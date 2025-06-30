@@ -1,0 +1,1955 @@
+openapi: 3.0.3
+info:
+    title: Unikraft Cloud Platform API
+    description: This specification describes the Unikraft Cloud Platform API, which provides mechanisms to interact with Unikraft Cloud metros. It allows you to create, manage, and interact with instances running on the platform.
+    contact:
+        name: Unikraft Support
+        url: https://unikraft.com/contact
+        email: support@unikraft.com
+    version: v1.0.0
+servers:
+    - url: https://api.{metro}.unikraft.cloud
+      description: Official Unikraft Cloud Metros
+      variables:
+        metro:
+            enum:
+                - dal0
+                - fra0
+                - sin0
+                - was1
+            default: fra0
+            description: The IATA and numeric code of the metro to connect to.
+paths:
+    /v1/images/digest/{digest}:
+        get:
+            tags:
+                - ImageService
+            description: GetImageByDigest retrieves an image by its digest.
+            operationId: GetImageByDigest
+            parameters:
+                - name: digest
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetImageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/images/tag/{tag}:
+        get:
+            tags:
+                - ImageService
+            description: GetImageByTag retrieves an image by its tag.
+            operationId: GetImageByTag
+            parameters:
+                - name: tag
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetImageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances:
+        get:
+            tags:
+                - InstanceService
+            description: |-
+                Get one or many instances with their current status and configuration.
+                 It's possible to filter this list by name or UUID.
+            operationId: GetInstances
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the instance to retrieve.  Mutually exclusive with name.
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  description: The name of the instance to retrieve.  Mutually exclusive with UUID.
+                  schema:
+                    type: string
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the instance in the response.  By default
+                     this is set to true, meaning that all information about the instance will
+                     be included in the response.  If set to false, only the basic information
+                     about the instance will be included, such as its name and UUID.
+                  schema:
+                    type: boolean
+                - name: metrics
+                  in: query
+                  description: |-
+                    Whether to include metrics about the instance in the response.  By default
+                     this is set to false, meaning that no metrics will be included in the
+                     response.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstancesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - InstanceService
+            description: Creates one or more new instances.
+            operationId: CreateInstance
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateInstanceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - InstanceService
+            description: |-
+                Delete the specified instance(s).  After this call the name of the
+                 instances are no longer valid.  If the instances are currently running,
+                 they are force stopped.
+            operationId: DeleteInstances
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteInstancesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/logs:
+        put:
+            tags:
+                - InstanceService
+            description: Retrieve the logs of an instance by its UUID or name.
+            operationId: GetInstanceLogs
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetInstanceLogsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstanceLogsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/metrics:
+        put:
+            tags:
+                - InstanceService
+            description: Get the metrics of an instance by its UUID or name.
+            operationId: GetInstanceMetrics
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetInstanceMetricsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstanceMetricsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/start:
+        put:
+            tags:
+                - InstanceService
+            description: |-
+                Starts previously stopped instances by their UUID(s) or name(s) or does
+                 nothing if the instance is already running.
+            operationId: StartInstances
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StartInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/stop:
+        put:
+            tags:
+                - InstanceService
+            description: |-
+                Stops one or more running instance by their UUID(s) or name(s) or does
+                 nothing if the instance is already stopped.
+            operationId: StopInstances
+            parameters:
+                - name: force
+                  in: query
+                  description: Whether to immediately force stop the instance.
+                  schema:
+                    type: boolean
+                - name: drain_timeout_ms
+                  in: query
+                  description: |-
+                    Timeout for draining connections in milliseconds.  The instance does not
+                     receive new connections in the draining phase.  The instance is stopped
+                     when the last connection has been closed or the timeout expired.  The
+                     maximum timeout may vary.  Use -1 for the largest possible value.
+
+                     Note: This endpoint does not block.  Use the wait endpoint for the
+                     instance to reach the stopped state.
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/StopInstancesRequestID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StopInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/wait:
+        get:
+            tags:
+                - InstanceService
+            description: |-
+                Waits for an instance to reach a certain state by its UUID or name.
+
+                 If the instance is already in the desired state, the request will return
+                 immediately.  If the instance is not in the desired state, the request will
+                 block until the instance reaches the desired state or the timeout is
+                 reached.  If the timeout is reached, the request will fail with an error.
+                 If the timeout is -1, the request will block indefinitely until the
+                 instance reaches the desired state.
+            operationId: WaitInstances
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/WaitInstancesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/WaitInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}:
+        get:
+            tags:
+                - InstanceService
+            description: Get a single instance by its ID which can either be its name or UUID.
+            operationId: GetInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstancesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - InstanceService
+            description: |-
+                Delete a specified instance by its UUID.  After this call the UUID of the
+                 instances are no longer valid.  If the instances are currently running,
+                 they are force stopped.
+            operationId: DeleteInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteInstancesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}/logs:
+        put:
+            tags:
+                - InstanceService
+            description: Retrieve the logs of an instance by its UUID.
+            operationId: GetInstanceLogsByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  description: |-
+                    The byte offset of the log output to receive.  A negative sign makes the
+                     offset relative to the end of the log.
+                  schema:
+                    type: integer
+                    format: uint64
+                - name: limit
+                  in: query
+                  description: The amount of bytes to return at most.
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstanceLogsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}/metrics:
+        put:
+            tags:
+                - InstanceService
+            description: Get the metrics of an instance by its UUID.
+            operationId: GetInstanceMetricsByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetInstanceMetricsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}/start:
+        put:
+            tags:
+                - InstanceService
+            description: |-
+                Starts previously stopped instance by its UUID or does nothing if the
+                 instance is already running.
+            operationId: StartInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StartInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}/stop:
+        put:
+            tags:
+                - InstanceService
+            description: |-
+                Stops a running instance by its UUID or does nothing if the instance is
+                 already stopped.
+            operationId: StopInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: force
+                  in: query
+                  description: Whether to immediately force stop the instance.
+                  schema:
+                    type: boolean
+                - name: drain_timeout_ms
+                  in: query
+                  description: |-
+                    Timeout for draining connections in milliseconds.  The instance does not
+                     receive new connections in the draining phase.  The instance is stopped
+                     when the last connection has been closed or the timeout expired.  The
+                     maximum timeout may vary.  Use -1 for the largest possible value.
+
+                     Note: This endpoint does not block.  Use the wait endpoint for the instance
+                     to reach the stopped state.
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StopInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/instances/{uuid}/wait:
+        get:
+            tags:
+                - InstanceService
+            description: |-
+                Waits for an instance to reach a certain state by its UUID.
+
+                 If the instance is already in the desired state, the request will return
+                 immediately.  If the instance is not in the desired state, the request will
+                 block until the instance reaches the desired state or the timeout is
+                 reached.  If the timeout is reached, the request will fail with an error.
+                 If the timeout is -1, the request will block indefinitely until the
+                 instance reaches the desired state.
+            operationId: WaitInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: state
+                  in: query
+                  description: The desired state to wait for.  Default is `running`.
+                  schema:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    format: enum
+                - name: timeout_ms
+                  in: query
+                  description: |-
+                    Timeout in milliseconds to wait for the instance to reach the desired
+                     state.  If the timeout is reached, the request will fail with an error.
+                     A value of -1 means to wait indefinitely until the instance reaches the
+                     desired state.
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/WaitInstanceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateInstanceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        (Optional).  The name of the instance.
+
+                         If not provided, a random name will be generated. The name must be unique.
+                image:
+                    type: string
+                    description: The image to use for the instance.
+                args:
+                    type: array
+                    items:
+                        type: string
+                    description: (Optional).  The arguments to pass to the instance when it starts.
+                env:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: (Optional).  Environment variables to set for the instance.
+                memory_mb:
+                    type: integer
+                    description: (Optional).  Memory in MB to allocate for the instance.  Default is 128.
+                    format: int64
+                service_group:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateInstanceRequestServiceGroup'
+                    description: |-
+                        (Optional).  The service group configuration when creating an instance.
+
+                         When creating an instance, either a previously created (persistent) service
+                         group can be referenced (either through its name or UUID), or a new
+                         (ephemeral) service group can be created for the instance by specifying the
+                         list of services it should expose and optionally the domains it should use.
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestVolume'
+                    description: |-
+                        Volumes to attach to the instance.
+
+                         his list can contain both existing and new volumes to create as part of the
+                         instance creation.  Existing volumes can be referenced by their name or
+                         UUID.  New volumes can be created by specifying a name, size in MiB, and
+                         mount point in the instance.  The mount point is the directory in the
+                         instance where the volume will be mounted.
+                autostart:
+                    type: boolean
+                    description: Whether the instance should start automatically on creation.
+                replicas:
+                    type: integer
+                    description: Number of replicas for the instance.
+                    format: int64
+                restart_policy:
+                    enum:
+                        - "never"
+                        - "always"
+                        - "on_failure"
+                    type: string
+                    description: |-
+                        Restart policy for the instance.  This defines how the instance should
+                         behave when it stops or crashes.
+                    format: enum
+                scale_to_zero:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceScaleToZero'
+                    description: Scale-to-zero configuration for the instance.
+                vcpus:
+                    type: integer
+                    description: Number of vCPUs to allocate for the instance.
+                    format: int32
+                wait_timeout_ms:
+                    type: integer
+                    description: |-
+                        Timeout to wait for all new instances to reach running state in
+                         milliseconds.  If you autostart your new instance, you can wait for it to
+                         finish starting with a blocking API call if you specify a wait timeout
+                         greater than zero.  No wait performed for a value of 0.
+                    format: int64
+                features:
+                    type: array
+                    items:
+                        enum:
+                            - "delete_on_stop"
+                        type: string
+                        format: enum
+                    description: |-
+                        Features to enable for the instance.  Features are specific
+                         configurations or capabilities that can be enabled for the instance.
+            description: The request message for creating a new instance.
+        CreateInstanceRequestCertificate:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        (Optional).  The name of the existing certificate.  Mutually
+                         exclusive with UUID.
+                uuid:
+                    type: string
+                    description: |-
+                        (Optional).  The UUID for the existing certificate.  Mutually
+                         exclusive with name.
+            description: |-
+                A reference to an existing certificate which can be used for the
+                 specified domain.  If unspecified, Unikraft Cloud will
+                 automatically generate a new certificate for the domain based on Let's
+                 Encrypt and seek to accomplish a DNS-01 challenge.
+        CreateInstanceRequestDomain:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.
+
+                         If this name ends in a period `.` it must be a valid Full Qualified
+                         Domain Name (FQDN), e.g. `example.com.`; otherwise it will become a
+                         subdomain of the target metro, e.g. `example` becomes
+                         `example.fra0.unikraft.app`.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateInstanceRequestCertificate'
+                    description: |-
+                        Use an existing certificate for the domain.  If this field is specified,
+                         the domain must be associated with a valid certificate.
+            description: |-
+                The domain configuration for the service group.
+
+                 A domain defines a publicly accessible domain name for the instance.  If
+                 the domain name ends with a period `.`, it must be a valid Fully Qualified
+                 Domain Name (FQDN), otherwise it will become a subdomain of the target
+                 metro.  The domain can be associated with an existing certificate by
+                 specifying the certificate's name or UUID.  If no certificate is specified
+                 and a FQDN is provided, Unikraft Cloud will automatically generate a new
+                 certificate for the domain based on Let's Encrypt and seek to accomplish a
+                 DNS-01 challenge.
+        CreateInstanceRequestServiceGroup:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        (Optional).  Reference an existing (persistent) service group by its
+                         UUID.  Mutually exclusive with name.
+                name:
+                    type: string
+                    description: |-
+                        (Optional).  Reference an existing (persistent) service group by its
+                         name.  Mutually exclusive with UUID.
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestDomain'
+                    description: |-
+                        Similarly, if no existing (persistent) service group is specified via its
+                         identifier, a new (ephemeral) service group can be created.  In addition
+                         to the services it must expose, you can specify which domains it should
+                         use too.
+            description: |-
+                The service group configuration when creating an instance.
+
+                 If no existing (persistent) service group is specified via its identifier,
+                 a new (ephemeral) service group can be created by specifying the services
+                 it should expose.  A service defines the configuration settings of an
+                 exposed port by the instance.  A service is a combination of a public port,
+                 an internal port, and a set of handlers that define how the service will
+                 handle incoming connections.
+        CreateInstanceRequestVolume:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of an existing volume.
+
+                         If this is the only specified field, then it will look up an existing
+                         volume by this UUID.
+                name:
+                    type: string
+                    description: |-
+                        The name of the volume.
+
+                         If this is the only specified field, then it will look up an existing
+                         volume by this name.  If the volume does not exist, the request will
+                         fail.  If a new volume is intended to be created, then this field must be
+                         specified along with the size in MiB and the mount point in the instance.
+                size_mb:
+                    type: integer
+                    description: |-
+                        The size of the volume when creating a new volume.
+
+                         When creating a new volume as part of the instance create request,
+                         specify the size of the volume in MiB.
+                    format: int64
+                at:
+                    type: string
+                    description: The mount point for the volume in the instance.
+                read_only:
+                    type: boolean
+                    description: |-
+                        Whether the volume is read-only.
+
+                         If this field is set to true, the volume will be mounted as read-only in
+                         the instance.  This field is optional and defaults to false and is only
+                         applicable when using an existing volume.
+            description: A volume defines a storage volume that can be attached to the instance.
+        CreateInstanceResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateInstanceResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: The response message for creating a new instance.
+        CreateInstanceResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Instance'
+                    description: The instance that was created in this request.
+        DeleteInstancesResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DeleteInstancesResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for deleting one or more instance(s) given their UUID(s)
+                 or name(s).
+        DeleteInstancesResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DeleteInstancesResponseDeletedInstance'
+                    description: The instance(s) which were deleted by the request.
+        DeleteInstancesResponseDeletedInstance:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: |-
+                        Indicates whether the start operation was successful or not for this
+                         instance.
+                    format: enum
+                uuid:
+                    type: string
+                    description: The UUID of the instance which was deleted.
+                name:
+                    type: string
+                    description: The name of the instance which was deleted.
+                previous_state:
+                    type: string
+                    description: The previous state of the instance before it was deleted.
+            description: Details of the instance which was deleted by this request.
+        GetImageResponse:
+            type: object
+            properties:
+                status:
+                    type: string
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/GetImageResponseData'
+                op_time_us:
+                    type: integer
+                    format: int64
+        GetImageResponseData:
+            type: object
+            properties:
+                image:
+                    $ref: '#/components/schemas/Image'
+        GetInstanceLogsRequest:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the instance to retrieve logs for.  Mutually exclusive with
+                         name.
+                name:
+                    type: string
+                    description: |-
+                        The name of the instance to retrieve logs for.  Mutually exclusive with
+                         UUID.
+                offset:
+                    type: integer
+                    description: |-
+                        The byte offset of the log output to receive.  A negative sign makes the
+                         offset relative to the end of the log.
+                    format: uint64
+                limit:
+                    type: integer
+                    description: The amount of bytes to return at most.
+                    format: int64
+            description: |-
+                The request message for getting the logs of an instance by their UUID or
+                 name.
+        GetInstanceLogsResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetInstanceLogsResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for getting the logs of an instance given its UUID(s) or
+                 name(s).
+        GetInstanceLogsResponseAvailable:
+            type: object
+            properties:
+                start:
+                    type: integer
+                    description: The first byte offset that can be retrieved.
+                    format: uint64
+                end:
+                    type: integer
+                    description: The last byte offset that can be retrieved.
+                    format: uint64
+        GetInstanceLogsResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetInstanceLogsResponseLoggedInstance'
+                    description: |-
+                        The instance which this requested waited on.  Note: only one instance
+                         can be specified in the request, so this will always contain a single
+                         entry.
+        GetInstanceLogsResponseLoggedInstance:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance.
+                name:
+                    type: string
+                    description: The name of the instance.
+                state:
+                    type: string
+                    description: Base64 encoded log output of the instance.
+                available:
+                    allOf:
+                        - $ref: '#/components/schemas/GetInstanceLogsResponseAvailable'
+                    description: Description of the log availability.
+                range:
+                    allOf:
+                        - $ref: '#/components/schemas/GetInstanceLogsResponseRange'
+                    description: |-
+                        Description of the range that was returned. Useful for requests with
+                         offset relative to end.
+        GetInstanceLogsResponseRange:
+            type: object
+            properties:
+                start:
+                    type: integer
+                    description: The first retrieved byte.
+                    format: uint64
+                end:
+                    type: integer
+                    description: The last retrieved byte.
+                    format: uint64
+        GetInstanceMetricsRequest:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the instance to retrieve metrics for.  Mutually exclusive
+                         with name.
+                name:
+                    type: string
+                    description: |-
+                        The name of the instance to retrieve metrics for.  Mutually exclusive
+                         with UUID.
+            description: |-
+                The request message for getting the metrics of one or more instance(s) by
+                 their UUID(s) or name(s).
+        GetInstanceMetricsResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetInstanceMetricsResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for getting the metrics of one or more instance(s)
+                 given their UUID(s) or name(s).
+        GetInstanceMetricsResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetInstanceMetricsResponseInstanceMetrics'
+                    description: |-
+                        The instance which this requested metrics for.  Note: only one instance
+                         can be specified in the request, so this will always contain a single
+                         entry.
+        GetInstanceMetricsResponseInstanceMetrics:
+            type: object
+            properties:
+                rss_bytes:
+                    type: integer
+                    description: |-
+                        Resident set size of the VMM in bytes.
+
+                         The resident set size (RSS) specifies the amount of physical memory that
+                         has been touched by the instance and is currently reserved for the
+                         instance on the Unikraft Cloud server.  The RSS grows until the instance
+                         has touched all memory assigned to it via the memory_mb setting and may
+                         also exceed this value as supporting services running outside the
+                         instance acquire memory. The RSS is different from the current amount of
+                         memory allocated by the application, which is likely to fluctuate over
+                         the lifetime of the application.  The RSS is not a cumulative metric.
+                         When the instance is stopped rss goes down to 0.
+                    format: uint64
+                cpu_time_ms:
+                    type: integer
+                    description: Consumed CPU time in milliseconds.
+                    format: uint64
+                rx_bytes:
+                    type: integer
+                    description: Total amount of bytes received from network.
+                    format: uint64
+                rx_packets:
+                    type: integer
+                    description: Total count of packets received from network.
+                    format: uint64
+                tx_bytes:
+                    type: integer
+                    description: Total amount of bytes transmitted over network.
+                    format: uint64
+                tx_packets:
+                    type: integer
+                    description: Total count of packets transmitted over network.
+                    format: uint64
+                nconns:
+                    type: integer
+                    description: Number of currently established inbound connections (non-HTTP).
+                    format: uint64
+                nreqs:
+                    type: integer
+                    description: Number of in-flight HTTP requests.
+                    format: uint64
+                nqueued:
+                    type: integer
+                    description: Number of queued inbound connections and HTTP requests.
+                    format: uint64
+                ntotal:
+                    type: integer
+                    description: Total number of inbound connections and HTTP requests handled.
+                    format: uint64
+        GetInstancesResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetInstancesResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: The response after retrieving an instance by its name or UUID.
+        GetInstancesResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Instance'
+                    description: The instance(s) that were retrieved by the request.
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        Image:
+            type: object
+            properties:
+                tag:
+                    type: string
+                    description: The canonical name of the image is known as the "tag".
+                digest:
+                    type: string
+                    description: |-
+                        The digest of the image is a unique identifier of the image manifest which
+                         is a string representation including the hashing algorithm and the hash
+                         value separated by a colon.
+                description:
+                    type: string
+                    description: A description of the image.
+                created_at:
+                    type: string
+                    description: When the image was created.
+                    format: date-time
+                arch:
+                    type: string
+                    description: The architecture of the image.
+                entrypoint:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        The entrypoint of the image is the command that is run when the image is
+                         started.
+                cmd:
+                    type: array
+                    items:
+                        type: string
+                    description: The command to run when the image is started.
+                env:
+                    type: array
+                    items:
+                        type: string
+                    description: The environment variables to set when the image is started.
+                ports:
+                    type: array
+                    items:
+                        type: string
+                    description: Documented port mappings for the image.
+                volumes:
+                    type: array
+                    items:
+                        type: string
+                    description: Documented volumes for the image.
+                labels:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Labels are key-value pairs.
+                workdir:
+                    type: string
+                    description: |-
+                        The working directory for the image is the directory that is set as the
+                         current working directory when the image is started.
+                kernel:
+                    allOf:
+                        - $ref: '#/components/schemas/Object'
+                    description: The kernel object is a reference to the kernel that is used by the image.
+                auxiliary_roms:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Object'
+                    description: List of auxiliary ROMs that are used by the image.
+        Instance:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the instance.
+
+                         This is a unique identifier for the instance that is generated when the
+                         instance is created.  The UUID is used to reference the instance in API
+                         calls and can be used to identify the instance in all API calls that
+                         require an instance identifier.
+                name:
+                    type: string
+                    description: |-
+                        The name of the instance.
+
+                         This is a human-readable name that can be used to identify the instance.
+                         The name must be unique within the context of your account.  The name can
+                         also be used to identify the instance in API calls.
+                created_at:
+                    type: string
+                    description: The time the instance was created.
+                    format: date-time
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: |-
+                        The state of the instance.  This indicates the current state of the
+                         instance, such as whether it is running, stopped, or in an error state.
+                    format: enum
+                private_fqdn:
+                    type: string
+                    description: |-
+                        The internal hostname of the instance.  This address can be used privately
+                         within the Unikraft Cloud network to access the instance.  It is not
+                         accessible from the public Internet.
+                image:
+                    type: string
+                    description: |-
+                        The image used to create the instance.  This is a reference to the
+                         Unikraft image that was used to create the instance.
+                memory_mb:
+                    type: integer
+                    description: |-
+                        The amount of memory in megabytes allocated for the instance.  This is the
+                         total amount of memory that is available to the instance for its
+                         operations.
+                    format: uint64
+                vcpus:
+                    type: integer
+                    description: |-
+                        The number of vCPUs allocated for the instance.  This is the total
+                         number of virtual CPUs that are available to the instance for its
+                         operations.
+                    format: uint32
+                args:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        The arguments passed to the instance when it was started.  This is a
+                         list of command-line arguments that were provided to the instance at
+                         startup.  These arguments can be used to configure the behavior of the
+                         instance and its applications.
+                start_count:
+                    type: integer
+                    description: |-
+                        The total number of times the instance has been started.  This is a counter
+                         that increments each time the instance is started, regardless of whether it
+                         was manually stopped or restarted.  This can be useful for tracking the
+                         usage of the instance over time and/or for debugging purposes.
+                    format: uint64
+                started_at:
+                    type: string
+                    description: |-
+                        The time the instance was started.  This is the timestamp when the
+                         instance was last started.
+                    format: date-time
+                stopped_at:
+                    type: string
+                    description: |-
+                        The time the instance was stopped.  This is the timestamp when the
+                         instance was last stopped.  If the instance is currently running, this
+                         field will be empty.
+                    format: date-time
+                uptime_ms:
+                    type: integer
+                    description: The total amount of time the instance has been running in milliseconds.
+                    format: uint64
+                vmm_start_time_us:
+                    type: integer
+                    description: |-
+                        (Developer-only).  The time taken between the main controller and the
+                         beginning of execution of the VMM (Virtual Machine Monitor) measured in
+                         microseconds.  This field is primarily used for debugging and performance
+                         analysis purposes.
+                    format: uint64
+                vmm_load_time_us:
+                    type: integer
+                    description: |-
+                        (Developer-only).  The time it took the VMM (Virtual Machine Monitor) to
+                         load the instance's kernel and initramfs into VM memory measured in
+                         microseconds.  This field is primarily used for debugging and performance
+                         analysis purposes.
+                    format: uint64
+                vmm_ready_time_us:
+                    type: integer
+                    description: |-
+                        (Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to
+                         become ready to execute the instance measured in microseconds.  This is the
+                         time from when the VMM started until it was ready to execute the instance's
+                         code.  This field is primarily used for debugging and performance analysis
+                         purposes.
+                    format: uint64
+                boot_time_us:
+                    type: integer
+                    description: |-
+                        The boot time of the instance in microseconds.  We take a pragmatic
+                         approach is to define the boot time.  We calculate this as the difference
+                         in time between the moment the virtualization toolstack is invoked to
+                         respond to a VM boot request and the moment the OS starts executing user
+                         code (i.e., the end of the guest OS boot process).  This is essentially the
+                         time that a user would experience in a deployment, minus the application
+                         initialization time, which we leave out since it is independent from the
+                         OS.
+                    format: uint64
+                net_time_us:
+                    type: integer
+                    description: |-
+                        This is the time it took for the user-level application to start listening
+                         on a non-localhost port measured in microseconds.  This is the time from
+                         when the instance started until it reasonably ready to start responding to
+                         network requests.  This is useful for measuring the time it takes for the
+                         instance to become operationally ready.
+                    format: uint64
+                stop_reason:
+                    type: integer
+                    description: |-
+                        The instance stop reason.
+
+                         Provides reason as to why an instance is stopped or in the process of
+                         shutting down.  The stop reason is a bitmask that tells you the origin of
+                         the shutdown:
+
+                         | Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |
+                         |---------|------------|------------|------------|------------|--------------|
+                         | Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |
+
+                         - **Forced**:   This was a force stop.  A forced stop does not give the
+                                         instance a chance to perform a clean shutdown.  Bits 0
+                                         (Kernel) and 1 (App) can thus never be set for forced
+                                         shutdowns.  Consequently, there won't be an `exit_code` or
+                                         `stop_code`.
+                         - **User**:     Stop initiated by user, e.g. via an API call.
+                         - **Platform**: Stop initiated by platform, e.g. an autoscale policy.
+                         - **App**:      The Application exited.  The `exit_code` field will be set.
+                         - **Kernel**:   The kernel exited.  The `stop_code` field will be set.
+
+                         For example, the stop reason will contain the following values in the given
+                         scenarios:
+
+                         | Value | Bitmask | Aliases | Scenario |
+                         |-------|---------|---------|----------|
+                         | 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |
+                         | 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |
+                         | 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |
+                         | 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |
+                         | 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |
+                         | 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |
+                         | 0     | `00000` | `-----` | The stop reason is unknown. |
+                    format: uint32
+                exit_code:
+                    type: integer
+                    description: |-
+                        The application exit code.
+
+                         This is the code which the application returns upon leaving its main entry
+                         point.  The encoding of the exit code is application specific. See the
+                         documentation of the application for more details.  Usually, an exit code
+                         of `0` indicates success / no failure.
+                    format: uint32
+                stop_code:
+                    type: integer
+                    description: |-
+                        The kernel stop code.
+
+                         This value encodes multiple details about the stop irrespective of the
+                         application.
+
+                         ```
+                         MSB                                                     LSB
+                         ┌──────────────┬──────────┬──────────┬───────────┬────────┐
+                         │ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │
+                         ├──────────────┼──────────┼──────────┼───────────┼────────┤
+                         │ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │
+                         └──────────────┴──────────┴──────────┴───────────┴────────┘
+                         ```
+
+                         - **errno**:     The application errno, using Linux's errno.h values.
+                                          (Optional, can be 0.)
+                         - **shutdown**:  Whether the shutdown originated from the inittable (0) or
+                                          from the termtable (1).
+                         - **initlevel**: The initlevel at the time of the stop.
+                         - **reason**:    The reason for the stop. See `StopCodeReason`.
+
+                         [^1]: Reserved for future use.
+                    format: uint32
+                restart_policy:
+                    enum:
+                        - "never"
+                        - "always"
+                        - "on_failure"
+                    type: string
+                    description: |-
+                        The restart configuration for the instance.
+
+                         When an instance stops either because the application exits or the instance
+                         crashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are
+                         performed according to the restart policy configured for a particular
+                         instance.
+
+                         The policy can have the following values:
+
+                         | Policy       | Description |
+                         |--------------|-------------|
+                         | `never`      | Never restart the instance (default). |
+                         | `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |
+                         | `on-failure` | Only restart the instance if it crashes. |
+
+                         When an instance stops, the stop reason and the configured restart policy
+                         are evaluated to decide if a restart should be performed.  Unikraft Cloud
+                         uses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)
+                         to slow down restarts in tight crash loops. If an instance runs without
+                         problems for 10s the back-off delay is reset and the restart sequence ends.
+
+                         The `restart.attempt` attribute reported in counts the number of restarts
+                         performed in the current sequence.  The `restart.next_at` field indicates
+                         when the next restart will take place if a back-off delay is in effect.
+
+                         A manual start or stop of the instance aborts the restart sequence and
+                         resets the back-off delay.
+                    format: enum
+                scale_to_zero:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceScaleToZero'
+                    description: |-
+                        The scale-to-zero configuration for the instance.
+
+                         With conventional cloud platforms you need to keep at least one instance
+                         running at all times to be able to respond to incoming requests. Performing
+                         a just-in-time cold boot is simply too time-consuming and would create a
+                         response latency of multiple seconds.  This is not the case with Unikraft
+                         Cloud.  Instances on Unikraft Cloud are able to cold boot within
+                         milliseconds, which allows us to perform low-latency scale-to-zero.
+
+                         To enable scale-to-zero for an instance it is sufficient to add a
+                         `scale_to_zero` configuration block.  Unikraft Cloud will then put the
+                         instance into standby if there is no traffic to your service within the
+                         window of a cooldown period. When there is new traffic coming in, it is
+                         automatically started again.
+
+                         If you have a heavyweight application that takes long to cold boot or has
+                         bad first request latency (e.g., with JIT compilation) consider to enable
+                         stateful scale-to-zero.
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceInstanceVolume'
+                    description: The list of volumes attached to the instance.
+                service_group:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceInstanceServiceGroup'
+                    description: The service group configuration for the instance.
+                network_interfaces:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceNetworkInterface'
+                    description: The network interfaces of the instance.
+            description: An instance is a unikernel virtual machine running an application.
+        InstanceDomainInstanceDomainCertificate:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the certificate.
+
+                         This is a unique identifier for the certificate that is generated
+                         when the certificate is created.  The UUID is used to reference the
+                         certificate in API calls and can be used to identify the certificate
+                         in all API calls that require a certificate identifier.
+                name:
+                    type: string
+                    description: |-
+                        The name of the certificate.
+
+                         This is a human-readable name that can be used to identify the
+                         certificate.  The name is unique within the context of your account.
+                         The name can also be used to identify the certificate in API calls.
+            description: |-
+                The certificate associated with the domain.
+
+                 The certificate is used to secure the domain with TLS/SSL.  If no
+                 certificate is specified, Unikraft Cloud will automatically generate a
+                 new certificate for the domain based on Let's Encrypt and seek to
+                 accomplish a DNS-01 challenge.
+        InstanceInstanceServiceGroup:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the service group.
+
+                         This is a unique identifier for the service group that is generated when
+                         the service is created.  The UUID is used to reference the service group
+                         in API calls and can be used to identify the service in all API calls
+                         that require an service identifier.
+                name:
+                    type: string
+                    description: |-
+                        The name of the service group.
+
+                         This is a human-readable name that can be used to identify the service
+                         group.  The name is unique within the context of your account.  The name
+                         can also be used to identify the service group in API calls.
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceServiceGroupInstanceDomain'
+                    description: The domain configuration for the service group.
+            description: |-
+                The service group configuration for the instance.
+
+                 This is a reference to the service group that the instance is part of.  The
+                 service group defines the services (e.g. ports, connection handling) that
+                 the instance exposes and how they are configured.
+        InstanceInstanceVolume:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the volume.
+
+                         This is a unique identifier for the volume that is generated when the
+                         volume is created.  The UUID is used to reference the volume in API calls
+                         and can be used to identify the volume in all API calls that require a
+                         volume identifier.
+                name:
+                    type: string
+                    description: |-
+                        The name of the volume.
+
+                         This is a human-readable name that can be used to identify the volume.
+                         The name must be unique within the context of your account.  The name can
+                         also be used to identify the volume in API calls.
+                at:
+                    type: string
+                    description: |-
+                        The mount point of the volume in the instance.  This is the directory in
+                         the instance where the volume will be mounted.
+                read_only:
+                    type: boolean
+                    description: Whether the volume is read-only or not.
+            description: |-
+                A volume defines a storage which can be attached to the instance.
+
+                 Volumes can be used to store persistent data which should remain available
+                 even if the instance is stopped or restarted.
+        InstanceNetworkInterface:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the network interface. This is a unique identifier for the
+                         network interface that is generated when the instance is created.
+                private_ip:
+                    type: string
+                    description: |-
+                        The private IP address of the network interface. This is the internal IP
+                         address that is used for communication between instances within the same
+                         network.
+                mac:
+                    type: string
+                    description: The MAC address of the network interface.
+                rx_bytes:
+                    type: integer
+                    description: Amount of bytes received from interface.
+                    format: uint64
+                rx_packets:
+                    type: integer
+                    description: Count of packets received from interface
+                    format: uint64
+                tx_bytes:
+                    type: integer
+                    description: Amount of bytes sent to interface.
+                    format: uint64
+                tx_packets:
+                    type: integer
+                    description: Count of packets sent to interface
+                    format: uint64
+            description: An instance network interface.
+        InstanceScaleToZero:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: Indicates whether scale-to-zero is enabled for the instance.
+                policy:
+                    enum:
+                        - "on"
+                        - "off"
+                        - "idle"
+                    type: string
+                    description: The specific policy to use for scaling the instance to zero.
+                    format: enum
+                stateful:
+                    type: boolean
+                    description: |-
+                        Whether the instance should be stateful when scaled to zero. If set to
+                         true, the instance will retain its state (e.g., RAM contents) when scaled
+                         to zero.  This is useful for instances that need to maintain their state
+                         across scale-to-zero operations.  If set to false, the instance will lose
+                         its state when scaled to zero, and it will be restarted from scratch when
+                         scaled back up.
+                cooldown_time_ms:
+                    type: integer
+                    description: |-
+                        The cooldown time in milliseconds before the instance can be scaled to
+                         zero again.  This is useful to prevent rapid scaling to zero and back up,
+                         which can lead to performance issues or resource exhaustion.
+                    format: int32
+            description: |-
+                Scale-to-zero defines the configuration for scaling the instance to zero.
+                 When an instance is scaled-to-zero it can be either stopped (and fully
+                 shutdown) or paused wherein the state of the instance is preserved (e.g., RAM
+                 contents) and the instance can be resumed later without losing its state,
+                 i.e. "stateful".
+        InstanceServiceGroupInstanceDomain:
+            type: object
+            properties:
+                fqdn:
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.
+
+                         If this name ends in a period `.` it must be a valid Full Qualified
+                         Domain Name (FQDN), otherwise it will become a subdomain of the target
+                         metro.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceDomainInstanceDomainCertificate'
+                    description: The certificate associated with the domain.
+            description: |-
+                The domain configuration for the service group.
+
+                 Domain names are completely specified with all labels in the hierarchy of
+                 the DNS, having no parts omitted.  The domain can be associated with an
+                 existing certificate by specifying the certificate's name or UUID. If no
+                 certificate is specified and a FQDN is provided, Unikraft Cloud will
+                 automatically generate a new certificate for the domain based on Let's
+                 Encrypt and seek to accomplish a DNS-01 challenge.
+        Object:
+            type: object
+            properties:
+                digest:
+                    type: string
+                    description: |-
+                        The digest is a string representation including the hashing
+                         algorithm and the hash value separated by a colon.
+                media_type:
+                    type: string
+                    description: |-
+                        The media type of the layer is a string that identifies the type of
+                         content that the layer contains.
+                size:
+                    type: integer
+                    description: The size of the layer in bytes.
+                    format: int64
+            description: |-
+                An object is a single component of an image which is external and can be
+                 uniquely identified by its digest.
+        StartInstanceResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/StartInstanceResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for starting one or more instance(s) given their UUID(s)
+                 or name(s).
+        StartInstanceResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StartInstanceResponseStartedInstance'
+                    description: The instance(s) which were started by the request.
+        StartInstanceResponseStartedInstance:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: |-
+                        Indicates whether the start operation was successful or not for this
+                         instance.
+                    format: enum
+                uuid:
+                    type: string
+                    description: The UUID of the instance which was deleted.
+                name:
+                    type: string
+                    description: The name of the instance which was deleted.
+                state:
+                    type: string
+                    description: The current state of the instance after this request.
+                previous_state:
+                    type: string
+                    description: The previous state of the instance before it was deleted.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        StopInstanceResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/StopInstanceResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for stopping one or more instance(s) given their UUID(s)
+                 or name(s).
+        StopInstanceResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StopInstanceResponseStoppedInstance'
+                    description: The instance(s) which were stopped by the request.
+        StopInstanceResponseStoppedInstance:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance.
+                name:
+                    type: string
+                    description: The name of the instance.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: The current state of the instance.
+                    format: enum
+                previous_state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: The previous state of the instance before the stop operation was invoked.
+                    format: enum
+        StopInstancesRequestID:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance to stop.  Mutually exclusive with name.
+                name:
+                    type: string
+                    description: The name of the instance to stop.  Mutually exclusive with UUID.
+            description: An identifier for the instance(s) to start.
+        WaitInstanceResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/WaitInstanceResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                         the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for waiting for one or more instance(s) to reach a
+                 certain state given their UUID(s) or name(s).
+        WaitInstanceResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WaitInstanceResponseWaitedInstance'
+                    description: The instance(s) which this requested waited on.
+        WaitInstanceResponseWaitedInstance:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance.
+                name:
+                    type: string
+                    description: The name of the instance.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: The current state of the instance.
+                    format: enum
+        WaitInstancesRequest:
+            type: object
+            properties:
+                ids:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WaitInstancesRequestID'
+                    description: The list of IDs of the instance to stop.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: The desired state to wait for.  Default is `running`.
+                    format: enum
+                timeout_ms:
+                    type: integer
+                    description: |-
+                        Timeout in milliseconds to wait for the instance to reach the desired
+                         state.  If the timeout is reached, the request will fail with an error.
+                         A value of -1 means to wait indefinitely until the instance reaches the
+                         desired state.
+                    format: int64
+            description: |-
+                The request message for waiting for one or more instance(s) to reach a
+                 certain state by their UUID(s) or name(s).
+        WaitInstancesRequestID:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance to stop.  Mutually exclusive with name.
+                name:
+                    type: string
+                    description: The name of the instance to stop.  Mutually exclusive with UUID.
+            description: An identifier for the instance(s) to start.
+    securitySchemes:
+        bearerToken:
+            type: http
+            scheme: bearer
+security:
+    - bearerToken: []
+tags:
+    - name: ImageService
+      description: |-
+        The ImageService provides mechanisms to interact with images on Unikraft
+         Cloud.
+    - name: InstanceService
+      description: The service provides mechanisms to interact with instances on Unikraft Cloud.

@@ -79,16 +79,6 @@ paths:
                  It's possible to filter this list by name or UUID.
             operationId: GetInstances
             parameters:
-                - name: uuid
-                  in: query
-                  description: The UUID of the instance to retrieve.  Mutually exclusive with name.
-                  schema:
-                    type: string
-                - name: name
-                  in: query
-                  description: The name of the instance to retrieve.  Mutually exclusive with UUID.
-                  schema:
-                    type: string
                 - name: details
                   in: query
                   description: |-
@@ -106,6 +96,14 @@ paths:
                      response.
                   schema:
                     type: boolean
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/GetInstancesRequestID'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -174,12 +172,35 @@ paths:
                 - InstanceService
             description: Retrieve the logs of an instance by its UUID or name.
             operationId: GetInstanceLogs
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/GetInstanceLogsRequest'
-                required: true
+            parameters:
+                - name: uuid
+                  in: query
+                  description: |-
+                    The UUID of the instance to retrieve logs for.  Mutually exclusive with
+                     name.
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  description: |-
+                    The name of the instance to retrieve logs for.  Mutually exclusive with
+                     UUID.
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  description: |-
+                    The byte offset of the log output to receive.  A negative sign makes the
+                     offset relative to the end of the log.
+                  schema:
+                    type: integer
+                    format: uint64
+                - name: limit
+                  in: query
+                  description: The amount of bytes to return at most.
+                  schema:
+                    type: integer
+                    format: int64
             responses:
                 "200":
                     description: OK
@@ -199,12 +220,21 @@ paths:
                 - InstanceService
             description: Get the metrics of an instance by its UUID or name.
             operationId: GetInstanceMetrics
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/GetInstanceMetricsRequest'
-                required: true
+            parameters:
+                - name: uuid
+                  in: query
+                  description: |-
+                    The UUID of the instance to retrieve metrics for.  Mutually exclusive
+                     with name.
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  description: |-
+                    The name of the instance to retrieve metrics for.  Mutually exclusive
+                     with UUID.
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -305,11 +335,37 @@ paths:
                  If the timeout is -1, the request will block indefinitely until the
                  instance reaches the desired state.
             operationId: WaitInstances
+            parameters:
+                - name: state
+                  in: query
+                  description: The desired state to wait for.  Default is `running`.
+                  schema:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    format: enum
+                - name: timeout_ms
+                  in: query
+                  description: |-
+                    Timeout in milliseconds to wait for the instance to reach the desired
+                     state.  If the timeout is reached, the request will fail with an error.
+                     A value of -1 means to wait indefinitely until the instance reaches the
+                     desired state.
+                  schema:
+                    type: integer
+                    format: int64
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/WaitInstancesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/WaitInstancesRequestID'
                 required: true
             responses:
                 "200":
@@ -613,8 +669,8 @@ components:
                     description: |-
                         Volumes to attach to the instance.
 
-                         his list can contain both existing and new volumes to create as part of the
-                         instance creation.  Existing volumes can be referenced by their name or
+                         This list can contain both existing and new volumes to create as part of
+                         the instance creation.  Existing volumes can be referenced by their name or
                          UUID.  New volumes can be created by specifying a name, size in MiB, and
                          mount point in the instance.  The mount point is the directory in the
                          instance where the volume will be mounted.
@@ -884,32 +940,6 @@ components:
             properties:
                 image:
                     $ref: '#/components/schemas/Image'
-        GetInstanceLogsRequest:
-            type: object
-            properties:
-                uuid:
-                    type: string
-                    description: |-
-                        The UUID of the instance to retrieve logs for.  Mutually exclusive with
-                         name.
-                name:
-                    type: string
-                    description: |-
-                        The name of the instance to retrieve logs for.  Mutually exclusive with
-                         UUID.
-                offset:
-                    type: integer
-                    description: |-
-                        The byte offset of the log output to receive.  A negative sign makes the
-                         offset relative to the end of the log.
-                    format: uint64
-                limit:
-                    type: integer
-                    description: The amount of bytes to return at most.
-                    format: int64
-            description: |-
-                The request message for getting the logs of an instance by their UUID or
-                 name.
         GetInstanceLogsResponse:
             type: object
             properties:
@@ -955,9 +985,10 @@ components:
                     items:
                         $ref: '#/components/schemas/GetInstanceLogsResponseLoggedInstance'
                     description: |-
-                        The instance which this requested waited on.  Note: only one instance
-                         can be specified in the request, so this will always contain a single
-                         entry.
+                        The instance which this requested waited on.
+
+                         Note: only one instance can be specified in the request, so this will
+                         always contain a single entry.
         GetInstanceLogsResponseLoggedInstance:
             type: object
             properties:
@@ -991,22 +1022,6 @@ components:
                     type: integer
                     description: The last retrieved byte.
                     format: uint64
-        GetInstanceMetricsRequest:
-            type: object
-            properties:
-                uuid:
-                    type: string
-                    description: |-
-                        The UUID of the instance to retrieve metrics for.  Mutually exclusive
-                         with name.
-                name:
-                    type: string
-                    description: |-
-                        The name of the instance to retrieve metrics for.  Mutually exclusive
-                         with UUID.
-            description: |-
-                The request message for getting the metrics of one or more instance(s) by
-                 their UUID(s) or name(s).
         GetInstanceMetricsResponse:
             type: object
             properties:
@@ -1098,6 +1113,16 @@ components:
                     type: integer
                     description: Total number of inbound connections and HTTP requests handled.
                     format: uint64
+        GetInstancesRequestID:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the instance to get.  Mutually exclusive with name.
+                name:
+                    type: string
+                    description: The name of the instance to get.  Mutually exclusive with UUID.
+            description: An identifier for the instance(s) to get.
         GetInstancesResponse:
             type: object
             properties:
@@ -1900,46 +1925,16 @@ components:
                     type: string
                     description: The current state of the instance.
                     format: enum
-        WaitInstancesRequest:
-            type: object
-            properties:
-                ids:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/WaitInstancesRequestID'
-                    description: The list of IDs of the instance to stop.
-                state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "standby"
-                    type: string
-                    description: The desired state to wait for.  Default is `running`.
-                    format: enum
-                timeout_ms:
-                    type: integer
-                    description: |-
-                        Timeout in milliseconds to wait for the instance to reach the desired
-                         state.  If the timeout is reached, the request will fail with an error.
-                         A value of -1 means to wait indefinitely until the instance reaches the
-                         desired state.
-                    format: int64
-            description: |-
-                The request message for waiting for one or more instance(s) to reach a
-                 certain state by their UUID(s) or name(s).
         WaitInstancesRequestID:
             type: object
             properties:
                 uuid:
                     type: string
-                    description: The UUID of the instance to stop.  Mutually exclusive with name.
+                    description: The UUID of the instance to wait for.  Mutually exclusive with name.
                 name:
                     type: string
-                    description: The name of the instance to stop.  Mutually exclusive with UUID.
-            description: An identifier for the instance(s) to start.
+                    description: The name of the instance to wait for.  Mutually exclusive with UUID.
+            description: An identifier for the instance(s) to wait for.
     securitySchemes:
         bearerToken:
             type: http

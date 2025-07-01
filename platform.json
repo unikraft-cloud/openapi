@@ -120,22 +120,6 @@
         "operationId": "GetInstances",
         "parameters": [
           {
-            "name": "uuid",
-            "in": "query",
-            "description": "The UUID of the instance to retrieve.  Mutually exclusive with name.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "The name of the instance to retrieve.  Mutually exclusive with UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the instance in the response.  By default\n this is set to true, meaning that all information about the instance will\n be included in the response.  If set to false, only the basic information\n about the instance will be included, such as its name and UUID.",
@@ -152,6 +136,19 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetInstancesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -257,16 +254,42 @@
         ],
         "description": "Retrieve the logs of an instance by its UUID or name.",
         "operationId": "GetInstanceLogs",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetInstanceLogsRequest"
-              }
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\n name.",
+            "schema": {
+              "type": "string"
             }
           },
-          "required": true
-        },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\n UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The byte offset of the log output to receive.  A negative sign makes the\n offset relative to the end of the log.",
+            "schema": {
+              "type": "integer",
+              "format": "uint64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The amount of bytes to return at most.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -298,16 +321,24 @@
         ],
         "description": "Get the metrics of an instance by its UUID or name.",
         "operationId": "GetInstanceMetrics",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetInstanceMetricsRequest"
-              }
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to retrieve metrics for.  Mutually exclusive\n with name.",
+            "schema": {
+              "type": "string"
             }
           },
-          "required": true
-        },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to retrieve metrics for.  Mutually exclusive\n with UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -439,11 +470,42 @@
         ],
         "description": "Waits for an instance to reach a certain state by its UUID or name.\n\n If the instance is already in the desired state, the request will return\n immediately.  If the instance is not in the desired state, the request will\n block until the instance reaches the desired state or the timeout is\n reached.  If the timeout is reached, the request will fail with an error.\n If the timeout is -1, the request will block indefinitely until the\n instance reaches the desired state.",
         "operationId": "WaitInstances",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "description": "The desired state to wait for.  Default is `running`.",
+            "schema": {
+              "enum": [
+                "stopped",
+                "starting",
+                "running",
+                "draining",
+                "stopping",
+                "standby"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "timeout_ms",
+            "in": "query",
+            "description": "Timeout in milliseconds to wait for the instance to reach the desired\n state.  If the timeout is reached, the request will fail with an error.\n A value of -1 means to wait indefinitely until the instance reaches the\n desired state.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WaitInstancesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WaitInstancesRequestID"
+                }
               }
             }
           },
@@ -865,7 +927,7 @@
             "items": {
               "$ref": "#/components/schemas/CreateInstanceRequestVolume"
             },
-            "description": "Volumes to attach to the instance.\n\n his list can contain both existing and new volumes to create as part of the\n instance creation.  Existing volumes can be referenced by their name or\n UUID.  New volumes can be created by specifying a name, size in MiB, and\n mount point in the instance.  The mount point is the directory in the\n instance where the volume will be mounted."
+            "description": "Volumes to attach to the instance.\n\n This list can contain both existing and new volumes to create as part of\n the instance creation.  Existing volumes can be referenced by their name or\n UUID.  New volumes can be created by specifying a name, size in MiB, and\n mount point in the instance.  The mount point is the directory in the\n instance where the volume will be mounted."
           },
           "autostart": {
             "type": "boolean",
@@ -1139,30 +1201,6 @@
           }
         }
       },
-      "GetInstanceLogsRequest": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\n name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\n UUID."
-          },
-          "offset": {
-            "type": "integer",
-            "description": "The byte offset of the log output to receive.  A negative sign makes the\n offset relative to the end of the log.",
-            "format": "uint64"
-          },
-          "limit": {
-            "type": "integer",
-            "description": "The amount of bytes to return at most.",
-            "format": "int64"
-          }
-        },
-        "description": "The request message for getting the logs of an instance by their UUID or\n name."
-      },
       "GetInstanceLogsResponse": {
         "type": "object",
         "properties": {
@@ -1218,7 +1256,7 @@
             "items": {
               "$ref": "#/components/schemas/GetInstanceLogsResponseLoggedInstance"
             },
-            "description": "The instance which this requested waited on.  Note: only one instance\n can be specified in the request, so this will always contain a single\n entry."
+            "description": "The instance which this requested waited on.\n\n Note: only one instance can be specified in the request, so this will\n always contain a single entry."
           }
         }
       },
@@ -1269,20 +1307,6 @@
             "format": "uint64"
           }
         }
-      },
-      "GetInstanceMetricsRequest": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to retrieve metrics for.  Mutually exclusive\n with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to retrieve metrics for.  Mutually exclusive\n with UUID."
-          }
-        },
-        "description": "The request message for getting the metrics of one or more instance(s) by\n their UUID(s) or name(s)."
       },
       "GetInstanceMetricsResponse": {
         "type": "object",
@@ -1382,6 +1406,20 @@
             "format": "uint64"
           }
         }
+      },
+      "GetInstancesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance to get.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance to get.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the instance(s) to get."
       },
       "GetInstancesResponse": {
         "type": "object",
@@ -2106,50 +2144,19 @@
           }
         }
       },
-      "WaitInstancesRequest": {
-        "type": "object",
-        "properties": {
-          "ids": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WaitInstancesRequestID"
-            },
-            "description": "The list of IDs of the instance to stop."
-          },
-          "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "standby"
-            ],
-            "type": "string",
-            "description": "The desired state to wait for.  Default is `running`.",
-            "format": "enum"
-          },
-          "timeout_ms": {
-            "type": "integer",
-            "description": "Timeout in milliseconds to wait for the instance to reach the desired\n state.  If the timeout is reached, the request will fail with an error.\n A value of -1 means to wait indefinitely until the instance reaches the\n desired state.",
-            "format": "int64"
-          }
-        },
-        "description": "The request message for waiting for one or more instance(s) to reach a\n certain state by their UUID(s) or name(s)."
-      },
       "WaitInstancesRequestID": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance to stop.  Mutually exclusive with name."
+            "description": "The UUID of the instance to wait for.  Mutually exclusive with name."
           },
           "name": {
             "type": "string",
-            "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+            "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
           }
         },
-        "description": "An identifier for the instance(s) to start."
+        "description": "An identifier for the instance(s) to wait for."
       }
     },
     "securitySchemes": {

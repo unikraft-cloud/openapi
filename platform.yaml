@@ -23,7 +23,7 @@ paths:
     /v1/certificates:
         get:
             tags:
-                - CertificateService
+                - Certificates
             description: |-
                 Get one or many certificates with their current status and configuration.
                  It's possible to filter this list by name or UUID.
@@ -62,7 +62,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - CertificateService
+                - Certificates
             description: Upload a new certificate with the given configuration.
             operationId: CreateCertificate
             requestBody:
@@ -86,7 +86,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - CertificateService
+                - Certificates
             description: |-
                 Delete a specified certificate by its UUID.  After this call the UUID of
                  the certificate are no longer valid.
@@ -115,7 +115,7 @@ paths:
     /v1/certificates/{uuid}:
         get:
             tags:
-                - CertificateService
+                - Certificates
             description: Get a specified certificate by its UUID.
             operationId: GetCertificateByUUID
             parameters:
@@ -139,7 +139,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - CertificateService
+                - Certificates
             description: |-
                 Delete the specified certificate(s).  After this call the name of the
                  certificate(s) are no longer valid.
@@ -166,7 +166,7 @@ paths:
     /v1/images/digest/{digest}:
         get:
             tags:
-                - ImageService
+                - Images
             description: GetImageByDigest retrieves an image by its digest.
             operationId: GetImageByDigest
             parameters:
@@ -191,7 +191,7 @@ paths:
     /v1/images/tag/{tag}:
         get:
             tags:
-                - ImageService
+                - Images
             description: GetImageByTag retrieves an image by its tag.
             operationId: GetImageByTag
             parameters:
@@ -216,7 +216,7 @@ paths:
     /v1/instances:
         get:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Get one or many instances with their current status and configuration.
                  It's possible to filter this list by name or UUID.
@@ -262,7 +262,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - InstanceService
+                - Instances
             description: Creates one or more new instances.
             operationId: CreateInstance
             requestBody:
@@ -286,7 +286,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Delete the specified instance(s).  After this call the name of the
                  instances are no longer valid.  If the instances are currently running,
@@ -312,7 +312,7 @@ paths:
     /v1/instances/logs:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: Retrieve the logs of an instance by its UUID or name.
             operationId: GetInstanceLogs
             parameters:
@@ -360,7 +360,7 @@ paths:
     /v1/instances/metrics:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: Get the metrics of an instance by its UUID or name.
             operationId: GetInstanceMetrics
             parameters:
@@ -394,7 +394,7 @@ paths:
     /v1/instances/start:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Starts previously stopped instances by their UUID(s) or name(s) or does
                  nothing if the instance is already running.
@@ -419,7 +419,7 @@ paths:
     /v1/instances/stop:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Stops one or more running instance by their UUID(s) or name(s) or does
                  nothing if the instance is already stopped.
@@ -467,7 +467,7 @@ paths:
     /v1/instances/wait:
         get:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Waits for an instance to reach a certain state by its UUID or name.
 
@@ -526,7 +526,7 @@ paths:
     /v1/instances/{uuid}:
         get:
             tags:
-                - InstanceService
+                - Instances
             description: Get a single instance by its ID which can either be its name or UUID.
             operationId: GetInstanceByUUID
             parameters:
@@ -550,7 +550,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Delete a specified instance by its UUID.  After this call the UUID of the
                  instances are no longer valid.  If the instances are currently running,
@@ -578,7 +578,7 @@ paths:
     /v1/instances/{uuid}/logs:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: Retrieve the logs of an instance by its UUID.
             operationId: GetInstanceLogsByUUID
             parameters:
@@ -617,7 +617,7 @@ paths:
     /v1/instances/{uuid}/metrics:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: Get the metrics of an instance by its UUID.
             operationId: GetInstanceMetricsByUUID
             parameters:
@@ -642,7 +642,7 @@ paths:
     /v1/instances/{uuid}/start:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Starts previously stopped instance by its UUID or does nothing if the
                  instance is already running.
@@ -669,7 +669,7 @@ paths:
     /v1/instances/{uuid}/stop:
         put:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Stops a running instance by its UUID or does nothing if the instance is
                  already stopped.
@@ -714,7 +714,7 @@ paths:
     /v1/instances/{uuid}/wait:
         get:
             tags:
-                - InstanceService
+                - Instances
             description: |-
                 Waits for an instance to reach a certain state by its UUID.
 
@@ -770,7 +770,7 @@ paths:
     /v1/services:
         get:
             tags:
-                - ServiceGroupService
+                - ServiceGroups
             description: |-
                 Get one or many service groups with their current status and configuration.
                  It's possible to filter this list by name or UUID.
@@ -809,7 +809,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - ServiceGroupService
+                - ServiceGroups
             description: |-
                 Create a new service with the given configuration.
 
@@ -839,7 +839,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - ServiceGroupService
+                - ServiceGroups
             description: |-
                 Delete a specified service group by its UUID.  After this call the UUID of
                  the service group are no longer valid.
@@ -868,7 +868,7 @@ paths:
     /v1/services/{uuid}:
         get:
             tags:
-                - ServiceGroupService
+                - ServiceGroups
             description: Get a specified service group by its UUID.
             operationId: GetServiceGroupByUUID
             parameters:
@@ -892,7 +892,7 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - ServiceGroupService
+                - ServiceGroups
             description: |-
                 Delete the specified service group(s).  After this call the name of the
                  service group(s) are no longer valid.
@@ -2808,11 +2808,44 @@ components:
 security:
     - bearerToken: []
 tags:
-    - name: CertificateService
-    - name: ImageService
+    - name: Certificates
       description: |-
-        The ImageService provides mechanisms to interact with images on Unikraft
-         Cloud.
-    - name: InstanceService
-      description: The service provides mechanisms to interact with instances on Unikraft Cloud.
-    - name: ServiceGroupService
+        Unikraft Cloud allows you to host your deployment at subdomains of the
+         intended metro and/or use custom domains (e.g., example.com).  Typically,
+         Unikraft Cloud will automatically generate a TLS certificate for you based
+         on Let's Encrypt™ via a DNS-01 challenge.
+
+         For subdomains, your deployment will use the wildcard TLS certificate of the
+         respective Unikraft Cloud metro.
+
+         For wildcard domains you have to supply your own certificate.  If you want to
+         use Let's Encrypt™ you can use their DNS-based challenge and upload the
+         resulting certificate to Unikraft Cloud.
+    - name: Images
+      description: |-
+        An image is a collection of objects representing a VM which can be deployed
+         on Unikraft Cloud.  Its format is based on the OCI Image Specification.
+         Within the context of Unikraft Cloud, these images also include a kernel
+         component.
+    - name: Instances
+      description: An instance is a unikernel virtual machine running an application.
+    - name: ServiceGroups
+      description: |-
+        A service group on Unikraft Cloud is used to describe how your application
+         exposes its functionality to the outside world.  Once defined, assigning an
+         instance to the service will make it accessible from the Internet.
+
+         An application, running as an instance, may expose one or more ports, e.g. it
+         listens on port 80 because your application exposes a HTTP web service. This,
+         along with a set of additional metadata defines how the "service" is
+         configured and accessed.  For example, a service may be configured to use
+         TLS, or be bound to a specific domain name.
+
+         When an instance is assigned to a service group, it immediately becomes
+         accessible over the Internet on the exposed public port, using the set DNS
+         name, and is routed to the set destination port.
+
+         Note: If you do not specify a DNS name when you create a service and you
+         indicate that the application exposes some ports, Unikraft Cloud will
+         generates a random DNS name for you.  Unikraft Cloud also supports custom
+         domains like www.example.com and wildcard domains like *.example.com.

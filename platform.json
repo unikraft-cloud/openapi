@@ -32,7 +32,7 @@
     "/v1/certificates": {
       "get": {
         "tags": [
-          "CertificateService"
+          "Certificates"
         ],
         "description": "Get one or many certificates with their current status and configuration.\n It's possible to filter this list by name or UUID.",
         "operationId": "GetCertificates",
@@ -84,7 +84,7 @@
       },
       "post": {
         "tags": [
-          "CertificateService"
+          "Certificates"
         ],
         "description": "Upload a new certificate with the given configuration.",
         "operationId": "CreateCertificate",
@@ -123,7 +123,7 @@
       },
       "delete": {
         "tags": [
-          "CertificateService"
+          "Certificates"
         ],
         "description": "Delete a specified certificate by its UUID.  After this call the UUID of\n the certificate are no longer valid.",
         "operationId": "DeleteCertificates",
@@ -167,7 +167,7 @@
     "/v1/certificates/{uuid}": {
       "get": {
         "tags": [
-          "CertificateService"
+          "Certificates"
         ],
         "description": "Get a specified certificate by its UUID.",
         "operationId": "GetCertificateByUUID",
@@ -206,7 +206,7 @@
       },
       "delete": {
         "tags": [
-          "CertificateService"
+          "Certificates"
         ],
         "description": "Delete the specified certificate(s).  After this call the name of the\n certificate(s) are no longer valid.",
         "operationId": "DeleteCertificateByUUID",
@@ -247,7 +247,7 @@
     "/v1/images/digest/{digest}": {
       "get": {
         "tags": [
-          "ImageService"
+          "Images"
         ],
         "description": "GetImageByDigest retrieves an image by its digest.",
         "operationId": "GetImageByDigest",
@@ -288,7 +288,7 @@
     "/v1/images/tag/{tag}": {
       "get": {
         "tags": [
-          "ImageService"
+          "Images"
         ],
         "description": "GetImageByTag retrieves an image by its tag.",
         "operationId": "GetImageByTag",
@@ -329,7 +329,7 @@
     "/v1/instances": {
       "get": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Get one or many instances with their current status and configuration.\n It's possible to filter this list by name or UUID.",
         "operationId": "GetInstances",
@@ -389,7 +389,7 @@
       },
       "post": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Creates one or more new instances.",
         "operationId": "CreateInstance",
@@ -428,7 +428,7 @@
       },
       "delete": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Delete the specified instance(s).  After this call the name of the\n instances are no longer valid.  If the instances are currently running,\n they are force stopped.",
         "operationId": "DeleteInstances",
@@ -465,7 +465,7 @@
     "/v1/instances/logs": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Retrieve the logs of an instance by its UUID or name.",
         "operationId": "GetInstanceLogs",
@@ -532,7 +532,7 @@
     "/v1/instances/metrics": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Get the metrics of an instance by its UUID or name.",
         "operationId": "GetInstanceMetrics",
@@ -581,7 +581,7 @@
     "/v1/instances/start": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Starts previously stopped instances by their UUID(s) or name(s) or does\n nothing if the instance is already running.",
         "operationId": "StartInstances",
@@ -618,7 +618,7 @@
     "/v1/instances/stop": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Stops one or more running instance by their UUID(s) or name(s) or does\n nothing if the instance is already stopped.",
         "operationId": "StopInstances",
@@ -681,7 +681,7 @@
     "/v1/instances/wait": {
       "get": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Waits for an instance to reach a certain state by its UUID or name.\n\n If the instance is already in the desired state, the request will return\n immediately.  If the instance is not in the desired state, the request will\n block until the instance reaches the desired state or the timeout is\n reached.  If the timeout is reached, the request will fail with an error.\n If the timeout is -1, the request will block indefinitely until the\n instance reaches the desired state.",
         "operationId": "WaitInstances",
@@ -753,7 +753,7 @@
     "/v1/instances/{uuid}": {
       "get": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Get a single instance by its ID which can either be its name or UUID.",
         "operationId": "GetInstanceByUUID",
@@ -792,7 +792,7 @@
       },
       "delete": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Delete a specified instance by its UUID.  After this call the UUID of the\n instances are no longer valid.  If the instances are currently running,\n they are force stopped.",
         "operationId": "DeleteInstanceByUUID",
@@ -833,7 +833,7 @@
     "/v1/instances/{uuid}/logs": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Retrieve the logs of an instance by its UUID.",
         "operationId": "GetInstanceLogsByUUID",
@@ -892,7 +892,7 @@
     "/v1/instances/{uuid}/metrics": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Get the metrics of an instance by its UUID.",
         "operationId": "GetInstanceMetricsByUUID",
@@ -933,7 +933,7 @@
     "/v1/instances/{uuid}/start": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Starts previously stopped instance by its UUID or does nothing if the\n instance is already running.",
         "operationId": "StartInstanceByUUID",
@@ -974,7 +974,7 @@
     "/v1/instances/{uuid}/stop": {
       "put": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Stops a running instance by its UUID or does nothing if the instance is\n already stopped.",
         "operationId": "StopInstanceByUUID",
@@ -1032,7 +1032,7 @@
     "/v1/instances/{uuid}/wait": {
       "get": {
         "tags": [
-          "InstanceService"
+          "Instances"
         ],
         "description": "Waits for an instance to reach a certain state by its UUID.\n\n If the instance is already in the desired state, the request will return\n immediately.  If the instance is not in the desired state, the request will\n block until the instance reaches the desired state or the timeout is\n reached.  If the timeout is reached, the request will fail with an error.\n If the timeout is -1, the request will block indefinitely until the\n instance reaches the desired state.",
         "operationId": "WaitInstanceByUUID",
@@ -1099,7 +1099,7 @@
     "/v1/services": {
       "get": {
         "tags": [
-          "ServiceGroupService"
+          "ServiceGroups"
         ],
         "description": "Get one or many service groups with their current status and configuration.\n It's possible to filter this list by name or UUID.",
         "operationId": "GetServiceGroups",
@@ -1151,7 +1151,7 @@
       },
       "post": {
         "tags": [
-          "ServiceGroupService"
+          "ServiceGroups"
         ],
         "description": "Create a new service with the given configuration.\n\n Note that the service properties like published ports can only be defined\n during creation.  They cannot be changed later.  Each port in a service can\n specify a list of handlers that determine how traffic arriving at the port\n is handled. See Connection Handlers for a complete overview.",
         "operationId": "CreateServiceGroup",
@@ -1190,7 +1190,7 @@
       },
       "delete": {
         "tags": [
-          "ServiceGroupService"
+          "ServiceGroups"
         ],
         "description": "Delete a specified service group by its UUID.  After this call the UUID of\n the service group are no longer valid.",
         "operationId": "DeleteServiceGroups",
@@ -1234,7 +1234,7 @@
     "/v1/services/{uuid}": {
       "get": {
         "tags": [
-          "ServiceGroupService"
+          "ServiceGroups"
         ],
         "description": "Get a specified service group by its UUID.",
         "operationId": "GetServiceGroupByUUID",
@@ -1273,7 +1273,7 @@
       },
       "delete": {
         "tags": [
-          "ServiceGroupService"
+          "ServiceGroups"
         ],
         "description": "Delete the specified service group(s).  After this call the name of the\n service group(s) are no longer valid.",
         "operationId": "DeleteServiceGroupByUUID",
@@ -3171,18 +3171,20 @@
   ],
   "tags": [
     {
-      "name": "CertificateService"
+      "name": "Certificates",
+      "description": "Unikraft Cloud allows you to host your deployment at subdomains of the\n intended metro and/or use custom domains (e.g., example.com).  Typically,\n Unikraft Cloud will automatically generate a TLS certificate for you based\n on Let's Encrypt™ via a DNS-01 challenge.\n\n For subdomains, your deployment will use the wildcard TLS certificate of the\n respective Unikraft Cloud metro.\n\n For wildcard domains you have to supply your own certificate.  If you want to\n use Let's Encrypt™ you can use their DNS-based challenge and upload the\n resulting certificate to Unikraft Cloud."
     },
     {
-      "name": "ImageService",
-      "description": "The ImageService provides mechanisms to interact with images on Unikraft\n Cloud."
+      "name": "Images",
+      "description": "An image is a collection of objects representing a VM which can be deployed\n on Unikraft Cloud.  Its format is based on the OCI Image Specification.\n Within the context of Unikraft Cloud, these images also include a kernel\n component."
     },
     {
-      "name": "InstanceService",
-      "description": "The service provides mechanisms to interact with instances on Unikraft Cloud."
+      "name": "Instances",
+      "description": "An instance is a unikernel virtual machine running an application."
     },
     {
-      "name": "ServiceGroupService"
+      "name": "ServiceGroups",
+      "description": "A service group on Unikraft Cloud is used to describe how your application\n exposes its functionality to the outside world.  Once defined, assigning an\n instance to the service will make it accessible from the Internet.\n\n An application, running as an instance, may expose one or more ports, e.g. it\n listens on port 80 because your application exposes a HTTP web service. This,\n along with a set of additional metadata defines how the \"service\" is\n configured and accessed.  For example, a service may be configured to use\n TLS, or be bound to a specific domain name.\n\n When an instance is assigned to a service group, it immediately becomes\n accessible over the Internet on the exposed public port, using the set DNS\n name, and is routed to the set destination port.\n\n Note: If you do not specify a DNS name when you create a service and you\n indicate that the application exposes some ports, Unikraft Cloud will\n generates a random DNS name for you.  Unikraft Cloud also supports custom\n domains like www.example.com and wildcard domains like *.example.com."
     }
   ]
 }

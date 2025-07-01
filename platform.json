@@ -1095,6 +1095,221 @@
           }
         }
       }
+    },
+    "/v1/services": {
+      "get": {
+        "tags": [
+          "ServiceGroupService"
+        ],
+        "description": "Get one or many service groups with their current status and configuration.\n It's possible to filter this list by name or UUID.",
+        "operationId": "GetServiceGroups",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the service group in the response.  By\n default this is set to true, meaning that all information about the service\n group will be included in the response.  If set to false, only the basic\n information about the service group will be included, such as its name and\n UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetServiceGroupsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ServiceGroupService"
+        ],
+        "description": "Create a new service with the given configuration.\n\n Note that the service properties like published ports can only be defined\n during creation.  They cannot be changed later.  Each port in a service can\n specify a list of handlers that determine how traffic arriving at the port\n is handled. See Connection Handlers for a complete overview.",
+        "operationId": "CreateServiceGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServiceGroupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServiceGroupResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ServiceGroupService"
+        ],
+        "description": "Delete a specified service group by its UUID.  After this call the UUID of\n the service group are no longer valid.",
+        "operationId": "DeleteServiceGroups",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/services/{uuid}": {
+      "get": {
+        "tags": [
+          "ServiceGroupService"
+        ],
+        "description": "Get a specified service group by its UUID.",
+        "operationId": "GetServiceGroupByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ServiceGroupService"
+        ],
+        "description": "Delete the specified service group(s).  After this call the name of the\n service group(s) are no longer valid.",
+        "operationId": "DeleteServiceGroupByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1415,6 +1630,83 @@
           }
         }
       },
+      "CreateServiceGroupRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the service group.  This is a human-readable name that can be used\n to identify the service group.  The name must be unique within the context\n of your account.  If no name is specified, a random name is generated for\n you.  The name can also be used to identify the service group in API calls."
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Service"
+            },
+            "description": "Description of exposed services."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Domain"
+            },
+            "description": "Description of domains associated with the service group."
+          },
+          "soft_limit": {
+            "type": "integer",
+            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\n to wake up another standby instance.\n\n For example, if the soft limit is set to 5 and the service consists of 2\n standby instances, one of the instances receives up to 5 concurrent\n requests.  The 6th parallel requests wakes up the second instance.  If\n there are no more standby instances to wake up, the number of requests\n assigned to each instance will exceed the soft limit.  The load balancer\n makes sure that when the number of in-flight requests goes down again,\n instances are put into standby as fast as possible.",
+            "format": "uint64"
+          },
+          "hard_limit": {
+            "type": "integer",
+            "description": "The hard limit defines the maximum number of concurrent requests that an\n instance assigned to the this service can handle.\n\n The load balancer will never assign more requests to a single instance.  In\n case there are no other instances available, excess requests fail (i.e.,\n they are blocked and not queued).",
+            "format": "uint64"
+          }
+        }
+      },
+      "CreateServiceGroupResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateServiceGroupResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating of a service group."
+      },
+      "CreateServiceGroupResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGroup"
+            },
+            "description": "The service group which was created by this request.\n\n Note: only one service group can be specified in the request, so this\n will always contain a single entry."
+          }
+        }
+      },
       "DeleteCertificatesRequestID": {
         "type": "object",
         "properties": {
@@ -1566,6 +1858,105 @@
           }
         },
         "description": "Details of the instance which was deleted by this request."
+      },
+      "DeleteServiceGroupsRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service group to retrieve.\n Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service group to retrieve.\n Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the service group(s) to delete."
+      },
+      "DeleteServiceGroupsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteServiceGroupsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for deleting of one or more service group(s) given their\n UUID(s) or name(s)."
+      },
+      "DeleteServiceGroupsResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteServiceGroupsResponseDeletedServiceGroup"
+            },
+            "description": "The service group(s) which were deleted by the request."
+          }
+        }
+      },
+      "DeleteServiceGroupsResponseDeletedServiceGroup": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "Indicates whether the delete operation was successful or not for this\n service group.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service group which was deleted."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service group which was deleted."
+          }
+        },
+        "description": "Details of the service group which was deleted by this request."
+      },
+      "Domain": {
+        "type": "object",
+        "properties": {
+          "fqdn": {
+            "type": "string",
+            "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\n be a valid Full Qualified Domain Name (FQDN), otherwise it will become a\n subdomain of the target metro."
+          },
+          "certificate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Certificate"
+              }
+            ],
+            "description": "Use an existing certificate for the domain.  If this field is\n specified, the domain must be associated with a valid certificate."
+          }
+        },
+        "description": "A domain name.\n\n Domain names are completely specified with all labels in the hierarchy of the\n DNS, having no parts omitted.  The domain can be associated with an existing\n certificate by specifying the certificate's name or UUID.  If no certificate\n is specified and a FQDN is provided, Unikraft Cloud will automatically\n generate a new certificate for the domain based on Let's Encrypt and seek to\n accomplish a DNS-01 challenge."
       },
       "GetCertificatesRequestID": {
         "type": "object",
@@ -1912,6 +2303,64 @@
               "$ref": "#/components/schemas/Instance"
             },
             "description": "The instance(s) that were retrieved by the request."
+          }
+        }
+      },
+      "GetServiceGroupsRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service group to get.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service group to get.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the service group(s) to get."
+      },
+      "GetServiceGroupsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetServiceGroupsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more service group(s) given their\n UUID(s) or name(s)."
+      },
+      "GetServiceGroupsResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGroup"
+            },
+            "description": "The service group(s) which were retrieved by the request."
           }
         }
       },
@@ -2331,6 +2780,105 @@
         },
         "description": "An object is a single component of an image which is external and can be\n uniquely identified by its digest."
       },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "type": "integer",
+            "description": "This is the public-facing port that the service will be accessible from\n on the Internet.",
+            "format": "uint32"
+          },
+          "destination_port": {
+            "type": "string",
+            "description": "The port number that the instance is listening on.  This is the internal\n port which Unikraft Cloud will forward traffic to."
+          },
+          "handlers": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "tls",
+                "http",
+                "redirect"
+              ],
+              "type": "string",
+              "format": "enum"
+            },
+            "description": "Connection handlers to use for the service.  Handlers define how the\n service will handle incoming connections and forward traffic from the\n Internet to your application.  For example, a service can be configured\n to terminate TLS connections, redirect HTTP traffic, or enable HTTP mode\n for load balancing.  You configure the handlers for every published\n service port individually."
+          }
+        },
+        "description": "A service connects a public-facing port to an internal destination port on\n which an application instance listens on.  Additional handlers can be defined\n for each published port in order to define how the service will handle\n incoming connections and forward traffic from the Internet to your\n application.  For example, a service can be configured to terminate TLS\n connections, redirect HTTP traffic, or enable HTTP mode for load balancing."
+      },
+      "ServiceGroup": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service group.\n\n This is a unique identifier for the service group that is generated when\n the service group is created.  The UUID is used to reference the service in\n API calls and can be used to identify the service group in all API calls\n that require an identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service group.\n\n This is a human-readable name that can be used to identify the service\n group. The name must be unique within the context of your account.  The\n name can also be used to identify the service in API calls."
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The time the service was created.",
+            "format": "date-time"
+          },
+          "persistent": {
+            "type": "boolean",
+            "description": "Indicates if the service will stay remain even after the last instance\n detached.  If this is set to false, the service will be deleted when the\n last instance detached from it.  If this is set to true, the service will\n remain and can be reused by other instances.  This is useful if you want to\n keep the service configuration, e.g., the published ports, handlers, and\n domains, even if there are no instances assigned to it."
+          },
+          "autoscale": {
+            "type": "boolean",
+            "description": "Indicates if the service has autoscale enabled.  See the associated\n autoscale documentation for more information about how to set this up.\n Autoscale policies can be set up after the service has been created."
+          },
+          "soft_limit": {
+            "type": "integer",
+            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\n to wake up another standby instance.  For example, if the soft limit is set\n to 5 and the service consists of 2 standby instances, one of the instances\n receives up to 5 concurrent requests.  The 6th parallel requests wakes up\n the second instance.  If there are no more standby instances to wake up,\n the number of requests assigned to each instance will exceed the soft\n limit.  The load balancer makes sure that when the number of in-flight\n requests goes down again, instances are put into standby as fast as\n possible.",
+            "format": "uint64"
+          },
+          "hard_limit": {
+            "type": "integer",
+            "description": "The hard limit defines the maximum number of concurrent requests that an\n instance assigned to the this service can handle.  The load balancer will\n never assign more requests to a single instance.  In case there are no\n other instances available, excess requests fail (i.e., they are blocked and\n not queued).",
+            "format": "uint64"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Service"
+            },
+            "description": "List of published network ports for this service and the destination port\n to which Unikraft Cloud will forward traffic to.  Additional handlers can\n be defined for each published port in order to define how the service will\n handle incoming connections and forward traffic from the Internet to your\n application.  For example, a service can be configured to terminate TLS\n connections, redirect HTTP traffic, or enable HTTP mode for load balancing."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Domain"
+            },
+            "description": "List of domains associated with the service.  Domains are used to access\n the service over the Internet."
+          },
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGroupInstance"
+            },
+            "description": "List of instances assigned to the service."
+          }
+        },
+        "description": "A service group on Unikraft Cloud is used to describe how your application\n exposes its functionality to the outside world.  Once defined, assigning an\n instance to the service will make it accessible from the Internet.\n\n An application, running as an instance, may expose one or more ports, e.g. it\n listens on port 80 because your application exposes a HTTP web service. This,\n along with a set of additional metadata defines how the \"service\" is\n configured and accessed.  For example, a service may be configured to use\n TLS, or be bound to a specific domain name.\n\n When an instance is assigned to a service group, it immediately becomes\n accessible over the Internet on the exposed public port, using the set DNS\n name, and is routed to the set destination port.\n\n Note: If you do not specify a DNS name when you create a service and you\n indicate that the application exposes some ports, Unikraft Cloud will\n generates a random DNS name for you.  Unikraft Cloud also supports custom\n domains like www.example.com and wildcard domains like *.example.com."
+      },
+      "ServiceGroupInstance": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance.  This is a unique identifier for the instance\n that is generated when the instance is created.  The UUID is used to\n reference the instance in API calls and can be used to identify the\n instance in all API calls that require an instance identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance.  This is a human-readable name that can be used\n to identify the instance.  The name must be unique within the context of\n your account.  If no name is specified, a random name is generated for\n you.  The name can also be used to identify the instance in API calls."
+          }
+        }
+      },
       "StartInstanceResponse": {
         "type": "object",
         "properties": {
@@ -2632,6 +3180,9 @@
     {
       "name": "InstanceService",
       "description": "The service provides mechanisms to interact with instances on Unikraft Cloud."
+    },
+    {
+      "name": "ServiceGroupService"
     }
   ]
 }

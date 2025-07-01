@@ -970,7 +970,7 @@
             "type": "array",
             "items": {
               "enum": [
-                "stop"
+                "delete_on_stop"
               ],
               "type": "string",
               "format": "enum"

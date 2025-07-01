@@ -29,6 +29,221 @@
     }
   ],
   "paths": {
+    "/v1/certificates": {
+      "get": {
+        "tags": [
+          "CertificateService"
+        ],
+        "description": "Get one or many certificates with their current status and configuration.\n It's possible to filter this list by name or UUID.",
+        "operationId": "GetCertificates",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the certificate in the response.  By\n default this is set to true, meaning that all information about the\n certificate will be included in the response.  If set to false, only the\n basic information about the certificate will be included, such as its name\n and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCertificatesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCertificatesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CertificateService"
+        ],
+        "description": "Upload a new certificate with the given configuration.",
+        "operationId": "CreateCertificate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCertificateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCertificateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CertificateService"
+        ],
+        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\n the certificate are no longer valid.",
+        "operationId": "DeleteCertificates",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteCertificatesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/certificates/{uuid}": {
+      "get": {
+        "tags": [
+          "CertificateService"
+        ],
+        "description": "Get a specified certificate by its UUID.",
+        "operationId": "GetCertificateByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCertificatesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CertificateService"
+        ],
+        "description": "Delete the specified certificate(s).  After this call the name of the\n certificate(s) are no longer valid.",
+        "operationId": "DeleteCertificateByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/images/digest/{digest}": {
       "get": {
         "tags": [
@@ -884,6 +1099,102 @@
   },
   "components": {
     "schemas": {
+      "Certificate": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the certificate.\n\n This is a unique identifier for the certificate that is generated when the\n certificate is created.  The UUID is used to reference the certificate in\n API calls and can be used to identify the certificate in all API calls that\n require an identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the certificate.\n\n This is a human-readable name that can be used to identify the certificate.\n The name must be unique within the context of your account.  The name can\n also be used to identify the certificate in API calls."
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The time the certificate was created.",
+            "format": "date-time"
+          },
+          "common_name": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "valid",
+              "error"
+            ],
+            "type": "string",
+            "format": "enum"
+          }
+        }
+      },
+      "CreateCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the certificate.\n\n This is a human-readable name that can be used to identify the certificate.\n The name must be unique within the context of your account.  If no name is\n specified, a random name is generated for you.  The name can also be used\n to identify the certificate in API calls."
+          },
+          "cn": {
+            "type": "string",
+            "description": "The common name (CN) of the certificate."
+          },
+          "chain": {
+            "type": "string",
+            "description": "The chain of the certificate."
+          },
+          "key": {
+            "type": "string",
+            "description": "The private key of the certificate."
+          }
+        },
+        "description": "The request message for creating/uploading a new certificate."
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateCertificateResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating of a certificate."
+      },
+      "CreateCertificateResponseData": {
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Certificate"
+            },
+            "description": "The certificate which was created by this request.\n\n Note: only one certificate can be specified in the request, so this\n will always contain a single entry."
+          }
+        }
+      },
       "CreateInstanceRequest": {
         "type": "object",
         "properties": {
@@ -1104,6 +1415,87 @@
           }
         }
       },
+      "DeleteCertificatesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the certificate to retrieve.\n Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the certificate to retrieve.\n Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the certificate(s) to delete."
+      },
+      "DeleteCertificatesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteCertificatesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for deleting of one or more certificate(s) given their\n UUID(s) or name(s)."
+      },
+      "DeleteCertificatesResponseData": {
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteCertificatesResponseDeletedCertificate"
+            },
+            "description": "The certificate(s) which were deleted by the request."
+          }
+        }
+      },
+      "DeleteCertificatesResponseDeletedCertificate": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "Indicates whether the delete operation was successful or not for this\n certificate.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the certificate which was deleted."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the certificate which was deleted."
+          }
+        },
+        "description": "Details of the certificate which was deleted by this request."
+      },
       "DeleteInstancesResponse": {
         "type": "object",
         "properties": {
@@ -1174,6 +1566,64 @@
           }
         },
         "description": "Details of the instance which was deleted by this request."
+      },
+      "GetCertificatesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the certificate to get.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the certificate to get.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the certificate(s) to get."
+      },
+      "GetCertificatesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetCertificatesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more certificate(s) given their\n UUID(s) or name(s)."
+      },
+      "GetCertificatesResponseData": {
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Certificate"
+            },
+            "description": "The certificate(s) which were retrieved by the request."
+          }
+        }
       },
       "GetImageResponse": {
         "type": "object",
@@ -2172,6 +2622,9 @@
     }
   ],
   "tags": [
+    {
+      "name": "CertificateService"
+    },
     {
       "name": "ImageService",
       "description": "The ImageService provides mechanisms to interact with images on Unikraft\n Cloud."

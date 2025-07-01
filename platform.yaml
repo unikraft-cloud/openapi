@@ -711,7 +711,7 @@ components:
                     type: array
                     items:
                         enum:
-                            - "delete_on_stop"
+                            - "stop"
                         type: string
                         format: enum
                     description: |-

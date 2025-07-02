@@ -26,9 +26,9 @@
         "operationId": "Signin",
         "parameters": [
           {
-            "name": "cli_version",
+            "name": "hostname",
             "in": "query",
-            "description": "The CLI version is the version of the Unikraft CLI that is making the\n request.",
+            "description": "The hostname is the name of the machine making the request.  This is\n mandatory as it consitutes a unique identifier for the machine.",
             "schema": {
               "type": "string"
             }
@@ -42,9 +42,73 @@
             }
           },
           {
-            "name": "hostname",
+            "name": "os_version",
             "in": "query",
-            "description": "The hostname is the name of the machine making the request.",
+            "description": "The version of the operating system of the machine making the request, if\n available.\n\n For Android, it's like \"10\", \"11\", \"12\", etc.  For iOS and macOS it's like\n \"15.6.1\" or \"12.4.0\".  For Windows it's like \"10.0.19044.1889\". For FreeBSD\n it's like \"12.3-STABLE\".  For Linux, this is simply the kernel version on\n Linux, like \"5.10.0-17-amd64\".",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "container",
+            "in": "query",
+            "description": "A best-effort whether the client is running in a container.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "distro",
+            "in": "query",
+            "description": "The OS distribution, if known.  E.g. \"debian\", \"ubuntu\", \"nixos\", ...",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "distro_version",
+            "in": "query",
+            "description": "The OS distribution version if known.  E.g. \"20.04\", ...",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "distro_codename",
+            "in": "query",
+            "description": "THe OS distribution codename if known.  E.g. \"jammy\", \"bullseye\", ...",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cli_version",
+            "in": "query",
+            "description": "The CLI version is the version of the Unikraft CLI that is making the\n request.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "goarch",
+            "in": "query",
+            "description": "If available, the GOARCH value (of the built binary).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "goos",
+            "in": "query",
+            "description": "If available, the GOOS value (of the built binary)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "go_version",
+            "in": "query",
+            "description": "if available, the Go version binary was built with.",
             "schema": {
               "type": "string"
             }
@@ -92,19 +156,33 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string"
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
           },
           "data": {
-            "$ref": "#/components/schemas/SigninResponseData"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SigninResponseData"
+              }
+            ],
+            "description": "The response data for this request."
           },
           "op_time_us": {
             "type": "integer",
-            "format": "int64"
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
           }
-        }
+        },
+        "description": "The response message for a sign-in request."
       },
       "SigninResponseData": {
         "type": "object",

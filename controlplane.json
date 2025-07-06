@@ -17,18 +17,18 @@
     }
   ],
   "paths": {
-    "/v1/auth/signin": {
+    "/v1/auth/check": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "description": "Signin initiates the sign-in process and returns an authorization URL.\n The user should be redirected to this URL to complete the sign-in.",
-        "operationId": "Signin",
+        "description": "CheckAuthorization is used to check the authorization status of a request.\n It streams responses back to the client, indicating whether the signin\n request is authorized or not.",
+        "operationId": "CheckAuthorization",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SigninRequest"
+                "$ref": "#/components/schemas/CheckAuthorizationRequest"
               }
             }
           },
@@ -40,7 +40,48 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SigninResponse"
+                  "$ref": "#/components/schemas/CheckAuthorizationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "RequestSignin initiates the sign-in process and returns an authorization\n URL.  The user should be redirected to this URL to complete the sign-in.",
+        "operationId": "RequestSignin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSigninRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSigninResponse"
                 }
               }
             }
@@ -61,6 +102,57 @@
   },
   "components": {
     "schemas": {
+      "CheckAuthorizationRequest": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "The request ID is a unique identifier for the request.  This is used to\n track the request in the system and should be provided by the client."
+          }
+        },
+        "description": "The request message for checking authorization given a request ID."
+      },
+      "CheckAuthorizationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CheckAuthorizationResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for checking authorization."
+      },
+      "CheckAuthorizationResponseData": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The authorization token which can be used to authenticate requests."
+          }
+        }
+      },
       "GoogleProtobufAny": {
         "type": "object",
         "properties": {
@@ -72,7 +164,7 @@
         "additionalProperties": true,
         "description": "Contains an arbitrary serialized message along with a @type that describes the type of the serialized message."
       },
-      "SigninRequest": {
+      "RequestSigninRequest": {
         "type": "object",
         "properties": {
           "hostname": {
@@ -122,7 +214,7 @@
         },
         "description": "The request message for a sign-in request."
       },
-      "SigninResponse": {
+      "RequestSigninResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -141,7 +233,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/SigninResponseData"
+                "$ref": "#/components/schemas/RequestSigninResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -154,11 +246,16 @@
         },
         "description": "The response message for a sign-in request."
       },
-      "SigninResponseData": {
+      "RequestSigninResponseData": {
         "type": "object",
         "properties": {
           "authorization_url": {
-            "type": "string"
+            "type": "string",
+            "description": "The full URL which can be used to remotely confirm the signin."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "A unique identifier for the request.  This can be used to track the\n request in the system."
           }
         }
       },

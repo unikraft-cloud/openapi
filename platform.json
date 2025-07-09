@@ -2020,25 +2020,44 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string"
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
           },
           "data": {
-            "$ref": "#/components/schemas/GetImageResponseData"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetImageResponseData"
+              }
+            ],
+            "description": "The response data for this request."
           },
           "op_time_us": {
             "type": "integer",
-            "format": "int64"
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
           }
-        }
+        },
+        "description": "The response message for retrieving a single image."
       },
       "GetImageResponseData": {
         "type": "object",
         "properties": {
           "image": {
-            "$ref": "#/components/schemas/Image"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "description": "The instance that was created in this request."
           }
         }
       },

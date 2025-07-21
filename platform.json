@@ -60,22 +60,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCertificatesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -99,22 +89,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateCertificateResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -141,22 +121,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteCertificatesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -182,22 +152,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCertificatesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -221,22 +181,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteCertificatesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -262,22 +212,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetImageResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -303,22 +243,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetImageResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -365,22 +295,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstancesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -404,22 +324,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -439,22 +349,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteInstancesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -506,22 +406,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstanceLogsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -555,22 +445,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstanceMetricsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -592,22 +472,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StartInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -655,22 +525,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StopInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -727,22 +587,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WaitInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -768,22 +618,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstancesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -807,22 +647,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteInstancesResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -866,22 +696,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstanceLogsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -907,22 +727,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetInstanceMetricsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -948,22 +758,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StartInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1006,22 +806,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StopInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1073,22 +863,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WaitInstanceResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1127,22 +907,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetServiceGroupsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1166,22 +936,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateServiceGroupResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1208,22 +968,12 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1249,22 +999,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetServiceGroupsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -1288,22 +1028,12 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "default": {
+            "description": "default",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
                 }
               }
             }
@@ -2392,17 +2122,6 @@
           }
         }
       },
-      "GoogleProtobufAny": {
-        "type": "object",
-        "properties": {
-          "@type": {
-            "type": "string",
-            "description": "The type of the serialized message."
-          }
-        },
-        "additionalProperties": true,
-        "description": "Contains an arbitrary serialized message along with a @type that describes the type of the serialized message."
-      },
       "Image": {
         "type": "object",
         "properties": {
@@ -2980,28 +2699,6 @@
             "description": "The previous state of the instance before it was deleted."
           }
         }
-      },
-      "Status": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string",
-            "description": "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client."
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoogleProtobufAny"
-            },
-            "description": "A list of messages that carry the error details.  There is a common set of message types for APIs to use."
-          }
-        },
-        "description": "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors)."
       },
       "StopInstanceResponse": {
         "type": "object",

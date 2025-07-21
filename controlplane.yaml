@@ -27,18 +27,12 @@ paths:
                             $ref: '#/components/schemas/CheckAuthorizationRequest'
                 required: true
             responses:
-                "200":
-                    description: OK
+                default:
+                    description: default
                     content:
                         text/event-stream:
                             schema:
                                 $ref: '#/components/schemas/CheckAuthorizationResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /v1/auth/signin:
         post:
             tags:
@@ -54,18 +48,12 @@ paths:
                             $ref: '#/components/schemas/RequestSigninRequest'
                 required: true
             responses:
-                "200":
-                    description: OK
+                default:
+                    description: default
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/RequestSigninResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         CheckAuthorizationRequest:
@@ -107,14 +95,6 @@ components:
                 token:
                     type: string
                     description: The authorization token which can be used to authenticate requests.
-        GoogleProtobufAny:
-            type: object
-            properties:
-                '@type':
-                    type: string
-                    description: The type of the serialized message.
-            additionalProperties: true
-            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
         RequestSigninRequest:
             type: object
             properties:
@@ -198,22 +178,6 @@ components:
                     description: |-
                         A unique identifier for the request.  This can be used to track the
                          request in the system.
-        Status:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
-                    format: int32
-                message:
-                    type: string
-                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
-                details:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/GoogleProtobufAny'
-                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
-            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
     securitySchemes:
         bearerToken:
             type: http

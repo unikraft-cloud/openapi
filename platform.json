@@ -1411,6 +1411,9 @@
         }
       },
       "CreateInstanceRequest": {
+        "required": [
+          "image"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1521,6 +1524,9 @@
         "description": "A reference to an existing certificate which can be used for the\n specified domain.  If unspecified, Unikraft Cloud will\n automatically generate a new certificate for the domain based on Let's\n Encrypt and seek to accomplish a DNS-01 challenge."
       },
       "CreateInstanceRequestDomain": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1560,6 +1566,9 @@
         "description": "The service group configuration when creating an instance.\n\n If no existing (persistent) service group is specified via its identifier,\n a new (ephemeral) service group can be created by specifying the services\n it should expose.  A service defines the configuration settings of an\n exposed port by the instance.  A service is a combination of a public port,\n an internal port, and a set of handlers that define how the service will\n handle incoming connections."
       },
       "CreateInstanceRequestVolume": {
+        "required": [
+          "at"
+        ],
         "type": "object",
         "properties": {
           "uuid": {

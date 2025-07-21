@@ -1010,6 +1010,8 @@ components:
                          Note: only one certificate can be specified in the request, so this
                          will always contain a single entry.
         CreateInstanceRequest:
+            required:
+                - image
             type: object
             properties:
                 name:
@@ -1120,6 +1122,8 @@ components:
                  automatically generate a new certificate for the domain based on Let's
                  Encrypt and seek to accomplish a DNS-01 challenge.
         CreateInstanceRequestDomain:
+            required:
+                - name
             type: object
             properties:
                 name:
@@ -1180,6 +1184,8 @@ components:
                  an internal port, and a set of handlers that define how the service will
                  handle incoming connections.
         CreateInstanceRequestVolume:
+            required:
+                - at
             type: object
             properties:
                 uuid:

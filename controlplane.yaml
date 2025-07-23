@@ -17,8 +17,8 @@ paths:
                 - Auth
             description: |-
                 CheckAuthorization is used to check the authorization status of a request.
-                 It streams responses back to the client, indicating whether the signin
-                 request is authorized or not.
+                It streams responses back to the client, indicating whether the signin
+                request is authorized or not.
             operationId: CheckAuthorization
             requestBody:
                 content:
@@ -39,7 +39,7 @@ paths:
                 - Auth
             description: |-
                 RequestSignin initiates the sign-in process and returns an authorization
-                 URL.  The user should be redirected to this URL to complete the sign-in.
+                URL.  The user should be redirected to this URL to complete the sign-in.
             operationId: RequestSignin
             requestBody:
                 content:
@@ -63,7 +63,7 @@ components:
                     type: string
                     description: |-
                         The request ID is a unique identifier for the request.  This is used to
-                         track the request in the system and should be provided by the client.
+                        track the request in the system and should be provided by the client.
             description: The request message for checking authorization given a request ID.
         CheckAuthorizationResponse:
             type: object
@@ -86,7 +86,7 @@ components:
                     type: integer
                     description: |-
                         The operation time in microseconds.  This is the time it took to process
-                         the request and generate the response.
+                        the request and generate the response.
                     format: uint64
             description: The response message for checking authorization.
         CheckAuthorizationResponseData:
@@ -102,7 +102,7 @@ components:
                     type: string
                     description: |-
                         The hostname is the name of the machine making the request.  This is
-                         mandatory as it consitutes a unique identifier for the machine.
+                        mandatory as it consitutes a unique identifier for the machine.
                 os:
                     type: string
                     description: The operating system of the machine making the request.
@@ -110,12 +110,12 @@ components:
                     type: string
                     description: |-
                         The version of the operating system of the machine making the request, if
-                         available.
+                        available.
 
-                         For Android, it's like "10", "11", "12", etc.  For iOS and macOS it's like
-                         "15.6.1" or "12.4.0".  For Windows it's like "10.0.19044.1889". For FreeBSD
-                         it's like "12.3-STABLE".  For Linux, this is simply the kernel version on
-                         Linux, like "5.10.0-17-amd64".
+                        For Android, it's like "10", "11", "12", etc.  For iOS and macOS it's like
+                        "15.6.1" or "12.4.0".  For Windows it's like "10.0.19044.1889". For FreeBSD
+                        it's like "12.3-STABLE".  For Linux, this is simply the kernel version on
+                        Linux, like "5.10.0-17-amd64".
                 container:
                     type: boolean
                     description: A best-effort whether the client is running in a container.
@@ -132,7 +132,7 @@ components:
                     type: string
                     description: |-
                         The CLI version is the version of the Unikraft CLI that is making the
-                         request.
+                        request.
                 goarch:
                     type: string
                     description: If available, the GOARCH value (of the built binary).
@@ -164,7 +164,7 @@ components:
                     type: integer
                     description: |-
                         The operation time in microseconds.  This is the time it took to process
-                         the request and generate the response.
+                        the request and generate the response.
                     format: uint64
             description: The response message for a sign-in request.
         RequestSigninResponseData:
@@ -177,7 +177,7 @@ components:
                     type: string
                     description: |-
                         A unique identifier for the request.  This can be used to track the
-                         request in the system.
+                        request in the system.
     securitySchemes:
         bearerToken:
             type: http

@@ -34,13 +34,13 @@
         "tags": [
           "Certificates"
         ],
-        "description": "Get one or many certificates with their current status and configuration.\n It's possible to filter this list by name or UUID.",
+        "description": "Get one or many certificates with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
         "operationId": "GetCertificates",
         "parameters": [
           {
             "name": "details",
             "in": "query",
-            "description": "Whether to include details about the certificate in the response.  By\n default this is set to true, meaning that all information about the\n certificate will be included in the response.  If set to false, only the\n basic information about the certificate will be included, such as its name\n and UUID.",
+            "description": "Whether to include details about the certificate in the response.  By\ndefault this is set to true, meaning that all information about the\ncertificate will be included in the response.  If set to false, only the\nbasic information about the certificate will be included, such as its name\nand UUID.",
             "schema": {
               "type": "boolean"
             }
@@ -105,7 +105,7 @@
         "tags": [
           "Certificates"
         ],
-        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\n the certificate are no longer valid.",
+        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
         "operationId": "DeleteCertificates",
         "requestBody": {
           "content": {
@@ -168,7 +168,7 @@
         "tags": [
           "Certificates"
         ],
-        "description": "Delete the specified certificate(s).  After this call the name of the\n certificate(s) are no longer valid.",
+        "description": "Delete the specified certificate(s).  After this call the name of the\ncertificate(s) are no longer valid.",
         "operationId": "DeleteCertificateByUUID",
         "parameters": [
           {
@@ -261,13 +261,13 @@
         "tags": [
           "Instances"
         ],
-        "description": "Get one or many instances with their current status and configuration.\n It's possible to filter this list by name or UUID.",
+        "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
         "operationId": "GetInstances",
         "parameters": [
           {
             "name": "details",
             "in": "query",
-            "description": "Whether to include details about the instance in the response.  By default\n this is set to true, meaning that all information about the instance will\n be included in the response.  If set to false, only the basic information\n about the instance will be included, such as its name and UUID.",
+            "description": "Whether to include details about the instance in the response.  By default\nthis is set to true, meaning that all information about the instance will\nbe included in the response.  If set to false, only the basic information\nabout the instance will be included, such as its name and UUID.",
             "schema": {
               "type": "boolean"
             }
@@ -275,7 +275,7 @@
           {
             "name": "metrics",
             "in": "query",
-            "description": "Whether to include metrics about the instance in the response.  By default\n this is set to false, meaning that no metrics will be included in the\n response.",
+            "description": "Whether to include metrics about the instance in the response.  By default\nthis is set to false, meaning that no metrics will be included in the\nresponse.",
             "schema": {
               "type": "boolean"
             }
@@ -340,7 +340,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Delete the specified instance(s).  After this call the name of the\n instances are no longer valid.  If the instances are currently running,\n they are force stopped.",
+        "description": "Delete the specified instance(s).  After this call the name of the\ninstances are no longer valid.  If the instances are currently running,\nthey are force stopped.",
         "operationId": "DeleteInstances",
         "requestBody": {
           "content": {
@@ -380,7 +380,7 @@
           {
             "name": "uuid",
             "in": "query",
-            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\n name.",
+            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\nname.",
             "schema": {
               "type": "string"
             }
@@ -388,7 +388,7 @@
           {
             "name": "name",
             "in": "query",
-            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\n UUID.",
+            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\nUUID.",
             "schema": {
               "type": "string"
             }
@@ -396,7 +396,7 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "The byte offset of the log output to receive.  A negative sign makes the\n offset relative to the end of the log.",
+            "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
             "schema": {
               "type": "integer",
               "format": "uint64"
@@ -437,7 +437,7 @@
           {
             "name": "uuid",
             "in": "query",
-            "description": "The UUID of the instance to retrieve metrics for.  Mutually exclusive\n with name.",
+            "description": "The UUID of the instance to retrieve metrics for.  Mutually exclusive\nwith name.",
             "schema": {
               "type": "string"
             }
@@ -445,7 +445,7 @@
           {
             "name": "name",
             "in": "query",
-            "description": "The name of the instance to retrieve metrics for.  Mutually exclusive\n with UUID.",
+            "description": "The name of the instance to retrieve metrics for.  Mutually exclusive\nwith UUID.",
             "schema": {
               "type": "string"
             }
@@ -470,7 +470,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Starts previously stopped instances by their UUID(s) or name(s) or does\n nothing if the instance is already running.",
+        "description": "Starts previously stopped instances by their UUID(s) or name(s) or does\nnothing if the instance is already running.",
         "operationId": "StartInstances",
         "requestBody": {
           "content": {
@@ -504,7 +504,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Stops one or more running instance by their UUID(s) or name(s) or does\n nothing if the instance is already stopped.",
+        "description": "Stops one or more running instance by their UUID(s) or name(s) or does\nnothing if the instance is already stopped.",
         "operationId": "StopInstances",
         "parameters": [
           {
@@ -518,7 +518,7 @@
           {
             "name": "drain_timeout_ms",
             "in": "query",
-            "description": "Timeout for draining connections in milliseconds.  The instance does not\n receive new connections in the draining phase.  The instance is stopped\n when the last connection has been closed or the timeout expired.  The\n maximum timeout may vary.  Use -1 for the largest possible value.\n\n Note: This endpoint does not block.  Use the wait endpoint for the\n instance to reach the stopped state.",
+            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
             "schema": {
               "type": "integer",
               "format": "uint64"
@@ -557,7 +557,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Waits for an instance to reach a certain state by its UUID or name.\n\n If the instance is already in the desired state, the request will return\n immediately.  If the instance is not in the desired state, the request will\n block until the instance reaches the desired state or the timeout is\n reached.  If the timeout is reached, the request will fail with an error.\n If the timeout is -1, the request will block indefinitely until the\n instance reaches the desired state.",
+        "description": "Waits for an instance to reach a certain state by its UUID or name.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
         "operationId": "WaitInstances",
         "parameters": [
           {
@@ -580,7 +580,7 @@
           {
             "name": "timeout_ms",
             "in": "query",
-            "description": "Timeout in milliseconds to wait for the instance to reach the desired\n state.  If the timeout is reached, the request will fail with an error.\n A value of -1 means to wait indefinitely until the instance reaches the\n desired state.",
+            "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -648,7 +648,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Delete a specified instance by its UUID.  After this call the UUID of the\n instances are no longer valid.  If the instances are currently running,\n they are force stopped.",
+        "description": "Delete a specified instance by its UUID.  After this call the UUID of the\ninstances are no longer valid.  If the instances are currently running,\nthey are force stopped.",
         "operationId": "DeleteInstanceByUUID",
         "parameters": [
           {
@@ -693,7 +693,7 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "The byte offset of the log output to receive.  A negative sign makes the\n offset relative to the end of the log.",
+            "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
             "schema": {
               "type": "integer",
               "format": "uint64"
@@ -759,7 +759,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Starts previously stopped instance by its UUID or does nothing if the\n instance is already running.",
+        "description": "Starts previously stopped instance by its UUID or does nothing if the\ninstance is already running.",
         "operationId": "StartInstanceByUUID",
         "parameters": [
           {
@@ -790,7 +790,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Stops a running instance by its UUID or does nothing if the instance is\n already stopped.",
+        "description": "Stops a running instance by its UUID or does nothing if the instance is\nalready stopped.",
         "operationId": "StopInstanceByUUID",
         "parameters": [
           {
@@ -812,7 +812,7 @@
           {
             "name": "drain_timeout_ms",
             "in": "query",
-            "description": "Timeout for draining connections in milliseconds.  The instance does not\n receive new connections in the draining phase.  The instance is stopped\n when the last connection has been closed or the timeout expired.  The\n maximum timeout may vary.  Use -1 for the largest possible value.\n\n Note: This endpoint does not block.  Use the wait endpoint for the instance\n to reach the stopped state.",
+            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the instance\nto reach the stopped state.",
             "schema": {
               "type": "integer",
               "format": "uint64"
@@ -838,7 +838,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Waits for an instance to reach a certain state by its UUID.\n\n If the instance is already in the desired state, the request will return\n immediately.  If the instance is not in the desired state, the request will\n block until the instance reaches the desired state or the timeout is\n reached.  If the timeout is reached, the request will fail with an error.\n If the timeout is -1, the request will block indefinitely until the\n instance reaches the desired state.",
+        "description": "Waits for an instance to reach a certain state by its UUID.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
         "operationId": "WaitInstanceByUUID",
         "parameters": [
           {
@@ -869,7 +869,7 @@
           {
             "name": "timeout_ms",
             "in": "query",
-            "description": "Timeout in milliseconds to wait for the instance to reach the desired\n state.  If the timeout is reached, the request will fail with an error.\n A value of -1 means to wait indefinitely until the instance reaches the\n desired state.",
+            "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -895,7 +895,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "GetAutoscaleConfigurations returns the current states and configurations of\n autoscale configurations.",
+        "description": "GetAutoscaleConfigurations returns the current states and configurations of\nautoscale configurations.",
         "operationId": "GetAutoscaleConfigurations",
         "requestBody": {
           "content": {
@@ -927,7 +927,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "CreateAutoscaleConfiguration creates an autoscale configuration for the\n specified service.",
+        "description": "CreateAutoscaleConfiguration creates an autoscale configuration for the\nspecified service.",
         "operationId": "CreateAutoscaleConfiguration",
         "requestBody": {
           "content": {
@@ -990,7 +990,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "GetAutoscaleConfigurationPolicies returns the current state and\n configuration of an autoscale policy.",
+        "description": "GetAutoscaleConfigurationPolicies returns the current state and\nconfiguration of an autoscale policy.",
         "operationId": "GetAutoscaleConfigurationPolicies",
         "parameters": [
           {
@@ -1029,7 +1029,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an\n autoscale configuration.",
+        "description": "CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an\nautoscale configuration.",
         "operationId": "CreateAutoscaleConfigurationPolicy",
         "parameters": [
           {
@@ -1109,7 +1109,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "GetAutoscaleConfigurationPolicyByName returns the current state and\n configuration of an autoscale policy by it's name.",
+        "description": "GetAutoscaleConfigurationPolicyByName returns the current state and\nconfiguration of an autoscale policy by it's name.",
         "operationId": "GetAutoscaleConfigurationPolicyByName",
         "parameters": [
           {
@@ -1146,7 +1146,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by\n name.",
+        "description": "DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by\nname.",
         "operationId": "DeleteAutoscaleConfigurationPolicyByName",
         "parameters": [
           {
@@ -1185,7 +1185,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "GetAutoscaleConfigurationsByServiceGroupUUID returns the current states\n and configurations of autoscale configurations by service UUID.",
+        "description": "GetAutoscaleConfigurationsByServiceGroupUUID returns the current states\nand configurations of autoscale configurations by service UUID.",
         "operationId": "GetAutoscaleConfigurationsByServiceGroupUUID",
         "parameters": [
           {
@@ -1214,7 +1214,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale\n configuration for the specified service by UUID.",
+        "description": "CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale\nconfiguration for the specified service by UUID.",
         "operationId": "CreateAutoscaleConfigurationsByServiceGroupUUID",
         "parameters": [
           {
@@ -1243,7 +1243,7 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale\n configurations by service UUID.",
+        "description": "DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale\nconfigurations by service UUID.",
         "operationId": "DeleteAutoscaleConfigurationsByServiceGroupUUID",
         "parameters": [
           {
@@ -1274,13 +1274,13 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Get one or many service groups with their current status and configuration.\n It's possible to filter this list by name or UUID.",
+        "description": "Get one or many service groups with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
         "operationId": "GetServiceGroups",
         "parameters": [
           {
             "name": "details",
             "in": "query",
-            "description": "Whether to include details about the service group in the response.  By\n default this is set to true, meaning that all information about the service\n group will be included in the response.  If set to false, only the basic\n information about the service group will be included, such as its name and\n UUID.",
+            "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
             "schema": {
               "type": "boolean"
             }
@@ -1316,7 +1316,7 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Create a new service with the given configuration.\n\n Note that the service properties like published ports can only be defined\n during creation.  They cannot be changed later.  Each port in a service can\n specify a list of handlers that determine how traffic arriving at the port\n is handled. See Connection Handlers for a complete overview.",
+        "description": "Create a new service with the given configuration.\n\nNote that the service properties like published ports can only be defined\nduring creation.  They cannot be changed later.  Each port in a service can\nspecify a list of handlers that determine how traffic arriving at the port\nis handled. See Connection Handlers for a complete overview.",
         "operationId": "CreateServiceGroup",
         "requestBody": {
           "content": {
@@ -1345,7 +1345,7 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Delete a specified service group by its UUID.  After this call the UUID of\n the service group are no longer valid.",
+        "description": "Delete a specified service group by its UUID.  After this call the UUID of\nthe service group are no longer valid.",
         "operationId": "DeleteServiceGroups",
         "requestBody": {
           "content": {
@@ -1408,7 +1408,7 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Delete the specified service group(s).  After this call the name of the\n service group(s) are no longer valid.",
+        "description": "Delete the specified service group(s).  After this call the name of the\nservice group(s) are no longer valid.",
         "operationId": "DeleteServiceGroupByUUID",
         "parameters": [
           {
@@ -1439,7 +1439,7 @@
         "tags": [
           "Users"
         ],
-        "description": "Lists quota usage and limits of your user account.\n Limits are hard limits that cannot be exceeded.",
+        "description": "Lists quota usage and limits of your user account.\nLimits are hard limits that cannot be exceeded.",
         "operationId": "GetUser",
         "responses": {
           "default": {
@@ -1460,7 +1460,7 @@
         "tags": [
           "Users"
         ],
-        "description": "Lists quota usage and limits of your user account by UUID.\n Limits are hard limits that cannot be exceeded.",
+        "description": "Lists quota usage and limits of your user account by UUID.\nLimits are hard limits that cannot be exceeded.",
         "operationId": "GetUserByUUID",
         "parameters": [
           {
@@ -1491,13 +1491,13 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Returns the current status and the configuration of a particular volume if\n name is specified. Otherwise, returns the current status and configuration\n of all volumes.",
+        "description": "Returns the current status and the configuration of a particular volume if\nname is specified. Otherwise, returns the current status and configuration\nof all volumes.",
         "operationId": "GetVolumes",
         "parameters": [
           {
             "name": "details",
             "in": "query",
-            "description": "Whether to include details about the volume in the response.  By\n default this is set to true, meaning that all information about the\n volume will be included in the response.  If set to false, only the\n basic information about the volume will be included, such as its name\n and UUID.",
+            "description": "Whether to include details about the volume in the response.  By\ndefault this is set to true, meaning that all information about the\nvolume will be included in the response.  If set to false, only the\nbasic information about the volume will be included, such as its name\nand UUID.",
             "schema": {
               "type": "boolean"
             }
@@ -1533,7 +1533,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Creates one or more volumes with the given configuration.\n The volumes are automatically initialized with an empty file system.\n After initialization the volumes are in the available state and can be\n attached to an instance with the `PUT /v1/volumes/attach` endpoint.\n Note that, the size of a volume cannot be changed after creation.",
+        "description": "Creates one or more volumes with the given configuration.\nThe volumes are automatically initialized with an empty file system.\nAfter initialization the volumes are in the available state and can be\nattached to an instance with the `PUT /v1/volumes/attach` endpoint.\nNote that, the size of a volume cannot be changed after creation.",
         "operationId": "CreateVolume",
         "requestBody": {
           "content": {
@@ -1562,7 +1562,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Deletes the specified volume by its name or UUID. Fails if the volume is\n still attached to an instance. After this call the IDs associated with\n the volume are no longer valid.",
+        "description": "Deletes the specified volume by its name or UUID. Fails if the volume is\nstill attached to an instance. After this call the IDs associated with\nthe volume are no longer valid.",
         "operationId": "DeleteVolume",
         "requestBody": {
           "content": {
@@ -1596,7 +1596,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Attaches a volume to an instance so that the volume is mounted when the\n instance starts. The volume needs to be in available state and the instance\n must in stopped state. Currently, each instance can have only one volume\n attached at most.",
+        "description": "Attaches a volume to an instance so that the volume is mounted when the\ninstance starts. The volume needs to be in available state and the instance\nmust in stopped state. Currently, each instance can have only one volume\nattached at most.",
         "operationId": "AttachVolumes",
         "parameters": [
           {
@@ -1618,7 +1618,7 @@
           {
             "name": "at",
             "in": "query",
-            "description": "Path of the mountpoint.\n\n The path must be absolute, not contain `.` and `..` components, and not\n contain colons (`:`). The path must point to an empty directory. If the\n directory does not exist, it is created.",
+            "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
             "schema": {
               "type": "string"
             }
@@ -1664,7 +1664,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Detaches a volume from instances. If no particular instance is specified\n the volume is detached from all instances. The instances from which to\n detach must not have the volume mounted. The API returns an error for each\n instance from which it was unable to detach the volume. If the volume has\n been created together with an instance, detaching the volume will make it\n persistent (i.e., it survives the deletion of the instance).",
+        "description": "Detaches a volume from instances. If no particular instance is specified\nthe volume is detached from all instances. The instances from which to\ndetach must not have the volume mounted. The API returns an error for each\ninstance from which it was unable to detach the volume. If the volume has\nbeen created together with an instance, detaching the volume will make it\npersistent (i.e., it survives the deletion of the instance).",
         "operationId": "DetachVolumes",
         "parameters": [
           {
@@ -1716,7 +1716,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Deletes the specified volume by its UUID. Fails if the volume is still\n attached to an instance. After this call the IDs associated with the\n volume are no longer valid.",
+        "description": "Deletes the specified volume by its UUID. Fails if the volume is still\nattached to an instance. After this call the IDs associated with the\nvolume are no longer valid.",
         "operationId": "DeleteVolumeByUUID",
         "parameters": [
           {
@@ -1747,7 +1747,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Attaches a volume by UUID to an instance so that the volume is mounted when\n the instance starts. The volume needs to be in available state and the\n instance must in stopped state. Currently, each instance can have only one\n volume attached at most.",
+        "description": "Attaches a volume by UUID to an instance so that the volume is mounted when\nthe instance starts. The volume needs to be in available state and the\ninstance must in stopped state. Currently, each instance can have only one\nvolume attached at most.",
         "operationId": "AttachVolumeByUUID",
         "parameters": [
           {
@@ -1778,7 +1778,7 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Detaches a volume by UUID from instances. If no particular instance is\n specified the volume is detached from all instances. The instances from\n which to detach must not have the volume mounted. The API returns an error\n for each instance from which it was unable to detach the volume. If the\n volume has been created together with an instance, detaching the volume\n will make it persistent (i.e., it survives the deletion of the instance).",
+        "description": "Detaches a volume by UUID from instances. If no particular instance is\nspecified the volume is detached from all instances. The instances from\nwhich to detach must not have the volume mounted. The API returns an error\nfor each instance from which it was unable to detach the volume. If the\nvolume has been created together with an instance, detaching the volume\nwill make it persistent (i.e., it survives the deletion of the instance).",
         "operationId": "DetachVolumeByUUID",
         "parameters": [
           {
@@ -1809,49 +1809,80 @@
     "schemas": {
       "AttachVolumesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the volume to attach.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the volume to attach.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the volume to attach.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the volume to attach.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the volume(s) to attach."
       },
       "AttachVolumesResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AttachVolumesResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AttachVolumesResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The response message for attaching one or more volume(s) given their\n UUID(s) or name(s)."
+        ],
+        "description": "The response message for attaching one or more volume(s) given their\nUUID(s) or name(s)."
       },
       "AttachVolumesResponseAttachedVolume": {
         "type": "object",
@@ -1921,10 +1952,10 @@
             "items": {
               "$ref": "#/components/schemas/AutoscalePolicyStep"
             },
-            "description": "The steps for the step policy.\n Each step defines an adjustment value and optional bounds."
+            "description": "The steps for the step policy.\nEach step defines an adjustment value and optional bounds."
           }
         },
-        "description": "AutoscalePolicy defines the autoscale policy for a service.\n Right now it contains fields from both the `ondemand` and `step` policies.\n They are marked both as optional, so only one of them should be set at a\n time. This is a current limitation of the API design."
+        "description": "AutoscalePolicy defines the autoscale policy for a service.\nRight now it contains fields from both the `ondemand` and `step` policies.\nThey are marked both as optional, so only one of them should be set at a\ntime. This is a current limitation of the API design."
       },
       "AutoscalePolicyStep": {
         "type": "object",
@@ -1951,11 +1982,11 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the certificate.\n\n This is a unique identifier for the certificate that is generated when the\n certificate is created.  The UUID is used to reference the certificate in\n API calls and can be used to identify the certificate in all API calls that\n require an identifier."
+            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated when the\ncertificate is created.  The UUID is used to reference the certificate in\nAPI calls and can be used to identify the certificate in all API calls that\nrequire an identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the certificate.\n\n This is a human-readable name that can be used to identify the certificate.\n The name must be unique within the context of your account.  The name can\n also be used to identify the certificate in API calls."
+            "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the certificate in API calls."
           },
           "created_at": {
             "type": "string",
@@ -1999,34 +2030,49 @@
       },
       "CreateAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "CreateAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -2067,11 +2113,11 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service to create a configuration for.\n Mutually exclusive with name."
+            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name."
           },
           "name": {
             "type": "string",
-            "description": "The name of the service to create a configuration for.\n Mutually exclusive with UUID."
+            "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
           },
           "min_size": {
             "type": "integer",
@@ -2113,55 +2159,86 @@
       },
       "CreateAutoscaleConfigurationRequestInstanceCreateArgs": {
         "type": "object",
-        "properties": {
-          "roms": {
-            "allOf": [
+        "allOf": [
+          {
+            "oneOf": [
               {
-                "$ref": "#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms"
-              }
-            ],
-            "description": "The ROM to use for the autoscale configuration."
-          },
-          "template": {
-            "allOf": [
+                "title": "roms",
+                "type": "object",
+                "properties": {
+                  "roms": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms"
+                      }
+                    ],
+                    "description": "The ROM to use for the autoscale configuration."
+                  }
+                }
+              },
               {
-                "$ref": "#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest"
+                "title": "template",
+                "type": "object",
+                "properties": {
+                  "template": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest"
+                      }
+                    ],
+                    "description": "The template to use for the autoscale configuration."
+                  }
+                }
               }
-            ],
-            "description": "The template to use for the autoscale configuration."
+            ]
           }
-        }
+        ]
       },
       "CreateAutoscaleConfigurationResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The response to a CreateAutoscaleConfigurationRequest."
       },
       "CreateAutoscaleConfigurationResponseConfigurationsResponse": {
@@ -2200,24 +2277,39 @@
       },
       "CreateCertificateRequest": {
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the certificate.\n\n This is a human-readable name that can be used to identify the certificate.\n The name must be unique within the context of your account.  If no name is\n specified, a random name is generated for you.  The name can also be used\n to identify the certificate in API calls."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "cn": {
+                "type": "string",
+                "description": "The common name (CN) of the certificate."
+              },
+              "chain": {
+                "type": "string",
+                "description": "The chain of the certificate."
+              },
+              "key": {
+                "type": "string",
+                "description": "The private key of the certificate."
+              }
+            }
           },
-          "cn": {
-            "type": "string",
-            "description": "The common name (CN) of the certificate."
-          },
-          "chain": {
-            "type": "string",
-            "description": "The chain of the certificate."
-          },
-          "key": {
-            "type": "string",
-            "description": "The private key of the certificate."
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The request message for creating/uploading a new certificate."
       },
       "CreateCertificateResponse": {
@@ -2246,7 +2338,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -2260,7 +2352,7 @@
             "items": {
               "$ref": "#/components/schemas/Certificate"
             },
-            "description": "The certificate which was created by this request.\n\n Note: only one certificate can be specified in the request, so this\n will always contain a single entry."
+            "description": "The certificate which was created by this request.\n\nNote: only one certificate can be specified in the request, so this\nwill always contain a single entry."
           }
         }
       },
@@ -2272,7 +2364,7 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "(Optional).  The name of the instance.\n\n If not provided, a random name will be generated. The name must be unique."
+            "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated. The name must be unique."
           },
           "image": {
             "type": "string",
@@ -2303,14 +2395,14 @@
                 "$ref": "#/components/schemas/CreateInstanceRequestServiceGroup"
               }
             ],
-            "description": "(Optional).  The service group configuration when creating an instance.\n\n When creating an instance, either a previously created (persistent) service\n group can be referenced (either through its name or UUID), or a new\n (ephemeral) service group can be created for the instance by specifying the\n list of services it should expose and optionally the domains it should use."
+            "description": "(Optional).  The service group configuration when creating an instance.\n\nWhen creating an instance, either a previously created (persistent) service\ngroup can be referenced (either through its name or UUID), or a new\n(ephemeral) service group can be created for the instance by specifying the\nlist of services it should expose and optionally the domains it should use."
           },
           "volumes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CreateInstanceRequestVolume"
             },
-            "description": "Volumes to attach to the instance.\n\n This list can contain both existing and new volumes to create as part of\n the instance creation.  Existing volumes can be referenced by their name or\n UUID.  New volumes can be created by specifying a name, size in MiB, and\n mount point in the instance.  The mount point is the directory in the\n instance where the volume will be mounted."
+            "description": "Volumes to attach to the instance.\n\nThis list can contain both existing and new volumes to create as part of\nthe instance creation.  Existing volumes can be referenced by their name or\nUUID.  New volumes can be created by specifying a name, size in MiB, and\nmount point in the instance.  The mount point is the directory in the\ninstance where the volume will be mounted."
           },
           "autostart": {
             "type": "boolean",
@@ -2328,7 +2420,7 @@
               "on_failure"
             ],
             "type": "string",
-            "description": "Restart policy for the instance.  This defines how the instance should\n behave when it stops or crashes.",
+            "description": "Restart policy for the instance.  This defines how the instance should\nbehave when it stops or crashes.",
             "format": "enum"
           },
           "scale_to_zero": {
@@ -2346,7 +2438,7 @@
           },
           "wait_timeout_ms": {
             "type": "integer",
-            "description": "Timeout to wait for all new instances to reach running state in\n milliseconds.  If you autostart your new instance, you can wait for it to\n finish starting with a blocking API call if you specify a wait timeout\n greater than zero.  No wait performed for a value of 0.",
+            "description": "Timeout to wait for all new instances to reach running state in\nmilliseconds.  If you autostart your new instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait timeout\ngreater than zero.  No wait performed for a value of 0.",
             "format": "int64"
           },
           "features": {
@@ -2358,66 +2450,118 @@
               "type": "string",
               "format": "enum"
             },
-            "description": "Features to enable for the instance.  Features are specific\n configurations or capabilities that can be enabled for the instance."
+            "description": "Features to enable for the instance.  Features are specific\nconfigurations or capabilities that can be enabled for the instance."
           }
         },
         "description": "The request message for creating a new instance."
       },
       "CreateInstanceRequestCertificate": {
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "(Optional).  The name of the existing certificate.  Mutually\n exclusive with UUID."
-          },
-          "uuid": {
-            "type": "string",
-            "description": "(Optional).  The UUID for the existing certificate.  Mutually\n exclusive with name."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "(Optional).  The name of the existing certificate.  Mutually\nexclusive with UUID."
+                  }
+                }
+              },
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "(Optional).  The UUID for the existing certificate.  Mutually\nexclusive with name."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "A reference to an existing certificate which can be used for the\n specified domain.  If unspecified, Unikraft Cloud will\n automatically generate a new certificate for the domain based on Let's\n Encrypt and seek to accomplish a DNS-01 challenge."
+        ],
+        "description": "A reference to an existing certificate which can be used for the\nspecified domain.  If unspecified, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
       },
       "CreateInstanceRequestDomain": {
         "required": [
           "name"
         ],
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Publicly accessible domain name.\n\n If this name ends in a period `.` it must be a valid Full Qualified\n Domain Name (FQDN), e.g. `example.com.`; otherwise it will become a\n subdomain of the target metro, e.g. `example` becomes\n `example.fra0.unikraft.app`."
-          },
-          "certificate": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInstanceRequestCertificate"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), e.g. `example.com.`; otherwise it will become a\nsubdomain of the target metro, e.g. `example` becomes\n`example.fra0.unikraft.app`."
               }
-            ],
-            "description": "Use an existing certificate for the domain.  If this field is specified,\n the domain must be associated with a valid certificate."
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "certificate",
+                "type": "object",
+                "properties": {
+                  "certificate": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CreateInstanceRequestCertificate"
+                      }
+                    ],
+                    "description": "Use an existing certificate for the domain.  If this field is specified,\nthe domain must be associated with a valid certificate."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The domain configuration for the service group.\n\n A domain defines a publicly accessible domain name for the instance.  If\n the domain name ends with a period `.`, it must be a valid Fully Qualified\n Domain Name (FQDN), otherwise it will become a subdomain of the target\n metro.  The domain can be associated with an existing certificate by\n specifying the certificate's name or UUID.  If no certificate is specified\n and a FQDN is provided, Unikraft Cloud will automatically generate a new\n certificate for the domain based on Let's Encrypt and seek to accomplish a\n DNS-01 challenge."
+        ],
+        "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge."
       },
       "CreateInstanceRequestServiceGroup": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "(Optional).  Reference an existing (persistent) service group by its\n UUID.  Mutually exclusive with name."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "domains": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateInstanceRequestDomain"
+                },
+                "description": "Similarly, if no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
+              }
+            }
           },
-          "name": {
-            "type": "string",
-            "description": "(Optional).  Reference an existing (persistent) service group by its\n name.  Mutually exclusive with UUID."
-          },
-          "domains": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateInstanceRequestDomain"
-            },
-            "description": "Similarly, if no existing (persistent) service group is specified via its\n identifier, a new (ephemeral) service group can be created.  In addition\n to the services it must expose, you can specify which domains it should\n use too."
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The service group configuration when creating an instance.\n\n If no existing (persistent) service group is specified via its identifier,\n a new (ephemeral) service group can be created by specifying the services\n it should expose.  A service defines the configuration settings of an\n exposed port by the instance.  A service is a combination of a public port,\n an internal port, and a set of handlers that define how the service will\n handle incoming connections."
+        ],
+        "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections."
       },
       "CreateInstanceRequestVolume": {
         "required": [
@@ -2427,15 +2571,15 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of an existing volume.\n\n If this is the only specified field, then it will look up an existing\n volume by this UUID."
+            "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID."
           },
           "name": {
             "type": "string",
-            "description": "The name of the volume.\n\n If this is the only specified field, then it will look up an existing\n volume by this name.  If the volume does not exist, the request will\n fail.  If a new volume is intended to be created, then this field must be\n specified along with the size in MiB and the mount point in the instance."
+            "description": "The name of the volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this name.  If the volume does not exist, the request will\nfail.  If a new volume is intended to be created, then this field must be\nspecified along with the size in MiB and the mount point in the instance."
           },
           "size_mb": {
             "type": "integer",
-            "description": "The size of the volume when creating a new volume.\n\n When creating a new volume as part of the instance create request,\n specify the size of the volume in MiB.",
+            "description": "The size of the volume when creating a new volume.\n\nWhen creating a new volume as part of the instance create request,\nspecify the size of the volume in MiB.",
             "format": "int64"
           },
           "at": {
@@ -2444,7 +2588,7 @@
           },
           "read_only": {
             "type": "boolean",
-            "description": "Whether the volume is read-only.\n\n If this field is set to true, the volume will be mounted as read-only in\n the instance.  This field is optional and defaults to false and is only\n applicable when using an existing volume."
+            "description": "Whether the volume is read-only.\n\nIf this field is set to true, the volume will be mounted as read-only in\nthe instance.  This field is optional and defaults to false and is only\napplicable when using an existing volume."
           }
         },
         "description": "A volume defines a storage volume that can be attached to the instance."
@@ -2475,7 +2619,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -2498,7 +2642,7 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Name of the service group.  This is a human-readable name that can be used\n to identify the service group.  The name must be unique within the context\n of your account.  If no name is specified, a random name is generated for\n you.  The name can also be used to identify the service group in API calls."
+            "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
           },
           "services": {
             "type": "array",
@@ -2516,12 +2660,12 @@
           },
           "soft_limit": {
             "type": "integer",
-            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\n to wake up another standby instance.\n\n For example, if the soft limit is set to 5 and the service consists of 2\n standby instances, one of the instances receives up to 5 concurrent\n requests.  The 6th parallel requests wakes up the second instance.  If\n there are no more standby instances to wake up, the number of requests\n assigned to each instance will exceed the soft limit.  The load balancer\n makes sure that when the number of in-flight requests goes down again,\n instances are put into standby as fast as possible.",
+            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
             "format": "uint64"
           },
           "hard_limit": {
             "type": "integer",
-            "description": "The hard limit defines the maximum number of concurrent requests that an\n instance assigned to the this service can handle.\n\n The load balancer will never assign more requests to a single instance.  In\n case there are no other instances available, excess requests fail (i.e.,\n they are blocked and not queued).",
+            "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
             "format": "uint64"
           }
         }
@@ -2552,7 +2696,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -2566,7 +2710,7 @@
             "items": {
               "$ref": "#/components/schemas/ServiceGroup"
             },
-            "description": "The service group which was created by this request.\n\n Note: only one service group can be specified in the request, so this\n will always contain a single entry."
+            "description": "The service group which was created by this request.\n\nNote: only one service group can be specified in the request, so this\nwill always contain a single entry."
           }
         }
       },
@@ -2575,44 +2719,74 @@
           "size_mb"
         ],
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the volume.\n\n This is a human-readable name that can be used to identify the volume.\n The name must be unique within the context of your account.  If no name is\n specified, a random name of the form `vol-X` is generated for you, where\n `X` is a 5 character long random alphanumeric suffix..  The name can also\n be used to identify the volume in API calls."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "size_mb": {
+                "type": "integer",
+                "description": "The size of the volume in megabytes.",
+                "format": "uint64"
+              }
+            }
           },
-          "size_mb": {
-            "type": "integer",
-            "description": "The size of the volume in megabytes.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "Creates one or more volumes with the given configuration. The volumes are\n automatically initialized with an empty file system. After initialization\n the volumes are in the available state and can be attached to an instance\n with the `PUT /v1/volumes/attach` endpoint. Note that, the size of a volume\n cannot be changed after creation."
+        ],
+        "description": "Creates one or more volumes with the given configuration. The volumes are\nautomatically initialized with an empty file system. After initialization\nthe volumes are in the available state and can be attached to an instance\nwith the `PUT /v1/volumes/attach` endpoint. Note that, the size of a volume\ncannot be changed after creation."
       },
       "CreateVolumeResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "$ref": "#/components/schemas/CreateVolumeResponseData"
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
+              }
+            }
           },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "$ref": "#/components/schemas/CreateVolumeResponseData"
-          },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The response message for creating of a volume."
       },
       "CreateVolumeResponseData": {
@@ -2651,34 +2825,49 @@
       },
       "DeleteAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "DeleteAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -2712,47 +2901,78 @@
       },
       "DeleteAutoscaleConfigurationsRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the service to delete a configuration for.\n Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the service to delete a configuration for.\n Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the service to delete a configuration for.\nMutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service to delete a configuration for.\nMutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "DeleteAutoscaleConfigurationsResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "DeleteAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -2790,16 +3010,32 @@
       },
       "DeleteCertificatesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the certificate to retrieve.\n Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the certificate to retrieve.\n Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the certificate to retrieve.\nMutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the certificate to retrieve.\nMutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the certificate(s) to delete."
       },
       "DeleteCertificatesResponse": {
@@ -2828,11 +3064,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting of one or more certificate(s) given their\n UUID(s) or name(s)."
+        "description": "The response message for deleting of one or more certificate(s) given their\nUUID(s) or name(s)."
       },
       "DeleteCertificatesResponseData": {
         "type": "object",
@@ -2855,7 +3091,7 @@
               "error"
             ],
             "type": "string",
-            "description": "Indicates whether the delete operation was successful or not for this\n certificate.",
+            "description": "Indicates whether the delete operation was successful or not for this\ncertificate.",
             "format": "enum"
           },
           "uuid": {
@@ -2871,16 +3107,32 @@
       },
       "DeleteInstancesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to retrieve.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to retrieve.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the instance to retrieve.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance to retrieve.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the instance(s) to delete."
       },
       "DeleteInstancesResponse": {
@@ -2909,11 +3161,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting one or more instance(s) given their UUID(s)\n or name(s)."
+        "description": "The response message for deleting one or more instance(s) given their UUID(s)\nor name(s)."
       },
       "DeleteInstancesResponseData": {
         "type": "object",
@@ -2936,7 +3188,7 @@
               "error"
             ],
             "type": "string",
-            "description": "Indicates whether the start operation was successful or not for this\n instance.",
+            "description": "Indicates whether the start operation was successful or not for this\ninstance.",
             "format": "enum"
           },
           "uuid": {
@@ -2968,16 +3220,32 @@
       },
       "DeleteServiceGroupsRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the service group to retrieve.\n Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the service group to retrieve.\n Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the service group to retrieve.\nMutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service group to retrieve.\nMutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the service group(s) to delete."
       },
       "DeleteServiceGroupsResponse": {
@@ -3006,11 +3274,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting of one or more service group(s) given their\n UUID(s) or name(s)."
+        "description": "The response message for deleting of one or more service group(s) given their\nUUID(s) or name(s)."
       },
       "DeleteServiceGroupsResponseData": {
         "type": "object",
@@ -3033,7 +3301,7 @@
               "error"
             ],
             "type": "string",
-            "description": "Indicates whether the delete operation was successful or not for this\n service group.",
+            "description": "Indicates whether the delete operation was successful or not for this\nservice group.",
             "format": "enum"
           },
           "uuid": {
@@ -3049,48 +3317,79 @@
       },
       "DeleteVolumesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the volume to delete.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the volume to delete.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the volume to delete.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the volume to delete.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the volume(s) to delete."
       },
       "DeleteVolumesResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DeleteVolumesResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DeleteVolumesResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "DeleteVolumesResponseData": {
         "type": "object",
@@ -3128,48 +3427,79 @@
       },
       "DetachVolumesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the volume to detach.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the volume to detach.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the volume to detach.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the volume to detach.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the volume(s) to detach."
       },
       "DetachVolumesResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetachVolumesResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DetachVolumesResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "DetachVolumesResponseData": {
         "type": "object",
@@ -3185,35 +3515,65 @@
       },
       "DetachVolumesResponseInstanceID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance that the volume is detached from."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "description": "The UUID of the instance that the volume is detached from."
+              }
+            }
           },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance that the volume is detached from."
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance that the volume is detached from."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "Reference to the instance to detach the volume from."
       },
       "Domain": {
         "type": "object",
-        "properties": {
-          "fqdn": {
-            "type": "string",
-            "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\n be a valid Full Qualified Domain Name (FQDN), otherwise it will become a\n subdomain of the target metro."
-          },
-          "certificate": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Certificate"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "fqdn": {
+                "type": "string",
+                "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\nbe a valid Full Qualified Domain Name (FQDN), otherwise it will become a\nsubdomain of the target metro."
               }
-            ],
-            "description": "Use an existing certificate for the domain.  If this field is\n specified, the domain must be associated with a valid certificate."
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "certificate",
+                "type": "object",
+                "properties": {
+                  "certificate": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Certificate"
+                      }
+                    ],
+                    "description": "Use an existing certificate for the domain.  If this field is\nspecified, the domain must be associated with a valid certificate."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "A domain name.\n\n Domain names are completely specified with all labels in the hierarchy of the\n DNS, having no parts omitted.  The domain can be associated with an existing\n certificate by specifying the certificate's name or UUID.  If no certificate\n is specified and a FQDN is provided, Unikraft Cloud will automatically\n generate a new certificate for the domain based on Let's Encrypt and seek to\n accomplish a DNS-01 challenge."
+        ],
+        "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a FQDN is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
       },
       "GetAutoscaleConfigurationPolicyRequest": {
         "required": [
@@ -3229,34 +3589,49 @@
       },
       "GetAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "GetAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -3294,48 +3669,79 @@
       },
       "GetAutoscaleConfigurationsRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the service to create a configuration for.\n Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the service to create a configuration for.\n Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the configuration(s) to get."
       },
       "GetAutoscaleConfigurationsResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "GetAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -3375,22 +3781,22 @@
           },
           "min_size": {
             "type": "integer",
-            "description": "The minimum number of instances to keep running.\n Only if enabled is true.",
+            "description": "The minimum number of instances to keep running.\nOnly if enabled is true.",
             "format": "int64"
           },
           "max_size": {
             "type": "integer",
-            "description": "The maximum number of instances to keep running.\n Only if enabled is true.",
+            "description": "The maximum number of instances to keep running.\nOnly if enabled is true.",
             "format": "int64"
           },
           "warmup_time_ms": {
             "type": "integer",
-            "description": "The warmup time in seconds for new instances.\n Only if enabled is true.",
+            "description": "The warmup time in seconds for new instances.\nOnly if enabled is true.",
             "format": "int64"
           },
           "cooldown_time_ms": {
             "type": "integer",
-            "description": "The cooldown time in seconds for the autoscale configuration.\n Only if enabled is true.",
+            "description": "The cooldown time in seconds for the autoscale configuration.\nOnly if enabled is true.",
             "format": "int64"
           },
           "template": {
@@ -3399,7 +3805,7 @@
                 "$ref": "#/components/schemas/ServiceGroupTemplate"
               }
             ],
-            "description": "The instance template used for the autoscale configuration.\n Only if enabled is true."
+            "description": "The instance template used for the autoscale configuration.\nOnly if enabled is true."
           },
           "policies": {
             "type": "array",
@@ -3412,16 +3818,32 @@
       },
       "GetCertificatesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the certificate to get.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the certificate to get.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the certificate to get.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the certificate to get.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the certificate(s) to get."
       },
       "GetCertificatesResponse": {
@@ -3450,11 +3872,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more certificate(s) given their\n UUID(s) or name(s)."
+        "description": "The response message for getting one or more certificate(s) given their\nUUID(s) or name(s)."
       },
       "GetCertificatesResponseData": {
         "type": "object",
@@ -3494,7 +3916,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -3539,11 +3961,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the logs of an instance given its UUID(s) or\n name(s)."
+        "description": "The response message for getting the logs of an instance given its UUID(s) or\nname(s)."
       },
       "GetInstanceLogsResponseAvailable": {
         "type": "object",
@@ -3568,7 +3990,7 @@
             "items": {
               "$ref": "#/components/schemas/GetInstanceLogsResponseLoggedInstance"
             },
-            "description": "The instance which this requested waited on.\n\n Note: only one instance can be specified in the request, so this will\n always contain a single entry."
+            "description": "The instance which this requested waited on.\n\nNote: only one instance can be specified in the request, so this will\nalways contain a single entry."
           }
         }
       },
@@ -3601,7 +4023,7 @@
                 "$ref": "#/components/schemas/GetInstanceLogsResponseRange"
               }
             ],
-            "description": "Description of the range that was returned. Useful for requests with\n offset relative to end."
+            "description": "Description of the range that was returned. Useful for requests with\noffset relative to end."
           }
         }
       },
@@ -3646,11 +4068,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the metrics of one or more instance(s)\n given their UUID(s) or name(s)."
+        "description": "The response message for getting the metrics of one or more instance(s)\ngiven their UUID(s) or name(s)."
       },
       "GetInstanceMetricsResponseData": {
         "type": "object",
@@ -3660,7 +4082,7 @@
             "items": {
               "$ref": "#/components/schemas/GetInstanceMetricsResponseInstanceMetrics"
             },
-            "description": "The instance which this requested metrics for.  Note: only one instance\n can be specified in the request, so this will always contain a single\n entry."
+            "description": "The instance which this requested metrics for.  Note: only one instance\ncan be specified in the request, so this will always contain a single\nentry."
           }
         }
       },
@@ -3669,7 +4091,7 @@
         "properties": {
           "rss_bytes": {
             "type": "integer",
-            "description": "Resident set size of the VMM in bytes.\n\n The resident set size (RSS) specifies the amount of physical memory that\n has been touched by the instance and is currently reserved for the\n instance on the Unikraft Cloud server.  The RSS grows until the instance\n has touched all memory assigned to it via the memory_mb setting and may\n also exceed this value as supporting services running outside the\n instance acquire memory. The RSS is different from the current amount of\n memory allocated by the application, which is likely to fluctuate over\n the lifetime of the application.  The RSS is not a cumulative metric.\n When the instance is stopped rss goes down to 0.",
+            "description": "Resident set size of the VMM in bytes.\n\nThe resident set size (RSS) specifies the amount of physical memory that\nhas been touched by the instance and is currently reserved for the\ninstance on the Unikraft Cloud server.  The RSS grows until the instance\nhas touched all memory assigned to it via the memory_mb setting and may\nalso exceed this value as supporting services running outside the\ninstance acquire memory. The RSS is different from the current amount of\nmemory allocated by the application, which is likely to fluctuate over\nthe lifetime of the application.  The RSS is not a cumulative metric.\nWhen the instance is stopped rss goes down to 0.",
             "format": "uint64"
           },
           "cpu_time_ms": {
@@ -3721,16 +4143,32 @@
       },
       "GetInstancesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to get.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to get.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the instance to get.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance to get.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the instance(s) to get."
       },
       "GetInstancesResponse": {
@@ -3759,7 +4197,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -3779,16 +4217,32 @@
       },
       "GetServiceGroupsRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the service group to get.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the service group to get.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the service group to get.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service group to get.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the service group(s) to get."
       },
       "GetServiceGroupsResponse": {
@@ -3817,11 +4271,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more service group(s) given their\n UUID(s) or name(s)."
+        "description": "The response message for getting one or more service group(s) given their\nUUID(s) or name(s)."
       },
       "GetServiceGroupsResponseData": {
         "type": "object",
@@ -3837,49 +4291,80 @@
       },
       "GetVolumesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the volume to get.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the volume to get.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the volume to get.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the volume to get.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the volume(s) to get."
       },
       "GetVolumesResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "success",
-              "error"
-            ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GetVolumesResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GetVolumesResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The response message for getting one or more volume(s) given their\n UUID(s) or name(s)."
+        ],
+        "description": "The response message for getting one or more volume(s) given their\nUUID(s) or name(s)."
       },
       "GetVolumesResponseData": {
         "type": "object",
@@ -3902,7 +4387,7 @@
           },
           "digest": {
             "type": "string",
-            "description": "The digest of the image is a unique identifier of the image manifest which\n is a string representation including the hashing algorithm and the hash\n value separated by a colon."
+            "description": "The digest of the image is a unique identifier of the image manifest which\nis a string representation including the hashing algorithm and the hash\nvalue separated by a colon."
           },
           "description": {
             "type": "string",
@@ -3922,7 +4407,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The entrypoint of the image is the command that is run when the image is\n started."
+            "description": "The entrypoint of the image is the command that is run when the image is\nstarted."
           },
           "cmd": {
             "type": "array",
@@ -3961,7 +4446,7 @@
           },
           "workdir": {
             "type": "string",
-            "description": "The working directory for the image is the directory that is set as the\n current working directory when the image is started."
+            "description": "The working directory for the image is the directory that is set as the\ncurrent working directory when the image is started."
           },
           "kernel": {
             "allOf": [
@@ -3985,11 +4470,11 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance.\n\n This is a unique identifier for the instance that is generated when the\n instance is created.  The UUID is used to reference the instance in API\n calls and can be used to identify the instance in all API calls that\n require an instance identifier."
+            "description": "The UUID of the instance.\n\nThis is a unique identifier for the instance that is generated when the\ninstance is created.  The UUID is used to reference the instance in API\ncalls and can be used to identify the instance in all API calls that\nrequire an instance identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the instance.\n\n This is a human-readable name that can be used to identify the instance.\n The name must be unique within the context of your account.  The name can\n also be used to identify the instance in API calls."
+            "description": "The name of the instance.\n\nThis is a human-readable name that can be used to identify the instance.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the instance in API calls."
           },
           "created_at": {
             "type": "string",
@@ -4006,25 +4491,25 @@
               "standby"
             ],
             "type": "string",
-            "description": "The state of the instance.  This indicates the current state of the\n instance, such as whether it is running, stopped, or in an error state.",
+            "description": "The state of the instance.  This indicates the current state of the\ninstance, such as whether it is running, stopped, or in an error state.",
             "format": "enum"
           },
           "private_fqdn": {
             "type": "string",
-            "description": "The internal hostname of the instance.  This address can be used privately\n within the Unikraft Cloud network to access the instance.  It is not\n accessible from the public Internet."
+            "description": "The internal hostname of the instance.  This address can be used privately\nwithin the Unikraft Cloud network to access the instance.  It is not\naccessible from the public Internet."
           },
           "image": {
             "type": "string",
-            "description": "The image used to create the instance.  This is a reference to the\n Unikraft image that was used to create the instance."
+            "description": "The image used to create the instance.  This is a reference to the\nUnikraft image that was used to create the instance."
           },
           "memory_mb": {
             "type": "integer",
-            "description": "The amount of memory in megabytes allocated for the instance.  This is the\n total amount of memory that is available to the instance for its\n operations.",
+            "description": "The amount of memory in megabytes allocated for the instance.  This is the\ntotal amount of memory that is available to the instance for its\noperations.",
             "format": "uint64"
           },
           "vcpus": {
             "type": "integer",
-            "description": "The number of vCPUs allocated for the instance.  This is the total\n number of virtual CPUs that are available to the instance for its\n operations.",
+            "description": "The number of vCPUs allocated for the instance.  This is the total\nnumber of virtual CPUs that are available to the instance for its\noperations.",
             "format": "uint32"
           },
           "args": {
@@ -4032,21 +4517,21 @@
             "items": {
               "type": "string"
             },
-            "description": "The arguments passed to the instance when it was started.  This is a\n list of command-line arguments that were provided to the instance at\n startup.  These arguments can be used to configure the behavior of the\n instance and its applications."
+            "description": "The arguments passed to the instance when it was started.  This is a\nlist of command-line arguments that were provided to the instance at\nstartup.  These arguments can be used to configure the behavior of the\ninstance and its applications."
           },
           "start_count": {
             "type": "integer",
-            "description": "The total number of times the instance has been started.  This is a counter\n that increments each time the instance is started, regardless of whether it\n was manually stopped or restarted.  This can be useful for tracking the\n usage of the instance over time and/or for debugging purposes.",
+            "description": "The total number of times the instance has been started.  This is a counter\nthat increments each time the instance is started, regardless of whether it\nwas manually stopped or restarted.  This can be useful for tracking the\nusage of the instance over time and/or for debugging purposes.",
             "format": "uint64"
           },
           "started_at": {
             "type": "string",
-            "description": "The time the instance was started.  This is the timestamp when the\n instance was last started.",
+            "description": "The time the instance was started.  This is the timestamp when the\ninstance was last started.",
             "format": "date-time"
           },
           "stopped_at": {
             "type": "string",
-            "description": "The time the instance was stopped.  This is the timestamp when the\n instance was last stopped.  If the instance is currently running, this\n field will be empty.",
+            "description": "The time the instance was stopped.  This is the timestamp when the\ninstance was last stopped.  If the instance is currently running, this\nfield will be empty.",
             "format": "date-time"
           },
           "uptime_ms": {
@@ -4056,42 +4541,42 @@
           },
           "vmm_start_time_us": {
             "type": "integer",
-            "description": "(Developer-only).  The time taken between the main controller and the\n beginning of execution of the VMM (Virtual Machine Monitor) measured in\n microseconds.  This field is primarily used for debugging and performance\n analysis purposes.",
+            "description": "(Developer-only).  The time taken between the main controller and the\nbeginning of execution of the VMM (Virtual Machine Monitor) measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
             "format": "uint64"
           },
           "vmm_load_time_us": {
             "type": "integer",
-            "description": "(Developer-only).  The time it took the VMM (Virtual Machine Monitor) to\n load the instance's kernel and initramfs into VM memory measured in\n microseconds.  This field is primarily used for debugging and performance\n analysis purposes.",
+            "description": "(Developer-only).  The time it took the VMM (Virtual Machine Monitor) to\nload the instance's kernel and initramfs into VM memory measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
             "format": "uint64"
           },
           "vmm_ready_time_us": {
             "type": "integer",
-            "description": "(Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to\n become ready to execute the instance measured in microseconds.  This is the\n time from when the VMM started until it was ready to execute the instance's\n code.  This field is primarily used for debugging and performance analysis\n purposes.",
+            "description": "(Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to\nbecome ready to execute the instance measured in microseconds.  This is the\ntime from when the VMM started until it was ready to execute the instance's\ncode.  This field is primarily used for debugging and performance analysis\npurposes.",
             "format": "uint64"
           },
           "boot_time_us": {
             "type": "integer",
-            "description": "The boot time of the instance in microseconds.  We take a pragmatic\n approach is to define the boot time.  We calculate this as the difference\n in time between the moment the virtualization toolstack is invoked to\n respond to a VM boot request and the moment the OS starts executing user\n code (i.e., the end of the guest OS boot process).  This is essentially the\n time that a user would experience in a deployment, minus the application\n initialization time, which we leave out since it is independent from the\n OS.",
+            "description": "The boot time of the instance in microseconds.  We take a pragmatic\napproach is to define the boot time.  We calculate this as the difference\nin time between the moment the virtualization toolstack is invoked to\nrespond to a VM boot request and the moment the OS starts executing user\ncode (i.e., the end of the guest OS boot process).  This is essentially the\ntime that a user would experience in a deployment, minus the application\ninitialization time, which we leave out since it is independent from the\nOS.",
             "format": "uint64"
           },
           "net_time_us": {
             "type": "integer",
-            "description": "This is the time it took for the user-level application to start listening\n on a non-localhost port measured in microseconds.  This is the time from\n when the instance started until it reasonably ready to start responding to\n network requests.  This is useful for measuring the time it takes for the\n instance to become operationally ready.",
+            "description": "This is the time it took for the user-level application to start listening\non a non-localhost port measured in microseconds.  This is the time from\nwhen the instance started until it reasonably ready to start responding to\nnetwork requests.  This is useful for measuring the time it takes for the\ninstance to become operationally ready.",
             "format": "uint64"
           },
           "stop_reason": {
             "type": "integer",
-            "description": "The instance stop reason.\n\n Provides reason as to why an instance is stopped or in the process of\n shutting down.  The stop reason is a bitmask that tells you the origin of\n the shutdown:\n\n | Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |\n |---------|------------|------------|------------|------------|--------------|\n | Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |\n\n - **Forced**:   This was a force stop.  A forced stop does not give the\n                 instance a chance to perform a clean shutdown.  Bits 0\n                 (Kernel) and 1 (App) can thus never be set for forced\n                 shutdowns.  Consequently, there won't be an `exit_code` or\n                 `stop_code`.\n - **User**:     Stop initiated by user, e.g. via an API call.\n - **Platform**: Stop initiated by platform, e.g. an autoscale policy.\n - **App**:      The Application exited.  The `exit_code` field will be set.\n - **Kernel**:   The kernel exited.  The `stop_code` field will be set.\n\n For example, the stop reason will contain the following values in the given\n scenarios:\n\n | Value | Bitmask | Aliases | Scenario |\n |-------|---------|---------|----------|\n | 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |\n | 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n | 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |\n | 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n | 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n | 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |\n | 0     | `00000` | `-----` | The stop reason is unknown. |",
+            "description": "The instance stop reason.\n\nProvides reason as to why an instance is stopped or in the process of\nshutting down.  The stop reason is a bitmask that tells you the origin of\nthe shutdown:\n\n| Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |\n|---------|------------|------------|------------|------------|--------------|\n| Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |\n\n- **Forced**:   This was a force stop.  A forced stop does not give the\n                instance a chance to perform a clean shutdown.  Bits 0\n                (Kernel) and 1 (App) can thus never be set for forced\n                shutdowns.  Consequently, there won't be an `exit_code` or\n                `stop_code`.\n- **User**:     Stop initiated by user, e.g. via an API call.\n- **Platform**: Stop initiated by platform, e.g. an autoscale policy.\n- **App**:      The Application exited.  The `exit_code` field will be set.\n- **Kernel**:   The kernel exited.  The `stop_code` field will be set.\n\nFor example, the stop reason will contain the following values in the given\nscenarios:\n\n| Value | Bitmask | Aliases | Scenario |\n|-------|---------|---------|----------|\n| 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |\n| 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |\n| 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |\n| 0     | `00000` | `-----` | The stop reason is unknown. |",
             "format": "uint32"
           },
           "exit_code": {
             "type": "integer",
-            "description": "The application exit code.\n\n This is the code which the application returns upon leaving its main entry\n point.  The encoding of the exit code is application specific. See the\n documentation of the application for more details.  Usually, an exit code\n of `0` indicates success / no failure.",
+            "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific. See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.",
             "format": "uint32"
           },
           "stop_code": {
             "type": "integer",
-            "description": "The kernel stop code.\n\n This value encodes multiple details about the stop irrespective of the\n application.\n\n ```\n MSB                                                     LSB\n ┌──────────────┬──────────┬──────────┬───────────┬────────┐\n │ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n ├──────────────┼──────────┼──────────┼───────────┼────────┤\n │ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n └──────────────┴──────────┴──────────┴───────────┴────────┘\n ```\n\n - **errno**:     The application errno, using Linux's errno.h values.\n                  (Optional, can be 0.)\n - **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                  from the termtable (1).\n - **initlevel**: The initlevel at the time of the stop.\n - **reason**:    The reason for the stop. See `StopCodeReason`.\n\n [^1]: Reserved for future use.",
+            "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop. See `StopCodeReason`.\n\n[^1]: Reserved for future use.",
             "format": "uint32"
           },
           "restart_policy": {
@@ -4101,7 +4586,7 @@
               "on_failure"
             ],
             "type": "string",
-            "description": "The restart configuration for the instance.\n\n When an instance stops either because the application exits or the instance\n crashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\n performed according to the restart policy configured for a particular\n instance.\n\n The policy can have the following values:\n\n | Policy       | Description |\n |--------------|-------------|\n | `never`      | Never restart the instance (default). |\n | `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n | `on-failure` | Only restart the instance if it crashes. |\n\n When an instance stops, the stop reason and the configured restart policy\n are evaluated to decide if a restart should be performed.  Unikraft Cloud\n uses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\n to slow down restarts in tight crash loops. If an instance runs without\n problems for 10s the back-off delay is reset and the restart sequence ends.\n\n The `restart.attempt` attribute reported in counts the number of restarts\n performed in the current sequence.  The `restart.next_at` field indicates\n when the next restart will take place if a back-off delay is in effect.\n\n A manual start or stop of the instance aborts the restart sequence and\n resets the back-off delay.",
+            "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops. If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay.",
             "format": "enum"
           },
           "scale_to_zero": {
@@ -4110,7 +4595,7 @@
                 "$ref": "#/components/schemas/InstanceScaleToZero"
               }
             ],
-            "description": "The scale-to-zero configuration for the instance.\n\n With conventional cloud platforms you need to keep at least one instance\n running at all times to be able to respond to incoming requests. Performing\n a just-in-time cold boot is simply too time-consuming and would create a\n response latency of multiple seconds.  This is not the case with Unikraft\n Cloud.  Instances on Unikraft Cloud are able to cold boot within\n milliseconds, which allows us to perform low-latency scale-to-zero.\n\n To enable scale-to-zero for an instance it is sufficient to add a\n `scale_to_zero` configuration block.  Unikraft Cloud will then put the\n instance into standby if there is no traffic to your service within the\n window of a cooldown period. When there is new traffic coming in, it is\n automatically started again.\n\n If you have a heavyweight application that takes long to cold boot or has\n bad first request latency (e.g., with JIT compilation) consider to enable\n stateful scale-to-zero."
+            "description": "The scale-to-zero configuration for the instance.\n\nWith conventional cloud platforms you need to keep at least one instance\nrunning at all times to be able to respond to incoming requests. Performing\na just-in-time cold boot is simply too time-consuming and would create a\nresponse latency of multiple seconds.  This is not the case with Unikraft\nCloud.  Instances on Unikraft Cloud are able to cold boot within\nmilliseconds, which allows us to perform low-latency scale-to-zero.\n\nTo enable scale-to-zero for an instance it is sufficient to add a\n`scale_to_zero` configuration block.  Unikraft Cloud will then put the\ninstance into standby if there is no traffic to your service within the\nwindow of a cooldown period. When there is new traffic coming in, it is\nautomatically started again.\n\nIf you have a heavyweight application that takes long to cold boot or has\nbad first request latency (e.g., with JIT compilation) consider to enable\nstateful scale-to-zero."
           },
           "volumes": {
             "type": "array",
@@ -4155,41 +4640,57 @@
       },
       "InstanceCreateArgsInstanceTemplateCreateRequest": {
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the template to use for the autoscale configuration."
-          },
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the template to use for the autoscale configuration."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the template to use for the autoscale configuration."
+                  }
+                }
+              },
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the template to use for the autoscale configuration."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "InstanceDomainInstanceDomainCertificate": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the certificate.\n\n This is a unique identifier for the certificate that is generated\n when the certificate is created.  The UUID is used to reference the\n certificate in API calls and can be used to identify the certificate\n in all API calls that require a certificate identifier."
+            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated\nwhen the certificate is created.  The UUID is used to reference the\ncertificate in API calls and can be used to identify the certificate\nin all API calls that require a certificate identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the certificate.\n\n This is a human-readable name that can be used to identify the\n certificate.  The name is unique within the context of your account.\n The name can also be used to identify the certificate in API calls."
+            "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the\ncertificate.  The name is unique within the context of your account.\nThe name can also be used to identify the certificate in API calls."
           }
         },
-        "description": "The certificate associated with the domain.\n\n The certificate is used to secure the domain with TLS/SSL.  If no\n certificate is specified, Unikraft Cloud will automatically generate a\n new certificate for the domain based on Let's Encrypt and seek to\n accomplish a DNS-01 challenge."
+        "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
       },
       "InstanceInstanceServiceGroup": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service group.\n\n This is a unique identifier for the service group that is generated when\n the service is created.  The UUID is used to reference the service group\n in API calls and can be used to identify the service in all API calls\n that require an service identifier."
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the service group.\n\n This is a human-readable name that can be used to identify the service\n group.  The name is unique within the context of your account.  The name\n can also be used to identify the service group in API calls."
+            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
           },
           "domains": {
             "type": "array",
@@ -4199,40 +4700,40 @@
             "description": "The domain configuration for the service group."
           }
         },
-        "description": "The service group configuration for the instance.\n\n This is a reference to the service group that the instance is part of.  The\n service group defines the services (e.g. ports, connection handling) that\n the instance exposes and how they are configured."
+        "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
       },
       "InstanceInstanceVolume": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume.\n\n This is a unique identifier for the volume that is generated when the\n volume is created.  The UUID is used to reference the volume in API calls\n and can be used to identify the volume in all API calls that require a\n volume identifier."
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the volume.\n\n This is a human-readable name that can be used to identify the volume.\n The name must be unique within the context of your account.  The name can\n also be used to identify the volume in API calls."
+            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
           "at": {
             "type": "string",
-            "description": "The mount point of the volume in the instance.  This is the directory in\n the instance where the volume will be mounted."
+            "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
           },
           "read_only": {
             "type": "boolean",
             "description": "Whether the volume is read-only or not."
           }
         },
-        "description": "A volume defines a storage which can be attached to the instance.\n\n Volumes can be used to store persistent data which should remain available\n even if the instance is stopped or restarted."
+        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
       },
       "InstanceNetworkInterface": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the network interface. This is a unique identifier for the\n network interface that is generated when the instance is created."
+            "description": "The UUID of the network interface. This is a unique identifier for the\nnetwork interface that is generated when the instance is created."
           },
           "private_ip": {
             "type": "string",
-            "description": "The private IP address of the network interface. This is the internal IP\n address that is used for communication between instances within the same\n network."
+            "description": "The private IP address of the network interface. This is the internal IP\naddress that is used for communication between instances within the same\nnetwork."
           },
           "mac": {
             "type": "string",
@@ -4280,44 +4781,59 @@
           },
           "stateful": {
             "type": "boolean",
-            "description": "Whether the instance should be stateful when scaled to zero. If set to\n true, the instance will retain its state (e.g., RAM contents) when scaled\n to zero.  This is useful for instances that need to maintain their state\n across scale-to-zero operations.  If set to false, the instance will lose\n its state when scaled to zero, and it will be restarted from scratch when\n scaled back up."
+            "description": "Whether the instance should be stateful when scaled to zero. If set to\ntrue, the instance will retain its state (e.g., RAM contents) when scaled\nto zero.  This is useful for instances that need to maintain their state\nacross scale-to-zero operations.  If set to false, the instance will lose\nits state when scaled to zero, and it will be restarted from scratch when\nscaled back up."
           },
           "cooldown_time_ms": {
             "type": "integer",
-            "description": "The cooldown time in milliseconds before the instance can be scaled to\n zero again.  This is useful to prevent rapid scaling to zero and back up,\n which can lead to performance issues or resource exhaustion.",
+            "description": "The cooldown time in milliseconds before the instance can be scaled to\nzero again.  This is useful to prevent rapid scaling to zero and back up,\nwhich can lead to performance issues or resource exhaustion.",
             "format": "int32"
           }
         },
-        "description": "Scale-to-zero defines the configuration for scaling the instance to zero.\n When an instance is scaled-to-zero it can be either stopped (and fully\n shutdown) or paused wherein the state of the instance is preserved (e.g., RAM\n contents) and the instance can be resumed later without losing its state,\n i.e. \"stateful\"."
+        "description": "Scale-to-zero defines the configuration for scaling the instance to zero.\nWhen an instance is scaled-to-zero it can be either stopped (and fully\nshutdown) or paused wherein the state of the instance is preserved (e.g., RAM\ncontents) and the instance can be resumed later without losing its state,\ni.e. \"stateful\"."
       },
       "InstanceServiceGroupInstanceDomain": {
         "type": "object",
-        "properties": {
-          "fqdn": {
-            "type": "string",
-            "description": "Publicly accessible domain name.\n\n If this name ends in a period `.` it must be a valid Full Qualified\n Domain Name (FQDN), otherwise it will become a subdomain of the target\n metro."
-          },
-          "certificate": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/InstanceDomainInstanceDomainCertificate"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "fqdn": {
+                "type": "string",
+                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
               }
-            ],
-            "description": "The certificate associated with the domain."
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "certificate",
+                "type": "object",
+                "properties": {
+                  "certificate": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InstanceDomainInstanceDomainCertificate"
+                      }
+                    ],
+                    "description": "The certificate associated with the domain."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The domain configuration for the service group.\n\n Domain names are completely specified with all labels in the hierarchy of\n the DNS, having no parts omitted.  The domain can be associated with an\n existing certificate by specifying the certificate's name or UUID. If no\n certificate is specified and a FQDN is provided, Unikraft Cloud will\n automatically generate a new certificate for the domain based on Let's\n Encrypt and seek to accomplish a DNS-01 challenge."
+        ],
+        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID. If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
       },
       "Object": {
         "type": "object",
         "properties": {
           "digest": {
             "type": "string",
-            "description": "The digest is a string representation including the hashing\n algorithm and the hash value separated by a colon."
+            "description": "The digest is a string representation including the hashing\nalgorithm and the hash value separated by a colon."
           },
           "media_type": {
             "type": "string",
-            "description": "The media type of the layer is a string that identifies the type of\n content that the layer contains."
+            "description": "The media type of the layer is a string that identifies the type of\ncontent that the layer contains."
           },
           "size": {
             "type": "integer",
@@ -4325,7 +4841,7 @@
             "format": "int64"
           }
         },
-        "description": "An object is a single component of an image which is external and can be\n uniquely identified by its digest."
+        "description": "An object is a single component of an image which is external and can be\nuniquely identified by its digest."
       },
       "Quotas": {
         "type": "object",
@@ -4397,29 +4913,44 @@
       },
       "QuotasResponse": {
         "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/QuotasResponseData"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "The status of the response."
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/QuotasResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
+              "op_time_us": {
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
               }
-            ],
-            "description": "The response data for this request."
+            }
           },
-          "op_time_us": {
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The response message for getting the quota of a user given their UUID."
       },
       "QuotasResponseData": {
@@ -4449,7 +4980,7 @@
           },
           "live_memory_mb": {
             "type": "integer",
-            "description": "Amount of memory assigned to instances that are not in the `stopped`\n state in megabytes",
+            "description": "Amount of memory assigned to instances that are not in the `stopped`\nstate in megabytes",
             "format": "int64"
           },
           "service_groups": {
@@ -4479,12 +5010,12 @@
         "properties": {
           "port": {
             "type": "integer",
-            "description": "This is the public-facing port that the service will be accessible from\n on the Internet.",
+            "description": "This is the public-facing port that the service will be accessible from\non the Internet.",
             "format": "uint32"
           },
           "destination_port": {
             "type": "string",
-            "description": "The port number that the instance is listening on.  This is the internal\n port which Unikraft Cloud will forward traffic to."
+            "description": "The port number that the instance is listening on.  This is the internal\nport which Unikraft Cloud will forward traffic to."
           },
           "handlers": {
             "type": "array",
@@ -4497,21 +5028,21 @@
               "type": "string",
               "format": "enum"
             },
-            "description": "Connection handlers to use for the service.  Handlers define how the\n service will handle incoming connections and forward traffic from the\n Internet to your application.  For example, a service can be configured\n to terminate TLS connections, redirect HTTP traffic, or enable HTTP mode\n for load balancing.  You configure the handlers for every published\n service port individually."
+            "description": "Connection handlers to use for the service.  Handlers define how the\nservice will handle incoming connections and forward traffic from the\nInternet to your application.  For example, a service can be configured\nto terminate TLS connections, redirect HTTP traffic, or enable HTTP mode\nfor load balancing.  You configure the handlers for every published\nservice port individually."
           }
         },
-        "description": "A service connects a public-facing port to an internal destination port on\n which an application instance listens on.  Additional handlers can be defined\n for each published port in order to define how the service will handle\n incoming connections and forward traffic from the Internet to your\n application.  For example, a service can be configured to terminate TLS\n connections, redirect HTTP traffic, or enable HTTP mode for load balancing."
+        "description": "A service connects a public-facing port to an internal destination port on\nwhich an application instance listens on.  Additional handlers can be defined\nfor each published port in order to define how the service will handle\nincoming connections and forward traffic from the Internet to your\napplication.  For example, a service can be configured to terminate TLS\nconnections, redirect HTTP traffic, or enable HTTP mode for load balancing."
       },
       "ServiceGroup": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service group.\n\n This is a unique identifier for the service group that is generated when\n the service group is created.  The UUID is used to reference the service in\n API calls and can be used to identify the service group in all API calls\n that require an identifier."
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service group is created.  The UUID is used to reference the service in\nAPI calls and can be used to identify the service group in all API calls\nthat require an identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the service group.\n\n This is a human-readable name that can be used to identify the service\n group. The name must be unique within the context of your account.  The\n name can also be used to identify the service in API calls."
+            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup. The name must be unique within the context of your account.  The\nname can also be used to identify the service in API calls."
           },
           "created_at": {
             "type": "string",
@@ -4520,20 +5051,20 @@
           },
           "persistent": {
             "type": "boolean",
-            "description": "Indicates if the service will stay remain even after the last instance\n detached.  If this is set to false, the service will be deleted when the\n last instance detached from it.  If this is set to true, the service will\n remain and can be reused by other instances.  This is useful if you want to\n keep the service configuration, e.g., the published ports, handlers, and\n domains, even if there are no instances assigned to it."
+            "description": "Indicates if the service will stay remain even after the last instance\ndetached.  If this is set to false, the service will be deleted when the\nlast instance detached from it.  If this is set to true, the service will\nremain and can be reused by other instances.  This is useful if you want to\nkeep the service configuration, e.g., the published ports, handlers, and\ndomains, even if there are no instances assigned to it."
           },
           "autoscale": {
             "type": "boolean",
-            "description": "Indicates if the service has autoscale enabled.  See the associated\n autoscale documentation for more information about how to set this up.\n Autoscale policies can be set up after the service has been created."
+            "description": "Indicates if the service has autoscale enabled.  See the associated\nautoscale documentation for more information about how to set this up.\nAutoscale policies can be set up after the service has been created."
           },
           "soft_limit": {
             "type": "integer",
-            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\n to wake up another standby instance.  For example, if the soft limit is set\n to 5 and the service consists of 2 standby instances, one of the instances\n receives up to 5 concurrent requests.  The 6th parallel requests wakes up\n the second instance.  If there are no more standby instances to wake up,\n the number of requests assigned to each instance will exceed the soft\n limit.  The load balancer makes sure that when the number of in-flight\n requests goes down again, instances are put into standby as fast as\n possible.",
+            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.  For example, if the soft limit is set\nto 5 and the service consists of 2 standby instances, one of the instances\nreceives up to 5 concurrent requests.  The 6th parallel requests wakes up\nthe second instance.  If there are no more standby instances to wake up,\nthe number of requests assigned to each instance will exceed the soft\nlimit.  The load balancer makes sure that when the number of in-flight\nrequests goes down again, instances are put into standby as fast as\npossible.",
             "format": "uint64"
           },
           "hard_limit": {
             "type": "integer",
-            "description": "The hard limit defines the maximum number of concurrent requests that an\n instance assigned to the this service can handle.  The load balancer will\n never assign more requests to a single instance.  In case there are no\n other instances available, excess requests fail (i.e., they are blocked and\n not queued).",
+            "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.  The load balancer will\nnever assign more requests to a single instance.  In case there are no\nother instances available, excess requests fail (i.e., they are blocked and\nnot queued).",
             "format": "uint64"
           },
           "services": {
@@ -4541,14 +5072,14 @@
             "items": {
               "$ref": "#/components/schemas/Service"
             },
-            "description": "List of published network ports for this service and the destination port\n to which Unikraft Cloud will forward traffic to.  Additional handlers can\n be defined for each published port in order to define how the service will\n handle incoming connections and forward traffic from the Internet to your\n application.  For example, a service can be configured to terminate TLS\n connections, redirect HTTP traffic, or enable HTTP mode for load balancing."
+            "description": "List of published network ports for this service and the destination port\nto which Unikraft Cloud will forward traffic to.  Additional handlers can\nbe defined for each published port in order to define how the service will\nhandle incoming connections and forward traffic from the Internet to your\napplication.  For example, a service can be configured to terminate TLS\nconnections, redirect HTTP traffic, or enable HTTP mode for load balancing."
           },
           "domains": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Domain"
             },
-            "description": "List of domains associated with the service.  Domains are used to access\n the service over the Internet."
+            "description": "List of domains associated with the service.  Domains are used to access\nthe service over the Internet."
           },
           "instances": {
             "type": "array",
@@ -4558,18 +5089,18 @@
             "description": "List of instances assigned to the service."
           }
         },
-        "description": "A service group on Unikraft Cloud is used to describe how your application\n exposes its functionality to the outside world.  Once defined, assigning an\n instance to the service will make it accessible from the Internet.\n\n An application, running as an instance, may expose one or more ports, e.g. it\n listens on port 80 because your application exposes a HTTP web service. This,\n along with a set of additional metadata defines how the \"service\" is\n configured and accessed.  For example, a service may be configured to use\n TLS, or be bound to a specific domain name.\n\n When an instance is assigned to a service group, it immediately becomes\n accessible over the Internet on the exposed public port, using the set DNS\n name, and is routed to the set destination port.\n\n Note: If you do not specify a DNS name when you create a service and you\n indicate that the application exposes some ports, Unikraft Cloud will\n generates a random DNS name for you.  Unikraft Cloud also supports custom\n domains like www.example.com and wildcard domains like *.example.com."
+        "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
       },
       "ServiceGroupInstance": {
         "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance.  This is a unique identifier for the instance\n that is generated when the instance is created.  The UUID is used to\n reference the instance in API calls and can be used to identify the\n instance in all API calls that require an instance identifier."
+            "description": "The UUID of the instance.  This is a unique identifier for the instance\nthat is generated when the instance is created.  The UUID is used to\nreference the instance in API calls and can be used to identify the\ninstance in all API calls that require an instance identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the instance.  This is a human-readable name that can be used\n to identify the instance.  The name must be unique within the context of\n your account.  If no name is specified, a random name is generated for\n you.  The name can also be used to identify the instance in API calls."
+            "description": "The name of the instance.  This is a human-readable name that can be used\nto identify the instance.  The name must be unique within the context of\nyour account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the instance in API calls."
           }
         }
       },
@@ -4612,11 +5143,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for starting one or more instance(s) given their UUID(s)\n or name(s)."
+        "description": "The response message for starting one or more instance(s) given their UUID(s)\nor name(s)."
       },
       "StartInstanceResponseData": {
         "type": "object",
@@ -4639,7 +5170,7 @@
               "error"
             ],
             "type": "string",
-            "description": "Indicates whether the start operation was successful or not for this\n instance.",
+            "description": "Indicates whether the start operation was successful or not for this\ninstance.",
             "format": "enum"
           },
           "uuid": {
@@ -4662,16 +5193,32 @@
       },
       "StartInstancesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to start.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to start.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the instance to start.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance to start.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the instance(s) to start."
       },
       "StopInstanceResponse": {
@@ -4700,11 +5247,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for stopping one or more instance(s) given their UUID(s)\n or name(s)."
+        "description": "The response message for stopping one or more instance(s) given their UUID(s)\nor name(s)."
       },
       "StopInstanceResponseData": {
         "type": "object",
@@ -4759,16 +5306,32 @@
       },
       "StopInstancesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to stop.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the instance to stop.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the instance(s) to start."
       },
       "Volume": {
@@ -4776,11 +5339,11 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume.\n\n This is a unique identifier for the volume that is generated when the\n volume is created.  The UUID is used to reference the volume in\n API calls and can be used to identify the volume in all API calls that\n require an identifier."
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in\nAPI calls and can be used to identify the volume in all API calls that\nrequire an identifier."
           },
           "name": {
             "type": "string",
-            "description": "The name of the volume.\n\n This is a human-readable name that can be used to identify the volume.\n The name must be unique within the context of your account.  The name can\n also be used to identify the volume in API calls."
+            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
           "created_at": {
             "type": "string",
@@ -4798,7 +5361,7 @@
           },
           "persistent": {
             "type": "boolean",
-            "description": "Indicates if the volume will stay alive when the last instance is deleted\n that this volume is attached to."
+            "description": "Indicates if the volume will stay alive when the last instance is deleted\nthat this volume is attached to."
           },
           "attached_to": {
             "type": "array",
@@ -4818,34 +5381,64 @@
       },
       "VolumeInstanceID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance that the volume is attached to."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "description": "The UUID of the instance that the volume is attached to."
+              }
+            }
           },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance that the volume is attached to."
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance that the volume is attached to."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "Reference to the instance to attach the volume to."
       },
       "VolumeVolumeInstanceMount": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance that the volume is mounted in."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "description": "The UUID of the instance that the volume is mounted in."
+              },
+              "read_only": {
+                "type": "boolean",
+                "description": "Whether the volume is mounted read-only or read-write."
+              }
+            }
           },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance that the volume is mounted in."
-          },
-          "read_only": {
-            "type": "boolean",
-            "description": "Whether the volume is mounted read-only or read-write."
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance that the volume is mounted in."
+                  }
+                }
+              }
+            ]
           }
-        }
+        ]
       },
       "WaitInstanceResponse": {
         "type": "object",
@@ -4873,11 +5466,11 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
-        "description": "The response message for waiting for one or more instance(s) to reach a\n certain state given their UUID(s) or name(s)."
+        "description": "The response message for waiting for one or more instance(s) to reach a\ncertain state given their UUID(s) or name(s)."
       },
       "WaitInstanceResponseData": {
         "type": "object",
@@ -4919,16 +5512,32 @@
       },
       "WaitInstancesRequestID": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the instance to wait for.  Mutually exclusive with name."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "The UUID of the instance to wait for.  Mutually exclusive with name."
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "An identifier for the instance(s) to wait for."
       }
     },
@@ -4947,15 +5556,15 @@
   "tags": [
     {
       "name": "Autoscale",
-      "description": "Services allow you to load balance traffic for an Internet-facing service\n like a webserver by creating multiple instances within the same service.\n While you can add or remove instances to a service to scale your service,\n doing this manually makes it hard to react to changes in service load. On\n the other hand, always keeping a large number of instances running to cope\n with bursts is not an option either. This is where autoscale comes into play.\n With autoscale enabled, Unikraft Cloud takes the heavy lifting of constantly\n monitoring the load of your service and automatically creates or deletes\n instances as needed."
+      "description": "Services allow you to load balance traffic for an Internet-facing service\nlike a webserver by creating multiple instances within the same service.\nWhile you can add or remove instances to a service to scale your service,\ndoing this manually makes it hard to react to changes in service load. On\nthe other hand, always keeping a large number of instances running to cope\nwith bursts is not an option either. This is where autoscale comes into play.\nWith autoscale enabled, Unikraft Cloud takes the heavy lifting of constantly\nmonitoring the load of your service and automatically creates or deletes\ninstances as needed."
     },
     {
       "name": "Certificates",
-      "description": "Unikraft Cloud allows you to host your deployment at subdomains of the\n intended metro and/or use custom domains (e.g., example.com).  Typically,\n Unikraft Cloud will automatically generate a TLS certificate for you based\n on Let's Encrypt™ via a DNS-01 challenge.\n\n For subdomains, your deployment will use the wildcard TLS certificate of the\n respective Unikraft Cloud metro.\n\n For wildcard domains you have to supply your own certificate.  If you want to\n use Let's Encrypt™ you can use their DNS-based challenge and upload the\n resulting certificate to Unikraft Cloud."
+      "description": "Unikraft Cloud allows you to host your deployment at subdomains of the\nintended metro and/or use custom domains (e.g., example.com).  Typically,\nUnikraft Cloud will automatically generate a TLS certificate for you based\non Let's Encrypt™ via a DNS-01 challenge.\n\nFor subdomains, your deployment will use the wildcard TLS certificate of the\nrespective Unikraft Cloud metro.\n\nFor wildcard domains you have to supply your own certificate.  If you want to\nuse Let's Encrypt™ you can use their DNS-based challenge and upload the\nresulting certificate to Unikraft Cloud."
     },
     {
       "name": "Images",
-      "description": "An image is a collection of objects representing a VM which can be deployed\n on Unikraft Cloud.  Its format is based on the OCI Image Specification.\n Within the context of Unikraft Cloud, these images also include a kernel\n component."
+      "description": "An image is a collection of objects representing a VM which can be deployed\non Unikraft Cloud.  Its format is based on the OCI Image Specification.\nWithin the context of Unikraft Cloud, these images also include a kernel\ncomponent."
     },
     {
       "name": "Instances",
@@ -4963,15 +5572,15 @@
     },
     {
       "name": "ServiceGroups",
-      "description": "A service group on Unikraft Cloud is used to describe how your application\n exposes its functionality to the outside world.  Once defined, assigning an\n instance to the service will make it accessible from the Internet.\n\n An application, running as an instance, may expose one or more ports, e.g. it\n listens on port 80 because your application exposes a HTTP web service. This,\n along with a set of additional metadata defines how the \"service\" is\n configured and accessed.  For example, a service may be configured to use\n TLS, or be bound to a specific domain name.\n\n When an instance is assigned to a service group, it immediately becomes\n accessible over the Internet on the exposed public port, using the set DNS\n name, and is routed to the set destination port.\n\n Note: If you do not specify a DNS name when you create a service and you\n indicate that the application exposes some ports, Unikraft Cloud will\n generates a random DNS name for you.  Unikraft Cloud also supports custom\n domains like www.example.com and wildcard domains like *.example.com."
+      "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
     },
     {
       "name": "Users",
-      "description": "This document describes the Unikraft Cloud Users API (v1) for retrieving\n information about your user account."
+      "description": "This document describes the Unikraft Cloud Users API (v1) for retrieving\ninformation about your user account."
     },
     {
       "name": "Volumes",
-      "description": "Initrd (initial ramdisk) and actual volumes serve different purposes.\n An initrd is a file system loaded into memory during the boot process of the\n instance. Any new files created as well as any modifications made to files\n in the initrd are lost when the instance is stopped. In contrast, a volume\n is a persistent storage device that keeps data across restarts. In addition,\n it can be initialized with a set of files with one instance and then be\n detached and attached to a another one."
+      "description": "Initrd (initial ramdisk) and actual volumes serve different purposes.\nAn initrd is a file system loaded into memory during the boot process of the\ninstance. Any new files created as well as any modifications made to files\nin the initrd are lost when the instance is stopped. In contrast, a volume\nis a persistent storage device that keeps data across restarts. In addition,\nit can be initialized with a set of files with one instance and then be\ndetached and attached to a another one."
     }
   ]
 }

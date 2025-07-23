@@ -22,7 +22,7 @@
         "tags": [
           "Auth"
         ],
-        "description": "CheckAuthorization is used to check the authorization status of a request.\n It streams responses back to the client, indicating whether the signin\n request is authorized or not.",
+        "description": "CheckAuthorization is used to check the authorization status of a request.\nIt streams responses back to the client, indicating whether the signin\nrequest is authorized or not.",
         "operationId": "CheckAuthorization",
         "requestBody": {
           "content": {
@@ -53,7 +53,7 @@
         "tags": [
           "Auth"
         ],
-        "description": "RequestSignin initiates the sign-in process and returns an authorization\n URL.  The user should be redirected to this URL to complete the sign-in.",
+        "description": "RequestSignin initiates the sign-in process and returns an authorization\nURL.  The user should be redirected to this URL to complete the sign-in.",
         "operationId": "RequestSignin",
         "requestBody": {
           "content": {
@@ -87,7 +87,7 @@
         "properties": {
           "request_id": {
             "type": "string",
-            "description": "The request ID is a unique identifier for the request.  This is used to\n track the request in the system and should be provided by the client."
+            "description": "The request ID is a unique identifier for the request.  This is used to\ntrack the request in the system and should be provided by the client."
           }
         },
         "description": "The request message for checking authorization given a request ID."
@@ -118,7 +118,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -138,7 +138,7 @@
         "properties": {
           "hostname": {
             "type": "string",
-            "description": "The hostname is the name of the machine making the request.  This is\n mandatory as it consitutes a unique identifier for the machine."
+            "description": "The hostname is the name of the machine making the request.  This is\nmandatory as it consitutes a unique identifier for the machine."
           },
           "os": {
             "type": "string",
@@ -146,7 +146,7 @@
           },
           "os_version": {
             "type": "string",
-            "description": "The version of the operating system of the machine making the request, if\n available.\n\n For Android, it's like \"10\", \"11\", \"12\", etc.  For iOS and macOS it's like\n \"15.6.1\" or \"12.4.0\".  For Windows it's like \"10.0.19044.1889\". For FreeBSD\n it's like \"12.3-STABLE\".  For Linux, this is simply the kernel version on\n Linux, like \"5.10.0-17-amd64\"."
+            "description": "The version of the operating system of the machine making the request, if\navailable.\n\nFor Android, it's like \"10\", \"11\", \"12\", etc.  For iOS and macOS it's like\n\"15.6.1\" or \"12.4.0\".  For Windows it's like \"10.0.19044.1889\". For FreeBSD\nit's like \"12.3-STABLE\".  For Linux, this is simply the kernel version on\nLinux, like \"5.10.0-17-amd64\"."
           },
           "container": {
             "type": "boolean",
@@ -166,7 +166,7 @@
           },
           "cli_version": {
             "type": "string",
-            "description": "The CLI version is the version of the Unikraft CLI that is making the\n request."
+            "description": "The CLI version is the version of the Unikraft CLI that is making the\nrequest."
           },
           "goarch": {
             "type": "string",
@@ -209,7 +209,7 @@
           },
           "op_time_us": {
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
         },
@@ -224,7 +224,7 @@
           },
           "request_id": {
             "type": "string",
-            "description": "A unique identifier for the request.  This can be used to track the\n request in the system."
+            "description": "A unique identifier for the request.  This can be used to track the\nrequest in the system."
           }
         }
       }

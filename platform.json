@@ -876,6 +876,409 @@
         }
       }
     },
+    "/v1/service/autoscale": {
+      "get": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "GetAutoscaleConfigurations returns the current states and configurations of\n autoscale configurations.",
+        "operationId": "GetAutoscaleConfigurations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "CreateAutoscaleConfiguration creates an autoscale configuration for the\n specified service.",
+        "operationId": "CreateAutoscaleConfiguration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "DeleteAutoscaleConfigurations deletes autoscale configurations.",
+        "operationId": "DeleteAutoscaleConfigurations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service/autoscale/{uuid}/policies": {
+      "get": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "GetAutoscaleConfigurationPolicies returns the current state and\n configuration of an autoscale policy.",
+        "operationId": "GetAutoscaleConfigurationPolicies",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an\n autoscale configuration.",
+        "operationId": "CreateAutoscaleConfigurationPolicy",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "DeleteAutoscaleConfigurationPolicies deletes an autoscale policy.",
+        "operationId": "DeleteAutoscaleConfigurationPolicies",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service/autoscale/{uuid}/policies/{name}": {
+      "get": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "GetAutoscaleConfigurationPolicyByName returns the current state and\n configuration of an autoscale policy by it's name.",
+        "operationId": "GetAutoscaleConfigurationPolicyByName",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by\n name.",
+        "operationId": "DeleteAutoscaleConfigurationPolicyByName",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service/{uuid}/autoscale": {
+      "get": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "GetAutoscaleConfigurationsByServiceGroupUUID returns the current states\n and configurations of autoscale configurations by service UUID.",
+        "operationId": "GetAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale\n configuration for the specified service by UUID.",
+        "operationId": "CreateAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale\n configurations by service UUID.",
+        "operationId": "DeleteAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/services": {
       "get": {
         "tags": [
@@ -1040,10 +1443,519 @@
           }
         }
       }
+    },
+    "/v1/users/quotas": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Lists quota usage and limits of your user account.\n Limits are hard limits that cannot be exceeded.",
+        "operationId": "GetUser",
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotasResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/{uuid}/quotas": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Lists quota usage and limits of your user account by UUID.\n Limits are hard limits that cannot be exceeded.",
+        "operationId": "GetUserByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotasResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Returns the current status and the configuration of a particular volume if\n name is specified. Otherwise, returns the current status and configuration\n of all volumes.",
+        "operationId": "GetVolumes",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the volume in the response.  By\n default this is set to true, meaning that all information about the\n volume will be included in the response.  If set to false, only the\n basic information about the volume will be included, such as its name\n and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetVolumesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Creates one or more volumes with the given configuration.\n The volumes are automatically initialized with an empty file system.\n After initialization the volumes are in the available state and can be\n attached to an instance with the `PUT /v1/volumes/attach` endpoint.\n Note that, the size of a volume cannot be changed after creation.",
+        "operationId": "CreateVolume",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVolumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateVolumeResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Deletes the specified volume by its name or UUID. Fails if the volume is\n still attached to an instance. After this call the IDs associated with\n the volume are no longer valid.",
+        "operationId": "DeleteVolume",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteVolumesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/attach": {
+      "put": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Attaches a volume to an instance so that the volume is mounted when the\n instance starts. The volume needs to be in available state and the instance\n must in stopped state. Currently, each instance can have only one volume\n attached at most.",
+        "operationId": "AttachVolumes",
+        "parameters": [
+          {
+            "name": "attach_to.uuid",
+            "in": "query",
+            "description": "The UUID of the instance that the volume is attached to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attach_to.name",
+            "in": "query",
+            "description": "The name of the instance that the volume is attached to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "at",
+            "in": "query",
+            "description": "Path of the mountpoint.\n\n The path must be absolute, not contain `.` and `..` components, and not\n contain colons (`:`). The path must point to an empty directory. If the\n directory does not exist, it is created.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "read_only",
+            "in": "query",
+            "description": "Whether the volume should be mounted read-only.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AttachVolumesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/detach": {
+      "post": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Detaches a volume from instances. If no particular instance is specified\n the volume is detached from all instances. The instances from which to\n detach must not have the volume mounted. The API returns an error for each\n instance from which it was unable to detach the volume. If the volume has\n been created together with an instance, detaching the volume will make it\n persistent (i.e., it survives the deletion of the instance).",
+        "operationId": "DetachVolumes",
+        "parameters": [
+          {
+            "name": "from.uuid",
+            "in": "query",
+            "description": "The UUID of the instance that the volume is detached from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from.name",
+            "in": "query",
+            "description": "The name of the instance that the volume is detached from.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DetachVolumesRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetachVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/{uuid}": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Deletes the specified volume by its UUID. Fails if the volume is still\n attached to an instance. After this call the IDs associated with the\n volume are no longer valid.",
+        "operationId": "DeleteVolumeByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/{uuid}/attach": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Attaches a volume by UUID to an instance so that the volume is mounted when\n the instance starts. The volume needs to be in available state and the\n instance must in stopped state. Currently, each instance can have only one\n volume attached at most.",
+        "operationId": "AttachVolumeByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/{uuid}/detach": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Detaches a volume by UUID from instances. If no particular instance is\n specified the volume is detached from all instances. The instances from\n which to detach must not have the volume mounted. The API returns an error\n for each instance from which it was unable to detach the volume. If the\n volume has been created together with an instance, detaching the volume\n will make it persistent (i.e., it survives the deletion of the instance).",
+        "operationId": "DetachVolumeByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetachVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AttachVolumesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume to attach.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume to attach.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the volume(s) to attach."
+      },
+      "AttachVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AttachVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for attaching one or more volume(s) given their\n UUID(s) or name(s)."
+      },
+      "AttachVolumesResponseAttachedVolume": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume that was attached."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume that was attached."
+          }
+        }
+      },
+      "AttachVolumesResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachVolumesResponseAttachedVolume"
+            },
+            "description": "The volume(s) which were attached by the request."
+          }
+        }
+      },
+      "AutoscalePolicy": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the policy."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "If the policy is enabled."
+          },
+          "metric": {
+            "enum": [
+              "cpu"
+            ],
+            "type": "string",
+            "description": "Metric to use for the step policy.",
+            "format": "enum"
+          },
+          "adjustment_type": {
+            "enum": [
+              "change",
+              "exact",
+              "percentage"
+            ],
+            "type": "string",
+            "description": "The type of adjustment to be made in the step policy.",
+            "format": "enum"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutoscalePolicyStep"
+            },
+            "description": "The steps for the step policy.\n Each step defines an adjustment value and optional bounds."
+          }
+        },
+        "description": "AutoscalePolicy defines the autoscale policy for a service.\n Right now it contains fields from both the `ondemand` and `step` policies.\n They are marked both as optional, so only one of them should be set at a\n time. This is a current limitation of the API design."
+      },
+      "AutoscalePolicyStep": {
+        "type": "object",
+        "properties": {
+          "adjustment": {
+            "type": "integer",
+            "description": "The adjustment value for the step.",
+            "format": "int64"
+          },
+          "lower_bound": {
+            "type": "integer",
+            "description": "Lower bound for the step.",
+            "format": "int64"
+          },
+          "upper_bound": {
+            "type": "integer",
+            "description": "Upper bound for the step.",
+            "format": "int64"
+          }
+        }
+      },
       "Certificate": {
         "type": "object",
         "properties": {
@@ -1071,6 +1983,228 @@
             ],
             "type": "string",
             "format": "enum"
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationPolicyRequest": {
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The Name of the service to add a policy to."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoscalePolicy"
+              }
+            ],
+            "description": "The policy type to add to the autoscale configuration."
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationPolicyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationPolicyResponseData": {
+        "type": "object",
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponsePolicy"
+            },
+            "description": "The policies which were added by the request."
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationPolicyResponsePolicy": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service of the added policy."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service of the added policy."
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationRequest": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service to create a configuration for.\n Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service to create a configuration for.\n Mutually exclusive with UUID."
+          },
+          "min_size": {
+            "type": "integer",
+            "description": "The minimum number of instances to keep running.",
+            "format": "int64"
+          },
+          "max_size": {
+            "type": "integer",
+            "description": "The maximum number of instances to keep running.",
+            "format": "int64"
+          },
+          "warmup_time_ms": {
+            "type": "integer",
+            "description": "The warmup time in milliseconds for new instances.",
+            "format": "int64"
+          },
+          "cooldown_time_ms": {
+            "type": "integer",
+            "description": "The cooldown time in milliseconds for the autoscale configuration.",
+            "format": "int64"
+          },
+          "create_args": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationRequestInstanceCreateArgs"
+              }
+            ],
+            "description": "The arguments to use when creating the autoscale configuration."
+          },
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutoscalePolicy"
+            },
+            "description": "The policies to apply to the autoscale configuration."
+          }
+        },
+        "description": "The request to create an autoscale configuration for a service."
+      },
+      "CreateAutoscaleConfigurationRequestInstanceCreateArgs": {
+        "type": "object",
+        "properties": {
+          "roms": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms"
+              }
+            ],
+            "description": "The ROM to use for the autoscale configuration."
+          },
+          "template": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest"
+              }
+            ],
+            "description": "The template to use for the autoscale configuration."
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response to a CreateAutoscaleConfigurationRequest."
+      },
+      "CreateAutoscaleConfigurationResponseConfigurationsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service where the configuration was created."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service where the configuration was created."
+          }
+        }
+      },
+      "CreateAutoscaleConfigurationResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseConfigurationsResponse"
+            },
+            "description": "The configuration(s) which were created by the request."
           }
         }
       },
@@ -1446,6 +2580,224 @@
           }
         }
       },
+      "CreateVolumeRequest": {
+        "required": [
+          "size_mb"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the volume.\n\n This is a human-readable name that can be used to identify the volume.\n The name must be unique within the context of your account.  If no name is\n specified, a random name of the form `vol-X` is generated for you, where\n `X` is a 5 character long random alphanumeric suffix..  The name can also\n be used to identify the volume in API calls."
+          },
+          "size_mb": {
+            "type": "integer",
+            "description": "The size of the volume in megabytes.",
+            "format": "uint64"
+          }
+        },
+        "description": "Creates one or more volumes with the given configuration. The volumes are\n automatically initialized with an empty file system. After initialization\n the volumes are in the available state and can be attached to an instance\n with the `PUT /v1/volumes/attach` endpoint. Note that, the size of a volume\n cannot be changed after creation."
+      },
+      "CreateVolumeResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateVolumeResponseData"
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating of a volume."
+      },
+      "CreateVolumeResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateVolumeResponseVolume"
+            },
+            "description": "The volume(s) which were created by the request."
+          }
+        }
+      },
+      "CreateVolumeResponseVolume": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "UUID of the newly created volume."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the newly created volume."
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationPolicyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationPolicyResponseData": {
+        "type": "object",
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponsePoliciesResponse"
+            },
+            "description": "The policies which were deleted by the request."
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationPolicyResponsePoliciesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service of the deleted policy."
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationsRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service to delete a configuration for.\n Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service to delete a configuration for.\n Mutually exclusive with UUID."
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationsResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseServiceGroup"
+            },
+            "description": "The configuration(s) which were deleted by the request."
+          }
+        }
+      },
+      "DeleteAutoscaleConfigurationsResponseServiceGroup": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service where the configuration was deleted."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service where the configuration was deleted."
+          }
+        }
+      },
       "DeleteCertificatesRequestID": {
         "type": "object",
         "properties": {
@@ -1598,6 +2950,18 @@
         },
         "description": "Details of the instance which was deleted by this request."
       },
+      "DeletePolicyRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The Name of the policy to delete."
+          }
+        }
+      },
       "DeleteServiceGroupsRequestID": {
         "type": "object",
         "properties": {
@@ -1679,6 +3043,156 @@
         },
         "description": "Details of the service group which was deleted by this request."
       },
+      "DeleteVolumesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume to delete.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume to delete.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the volume(s) to delete."
+      },
+      "DeleteVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "DeleteVolumesResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteVolumesResponseDeletedVolume"
+            },
+            "description": "The volume(s) which were deleted by the request."
+          }
+        }
+      },
+      "DeleteVolumesResponseDeletedVolume": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume that was deleted."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume that was deleted."
+          }
+        }
+      },
+      "DetachVolumesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume to detach.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume to detach.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the volume(s) to detach."
+      },
+      "DetachVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetachVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "DetachVolumesResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetachVolumesResponseInstanceID"
+            },
+            "description": "The volume(s) which were detached by the request."
+          }
+        }
+      },
+      "DetachVolumesResponseInstanceID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance that the volume is detached from."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance that the volume is detached from."
+          }
+        },
+        "description": "Reference to the instance to detach the volume from."
+      },
       "Domain": {
         "type": "object",
         "properties": {
@@ -1696,6 +3210,201 @@
           }
         },
         "description": "A domain name.\n\n Domain names are completely specified with all labels in the hierarchy of the\n DNS, having no parts omitted.  The domain can be associated with an existing\n certificate by specifying the certificate's name or UUID.  If no certificate\n is specified and a FQDN is provided, Unikraft Cloud will automatically\n generate a new certificate for the domain based on Let's Encrypt and seek to\n accomplish a DNS-01 challenge."
+      },
+      "GetAutoscaleConfigurationPolicyRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The Name  of the policy to get."
+          }
+        }
+      },
+      "GetAutoscaleConfigurationPolicyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "GetAutoscaleConfigurationPolicyResponseData": {
+        "type": "object",
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponsePolicyResponse"
+            },
+            "description": "The policy which was retrieved by the request."
+          }
+        }
+      },
+      "GetAutoscaleConfigurationPolicyResponsePolicyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "policy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoscalePolicy"
+              }
+            ],
+            "description": "The policy which was retrieved by the request."
+          }
+        }
+      },
+      "GetAutoscaleConfigurationsRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service to create a configuration for.\n Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service to create a configuration for.\n Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the configuration(s) to get."
+      },
+      "GetAutoscaleConfigurationsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "GetAutoscaleConfigurationsResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseServiceGroup"
+            },
+            "description": "The configuration(s) which were retrieved by the request."
+          }
+        }
+      },
+      "GetAutoscaleConfigurationsResponseServiceGroup": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the service where the configuration was created."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service where the configuration was created."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "If the autoscale configuration is enabled."
+          },
+          "min_size": {
+            "type": "integer",
+            "description": "The minimum number of instances to keep running.\n Only if enabled is true.",
+            "format": "int64"
+          },
+          "max_size": {
+            "type": "integer",
+            "description": "The maximum number of instances to keep running.\n Only if enabled is true.",
+            "format": "int64"
+          },
+          "warmup_time_ms": {
+            "type": "integer",
+            "description": "The warmup time in seconds for new instances.\n Only if enabled is true.",
+            "format": "int64"
+          },
+          "cooldown_time_ms": {
+            "type": "integer",
+            "description": "The cooldown time in seconds for the autoscale configuration.\n Only if enabled is true.",
+            "format": "int64"
+          },
+          "template": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGroupTemplate"
+              }
+            ],
+            "description": "The instance template used for the autoscale configuration.\n Only if enabled is true."
+          },
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutoscalePolicy"
+            },
+            "description": "The policies applied to the autoscale configuration."
+          }
+        }
       },
       "GetCertificatesRequestID": {
         "type": "object",
@@ -2122,6 +3831,64 @@
           }
         }
       },
+      "GetVolumesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume to get.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume to get.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the volume(s) to get."
+      },
+      "GetVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more volume(s) given their\n UUID(s) or name(s)."
+      },
+      "GetVolumesResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Volume"
+            },
+            "description": "The volume(s) which were retrieved by the request."
+          }
+        }
+      },
       "Image": {
         "type": "object",
         "properties": {
@@ -2366,6 +4133,35 @@
         },
         "description": "An instance is a unikernel virtual machine running an application."
       },
+      "InstanceCreateArgsInstanceCreateRequestRoms": {
+        "required": [
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the ROM to use for the autoscale configuration."
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the ROM to use for the autoscale configuration."
+          }
+        }
+      },
+      "InstanceCreateArgsInstanceTemplateCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the template to use for the autoscale configuration."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the template to use for the autoscale configuration."
+          }
+        }
+      },
       "InstanceDomainInstanceDomainCertificate": {
         "type": "object",
         "properties": {
@@ -2527,6 +4323,153 @@
         },
         "description": "An object is a single component of an image which is external and can be\n uniquely identified by its digest."
       },
+      "Quotas": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the quota."
+          },
+          "used": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotasStats"
+              }
+            ],
+            "description": "Used quota"
+          },
+          "hard": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotasStats"
+              }
+            ],
+            "description": "Configured quota limits"
+          },
+          "limits": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotasLimits"
+              }
+            ],
+            "description": "Additional limits"
+          }
+        }
+      },
+      "QuotasLimits": {
+        "type": "object",
+        "properties": {
+          "min_memory_mb": {
+            "type": "integer",
+            "description": "Minimum amount of memory assigned to live instances in megabytes",
+            "format": "int64"
+          },
+          "max_memory_mb": {
+            "type": "integer",
+            "description": "Maximum amount of memory assigned to live instances in megabytes",
+            "format": "int64"
+          },
+          "min_volume_mb": {
+            "type": "integer",
+            "description": "Minimum size of a volume in megabytes",
+            "format": "int64"
+          },
+          "max_volume_mb": {
+            "type": "integer",
+            "description": "Maximum size of a volume in megabytes",
+            "format": "int64"
+          },
+          "min_autoscale_size": {
+            "type": "integer",
+            "description": "Minimum size of an autoscale group",
+            "format": "int64"
+          },
+          "max_autoscale_size": {
+            "type": "integer",
+            "description": "Maximum size of an autoscale group",
+            "format": "int64"
+          }
+        }
+      },
+      "QuotasResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotasResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\n the request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting the quota of a user given their UUID."
+      },
+      "QuotasResponseData": {
+        "type": "object",
+        "properties": {
+          "quotas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Quotas"
+            },
+            "description": "The quota(s) which were retrieved by the request."
+          }
+        }
+      },
+      "QuotasStats": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "integer",
+            "description": "Number of instances",
+            "format": "int64"
+          },
+          "live_instances": {
+            "type": "integer",
+            "description": "Number of instances that are not in the `stopped` state",
+            "format": "int64"
+          },
+          "live_memory_mb": {
+            "type": "integer",
+            "description": "Amount of memory assigned to instances that are not in the `stopped`\n state in megabytes",
+            "format": "int64"
+          },
+          "service_groups": {
+            "type": "integer",
+            "description": "Number of services",
+            "format": "int64"
+          },
+          "services": {
+            "type": "integer",
+            "description": "Number of published network ports over all existing services",
+            "format": "int64"
+          },
+          "volumes": {
+            "type": "integer",
+            "description": "Number of volumes",
+            "format": "int64"
+          },
+          "total_volume_mb": {
+            "type": "integer",
+            "description": "Total size of all volumes in megabytes",
+            "format": "int64"
+          }
+        }
+      },
       "Service": {
         "type": "object",
         "properties": {
@@ -2623,6 +4566,19 @@
           "name": {
             "type": "string",
             "description": "The name of the instance.  This is a human-readable name that can be used\n to identify the instance.  The name must be unique within the context of\n your account.  If no name is specified, a random name is generated for\n you.  The name can also be used to identify the instance in API calls."
+          }
+        }
+      },
+      "ServiceGroupTemplate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the template used for the autoscale configuration."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the template used for the autoscale configuration."
           }
         }
       },
@@ -2797,6 +4753,82 @@
         },
         "description": "An identifier for the instance(s) to start."
       },
+      "Volume": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the volume.\n\n This is a unique identifier for the volume that is generated when the\n volume is created.  The UUID is used to reference the volume in\n API calls and can be used to identify the volume in all API calls that\n require an identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the volume.\n\n This is a human-readable name that can be used to identify the volume.\n The name must be unique within the context of your account.  The name can\n also be used to identify the volume in API calls."
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The time the volume was created.",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "description": "Current state of the volume."
+          },
+          "size_mb": {
+            "type": "integer",
+            "description": "The size of the volume in megabytes.",
+            "format": "uint64"
+          },
+          "persistent": {
+            "type": "boolean",
+            "description": "Indicates if the volume will stay alive when the last instance is deleted\n that this volume is attached to."
+          },
+          "attached_to": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolumeInstanceID"
+            },
+            "description": "List of instances that this volume is attached to."
+          },
+          "mounted_by": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolumeVolumeInstanceMount"
+            },
+            "description": "List of instances that have this volume mounted."
+          }
+        }
+      },
+      "VolumeInstanceID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance that the volume is attached to."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance that the volume is attached to."
+          }
+        },
+        "description": "Reference to the instance to attach the volume to."
+      },
+      "VolumeVolumeInstanceMount": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance that the volume is mounted in."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance that the volume is mounted in."
+          },
+          "read_only": {
+            "type": "boolean",
+            "description": "Whether the volume is mounted read-only or read-write."
+          }
+        }
+      },
       "WaitInstanceResponse": {
         "type": "object",
         "properties": {
@@ -2896,6 +4928,10 @@
   ],
   "tags": [
     {
+      "name": "Autoscale",
+      "description": "Services allow you to load balance traffic for an Internet-facing service\n like a webserver by creating multiple instances within the same service.\n While you can add or remove instances to a service to scale your service,\n doing this manually makes it hard to react to changes in service load. On\n the other hand, always keeping a large number of instances running to cope\n with bursts is not an option either. This is where autoscale comes into play.\n With autoscale enabled, Unikraft Cloud takes the heavy lifting of constantly\n monitoring the load of your service and automatically creates or deletes\n instances as needed."
+    },
+    {
       "name": "Certificates",
       "description": "Unikraft Cloud allows you to host your deployment at subdomains of the\n intended metro and/or use custom domains (e.g., example.com).  Typically,\n Unikraft Cloud will automatically generate a TLS certificate for you based\n on Let's Encrypt™ via a DNS-01 challenge.\n\n For subdomains, your deployment will use the wildcard TLS certificate of the\n respective Unikraft Cloud metro.\n\n For wildcard domains you have to supply your own certificate.  If you want to\n use Let's Encrypt™ you can use their DNS-based challenge and upload the\n resulting certificate to Unikraft Cloud."
     },
@@ -2910,6 +4946,14 @@
     {
       "name": "ServiceGroups",
       "description": "A service group on Unikraft Cloud is used to describe how your application\n exposes its functionality to the outside world.  Once defined, assigning an\n instance to the service will make it accessible from the Internet.\n\n An application, running as an instance, may expose one or more ports, e.g. it\n listens on port 80 because your application exposes a HTTP web service. This,\n along with a set of additional metadata defines how the \"service\" is\n configured and accessed.  For example, a service may be configured to use\n TLS, or be bound to a specific domain name.\n\n When an instance is assigned to a service group, it immediately becomes\n accessible over the Internet on the exposed public port, using the set DNS\n name, and is routed to the set destination port.\n\n Note: If you do not specify a DNS name when you create a service and you\n indicate that the application exposes some ports, Unikraft Cloud will\n generates a random DNS name for you.  Unikraft Cloud also supports custom\n domains like www.example.com and wildcard domains like *.example.com."
+    },
+    {
+      "name": "Users",
+      "description": "This document describes the Unikraft Cloud Users API (v1) for retrieving\n information about your user account."
+    },
+    {
+      "name": "Volumes",
+      "description": "Initrd (initial ramdisk) and actual volumes serve different purposes.\n An initrd is a file system loaded into memory during the boot process of the\n instance. Any new files created as well as any modifications made to files\n in the initrd are lost when the instance is stopped. In contrast, a volume\n is a persistent storage device that keeps data across restarts. In addition,\n it can be initialized with a set of files with one instance and then be\n detached and attached to a another one."
     }
   ]
 }

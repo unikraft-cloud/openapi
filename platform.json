@@ -344,7 +344,14 @@
         "operationId": "DeleteInstances",
         "requestBody": {
           "content": {
-            "application/json": {}
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteInstancesRequestID"
+                }
+              }
+            }
           },
           "required": true
         },
@@ -467,7 +474,14 @@
         "operationId": "StartInstances",
         "requestBody": {
           "content": {
-            "application/json": {}
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StartInstancesRequestID"
+                }
+              }
+            }
           },
           "required": true
         },
@@ -1152,12 +1166,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {}
-          },
-          "required": true
-        },
         "responses": {
           "default": {
             "description": "default",
@@ -1189,12 +1197,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {}
-          },
-          "required": true
-        },
         "responses": {
           "default": {
             "description": "default",
@@ -1224,12 +1226,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {}
-          },
-          "required": true
-        },
         "responses": {
           "default": {
             "description": "default",
@@ -1259,12 +1255,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {}
-          },
-          "required": true
-        },
         "responses": {
           "default": {
             "description": "default",
@@ -2878,6 +2868,20 @@
           }
         },
         "description": "Details of the certificate which was deleted by this request."
+      },
+      "DeleteInstancesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance to retrieve.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance to retrieve.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the instance(s) to delete."
       },
       "DeleteInstancesResponse": {
         "type": "object",
@@ -4655,6 +4659,20 @@
             "description": "The previous state of the instance before it was deleted."
           }
         }
+      },
+      "StartInstancesRequestID": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the instance to start.  Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance to start.  Mutually exclusive with UUID."
+          }
+        },
+        "description": "An identifier for the instance(s) to start."
       },
       "StopInstanceResponse": {
         "type": "object",

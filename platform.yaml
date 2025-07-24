@@ -1382,6 +1382,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -1389,6 +1391,8 @@ components:
                             description: The UUID of the volume to attach.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -1659,6 +1663,9 @@ components:
                     type: string
                     description: The name of the service of the added policy.
         CreateAutoscaleConfigurationRequest:
+            required:
+                - uuid
+                - name
             type: object
             properties:
                 uuid:
@@ -1934,6 +1941,8 @@ components:
             allOf:
                 - oneOf:
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -1942,6 +1951,8 @@ components:
                                 (Optional).  The name of the existing certificate.  Mutually
                                 exclusive with UUID.
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2008,6 +2019,8 @@ components:
                             use too.
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2017,6 +2030,8 @@ components:
                                 UUID.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2326,6 +2341,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2335,6 +2352,8 @@ components:
                                 Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2401,6 +2420,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2410,6 +2431,8 @@ components:
                                 Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2477,6 +2500,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2484,6 +2509,8 @@ components:
                             description: The UUID of the instance to retrieve.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2560,6 +2587,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2569,6 +2598,8 @@ components:
                                 Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2636,6 +2667,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2643,6 +2676,8 @@ components:
                             description: The UUID of the volume to delete.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2708,6 +2743,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2715,6 +2752,8 @@ components:
                             description: The UUID of the volume to detach.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2869,6 +2908,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2878,6 +2919,8 @@ components:
                                 Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -2983,6 +3026,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2990,6 +3035,8 @@ components:
                             description: The UUID of the certificate to get.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -3240,6 +3287,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -3247,6 +3296,8 @@ components:
                             description: The UUID of the instance to get.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -3290,6 +3341,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -3297,6 +3350,8 @@ components:
                             description: The UUID of the service group to get.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -3342,6 +3397,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -3349,6 +3406,8 @@ components:
                             description: The UUID of the volume to get.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -3766,12 +3825,16 @@ components:
             allOf:
                 - oneOf:
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
                             type: string
                             description: The name of the template to use for the autoscale configuration.
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -3780,25 +3843,36 @@ components:
                             format: uuid
         InstanceDomainInstanceDomainCertificate:
             type: object
-            properties:
-                uuid:
-                    type: string
-                    description: |-
-                        The UUID of the certificate.
+            allOf:
+                - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            type: string
+                            description: |-
+                                The UUID of the certificate.
 
-                        This is a unique identifier for the certificate that is generated
-                        when the certificate is created.  The UUID is used to reference the
-                        certificate in API calls and can be used to identify the certificate
-                        in all API calls that require a certificate identifier.
-                    format: uuid
-                name:
-                    type: string
-                    description: |-
-                        The name of the certificate.
+                                This is a unique identifier for the certificate that is generated
+                                when the certificate is created.  The UUID is used to reference the
+                                certificate in API calls and can be used to identify the certificate
+                                in all API calls that require a certificate identifier.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            type: string
+                            description: |-
+                                The name of the certificate.
 
-                        This is a human-readable name that can be used to identify the
-                        certificate.  The name is unique within the context of your account.
-                        The name can also be used to identify the certificate in API calls.
+                                This is a human-readable name that can be used to identify the
+                                certificate.  The name is unique within the context of your account.
+                                The name can also be used to identify the certificate in API calls.
             description: |-
                 The certificate associated with the domain.
 
@@ -4339,6 +4413,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -4346,6 +4422,8 @@ components:
                             description: The UUID of the instance to start.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -4423,6 +4501,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -4430,6 +4510,8 @@ components:
                             description: The UUID of the instance to stop.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
@@ -4614,6 +4696,8 @@ components:
             allOf:
                 - oneOf:
                     - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -4621,6 +4705,8 @@ components:
                             description: The UUID of the instance to wait for.  Mutually exclusive with name.
                             format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:

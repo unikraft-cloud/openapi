@@ -431,7 +431,7 @@
       }
     },
     "/v1/instances/metrics": {
-      "put": {
+      "get": {
         "tags": [
           "Instances"
         ],
@@ -750,7 +750,7 @@
       }
     },
     "/v1/instances/{uuid}/metrics": {
-      "put": {
+      "get": {
         "tags": [
           "Instances"
         ],

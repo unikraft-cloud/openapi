@@ -300,7 +300,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GetInstanceLogsResponse'
     /v1/instances/metrics:
-        put:
+        get:
             tags:
                 - Instances
             description: Get the metrics of an instance by its UUID or name.
@@ -542,7 +542,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GetInstanceLogsResponse'
     /v1/instances/{uuid}/metrics:
-        put:
+        get:
             tags:
                 - Instances
             description: Get the metrics of an instance by its UUID.

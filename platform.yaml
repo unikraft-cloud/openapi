@@ -103,9 +103,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the certificate.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -123,9 +125,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the certificate to delete.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -450,9 +454,28 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to get.
                   required: true
                   schema:
                     type: string
+                    format: uuid
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the instance in the response.  By default
+                    this is set to true, meaning that all information about the instance will
+                    be included in the response.  If set to false, only the basic information
+                    about the instance will be included, such as its name and UUID.
+                  schema:
+                    type: boolean
+                - name: metrics
+                  in: query
+                  description: |-
+                    Whether to include metrics about the instance in the response.  By default
+                    this is set to false, meaning that no metrics will be included in the
+                    response.
+                  schema:
+                    type: boolean
             responses:
                 default:
                     description: default
@@ -471,9 +494,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to delete.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -490,9 +515,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to delete.
                   required: true
                   schema:
                     type: string
+                    format: uuid
                 - name: offset
                   in: query
                   description: |-
@@ -523,9 +550,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to retrieve metrics for.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -544,9 +573,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to start.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -565,9 +596,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to stop.
                   required: true
                   schema:
                     type: string
+                    format: uuid
                 - name: force
                   in: query
                   description: Whether to immediately force stop the instance.
@@ -610,32 +643,17 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the instance to delete.
                   required: true
                   schema:
                     type: string
-                - name: state
-                  in: query
-                  description: The desired state to wait for.  Default is `running`.
-                  schema:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "standby"
-                    type: string
-                    format: enum
-                - name: timeout_ms
-                  in: query
-                  description: |-
-                    Timeout in milliseconds to wait for the instance to reach the desired
-                    state.  If the timeout is reached, the request will fail with an error.
-                    A value of -1 means to wait indefinitely until the instance reaches the
-                    desired state.
-                  schema:
-                    type: integer
-                    format: int64
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/WaitInstanceByUUIDRequest'
+                required: true
             responses:
                 default:
                     description: default
@@ -794,11 +812,14 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group.
                   required: true
                   schema:
                     type: string
+                    format: uuid
                 - name: name
                   in: path
+                  description: The name of the policy to get.
                   required: true
                   schema:
                     type: string
@@ -819,11 +840,14 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group.
                   required: true
                   schema:
                     type: string
+                    format: uuid
                 - name: name
                   in: path
+                  description: The name of the policy to delete.
                   required: true
                   schema:
                     type: string
@@ -845,9 +869,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -865,9 +891,19 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: |-
+                    The UUID of the service to create a configuration for.
+                    Mutually exclusive with name.
                   required: true
                   schema:
                     type: string
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequest'
+                required: true
             responses:
                 default:
                     description: default
@@ -885,9 +921,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -984,9 +1022,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group to retrieve.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -1004,9 +1044,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the service group to delete.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -1040,9 +1082,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the user to retrieve quotas for.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -1232,9 +1276,11 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the volume to delete.
                   required: true
                   schema:
                     type: string
+                    format: uuid
             responses:
                 default:
                     description: default
@@ -1255,9 +1301,36 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the volume to attach.
                   required: true
                   schema:
                     type: string
+                    format: uuid
+                - name: attach_to.uuid
+                  in: query
+                  description: The UUID of the instance that the volume is attached to.
+                  schema:
+                    type: string
+                - name: attach_to.name
+                  in: query
+                  description: The name of the instance that the volume is attached to.
+                  schema:
+                    type: string
+                - name: at
+                  in: query
+                  description: |-
+                    Path of the mountpoint.
+
+                    The path must be absolute, not contain `.` and `..` components, and not
+                    contain colons (`:`). The path must point to an empty directory. If the
+                    directory does not exist, it is created.
+                  schema:
+                    type: string
+                - name: read_only
+                  in: query
+                  description: Whether the volume should be mounted read-only.
+                  schema:
+                    type: boolean
             responses:
                 default:
                     description: default
@@ -1280,7 +1353,19 @@ paths:
             parameters:
                 - name: uuid
                   in: path
+                  description: The UUID of the volume to detach.
                   required: true
+                  schema:
+                    type: string
+                    format: uuid
+                - name: from.uuid
+                  in: query
+                  description: The UUID of the instance that the volume is detached from.
+                  schema:
+                    type: string
+                - name: from.name
+                  in: query
+                  description: The name of the instance that the volume is detached from.
                   schema:
                     type: string
             responses:
@@ -1451,6 +1536,61 @@ components:
                         - "error"
                     type: string
                     format: enum
+        CreateAutoscaleConfigurationByServiceGroupUUIDRequest:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: |-
+                        The UUID of the service to create a configuration for.
+                        Mutually exclusive with name.
+                    format: uuid
+                min_size:
+                    type: integer
+                    description: The minimum number of instances to keep running.
+                    format: int64
+                max_size:
+                    type: integer
+                    description: The maximum number of instances to keep running.
+                    format: int64
+                warmup_time_ms:
+                    type: integer
+                    description: The warmup time in milliseconds for new instances.
+                    format: int64
+                cooldown_time_ms:
+                    type: integer
+                    description: The cooldown time in milliseconds for the autoscale configuration.
+                    format: int64
+                create_args:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequestInstanceCreateArgs'
+                    description: The arguments to use when creating the autoscale configuration.
+                policies:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AutoscalePolicy'
+                    description: The policies to apply to the autoscale configuration.
+            description: |-
+                The request to create an autoscale configuration for a service group based on
+                its UUID.
+        CreateAutoscaleConfigurationByServiceGroupUUIDRequestInstanceCreateArgs:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: roms
+                      type: object
+                      properties:
+                        roms:
+                            allOf:
+                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms'
+                            description: The ROM to use for the autoscale configuration.
+                    - title: template
+                      type: object
+                      properties:
+                        template:
+                            allOf:
+                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest'
+                            description: The template to use for the autoscale configuration.
         CreateAutoscaleConfigurationPolicyRequest:
             required:
                 - name
@@ -4379,6 +4519,41 @@ components:
                         name:
                             type: string
                             description: The name of the instance that the volume is mounted in.
+        WaitInstanceByUUIDRequest:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    uuid:
+                        type: string
+                        description: The UUID of the instance to delete.
+                        format: uuid
+                    state:
+                        enum:
+                            - "stopped"
+                            - "starting"
+                            - "running"
+                            - "draining"
+                            - "stopping"
+                            - "standby"
+                        type: string
+                        description: The desired state to wait for.  Default is `running`.
+                        format: enum
+                - oneOf:
+                    - title: timeout_ms
+                      type: object
+                      properties:
+                        timeout_ms:
+                            type: integer
+                            description: |-
+                                Timeout in milliseconds to wait for the instance to reach the desired
+                                state.  If the timeout is reached, the request will fail with an error.
+                                A value of -1 means to wait indefinitely until the instance reaches the
+                                desired state.
+                            format: int64
+            description: |-
+                The request message for waiting for an instance to reach a certain state by
+                its UUID.
         WaitInstanceResponse:
             type: object
             properties:

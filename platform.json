@@ -1003,7 +1003,112 @@
         }
       }
     },
-    "/v1/service/autoscale/{uuid}/policies": {
+    "/v1/service/{uuid}/autoscale": {
+      "get": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "GetAutoscaleConfigurationsByServiceGroupUUID returns the current states\nand configurations of autoscale configurations by service UUID.",
+        "operationId": "GetAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale\nconfiguration for the specified service by UUID.",
+        "operationId": "CreateAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Autoscale"
+        ],
+        "description": "DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale\nconfigurations by service UUID.",
+        "operationId": "DeleteAutoscaleConfigurationsByServiceGroupUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service/{uuid}/autoscale/policies": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1122,7 +1227,7 @@
         }
       }
     },
-    "/v1/service/autoscale/{uuid}/policies/{name}": {
+    "/v1/service/{uuid}/autoscale/policies/{name}": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1197,111 +1302,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/service/{uuid}/autoscale": {
-      "get": {
-        "tags": [
-          "Autoscale"
-        ],
-        "description": "GetAutoscaleConfigurationsByServiceGroupUUID returns the current states\nand configurations of autoscale configurations by service UUID.",
-        "operationId": "GetAutoscaleConfigurationsByServiceGroupUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the service group.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Autoscale"
-        ],
-        "description": "CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale\nconfiguration for the specified service by UUID.",
-        "operationId": "CreateAutoscaleConfigurationsByServiceGroupUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Autoscale"
-        ],
-        "description": "DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale\nconfigurations by service UUID.",
-        "operationId": "DeleteAutoscaleConfigurationsByServiceGroupUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the service group.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponse"
                 }
               }
             }

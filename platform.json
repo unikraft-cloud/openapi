@@ -1818,7 +1818,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the volume to attach.  Mutually exclusive with name."
+                    "description": "The UUID of the volume to attach.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -1898,7 +1899,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume that was attached."
+            "description": "The UUID of the volume that was attached.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -1982,7 +1984,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated when the\ncertificate is created.  The UUID is used to reference the certificate in\nAPI calls and can be used to identify the certificate in all API calls that\nrequire an identifier."
+            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated when the\ncertificate is created.  The UUID is used to reference the certificate in\nAPI calls and can be used to identify the certificate in all API calls that\nrequire an identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2100,7 +2103,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service of the added policy."
+            "description": "The UUID of the service of the added policy.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2113,7 +2117,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name."
+            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2255,7 +2260,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service where the configuration was created."
+            "description": "The UUID of the service where the configuration was created.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2476,7 +2482,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "(Optional).  The UUID for the existing certificate.  Mutually\nexclusive with name."
+                    "description": "(Optional).  The UUID for the existing certificate.  Mutually\nexclusive with name.",
+                    "format": "uuid"
                   }
                 }
               }
@@ -2544,7 +2551,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name."
+                    "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -2571,7 +2579,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID."
+            "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2815,7 +2824,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "UUID of the newly created volume."
+            "description": "UUID of the newly created volume.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -2910,7 +2920,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the service to delete a configuration for.\nMutually exclusive with name."
+                    "description": "The UUID of the service to delete a configuration for.\nMutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3000,7 +3011,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service where the configuration was deleted."
+            "description": "The UUID of the service where the configuration was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3019,7 +3031,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the certificate to retrieve.\nMutually exclusive with name."
+                    "description": "The UUID of the certificate to retrieve.\nMutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3096,7 +3109,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the certificate which was deleted."
+            "description": "The UUID of the certificate which was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3116,7 +3130,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the instance to retrieve.  Mutually exclusive with name."
+                    "description": "The UUID of the instance to retrieve.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3193,7 +3208,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance which was deleted."
+            "description": "The UUID of the instance which was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3229,7 +3245,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the service group to retrieve.\nMutually exclusive with name."
+                    "description": "The UUID of the service group to retrieve.\nMutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3306,7 +3323,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service group which was deleted."
+            "description": "The UUID of the service group which was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3326,7 +3344,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the volume to delete.  Mutually exclusive with name."
+                    "description": "The UUID of the volume to delete.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3417,7 +3436,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume that was deleted."
+            "description": "The UUID of the volume that was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3436,7 +3456,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the volume to detach.  Mutually exclusive with name."
+                    "description": "The UUID of the volume to detach.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3521,7 +3542,8 @@
             "properties": {
               "uuid": {
                 "type": "string",
-                "description": "The UUID of the instance that the volume is detached from."
+                "description": "The UUID of the instance that the volume is detached from.",
+                "format": "uuid"
               }
             }
           },
@@ -3678,7 +3700,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name."
+                    "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3769,7 +3792,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service where the configuration was created."
+            "description": "The UUID of the service where the configuration was created.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -3827,7 +3851,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the certificate to get.  Mutually exclusive with name."
+                    "description": "The UUID of the certificate to get.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -3999,7 +4024,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance."
+            "description": "The UUID of the instance.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -4152,7 +4178,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the instance to get.  Mutually exclusive with name."
+                    "description": "The UUID of the instance to get.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -4226,7 +4253,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the service group to get.  Mutually exclusive with name."
+                    "description": "The UUID of the service group to get.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -4300,7 +4328,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the volume to get.  Mutually exclusive with name."
+                    "description": "The UUID of the volume to get.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -4470,7 +4499,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance.\n\nThis is a unique identifier for the instance that is generated when the\ninstance is created.  The UUID is used to reference the instance in API\ncalls and can be used to identify the instance in all API calls that\nrequire an instance identifier."
+            "description": "The UUID of the instance.\n\nThis is a unique identifier for the instance that is generated when the\ninstance is created.  The UUID is used to reference the instance in API\ncalls and can be used to identify the instance in all API calls that\nrequire an instance identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -4659,7 +4689,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the template to use for the autoscale configuration."
+                    "description": "The UUID of the template to use for the autoscale configuration.",
+                    "format": "uuid"
                   }
                 }
               }
@@ -4672,7 +4703,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated\nwhen the certificate is created.  The UUID is used to reference the\ncertificate in API calls and can be used to identify the certificate\nin all API calls that require a certificate identifier."
+            "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated\nwhen the certificate is created.  The UUID is used to reference the\ncertificate in API calls and can be used to identify the certificate\nin all API calls that require a certificate identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -4686,7 +4718,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier."
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -4707,7 +4740,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier."
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -4729,7 +4763,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the network interface. This is a unique identifier for the\nnetwork interface that is generated when the instance is created."
+            "description": "The UUID of the network interface. This is a unique identifier for the\nnetwork interface that is generated when the instance is created.",
+            "format": "uuid"
           },
           "private_ip": {
             "type": "string",
@@ -4848,7 +4883,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the quota."
+            "description": "The UUID of the quota.",
+            "format": "uuid"
           },
           "used": {
             "allOf": [
@@ -5038,7 +5074,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service group is created.  The UUID is used to reference the service in\nAPI calls and can be used to identify the service group in all API calls\nthat require an identifier."
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service group is created.  The UUID is used to reference the service in\nAPI calls and can be used to identify the service group in all API calls\nthat require an identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5096,7 +5133,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance.  This is a unique identifier for the instance\nthat is generated when the instance is created.  The UUID is used to\nreference the instance in API calls and can be used to identify the\ninstance in all API calls that require an instance identifier."
+            "description": "The UUID of the instance.  This is a unique identifier for the instance\nthat is generated when the instance is created.  The UUID is used to\nreference the instance in API calls and can be used to identify the\ninstance in all API calls that require an instance identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5113,7 +5151,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the template used for the autoscale configuration."
+            "description": "The UUID of the template used for the autoscale configuration.",
+            "format": "uuid"
           }
         }
       },
@@ -5175,7 +5214,8 @@
           },
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance which was deleted."
+            "description": "The UUID of the instance which was deleted.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5202,7 +5242,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the instance to start.  Mutually exclusive with name."
+                    "description": "The UUID of the instance to start.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -5270,7 +5311,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance."
+            "description": "The UUID of the instance.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5315,7 +5357,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the instance to stop.  Mutually exclusive with name."
+                    "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },
@@ -5339,7 +5382,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in\nAPI calls and can be used to identify the volume in all API calls that\nrequire an identifier."
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in\nAPI calls and can be used to identify the volume in all API calls that\nrequire an identifier.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5387,7 +5431,8 @@
             "properties": {
               "uuid": {
                 "type": "string",
-                "description": "The UUID of the instance that the volume is attached to."
+                "description": "The UUID of the instance that the volume is attached to.",
+                "format": "uuid"
               }
             }
           },
@@ -5416,7 +5461,8 @@
             "properties": {
               "uuid": {
                 "type": "string",
-                "description": "The UUID of the instance that the volume is mounted in."
+                "description": "The UUID of the instance that the volume is mounted in.",
+                "format": "uuid"
               },
               "read_only": {
                 "type": "boolean",
@@ -5489,7 +5535,8 @@
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the instance."
+            "description": "The UUID of the instance.",
+            "format": "uuid"
           },
           "name": {
             "type": "string",
@@ -5521,7 +5568,8 @@
                 "properties": {
                   "uuid": {
                     "type": "string",
-                    "description": "The UUID of the instance to wait for.  Mutually exclusive with name."
+                    "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
+                    "format": "uuid"
                   }
                 }
               },

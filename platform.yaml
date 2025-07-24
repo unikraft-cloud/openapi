@@ -1302,6 +1302,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the volume to attach.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -1354,6 +1355,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the volume that was attached.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the volume that was attached.
@@ -1427,6 +1429,7 @@ components:
                         certificate is created.  The UUID is used to reference the certificate in
                         API calls and can be used to identify the certificate in all API calls that
                         require an identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -1511,6 +1514,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the service of the added policy.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the service of the added policy.
@@ -1522,6 +1526,7 @@ components:
                     description: |-
                         The UUID of the service to create a configuration for.
                         Mutually exclusive with name.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -1614,6 +1619,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the service where the configuration was created.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the service where the configuration was created.
@@ -1803,6 +1809,7 @@ components:
                             description: |-
                                 (Optional).  The UUID for the existing certificate.  Mutually
                                 exclusive with name.
+                            format: uuid
             description: |-
                 A reference to an existing certificate which can be used for the
                 specified domain.  If unspecified, Unikraft Cloud will
@@ -1868,6 +1875,7 @@ components:
                             description: |-
                                 (Optional).  Reference an existing (persistent) service group by its
                                 UUID.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -1897,6 +1905,7 @@ components:
 
                         If this is the only specified field, then it will look up an existing
                         volume by this UUID.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -2118,6 +2127,7 @@ components:
                 uuid:
                     type: string
                     description: UUID of the newly created volume.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the newly created volume.
@@ -2183,6 +2193,7 @@ components:
                             description: |-
                                 The UUID of the service to delete a configuration for.
                                 Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2241,6 +2252,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the service where the configuration was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the service where the configuration was deleted.
@@ -2256,6 +2268,7 @@ components:
                             description: |-
                                 The UUID of the certificate to retrieve.
                                 Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2314,6 +2327,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the certificate which was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the certificate which was deleted.
@@ -2328,6 +2342,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the instance to retrieve.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2384,6 +2399,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the instance which was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the instance which was deleted.
@@ -2411,6 +2427,7 @@ components:
                             description: |-
                                 The UUID of the service group to retrieve.
                                 Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2469,6 +2486,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the service group which was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the service group which was deleted.
@@ -2483,6 +2501,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the volume to delete.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2540,6 +2559,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the volume that was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the volume that was deleted.
@@ -2553,6 +2573,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the volume to detach.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2605,6 +2626,7 @@ components:
                     uuid:
                         type: string
                         description: The UUID of the instance that the volume is detached from.
+                        format: uuid
                 - oneOf:
                     - title: name
                       type: object
@@ -2714,6 +2736,7 @@ components:
                             description: |-
                                 The UUID of the service to create a configuration for.
                                 Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2773,6 +2796,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the service where the configuration was created.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the service where the configuration was created.
@@ -2824,6 +2848,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the certificate to get.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -2951,6 +2976,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the instance.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the instance.
@@ -3079,6 +3105,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the instance to get.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -3128,6 +3155,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the service group to get.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -3179,6 +3207,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the volume to get.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -3306,6 +3335,7 @@ components:
                         instance is created.  The UUID is used to reference the instance in API
                         calls and can be used to identify the instance in all API calls that
                         require an instance identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -3607,6 +3637,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the template to use for the autoscale configuration.
+                            format: uuid
         InstanceDomainInstanceDomainCertificate:
             type: object
             properties:
@@ -3619,6 +3650,7 @@ components:
                         when the certificate is created.  The UUID is used to reference the
                         certificate in API calls and can be used to identify the certificate
                         in all API calls that require a certificate identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -3646,6 +3678,7 @@ components:
                         the service is created.  The UUID is used to reference the service group
                         in API calls and can be used to identify the service in all API calls
                         that require an service identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -3677,6 +3710,7 @@ components:
                         volume is created.  The UUID is used to reference the volume in API calls
                         and can be used to identify the volume in all API calls that require a
                         volume identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -3706,6 +3740,7 @@ components:
                     description: |-
                         The UUID of the network interface. This is a unique identifier for the
                         network interface that is generated when the instance is created.
+                    format: uuid
                 private_ip:
                     type: string
                     description: |-
@@ -3824,6 +3859,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the quota.
+                    format: uuid
                 used:
                     allOf:
                         - $ref: '#/components/schemas/QuotasStats'
@@ -3979,6 +4015,7 @@ components:
                         the service group is created.  The UUID is used to reference the service in
                         API calls and can be used to identify the service group in all API calls
                         that require an identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -4080,6 +4117,7 @@ components:
                         that is generated when the instance is created.  The UUID is used to
                         reference the instance in API calls and can be used to identify the
                         instance in all API calls that require an instance identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -4096,6 +4134,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the template used for the autoscale configuration.
+                    format: uuid
         StartInstanceResponse:
             type: object
             properties:
@@ -4145,6 +4184,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the instance which was deleted.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the instance which was deleted.
@@ -4164,6 +4204,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the instance to start.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -4211,6 +4252,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the instance.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the instance.
@@ -4246,6 +4288,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the instance to stop.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:
@@ -4265,6 +4308,7 @@ components:
                         volume is created.  The UUID is used to reference the volume in
                         API calls and can be used to identify the volume in all API calls that
                         require an identifier.
+                    format: uuid
                 name:
                     type: string
                     description: |-
@@ -4307,6 +4351,7 @@ components:
                     uuid:
                         type: string
                         description: The UUID of the instance that the volume is attached to.
+                        format: uuid
                 - oneOf:
                     - title: name
                       type: object
@@ -4323,6 +4368,7 @@ components:
                     uuid:
                         type: string
                         description: The UUID of the instance that the volume is mounted in.
+                        format: uuid
                     read_only:
                         type: boolean
                         description: Whether the volume is mounted read-only or read-write.
@@ -4373,6 +4419,7 @@ components:
                 uuid:
                     type: string
                     description: The UUID of the instance.
+                    format: uuid
                 name:
                     type: string
                     description: The name of the instance.
@@ -4397,6 +4444,7 @@ components:
                         uuid:
                             type: string
                             description: The UUID of the instance to wait for.  Mutually exclusive with name.
+                            format: uuid
                     - title: name
                       type: object
                       properties:

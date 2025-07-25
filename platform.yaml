@@ -258,7 +258,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
     /v1/instances/log:
-        put:
+        get:
             tags:
                 - Instances
             description: Retrieve the logs of an instance by its UUID or name.
@@ -507,7 +507,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
     /v1/instances/{uuid}/log:
-        put:
+        get:
             tags:
                 - Instances
             description: Retrieve the logs of an instance by its UUID.

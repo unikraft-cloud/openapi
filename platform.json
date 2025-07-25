@@ -374,7 +374,7 @@
       }
     },
     "/v1/instances/log": {
-      "put": {
+      "get": {
         "tags": [
           "Instances"
         ],
@@ -699,7 +699,7 @@
       }
     },
     "/v1/instances/{uuid}/log": {
-      "put": {
+      "get": {
         "tags": [
           "Instances"
         ],

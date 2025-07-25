@@ -211,6 +211,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
               "type": "string"
             }
           }
@@ -242,6 +243,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "example": "my-image:latest",
               "type": "string"
             }
           }
@@ -1920,6 +1922,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                     "type": "string",
                     "description": "The UUID of the volume to attach.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -1934,6 +1937,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-vol-g7gum5cj",
                     "type": "string",
                     "description": "The name of the volume to attach.  Mutually exclusive with UUID."
                   }
@@ -1968,6 +1972,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -1981,6 +1986,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -2004,11 +2010,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the volume that was attached.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was attached."
           }
@@ -2030,10 +2038,12 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-policy",
             "type": "string",
             "description": "The name of the policy."
           },
           "enabled": {
+            "example": true,
             "type": "boolean",
             "description": "If the policy is enabled."
           },
@@ -2069,16 +2079,19 @@
         "type": "object",
         "properties": {
           "adjustment": {
+            "example": 50,
             "type": "integer",
             "description": "The adjustment value for the step.",
             "format": "int64"
           },
           "lower_bound": {
+            "example": 10,
             "type": "integer",
             "description": "Lower bound for the step.",
             "format": "int64"
           },
           "upper_bound": {
+            "example": 500,
             "type": "integer",
             "description": "Upper bound for the step.",
             "format": "int64"
@@ -2089,20 +2102,24 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated when the\ncertificate is created.  The UUID is used to reference the certificate in\nAPI calls and can be used to identify the certificate in all API calls that\nrequire an identifier.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the certificate in API calls."
           },
           "created_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "The time the certificate was created.",
             "format": "date-time"
           },
           "common_name": {
+            "example": "my-common-name",
             "type": "string"
           },
           "state": {
@@ -2207,6 +2224,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-service",
             "type": "string",
             "description": "The Name of the service to add a policy to."
           },
@@ -2244,6 +2262,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 32,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -2257,6 +2276,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No service with name 'funky-service'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -2291,11 +2311,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service of the added policy.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the added policy."
           }
@@ -2309,30 +2331,36 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-service",
             "type": "string",
             "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
           },
           "min_size": {
+            "example": 2,
             "type": "integer",
             "description": "The minimum number of instances to keep running.",
             "format": "int64"
           },
           "max_size": {
+            "example": 12,
             "type": "integer",
             "description": "The maximum number of instances to keep running.",
             "format": "int64"
           },
           "warmup_time_ms": {
+            "example": 100,
             "type": "integer",
             "description": "The warmup time in milliseconds for new instances.",
             "format": "int64"
           },
           "cooldown_time_ms": {
+            "example": 100,
             "type": "integer",
             "description": "The cooldown time in milliseconds for the autoscale configuration.",
             "format": "int64"
@@ -2416,6 +2444,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 34,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -2429,6 +2458,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No service with name 'funky-service'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -2452,11 +2482,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service where the configuration was created.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
           }
@@ -2481,14 +2513,17 @@
             "type": "object",
             "properties": {
               "cn": {
+                "example": "funky-town.com",
                 "type": "string",
                 "description": "The common name (CN) of the certificate."
               },
               "chain": {
+                "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
                 "type": "string",
                 "description": "The chain of the certificate."
               },
               "key": {
+                "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
                 "type": "string",
                 "description": "The private key of the certificate."
               }
@@ -2501,6 +2536,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-certificate",
                     "type": "string",
                     "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
                   }
@@ -2524,6 +2560,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No certificate with name 'funky-certificate'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -2536,6 +2573,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 32,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -2562,14 +2600,17 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated. The name must be unique."
           },
           "image": {
+            "example": "nginx:latest",
             "type": "string",
             "description": "The image to use for the instance."
           },
           "args": {
+            "example": "--port=8080 --debug",
             "type": "array",
             "items": {
               "type": "string"
@@ -2577,6 +2618,10 @@
             "description": "(Optional).  The arguments to pass to the instance when it starts."
           },
           "env": {
+            "example": {
+              "ENV_VAR1": "value1",
+              "ENV_VAR2": "value2"
+            },
             "type": "object",
             "additionalProperties": {
               "type": "string"
@@ -2584,6 +2629,7 @@
             "description": "(Optional).  Environment variables to set for the instance."
           },
           "memory_mb": {
+            "example": 256,
             "type": "integer",
             "description": "(Optional).  Memory in MB to allocate for the instance.  Default is 128.",
             "format": "int64"
@@ -2604,10 +2650,12 @@
             "description": "Volumes to attach to the instance.\n\nThis list can contain both existing and new volumes to create as part of\nthe instance creation.  Existing volumes can be referenced by their name or\nUUID.  New volumes can be created by specifying a name, size in MiB, and\nmount point in the instance.  The mount point is the directory in the\ninstance where the volume will be mounted."
           },
           "autostart": {
+            "example": true,
             "type": "boolean",
             "description": "Whether the instance should start automatically on creation."
           },
           "replicas": {
+            "example": 5,
             "type": "integer",
             "description": "Number of replicas for the instance.",
             "format": "int64"
@@ -2631,11 +2679,13 @@
             "description": "Scale-to-zero configuration for the instance."
           },
           "vcpus": {
+            "example": 1,
             "type": "integer",
             "description": "Number of vCPUs to allocate for the instance.",
             "format": "int32"
           },
           "wait_timeout_ms": {
+            "example": 2000,
             "type": "integer",
             "description": "Timeout to wait for all new instances to reach running state in\nmilliseconds.  If you autostart your new instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait timeout\ngreater than zero.  No wait performed for a value of 0.",
             "format": "int64"
@@ -2667,6 +2717,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-cert-g756b5d",
                     "type": "string",
                     "description": "(Optional).  The name of the existing certificate.  Mutually\nexclusive with UUID."
                   }
@@ -2680,6 +2731,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "(Optional).  The UUID for the existing certificate.  Mutually\nexclusive with name.",
                     "format": "uuid"
@@ -2701,6 +2753,7 @@
             "type": "object",
             "properties": {
               "name": {
+                "example": "funky-town-g756b5d.fra0.unikraft.app.",
                 "type": "string",
                 "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), e.g. `example.com.`; otherwise it will become a\nsubdomain of the target metro, e.g. `example` becomes\n`example.fra0.unikraft.app`."
               }
@@ -2752,6 +2805,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -2766,6 +2820,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-service-g756b5d",
                     "type": "string",
                     "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
                   }
@@ -2783,24 +2838,29 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-volume-g756b5d",
             "type": "string",
             "description": "The name of the volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this name.  If the volume does not exist, the request will\nfail.  If a new volume is intended to be created, then this field must be\nspecified along with the size in MiB and the mount point in the instance."
           },
           "size_mb": {
+            "example": 32,
             "type": "integer",
             "description": "The size of the volume when creating a new volume.\n\nWhen creating a new volume as part of the instance create request,\nspecify the size of the volume in MiB.",
             "format": "int64"
           },
           "at": {
+            "example": "/mnt/funky-volume",
             "type": "string",
             "description": "The mount point for the volume in the instance."
           },
           "read_only": {
+            "example": 256,
             "type": "boolean",
             "description": "Whether the volume is read-only.\n\nIf this field is set to true, the volume will be mounted as read-only in\nthe instance.  This field is optional and defaults to false and is only\napplicable when using an existing volume."
           }
@@ -2820,6 +2880,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'non-funky-town'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -2832,6 +2893,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 875,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -2855,6 +2917,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
           },
@@ -2873,11 +2936,13 @@
             "description": "Description of domains associated with the service group."
           },
           "soft_limit": {
+            "example": 1,
             "type": "integer",
             "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
             "format": "uint64"
           },
           "hard_limit": {
+            "example": 100,
             "type": "integer",
             "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
             "format": "uint64"
@@ -2897,6 +2962,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Port 443 must use HTTP and TLS termination",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -2909,6 +2975,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 46,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -2938,6 +3005,7 @@
             "type": "object",
             "properties": {
               "size_mb": {
+                "example": 64,
                 "type": "integer",
                 "description": "The size of the volume in megabytes.",
                 "format": "uint64"
@@ -2951,6 +3019,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-vol-t7qumh5j",
                     "type": "string",
                     "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
                   }
@@ -2980,6 +3049,7 @@
                 "$ref": "#/components/schemas/CreateVolumeResponseData"
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -2993,6 +3063,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "Value of 'size_mb' must be in the range 8 to 1024.",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3028,11 +3099,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "UUID of the newly created volume.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the newly created volume."
           }
@@ -3062,6 +3135,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 54,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -3075,6 +3149,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No policy with name 'funky-policy'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3109,6 +3184,7 @@
             "format": "enum"
           },
           "name": {
+            "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the deleted policy."
           }
@@ -3127,6 +3203,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the service to delete a configuration for.\nMutually exclusive with name.",
                     "format": "uuid"
@@ -3141,6 +3218,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-service",
                     "type": "string",
                     "description": "The name of the service to delete a configuration for.\nMutually exclusive with UUID."
                   }
@@ -3174,6 +3252,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 60,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -3187,6 +3266,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No service with name 'funky-service'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3221,11 +3301,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service where the configuration was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was deleted."
           }
@@ -3244,6 +3326,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the certificate to retrieve.\nMutually exclusive with name.",
                     "format": "uuid"
@@ -3258,6 +3341,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-certificate",
                     "type": "string",
                     "description": "The name of the certificate to retrieve.\nMutually exclusive with UUID."
                   }
@@ -3281,6 +3365,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No certificate with name 'funky-certificate'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -3293,6 +3378,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 42,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -3325,11 +3411,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the certificate which was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate which was deleted."
           }
@@ -3349,6 +3437,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the instance to retrieve.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -3363,6 +3452,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d",
                     "type": "string",
                     "description": "The name of the instance to retrieve.  Mutually exclusive with UUID."
                   }
@@ -3386,6 +3476,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -3398,6 +3489,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 221,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -3430,15 +3522,18 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the instance which was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
           "previous_state": {
+            "example": "stopped",
             "type": "string",
             "description": "The previous state of the instance before it was deleted."
           }
@@ -3452,6 +3547,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-policy",
             "type": "string",
             "description": "The Name of the policy to delete."
           }
@@ -3470,6 +3566,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "12345678-90ab-cdef-1234-567890abcdef",
                     "type": "string",
                     "description": "The UUID of the service group to retrieve.\nMutually exclusive with name.",
                     "format": "uuid"
@@ -3484,6 +3581,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-service-g7gum5cj",
                     "type": "string",
                     "description": "The name of the service group to retrieve.\nMutually exclusive with UUID."
                   }
@@ -3507,6 +3605,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -3519,6 +3618,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 46,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -3551,11 +3651,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "12345678-90ab-cdef-1234-567890abcdef",
             "type": "string",
             "description": "The UUID of the service group which was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "The name of the service group which was deleted."
           }
@@ -3589,6 +3691,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-vol-g7gum5cj",
                     "type": "string",
                     "description": "The name of the volume to delete.  Mutually exclusive with UUID."
                   }
@@ -3623,6 +3726,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -3636,6 +3740,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No volume with name 'funky-vol-g7gum5cj' (code=8)",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3670,11 +3775,13 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the volume that was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was deleted."
           }
@@ -3693,6 +3800,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                     "type": "string",
                     "description": "The UUID of the volume to detach.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -3707,6 +3815,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
                     "description": "The name of the volume to detach.  Mutually exclusive with UUID."
                   }
@@ -3741,6 +3850,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -3754,6 +3864,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No volume with name 'funky-vol-g7gum5cj' (code=8)",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3782,6 +3893,7 @@
             "type": "object",
             "properties": {
               "uuid": {
+                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                 "type": "string",
                 "description": "The UUID of the instance that the volume is detached from.",
                 "format": "uuid"
@@ -3795,6 +3907,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
                     "description": "The name of the instance that the volume is detached from."
                   }
@@ -3812,6 +3925,7 @@
             "type": "object",
             "properties": {
               "fqdn": {
+                "example": "example.com.",
                 "type": "string",
                 "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\nbe a valid Full Qualified Domain Name (FQDN), otherwise it will become a\nsubdomain of the target metro."
               }
@@ -3845,6 +3959,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-policy",
             "type": "string",
             "description": "The Name  of the policy to get."
           }
@@ -3874,6 +3989,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 12,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -3887,6 +4003,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No policy with name 'funky-policy'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -3943,6 +4060,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
                     "format": "uuid"
@@ -3957,6 +4075,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-service",
                     "type": "string",
                     "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
                   }
@@ -3991,6 +4110,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 50,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -4004,6 +4124,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "funky-instance-template",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -4038,34 +4159,41 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service where the configuration was created.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
           },
           "enabled": {
+            "example": true,
             "type": "boolean",
             "description": "If the autoscale configuration is enabled."
           },
           "min_size": {
+            "example": 2,
             "type": "integer",
             "description": "The minimum number of instances to keep running.\nOnly if enabled is true.",
             "format": "int64"
           },
           "max_size": {
+            "example": 10,
             "type": "integer",
             "description": "The maximum number of instances to keep running.\nOnly if enabled is true.",
             "format": "int64"
           },
           "warmup_time_ms": {
+            "example": 3000,
             "type": "integer",
             "description": "The warmup time in seconds for new instances.\nOnly if enabled is true.",
             "format": "int64"
           },
           "cooldown_time_ms": {
+            "example": 3000,
             "type": "integer",
             "description": "The cooldown time in seconds for the autoscale configuration.\nOnly if enabled is true.",
             "format": "int64"
@@ -4100,6 +4228,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the certificate to get.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -4114,6 +4243,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-certificate",
                     "type": "string",
                     "description": "The name of the certificate to get.  Mutually exclusive with UUID."
                   }
@@ -4137,6 +4267,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No certificate with name 'funky-certificate'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -4149,6 +4280,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 55,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4181,6 +4313,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No image with name 'my-image:latest'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -4193,6 +4326,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 46,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4226,6 +4360,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -4238,6 +4373,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 47,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4249,11 +4385,13 @@
         "type": "object",
         "properties": {
           "start": {
+            "example": 250,
             "type": "integer",
             "description": "The first byte offset that can be retrieved.",
             "format": "uint64"
           },
           "end": {
+            "example": 2700,
             "type": "integer",
             "description": "The last byte offset that can be retrieved.",
             "format": "uint64"
@@ -4276,15 +4414,18 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the instance.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
           },
           "state": {
+            "example": "d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==",
             "type": "string",
             "description": "Base64 encoded log output of the instance."
           },
@@ -4310,11 +4451,13 @@
         "type": "object",
         "properties": {
           "start": {
+            "example": 450,
             "type": "integer",
             "description": "The first retrieved byte.",
             "format": "uint64"
           },
           "end": {
+            "example": "funky-town-g756b5d",
             "type": "integer",
             "description": "The last retrieved byte.",
             "format": "uint64"
@@ -4334,6 +4477,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -4346,6 +4490,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 76,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4369,51 +4514,61 @@
         "type": "object",
         "properties": {
           "rss_bytes": {
+            "example": 5677765543,
             "type": "integer",
             "description": "Resident set size of the VMM in bytes.\n\nThe resident set size (RSS) specifies the amount of physical memory that\nhas been touched by the instance and is currently reserved for the\ninstance on the Unikraft Cloud server.  The RSS grows until the instance\nhas touched all memory assigned to it via the memory_mb setting and may\nalso exceed this value as supporting services running outside the\ninstance acquire memory. The RSS is different from the current amount of\nmemory allocated by the application, which is likely to fluctuate over\nthe lifetime of the application.  The RSS is not a cumulative metric.\nWhen the instance is stopped rss goes down to 0.",
             "format": "uint64"
           },
           "cpu_time_ms": {
+            "example": 560007005,
             "type": "integer",
             "description": "Consumed CPU time in milliseconds.",
             "format": "uint64"
           },
           "rx_bytes": {
+            "example": 12312353,
             "type": "integer",
             "description": "Total amount of bytes received from network.",
             "format": "uint64"
           },
           "rx_packets": {
+            "example": 43432,
             "type": "integer",
             "description": "Total count of packets received from network.",
             "format": "uint64"
           },
           "tx_bytes": {
+            "example": 6565643,
             "type": "integer",
             "description": "Total amount of bytes transmitted over network.",
             "format": "uint64"
           },
           "tx_packets": {
+            "example": 54534,
             "type": "integer",
             "description": "Total count of packets transmitted over network.",
             "format": "uint64"
           },
           "nconns": {
+            "example": 5,
             "type": "integer",
             "description": "Number of currently established inbound connections (non-HTTP).",
             "format": "uint64"
           },
           "nreqs": {
+            "example": 12,
             "type": "integer",
             "description": "Number of in-flight HTTP requests.",
             "format": "uint64"
           },
           "nqueued": {
+            "example": 5,
             "type": "integer",
             "description": "Number of queued inbound connections and HTTP requests.",
             "format": "uint64"
           },
           "ntotal": {
+            "example": 21,
             "type": "integer",
             "description": "Total number of inbound connections and HTTP requests handled.",
             "format": "uint64"
@@ -4433,6 +4588,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the instance to get.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -4447,6 +4603,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d",
                     "type": "string",
                     "description": "The name of the instance to get.  Mutually exclusive with UUID."
                   }
@@ -4482,6 +4639,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 432,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4514,6 +4672,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "12345678-90ab-cdef-1234-567890abcdef",
                     "type": "string",
                     "description": "The UUID of the service group to get.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -4528,6 +4687,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-service-g7gum5cj",
                     "type": "string",
                     "description": "The name of the service group to get.  Mutually exclusive with UUID."
                   }
@@ -4551,6 +4711,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -4563,6 +4724,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 46,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -4595,6 +4757,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                     "type": "string",
                     "description": "The UUID of the volume to get.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -4609,6 +4772,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-vol-g7gum5cj",
                     "type": "string",
                     "description": "The name of the volume to get.  Mutually exclusive with UUID."
                   }
@@ -4643,6 +4807,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -4656,6 +4821,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "No volume with name 'funky-vol-g7gum5cj'",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -4682,27 +4848,36 @@
         "type": "object",
         "properties": {
           "tag": {
+            "example": "my-image:latest",
             "type": "string",
             "description": "The canonical name of the image is known as the \"tag\"."
           },
           "digest": {
+            "example": 256,
             "type": "string",
             "description": "The digest of the image is a unique identifier of the image manifest which\nis a string representation including the hashing algorithm and the hash\nvalue separated by a colon."
           },
           "description": {
+            "example": "My image description",
             "type": "string",
             "description": "A description of the image."
           },
           "created_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "When the image was created.",
             "format": "date-time"
           },
           "arch": {
+            "example": "x86_64",
             "type": "string",
             "description": "The architecture of the image."
           },
           "entrypoint": {
+            "example": [
+              "/bin/sh",
+              "-c"
+            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -4710,6 +4885,10 @@
             "description": "The entrypoint of the image is the command that is run when the image is\nstarted."
           },
           "cmd": {
+            "example": [
+              "/bin/sh",
+              "-c"
+            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -4717,6 +4896,9 @@
             "description": "The command to run when the image is started."
           },
           "env": {
+            "example": [
+              "ENV_VAR=value"
+            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -4724,6 +4906,9 @@
             "description": "The environment variables to set when the image is started."
           },
           "ports": {
+            "example": [
+              "8080:80"
+            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -4731,6 +4916,9 @@
             "description": "Documented port mappings for the image."
           },
           "volumes": {
+            "example": [
+              "/data"
+            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -4745,6 +4933,7 @@
             "description": "Labels are key-value pairs."
           },
           "workdir": {
+            "example": "/app",
             "type": "string",
             "description": "The working directory for the image is the directory that is set as the\ncurrent working directory when the image is started."
           },
@@ -4774,10 +4963,12 @@
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance.\n\nThis is a human-readable name that can be used to identify the instance.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the instance in API calls."
           },
           "created_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "The time the instance was created.",
             "format": "date-time"
@@ -4796,24 +4987,29 @@
             "format": "enum"
           },
           "private_fqdn": {
+            "example": "funky-town-g756b5d.internal",
             "type": "string",
             "description": "The internal hostname of the instance.  This address can be used privately\nwithin the Unikraft Cloud network to access the instance.  It is not\naccessible from the public Internet."
           },
           "image": {
+            "example": "nginx:latest",
             "type": "string",
             "description": "The image used to create the instance.  This is a reference to the\nUnikraft image that was used to create the instance."
           },
           "memory_mb": {
+            "example": 1024,
             "type": "integer",
             "description": "The amount of memory in megabytes allocated for the instance.  This is the\ntotal amount of memory that is available to the instance for its\noperations.",
             "format": "uint64"
           },
           "vcpus": {
+            "example": 1,
             "type": "integer",
             "description": "The number of vCPUs allocated for the instance.  This is the total\nnumber of virtual CPUs that are available to the instance for its\noperations.",
             "format": "uint32"
           },
           "args": {
+            "example": "--port=8080 --debug",
             "type": "array",
             "items": {
               "type": "string"
@@ -4821,61 +5017,73 @@
             "description": "The arguments passed to the instance when it was started.  This is a\nlist of command-line arguments that were provided to the instance at\nstartup.  These arguments can be used to configure the behavior of the\ninstance and its applications."
           },
           "start_count": {
+            "example": 6,
             "type": "integer",
             "description": "The total number of times the instance has been started.  This is a counter\nthat increments each time the instance is started, regardless of whether it\nwas manually stopped or restarted.  This can be useful for tracking the\nusage of the instance over time and/or for debugging purposes.",
             "format": "uint64"
           },
           "started_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "The time the instance was started.  This is the timestamp when the\ninstance was last started.",
             "format": "date-time"
           },
           "stopped_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "The time the instance was stopped.  This is the timestamp when the\ninstance was last stopped.  If the instance is currently running, this\nfield will be empty.",
             "format": "date-time"
           },
           "uptime_ms": {
+            "example": 8954050300,
             "type": "integer",
             "description": "The total amount of time the instance has been running in milliseconds.",
             "format": "uint64"
           },
           "vmm_start_time_us": {
+            "example": 70040,
             "type": "integer",
             "description": "(Developer-only).  The time taken between the main controller and the\nbeginning of execution of the VMM (Virtual Machine Monitor) measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
             "format": "uint64"
           },
           "vmm_load_time_us": {
+            "example": 4050,
             "type": "integer",
             "description": "(Developer-only).  The time it took the VMM (Virtual Machine Monitor) to\nload the instance's kernel and initramfs into VM memory measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
             "format": "uint64"
           },
           "vmm_ready_time_us": {
+            "example": 400,
             "type": "integer",
             "description": "(Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to\nbecome ready to execute the instance measured in microseconds.  This is the\ntime from when the VMM started until it was ready to execute the instance's\ncode.  This field is primarily used for debugging and performance analysis\npurposes.",
             "format": "uint64"
           },
           "boot_time_us": {
+            "example": 9000,
             "type": "integer",
             "description": "The boot time of the instance in microseconds.  We take a pragmatic\napproach is to define the boot time.  We calculate this as the difference\nin time between the moment the virtualization toolstack is invoked to\nrespond to a VM boot request and the moment the OS starts executing user\ncode (i.e., the end of the guest OS boot process).  This is essentially the\ntime that a user would experience in a deployment, minus the application\ninitialization time, which we leave out since it is independent from the\nOS.",
             "format": "uint64"
           },
           "net_time_us": {
+            "example": 11000,
             "type": "integer",
             "description": "This is the time it took for the user-level application to start listening\non a non-localhost port measured in microseconds.  This is the time from\nwhen the instance started until it reasonably ready to start responding to\nnetwork requests.  This is useful for measuring the time it takes for the\ninstance to become operationally ready.",
             "format": "uint64"
           },
           "stop_reason": {
+            "example": 15,
             "type": "integer",
             "description": "The instance stop reason.\n\nProvides reason as to why an instance is stopped or in the process of\nshutting down.  The stop reason is a bitmask that tells you the origin of\nthe shutdown:\n\n| Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |\n|---------|------------|------------|------------|------------|--------------|\n| Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |\n\n- **Forced**:   This was a force stop.  A forced stop does not give the\n                instance a chance to perform a clean shutdown.  Bits 0\n                (Kernel) and 1 (App) can thus never be set for forced\n                shutdowns.  Consequently, there won't be an `exit_code` or\n                `stop_code`.\n- **User**:     Stop initiated by user, e.g. via an API call.\n- **Platform**: Stop initiated by platform, e.g. an autoscale policy.\n- **App**:      The Application exited.  The `exit_code` field will be set.\n- **Kernel**:   The kernel exited.  The `stop_code` field will be set.\n\nFor example, the stop reason will contain the following values in the given\nscenarios:\n\n| Value | Bitmask | Aliases | Scenario |\n|-------|---------|---------|----------|\n| 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |\n| 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |\n| 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |\n| 0     | `00000` | `-----` | The stop reason is unknown. |",
             "format": "uint32"
           },
           "exit_code": {
+            "example": 137,
             "type": "integer",
             "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific. See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.",
             "format": "uint32"
           },
           "stop_code": {
+            "example": 33024,
             "type": "integer",
             "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop. See `StopCodeReason`.\n\n[^1]: Reserved for future use.",
             "format": "uint32"
@@ -4988,6 +5196,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the certificate.\n\nThis is a unique identifier for the certificate that is generated\nwhen the certificate is created.  The UUID is used to reference the\ncertificate in API calls and can be used to identify the certificate\nin all API calls that require a certificate identifier.",
                     "format": "uuid"
@@ -5002,6 +5211,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d.internal",
                     "type": "string",
                     "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the\ncertificate.  The name is unique within the context of your account.\nThe name can also be used to identify the certificate in API calls."
                   }
@@ -5016,11 +5226,13 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-service-g756b5d",
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
           },
@@ -5038,19 +5250,23 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-volume-g756b5d",
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
           "at": {
+            "example": "/mnt/funky-volume",
             "type": "string",
             "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
           },
           "read_only": {
+            "example": true,
             "type": "boolean",
             "description": "Whether the volume is read-only or not."
           }
@@ -5061,34 +5277,41 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the network interface. This is a unique identifier for the\nnetwork interface that is generated when the instance is created.",
             "format": "uuid"
           },
           "private_ip": {
+            "example": "10.0.0.61",
             "type": "string",
             "description": "The private IP address of the network interface. This is the internal IP\naddress that is used for communication between instances within the same\nnetwork."
           },
           "mac": {
+            "example": "12:b0:a0:00:00:3d",
             "type": "string",
             "description": "The MAC address of the network interface."
           },
           "rx_bytes": {
+            "example": 5345,
             "type": "integer",
             "description": "Amount of bytes received from interface.",
             "format": "uint64"
           },
           "rx_packets": {
+            "example": 110,
             "type": "integer",
             "description": "Count of packets received from interface",
             "format": "uint64"
           },
           "tx_bytes": {
+            "example": 1500,
             "type": "integer",
             "description": "Amount of bytes sent to interface.",
             "format": "uint64"
           },
           "tx_packets": {
+            "example": 12,
             "type": "integer",
             "description": "Count of packets sent to interface",
             "format": "uint64"
@@ -5100,6 +5323,7 @@
         "type": "object",
         "properties": {
           "enabled": {
+            "example": true,
             "type": "boolean",
             "description": "Indicates whether scale-to-zero is enabled for the instance."
           },
@@ -5114,10 +5338,12 @@
             "format": "enum"
           },
           "stateful": {
+            "example": true,
             "type": "boolean",
             "description": "Whether the instance should be stateful when scaled to zero. If set to\ntrue, the instance will retain its state (e.g., RAM contents) when scaled\nto zero.  This is useful for instances that need to maintain their state\nacross scale-to-zero operations.  If set to false, the instance will lose\nits state when scaled to zero, and it will be restarted from scratch when\nscaled back up."
           },
           "cooldown_time_ms": {
+            "example": 3000,
             "type": "integer",
             "description": "The cooldown time in milliseconds before the instance can be scaled to\nzero again.  This is useful to prevent rapid scaling to zero and back up,\nwhich can lead to performance issues or resource exhaustion.",
             "format": "int32"
@@ -5132,6 +5358,7 @@
             "type": "object",
             "properties": {
               "fqdn": {
+                "example": "funky-town-g756b5d.fra0.unikraft.app.",
                 "type": "string",
                 "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
               }
@@ -5162,14 +5389,17 @@
         "type": "object",
         "properties": {
           "digest": {
+            "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
             "type": "string",
             "description": "The digest is a string representation including the hashing\nalgorithm and the hash value separated by a colon."
           },
           "media_type": {
+            "example": "application/vnd.oci.image.layer.v1.tar",
             "type": "string",
             "description": "The media type of the layer is a string that identifies the type of\ncontent that the layer contains."
           },
           "size": {
+            "example": 655,
             "type": "integer",
             "description": "The size of the layer in bytes.",
             "format": "int64"
@@ -5181,6 +5411,7 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the quota.",
             "format": "uuid"
@@ -5215,31 +5446,37 @@
         "type": "object",
         "properties": {
           "min_memory_mb": {
+            "example": 16,
             "type": "integer",
             "description": "Minimum amount of memory assigned to live instances in megabytes",
             "format": "int64"
           },
           "max_memory_mb": {
+            "example": 2048,
             "type": "integer",
             "description": "Maximum amount of memory assigned to live instances in megabytes",
             "format": "int64"
           },
           "min_volume_mb": {
+            "example": 1,
             "type": "integer",
             "description": "Minimum size of a volume in megabytes",
             "format": "int64"
           },
           "max_volume_mb": {
+            "example": 1024,
             "type": "integer",
             "description": "Maximum size of a volume in megabytes",
             "format": "int64"
           },
           "min_autoscale_size": {
+            "example": 1,
             "type": "integer",
             "description": "Minimum size of an autoscale group",
             "format": "int64"
           },
           "max_autoscale_size": {
+            "example": 16,
             "type": "integer",
             "description": "Maximum size of an autoscale group",
             "format": "int64"
@@ -5265,6 +5502,7 @@
                 "description": "The response data for this request."
               },
               "op_time_us": {
+                "example": 46,
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
@@ -5278,6 +5516,7 @@
                 "type": "object",
                 "properties": {
                   "message": {
+                    "example": "funky-vol-g7gum5cj",
                     "type": "string",
                     "description": "An optional message providing additional information about the response."
                   }
@@ -5304,36 +5543,43 @@
         "type": "object",
         "properties": {
           "instances": {
+            "example": 16,
             "type": "integer",
             "description": "Number of instances",
             "format": "int64"
           },
           "live_instances": {
+            "example": 4,
             "type": "integer",
             "description": "Number of instances that are not in the `stopped` state",
             "format": "int64"
           },
           "live_memory_mb": {
+            "example": 2048,
             "type": "integer",
             "description": "Amount of memory assigned to instances that are not in the `stopped`\nstate in megabytes",
             "format": "int64"
           },
           "service_groups": {
+            "example": 15,
             "type": "integer",
             "description": "Number of services",
             "format": "int64"
           },
           "services": {
+            "example": 30,
             "type": "integer",
             "description": "Number of published network ports over all existing services",
             "format": "int64"
           },
           "volumes": {
+            "example": 2,
             "type": "integer",
             "description": "Number of volumes",
             "format": "int64"
           },
           "total_volume_mb": {
+            "example": 1024,
             "type": "integer",
             "description": "Total size of all volumes in megabytes",
             "format": "int64"
@@ -5344,11 +5590,13 @@
         "type": "object",
         "properties": {
           "port": {
+            "example": 443,
             "type": "integer",
             "description": "This is the public-facing port that the service will be accessible from\non the Internet.",
             "format": "uint32"
           },
           "destination_port": {
+            "example": 8080,
             "type": "string",
             "description": "The port number that the instance is listening on.  This is the internal\nport which Unikraft Cloud will forward traffic to."
           },
@@ -5372,33 +5620,40 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service group is created.  The UUID is used to reference the service in\nAPI calls and can be used to identify the service group in all API calls\nthat require an identifier.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup. The name must be unique within the context of your account.  The\nname can also be used to identify the service in API calls."
           },
           "created_at": {
+            "example": "2023-10-01T12:00:00Z",
             "type": "string",
             "description": "The time the service was created.",
             "format": "date-time"
           },
           "persistent": {
+            "example": true,
             "type": "boolean",
             "description": "Indicates if the service will stay remain even after the last instance\ndetached.  If this is set to false, the service will be deleted when the\nlast instance detached from it.  If this is set to true, the service will\nremain and can be reused by other instances.  This is useful if you want to\nkeep the service configuration, e.g., the published ports, handlers, and\ndomains, even if there are no instances assigned to it."
           },
           "autoscale": {
+            "example": true,
             "type": "boolean",
             "description": "Indicates if the service has autoscale enabled.  See the associated\nautoscale documentation for more information about how to set this up.\nAutoscale policies can be set up after the service has been created."
           },
           "soft_limit": {
+            "example": 1,
             "type": "integer",
             "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.  For example, if the soft limit is set\nto 5 and the service consists of 2 standby instances, one of the instances\nreceives up to 5 concurrent requests.  The 6th parallel requests wakes up\nthe second instance.  If there are no more standby instances to wake up,\nthe number of requests assigned to each instance will exceed the soft\nlimit.  The load balancer makes sure that when the number of in-flight\nrequests goes down again, instances are put into standby as fast as\npossible.",
             "format": "uint64"
           },
           "hard_limit": {
+            "example": 100,
             "type": "integer",
             "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.  The load balancer will\nnever assign more requests to a single instance.  In case there are no\nother instances available, excess requests fail (i.e., they are blocked and\nnot queued).",
             "format": "uint64"
@@ -5431,11 +5686,13 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "12345678-90ab-cdef-1234-567890abcdef",
             "type": "string",
             "description": "The UUID of the instance.  This is a unique identifier for the instance\nthat is generated when the instance is created.  The UUID is used to\nreference the instance in API calls and can be used to identify the\ninstance in all API calls that require an instance identifier.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the instance.  This is a human-readable name that can be used\nto identify the instance.  The name must be unique within the context of\nyour account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the instance in API calls."
           }
@@ -5445,10 +5702,12 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the template used for the autoscale configuration."
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the template used for the autoscale configuration.",
             "format": "uuid"
@@ -5468,6 +5727,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -5480,6 +5740,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 256,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -5512,19 +5773,23 @@
             "format": "enum"
           },
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the instance which was deleted.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
           "state": {
+            "example": "running",
             "type": "string",
             "description": "The current state of the instance after this request."
           },
           "previous_state": {
+            "example": "stopped",
             "type": "string",
             "description": "The previous state of the instance before it was deleted."
           }
@@ -5543,6 +5808,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the instance to start.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -5557,6 +5823,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d",
                     "type": "string",
                     "description": "The name of the instance to start.  Mutually exclusive with UUID."
                   }
@@ -5580,6 +5847,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d'",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -5592,6 +5860,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 23,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -5615,11 +5884,13 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the instance.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
           },
@@ -5664,6 +5935,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -5678,6 +5950,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d",
                     "type": "string",
                     "description": "The name of the instance to stop.  Mutually exclusive with UUID."
                   }
@@ -5697,24 +5970,29 @@
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g7gum5cj",
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
           "created_at": {
+            "example": "2021-01-01T00:00:00Z",
             "type": "string",
             "description": "The time the volume was created.",
             "format": "date-time"
           },
           "state": {
+            "example": "mounted",
             "type": "string",
             "description": "Current state of the volume."
           },
           "size_mb": {
+            "example": 64,
             "type": "integer",
             "description": "The size of the volume in megabytes.",
             "format": "uint64"
           },
           "persistent": {
+            "example": true,
             "type": "boolean",
             "description": "Indicates if the volume will stay alive when the last instance is deleted\nthat this volume is attached to."
           },
@@ -5741,6 +6019,7 @@
             "type": "object",
             "properties": {
               "uuid": {
+                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                 "type": "string",
                 "description": "The UUID of the instance that the volume is attached to.",
                 "format": "uuid"
@@ -5754,6 +6033,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
                     "description": "The name of the instance that the volume is attached to."
                   }
@@ -5771,11 +6051,13 @@
             "type": "object",
             "properties": {
               "uuid": {
+                "example": "funky-town-g7gum5cj",
                 "type": "string",
                 "description": "The UUID of the instance that the volume is mounted in.",
                 "format": "uuid"
               },
               "read_only": {
+                "example": true,
                 "type": "boolean",
                 "description": "Whether the volume is mounted read-only or read-write."
               }
@@ -5788,6 +6070,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
                     "description": "The name of the instance that the volume is mounted in."
                   }
@@ -5830,6 +6113,7 @@
                 "type": "object",
                 "properties": {
                   "timeout_ms": {
+                    "example": 450,
                     "type": "integer",
                     "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
                     "format": "int64"
@@ -5854,6 +6138,7 @@
             "format": "enum"
           },
           "message": {
+            "example": "Invalid name 'funky-town-g756b5d",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
@@ -5866,6 +6151,7 @@
             "description": "The response data for this request."
           },
           "op_time_us": {
+            "example": 450,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
@@ -5889,11 +6175,13 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
             "type": "string",
             "description": "The UUID of the instance.",
             "format": "uuid"
           },
           "name": {
+            "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
           },
@@ -5925,6 +6213,7 @@
                 "type": "object",
                 "properties": {
                   "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
                     "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
                     "format": "uuid"
@@ -5939,6 +6228,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "example": "funky-town-g756b5d",
                     "type": "string",
                     "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
                   }

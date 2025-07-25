@@ -83,6 +83,7 @@ components:
                         - $ref: '#/components/schemas/CheckAuthorizationResponseData'
                     description: The response data for this request.
                 op_time_us:
+                    example: 56
                     type: integer
                     description: |-
                         The operation time in microseconds.  This is the time it took to process
@@ -99,14 +100,17 @@ components:
             type: object
             properties:
                 hostname:
+                    example: my-machine.local
                     type: string
                     description: |-
                         The hostname is the name of the machine making the request.  This is
                         mandatory as it consitutes a unique identifier for the machine.
                 os:
+                    example: linux
                     type: string
                     description: The operating system of the machine making the request.
                 os_version:
+                    example: 5.10.0-17-amd64
                     type: string
                     description: |-
                         The version of the operating system of the machine making the request, if
@@ -117,29 +121,37 @@ components:
                         it's like "12.3-STABLE".  For Linux, this is simply the kernel version on
                         Linux, like "5.10.0-17-amd64".
                 container:
+                    example: false
                     type: boolean
                     description: A best-effort whether the client is running in a container.
                 distro:
+                    example: ubuntu
                     type: string
                     description: The OS distribution, if known.  E.g. "debian", "ubuntu", "nixos", ...
                 distro_version:
+                    example: 20.04
                     type: string
                     description: The OS distribution version if known.  E.g. "20.04", ...
                 distro_codename:
+                    example: jammy
                     type: string
-                    description: THe OS distribution codename if known.  E.g. "jammy", "bullseye", ...
+                    description: TThe OS distribution codename if known.  E.g. "jammy", "bullseye", ...
                 cli_version:
+                    example: 1.0.0
                     type: string
                     description: |-
                         The CLI version is the version of the Unikraft CLI that is making the
                         request.
                 goarch:
+                    example: amd64
                     type: string
                     description: If available, the GOARCH value (of the built binary).
                 goos:
+                    example: linux
                     type: string
                     description: If available, the GOOS value (of the built binary)
                 go_version:
+                    example: 1.16.0
                     type: string
                     description: if available, the Go version binary was built with.
             description: The request message for a sign-in request.
@@ -161,6 +173,7 @@ components:
                         - $ref: '#/components/schemas/RequestSigninResponseData'
                     description: The response data for this request.
                 op_time_us:
+                    example: 87
                     type: integer
                     description: |-
                         The operation time in microseconds.  This is the time it took to process

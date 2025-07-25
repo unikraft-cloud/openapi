@@ -257,7 +257,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
-    /v1/instances/logs:
+    /v1/instances/log:
         put:
             tags:
                 - Instances
@@ -506,7 +506,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
-    /v1/instances/{uuid}/logs:
+    /v1/instances/{uuid}/log:
         put:
             tags:
                 - Instances

@@ -4343,8 +4343,12 @@ components:
                 - type: object
                   properties:
                     status:
+                        enum:
+                            - "success"
+                            - "error"
                         type: string
                         description: The status of the response.
+                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/QuotasResponseData'
@@ -4806,9 +4810,17 @@ components:
                     description: The time the volume was created.
                     format: date-time
                 state:
-                    example: mounted
+                    enum:
+                        - "uninitialized"
+                        - "initializing"
+                        - "available"
+                        - "idle"
+                        - "mounted"
+                        - "busy"
+                        - "error"
                     type: string
                     description: Current state of the volume.
+                    format: enum
                 size_mb:
                     example: 64
                     type: integer

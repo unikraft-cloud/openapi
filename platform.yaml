@@ -661,278 +661,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/WaitInstanceResponse'
-    /v1/service/autoscale:
-        get:
-            tags:
-                - Autoscale
-            description: |-
-                GetAutoscaleConfigurations returns the current states and configurations of
-                autoscale configurations.
-            operationId: GetAutoscaleConfigurations
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            type: array
-                            items:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationsRequestID'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
-        post:
-            tags:
-                - Autoscale
-            description: |-
-                CreateAutoscaleConfiguration creates an autoscale configuration for the
-                specified service.
-            operationId: CreateAutoscaleConfiguration
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateAutoscaleConfigurationRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
-        delete:
-            tags:
-                - Autoscale
-            description: DeleteAutoscaleConfigurations deletes autoscale configurations.
-            operationId: DeleteAutoscaleConfigurations
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            type: array
-                            items:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsRequestID'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
-    /v1/service/{uuid}/autoscale:
-        get:
-            tags:
-                - Autoscale
-            description: |-
-                GetAutoscaleConfigurationsByServiceGroupUUID returns the current states
-                and configurations of autoscale configurations by service UUID.
-            operationId: GetAutoscaleConfigurationsByServiceGroupUUID
-            parameters:
-                - name: uuid
-                  in: path
-                  description: The UUID of the service group.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
-        post:
-            tags:
-                - Autoscale
-            description: |-
-                CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale
-                configuration for the specified service by UUID.
-            operationId: CreateAutoscaleConfigurationsByServiceGroupUUID
-            parameters:
-                - name: uuid
-                  in: path
-                  description: |-
-                    The UUID of the service to create a configuration for.
-                    Mutually exclusive with name.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
-        delete:
-            tags:
-                - Autoscale
-            description: |-
-                DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale
-                configurations by service UUID.
-            operationId: DeleteAutoscaleConfigurationsByServiceGroupUUID
-            parameters:
-                - name: uuid
-                  in: path
-                  description: The UUID of the service group.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
-    /v1/service/{uuid}/autoscale/policies:
-        get:
-            tags:
-                - Autoscale
-            description: |-
-                GetAutoscaleConfigurationPolicies returns the current state and
-                configuration of an autoscale policy.
-            operationId: GetAutoscaleConfigurationPolicies
-            parameters:
-                - name: uuid
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
-        post:
-            tags:
-                - Autoscale
-            description: |-
-                CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an
-                autoscale configuration.
-            operationId: CreateAutoscaleConfigurationPolicy
-            parameters:
-                - name: uuid
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponse'
-        delete:
-            tags:
-                - Autoscale
-            description: DeleteAutoscaleConfigurationPolicies deletes an autoscale policy.
-            operationId: DeleteAutoscaleConfigurationPolicies
-            parameters:
-                - name: uuid
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/DeletePolicyRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
-    /v1/service/{uuid}/autoscale/policies/{name}:
-        get:
-            tags:
-                - Autoscale
-            description: |-
-                GetAutoscaleConfigurationPolicyByName returns the current state and
-                configuration of an autoscale policy by it's name.
-            operationId: GetAutoscaleConfigurationPolicyByName
-            parameters:
-                - name: uuid
-                  in: path
-                  description: The UUID of the service group.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-                - name: name
-                  in: path
-                  description: The name of the policy to get.
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
-        delete:
-            tags:
-                - Autoscale
-            description: |-
-                DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by
-                name.
-            operationId: DeleteAutoscaleConfigurationPolicyByName
-            parameters:
-                - name: uuid
-                  in: path
-                  description: The UUID of the service group.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-                - name: name
-                  in: path
-                  description: The name of the policy to delete.
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
     /v1/services:
         get:
             tags:
@@ -1013,6 +741,69 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteServiceGroupsResponse'
+    /v1/services/autoscale:
+        get:
+            tags:
+                - Autoscale
+            description: |-
+                GetAutoscaleConfigurations returns the current states and configurations of
+                autoscale configurations.
+            operationId: GetAutoscaleConfigurations
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/GetAutoscaleConfigurationsRequestID'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
+        post:
+            tags:
+                - Autoscale
+            description: |-
+                CreateAutoscaleConfiguration creates an autoscale configuration for the
+                specified service.
+            operationId: CreateAutoscaleConfiguration
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAutoscaleConfigurationRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
+        delete:
+            tags:
+                - Autoscale
+            description: DeleteAutoscaleConfigurations deletes autoscale configurations.
+            operationId: DeleteAutoscaleConfigurations
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsRequestID'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
     /v1/services/{uuid}:
         get:
             tags:
@@ -1056,6 +847,215 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteServiceGroupsResponse'
+    /v1/services/{uuid}/autoscale:
+        get:
+            tags:
+                - Autoscale
+            description: |-
+                GetAutoscaleConfigurationsByServiceGroupUUID returns the current states
+                and configurations of autoscale configurations by service UUID.
+            operationId: GetAutoscaleConfigurationsByServiceGroupUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the service group.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
+        post:
+            tags:
+                - Autoscale
+            description: |-
+                CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale
+                configuration for the specified service by UUID.
+            operationId: CreateAutoscaleConfigurationsByServiceGroupUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: |-
+                    The UUID of the service to create a configuration for.
+                    Mutually exclusive with name.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAutoscaleConfigurationByServiceGroupUUIDRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
+        delete:
+            tags:
+                - Autoscale
+            description: |-
+                DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale
+                configurations by service UUID.
+            operationId: DeleteAutoscaleConfigurationsByServiceGroupUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the service group.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
+    /v1/services/{uuid}/autoscale/policies:
+        get:
+            tags:
+                - Autoscale
+            description: |-
+                GetAutoscaleConfigurationPolicies returns the current state and
+                configuration of an autoscale policy.
+            operationId: GetAutoscaleConfigurationPolicies
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
+        post:
+            tags:
+                - Autoscale
+            description: |-
+                CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an
+                autoscale configuration.
+            operationId: CreateAutoscaleConfigurationPolicy
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponse'
+        delete:
+            tags:
+                - Autoscale
+            description: DeleteAutoscaleConfigurationPolicies deletes an autoscale policy.
+            operationId: DeleteAutoscaleConfigurationPolicies
+            parameters:
+                - name: uuid
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeletePolicyRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
+    /v1/services/{uuid}/autoscale/policies/{name}:
+        get:
+            tags:
+                - Autoscale
+            description: |-
+                GetAutoscaleConfigurationPolicyByName returns the current state and
+                configuration of an autoscale policy by it's name.
+            operationId: GetAutoscaleConfigurationPolicyByName
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the service group.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+                - name: name
+                  in: path
+                  description: The name of the policy to get.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
+        delete:
+            tags:
+                - Autoscale
+            description: |-
+                DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by
+                name.
+            operationId: DeleteAutoscaleConfigurationPolicyByName
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the service group.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+                - name: name
+                  in: path
+                  description: The name of the policy to delete.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
     /v1/users/quotas:
         get:
             tags:

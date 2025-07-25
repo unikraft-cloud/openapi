@@ -908,7 +908,112 @@
         }
       }
     },
-    "/v1/service/autoscale": {
+    "/v1/services": {
+      "get": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Get one or many service groups with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
+        "operationId": "GetServiceGroups",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetServiceGroupsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Create a new service with the given configuration.\n\nNote that the service properties like published ports can only be defined\nduring creation.  They cannot be changed later.  Each port in a service can\nspecify a list of handlers that determine how traffic arriving at the port\nis handled. See Connection Handlers for a complete overview.",
+        "operationId": "CreateServiceGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServiceGroupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServiceGroupResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Delete a specified service group by its UUID.  After this call the UUID of\nthe service group are no longer valid.",
+        "operationId": "DeleteServiceGroups",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsRequestID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/services/autoscale": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1003,7 +1108,71 @@
         }
       }
     },
-    "/v1/service/{uuid}/autoscale": {
+    "/v1/services/{uuid}": {
+      "get": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Get a specified service group by its UUID.",
+        "operationId": "GetServiceGroupByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Delete the specified service group(s).  After this call the name of the\nservice group(s) are no longer valid.",
+        "operationId": "DeleteServiceGroupByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/services/{uuid}/autoscale": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1108,7 +1277,7 @@
         }
       }
     },
-    "/v1/service/{uuid}/autoscale/policies": {
+    "/v1/services/{uuid}/autoscale/policies": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1227,7 +1396,7 @@
         }
       }
     },
-    "/v1/service/{uuid}/autoscale/policies/{name}": {
+    "/v1/services/{uuid}/autoscale/policies/{name}": {
       "get": {
         "tags": [
           "Autoscale"
@@ -1302,175 +1471,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/services": {
-      "get": {
-        "tags": [
-          "ServiceGroups"
-        ],
-        "description": "Get one or many service groups with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
-        "operationId": "GetServiceGroups",
-        "parameters": [
-          {
-            "name": "details",
-            "in": "query",
-            "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetServiceGroupsRequestID"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "ServiceGroups"
-        ],
-        "description": "Create a new service with the given configuration.\n\nNote that the service properties like published ports can only be defined\nduring creation.  They cannot be changed later.  Each port in a service can\nspecify a list of handlers that determine how traffic arriving at the port\nis handled. See Connection Handlers for a complete overview.",
-        "operationId": "CreateServiceGroup",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateServiceGroupRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateServiceGroupResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "ServiceGroups"
-        ],
-        "description": "Delete a specified service group by its UUID.  After this call the UUID of\nthe service group are no longer valid.",
-        "operationId": "DeleteServiceGroups",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DeleteServiceGroupsRequestID"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/services/{uuid}": {
-      "get": {
-        "tags": [
-          "ServiceGroups"
-        ],
-        "description": "Get a specified service group by its UUID.",
-        "operationId": "GetServiceGroupByUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the service group to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetServiceGroupsResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "ServiceGroups"
-        ],
-        "description": "Delete the specified service group(s).  After this call the name of the\nservice group(s) are no longer valid.",
-        "operationId": "DeleteServiceGroupByUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the service group to delete.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
                 }
               }
             }

@@ -2522,7 +2522,7 @@
                 "type": "string",
                 "description": "The chain of the certificate."
               },
-              "key": {
+              "pkey": {
                 "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
                 "type": "string",
                 "description": "The private key of the certificate."

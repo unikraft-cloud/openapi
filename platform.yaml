@@ -1685,9 +1685,6 @@ components:
                     type: string
                     description: The name of the service of the added policy.
         CreateAutoscaleConfigurationRequest:
-            required:
-                - uuid
-                - name
             type: object
             properties:
                 uuid:

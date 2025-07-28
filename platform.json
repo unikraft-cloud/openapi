@@ -2324,10 +2324,6 @@
         }
       },
       "CreateAutoscaleConfigurationRequest": {
-        "required": [
-          "uuid",
-          "name"
-        ],
         "type": "object",
         "properties": {
           "uuid": {

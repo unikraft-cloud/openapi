@@ -1271,6 +1271,38 @@ paths:
             tags:
                 - Volumes
             description: |-
+                Returns the current status and the configuration of a particular volume if
+                the UUID is specified.
+            operationId: GetVolumeByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the volume to retrieve.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the volume in the response.  By
+                    default this is set to true, meaning that all information about the
+                    volume will be included in the response.  If set to false, only the
+                    basic information about the volume will be included, such as its name
+                    and UUID.
+                  schema:
+                    type: boolean
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetVolumesResponse'
+        delete:
+            tags:
+                - Volumes
+            description: |-
                 Deletes the specified volume by its UUID. Fails if the volume is still
                 attached to an instance. After this call the IDs associated with the
                 volume are no longer valid.

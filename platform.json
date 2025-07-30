@@ -1646,48 +1646,11 @@
         ],
         "description": "Attaches a volume to an instance so that the volume is mounted when the\ninstance starts. The volume needs to be in available state and the instance\nmust in stopped state. Currently, each instance can have only one volume\nattached at most.",
         "operationId": "AttachVolumes",
-        "parameters": [
-          {
-            "name": "attach_to.uuid",
-            "in": "query",
-            "description": "The UUID of the instance that the volume is attached to.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "attach_to.name",
-            "in": "query",
-            "description": "The name of the instance that the volume is attached to.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "at",
-            "in": "query",
-            "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "read_only",
-            "in": "query",
-            "description": "Whether the volume should be mounted read-only.",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/AttachVolumesRequestID"
-                }
+                "$ref": "#/components/schemas/AttachVolumesRequest"
               }
             }
           },
@@ -1708,38 +1671,17 @@
       }
     },
     "/v1/volumes/detach": {
-      "post": {
+      "put": {
         "tags": [
           "Volumes"
         ],
         "description": "Detaches a volume from instances. If no particular instance is specified\nthe volume is detached from all instances. The instances from which to\ndetach must not have the volume mounted. The API returns an error for each\ninstance from which it was unable to detach the volume. If the volume has\nbeen created together with an instance, detaching the volume will make it\npersistent (i.e., it survives the deletion of the instance).",
         "operationId": "DetachVolumes",
-        "parameters": [
-          {
-            "name": "from.uuid",
-            "in": "query",
-            "description": "The UUID of the instance that the volume is detached from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "from.name",
-            "in": "query",
-            "description": "The name of the instance that the volume is detached from.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DetachVolumesRequestID"
-                }
+                "$ref": "#/components/schemas/DetachVolumesRequest"
               }
             }
           },
@@ -1773,6 +1715,7 @@
             "description": "The UUID of the volume to retrieve.",
             "required": true,
             "schema": {
+              "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
               "type": "string",
               "format": "uuid"
             }
@@ -1812,6 +1755,7 @@
             "description": "The UUID of the volume to delete.",
             "required": true,
             "schema": {
+              "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
               "type": "string",
               "format": "uuid"
             }
@@ -1832,7 +1776,7 @@
       }
     },
     "/v1/volumes/{uuid}/attach": {
-      "get": {
+      "put": {
         "tags": [
           "Volumes"
         ],
@@ -1845,43 +1789,22 @@
             "description": "The UUID of the volume to attach.",
             "required": true,
             "schema": {
+              "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
               "type": "string",
               "format": "uuid"
             }
-          },
-          {
-            "name": "attach_to.uuid",
-            "in": "query",
-            "description": "The UUID of the instance that the volume is attached to.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "attach_to.name",
-            "in": "query",
-            "description": "The name of the instance that the volume is attached to.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "at",
-            "in": "query",
-            "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "read_only",
-            "in": "query",
-            "description": "Whether the volume should be mounted read-only.",
-            "schema": {
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachVolumeByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
@@ -1897,7 +1820,7 @@
       }
     },
     "/v1/volumes/{uuid}/detach": {
-      "get": {
+      "put": {
         "tags": [
           "Volumes"
         ],
@@ -1910,27 +1833,22 @@
             "description": "The UUID of the volume to detach.",
             "required": true,
             "schema": {
+              "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
               "type": "string",
               "format": "uuid"
             }
-          },
-          {
-            "name": "from.uuid",
-            "in": "query",
-            "description": "The UUID of the instance that the volume is detached from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "from.name",
-            "in": "query",
-            "description": "The name of the instance that the volume is detached from.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetachVolumeByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
@@ -1948,44 +1866,122 @@
   },
   "components": {
     "schemas": {
-      "AttachVolumesRequestID": {
+      "AttachVolumeByUUIDRequestBody": {
+        "required": [
+          "attach_to",
+          "at"
+        ],
         "type": "object",
         "allOf": [
           {
+            "type": "object",
+            "properties": {
+              "attach_to": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BodyInstanceID"
+                  }
+                ],
+                "description": "UUID or name of the instance to attach the volume to."
+              },
+              "at": {
+                "example": "/mnt/my-volume",
+                "pattern": "^/(?!.*\\.\\./|.*\\.$|.*/\\.$)[^:]*$",
+                "type": "string",
+                "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
+                "format": "regex"
+              }
+            }
+          },
+          {
             "oneOf": [
               {
-                "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
+                "title": "readonly",
                 "type": "object",
                 "properties": {
-                  "uuid": {
-                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                    "type": "string",
-                    "description": "The UUID of the volume to attach.  Mutually exclusive with name.",
-                    "format": "uuid"
+                  "readonly": {
+                    "example": false,
+                    "type": "boolean",
+                    "description": "Whether the volume should be mounted read-only."
                   }
                 }
-              },
+              }
+            ]
+          }
+        ]
+      },
+      "AttachVolumesRequest": {
+        "required": [
+          "attach_to",
+          "at"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the volume to attach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-vol-g7gum5cj",
+            "type": "string",
+            "description": "The name of the volume to attach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
+          },
+          "attach_to": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AttachVolumesRequestInstanceID"
+              }
+            ],
+            "description": "UUID or name of the instance to attach the volume to."
+          },
+          "at": {
+            "example": "/mnt/my-volume",
+            "pattern": "^/(?!.*\\.\\./|.*\\.$|.*/\\.$)[^:]*$",
+            "type": "string",
+            "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
+            "format": "regex"
+          },
+          "readonly": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether the volume should be mounted read-only."
+          }
+        },
+        "description": "The request message for attaching one or more volume(s) to instances by\ntheir UUID(s) or name(s).\n\nAttaches a volume to an instance so that the volume is mounted when the\ninstance starts. The volume needs to be in available state and the instance\nmust in stopped state. Currently, each instance can have only one volume\nattached at most."
+      },
+      "AttachVolumesRequestInstanceID": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+                "type": "string",
+                "description": "The UUID of the instance that the volume is attached to.",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "oneOf": [
               {
                 "title": "name",
-                "required": [
-                  "name"
-                ],
                 "type": "object",
                 "properties": {
                   "name": {
-                    "example": "funky-vol-g7gum5cj",
+                    "example": "funky-town-g7gum5cj",
                     "type": "string",
-                    "description": "The name of the volume to attach.  Mutually exclusive with UUID."
+                    "description": "The name of the instance that the volume is attached to."
                   }
                 }
               }
             ]
           }
         ],
-        "description": "An identifier for the volume(s) to attach."
+        "description": "Reference to the instance to attach the volume to."
       },
       "AttachVolumesResponse": {
         "type": "object",
@@ -2136,6 +2132,38 @@
             "format": "int64"
           }
         }
+      },
+      "BodyInstanceID": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+                "type": "string",
+                "description": "The UUID of the instance that the volume is detached from.",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g7gum5cj",
+                    "type": "string",
+                    "description": "The name of the instance that the volume is detached from."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Reference to the instance to detach the volume from."
       },
       "Certificate": {
         "type": "object",
@@ -3822,44 +3850,75 @@
           }
         }
       },
-      "DetachVolumesRequestID": {
+      "DetachVolumeByUUIDRequestBody": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BodyInstanceID"
+              }
+            ],
+            "description": "UUID or name of the instance to detach the volume from."
+          }
+        }
+      },
+      "DetachVolumesRequest": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the volume to detach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g7gum5cj",
+            "type": "string",
+            "description": "The name of the volume to detach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
+          },
+          "from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetachVolumesRequestInstanceID"
+              }
+            ],
+            "description": "UUID or name of the instance to detach the volume from."
+          }
+        },
+        "description": "Detaches a volume from instances. If no particular instance is specified the\nvolume is detached from all instances. The instances from which to detach\nmust not have the volume mounted. The API returns an error for each instance\nfrom which it was unable to detach the volume. If the volume has been\ncreated together with an instance, detaching the volume will make it\npersistent (i.e., it survives the deletion of the instance)."
+      },
+      "DetachVolumesRequestInstanceID": {
         "type": "object",
         "allOf": [
           {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+                "type": "string",
+                "description": "The UUID of the instance that the volume is detached from.",
+                "format": "uuid"
+              }
+            }
+          },
+          {
             "oneOf": [
               {
-                "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                    "type": "string",
-                    "description": "The UUID of the volume to detach.  Mutually exclusive with name.",
-                    "format": "uuid"
-                  }
-                }
-              },
-              {
                 "title": "name",
-                "required": [
-                  "name"
-                ],
                 "type": "object",
                 "properties": {
                   "name": {
                     "example": "funky-town-g7gum5cj",
                     "type": "string",
-                    "description": "The name of the volume to detach.  Mutually exclusive with UUID."
+                    "description": "The name of the instance that the volume is detached from."
                   }
                 }
               }
             ]
           }
         ],
-        "description": "An identifier for the volume(s) to detach."
+        "description": "Reference to the instance to detach the volume from."
       },
       "DetachVolumesResponse": {
         "type": "object",
@@ -6005,6 +6064,7 @@
         "type": "object",
         "properties": {
           "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
             "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in\nAPI calls and can be used to identify the volume in all API calls that\nrequire an identifier.",
             "format": "uuid"

@@ -265,35 +265,12 @@ paths:
                 - Instances
             description: Retrieve the logs of an instance by its UUID or name.
             operationId: GetInstanceLogs
-            parameters:
-                - name: uuid
-                  in: query
-                  description: |-
-                    The UUID of the instance to retrieve logs for.  Mutually exclusive with
-                    name.
-                  schema:
-                    type: string
-                - name: name
-                  in: query
-                  description: |-
-                    The name of the instance to retrieve logs for.  Mutually exclusive with
-                    UUID.
-                  schema:
-                    type: string
-                - name: offset
-                  in: query
-                  description: |-
-                    The byte offset of the log output to receive.  A negative sign makes the
-                    offset relative to the end of the log.
-                  schema:
-                    type: integer
-                    format: uint64
-                - name: limit
-                  in: query
-                  description: The amount of bytes to return at most.
-                  schema:
-                    type: integer
-                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetInstanceLogsRequest'
+                required: true
             responses:
                 default:
                     description: default
@@ -517,25 +494,18 @@ paths:
             parameters:
                 - name: uuid
                   in: path
-                  description: The UUID of the instance to delete.
+                  description: The UUID of the instance to retrieve logs for.
                   required: true
                   schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
                     format: uuid
-                - name: offset
-                  in: query
-                  description: |-
-                    The byte offset of the log output to receive.  A negative sign makes the
-                    offset relative to the end of the log.
-                  schema:
-                    type: integer
-                    format: uint64
-                - name: limit
-                  in: query
-                  description: The amount of bytes to return at most.
-                  schema:
-                    type: integer
-                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetInstanceLogsByUUIDRequestBody'
+                required: true
             responses:
                 default:
                     description: default
@@ -645,16 +615,17 @@ paths:
             parameters:
                 - name: uuid
                   in: path
-                  description: The UUID of the instance to delete.
+                  description: The UUID of the instance to wait for.
                   required: true
                   schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
                     format: uuid
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/WaitInstanceByUUIDRequest'
+                            $ref: '#/components/schemas/WaitInstanceByUUIDRequestBody'
                 required: true
             responses:
                 default:
@@ -3385,6 +3356,55 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/Image'
                     description: The instance that was created in this request.
+        GetInstanceLogsByUUIDRequestBody:
+            type: object
+            properties:
+                offset:
+                    example: 56000
+                    type: integer
+                    description: |-
+                        The byte offset of the log output to receive.  A negative sign makes the
+                        offset relative to the end of the log.
+                    format: uint64
+                limit:
+                    example: 1500
+                    type: integer
+                    description: The amount of bytes to return at most.
+                    format: int64
+        GetInstanceLogsRequest:
+            required:
+                - uuid
+                - name
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        The UUID of the instance to retrieve logs for.  Mutually exclusive with
+                        name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: |-
+                        The name of the instance to retrieve logs for.  Mutually exclusive with
+                        UUID.
+                offset:
+                    example: 450
+                    type: integer
+                    description: |-
+                        The byte offset of the log output to receive.  A negative sign makes the
+                        offset relative to the end of the log.
+                    format: uint64
+                limit:
+                    example: 3000
+                    type: integer
+                    description: The amount of bytes to return at most.
+                    format: int64
+            description: |-
+                The request message for getting the logs of an instance by their UUID or
+                name.
         GetInstanceLogsResponse:
             type: object
             properties:
@@ -3450,7 +3470,7 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance.
-                state:
+                output:
                     example: d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==
                     type: string
                     description: Base64 encoded log output of the instance.
@@ -3464,6 +3484,17 @@ components:
                     description: |-
                         Description of the range that was returned. Useful for requests with
                         offset relative to end.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "standby"
+                    type: string
+                    description: State of the instance when the logs were retrieved.
+                    format: enum
         GetInstanceLogsResponseRange:
             type: object
             properties:
@@ -5031,15 +5062,11 @@ components:
                             example: funky-town-g7gum5cj
                             type: string
                             description: The name of the instance that the volume is mounted in.
-        WaitInstanceByUUIDRequest:
+        WaitInstanceByUUIDRequestBody:
             type: object
             allOf:
                 - type: object
                   properties:
-                    uuid:
-                        type: string
-                        description: The UUID of the instance to delete.
-                        format: uuid
                     state:
                         enum:
                             - "stopped"
@@ -5064,9 +5091,7 @@ components:
                                 A value of -1 means to wait indefinitely until the instance reaches the
                                 desired state.
                             format: int64
-            description: |-
-                The request message for waiting for an instance to reach a certain state by
-                its UUID.
+            description: Wait parameters.
         WaitInstanceResponse:
             type: object
             properties:

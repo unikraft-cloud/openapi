@@ -2548,6 +2548,11 @@
         }
       },
       "CreateCertificateRequest": {
+        "required": [
+          "cn",
+          "chain",
+          "pkey"
+        ],
         "type": "object",
         "allOf": [
           {

@@ -1854,6 +1854,10 @@ components:
                         $ref: '#/components/schemas/CreateAutoscaleConfigurationResponseConfigurationsResponse'
                     description: The configuration(s) which were created by the request.
         CreateCertificateRequest:
+            required:
+                - cn
+                - chain
+                - pkey
             type: object
             allOf:
                 - type: object

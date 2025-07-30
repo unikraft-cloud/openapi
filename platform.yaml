@@ -818,8 +818,19 @@ paths:
                   description: The UUID of the service group to retrieve.
                   required: true
                   schema:
+                    example: 12345678-90ab-cdef-1234-567890abcdef
                     type: string
                     format: uuid
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the service group in the response.  By
+                    default this is set to true, meaning that all information about the service
+                    group will be included in the response.  If set to false, only the basic
+                    information about the service group will be included, such as its name and
+                    UUID.
+                  schema:
+                    type: boolean
             responses:
                 default:
                     description: default
@@ -840,6 +851,7 @@ paths:
                   description: The UUID of the service group to delete.
                   required: true
                   schema:
+                    example: 12345678-90ab-cdef-1234-567890abcdef
                     type: string
                     format: uuid
             responses:
@@ -2262,7 +2274,7 @@ components:
                 domains:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Domain'
+                        $ref: '#/components/schemas/CreateServiceGroupRequestDomain'
                     description: Description of domains associated with the service group.
                 soft_limit:
                     example: 1
@@ -2290,6 +2302,49 @@ components:
                         case there are no other instances available, excess requests fail (i.e.,
                         they are blocked and not queued).
                     format: uint64
+        CreateServiceGroupRequestDomain:
+            required:
+                - name
+            type: object
+            properties:
+                name:
+                    example: example.com.
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.  If this name ends in a period `.` it must
+                        be a valid Full Qualified Domain Name (FQDN), otherwise it will become a
+                        subdomain of the target metro.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateServiceGroupRequestID'
+                    description: |-
+                        Use an existing certificate for the domain.  If this field is
+                        specified, the domain must be associated with a valid certificate.
+            description: A domain name
+        CreateServiceGroupRequestID:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 12345678-90ab-cdef-1234-567890abcdef
+                            type: string
+                            description: The UUID of the certificate to use for the service group.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            example: my-cert
+                            type: string
+                            description: The name of the certificate to use for the service group.
+            description: An identifier for the domain certificate to use for the service group.
         CreateServiceGroupResponse:
             type: object
             properties:
@@ -4507,6 +4562,8 @@ components:
                     description: Total size of all volumes in megabytes
                     format: int64
         Service:
+            required:
+                - port
             type: object
             properties:
                 port:
@@ -4518,10 +4575,11 @@ components:
                     format: uint32
                 destination_port:
                     example: 8080
-                    type: string
+                    type: integer
                     description: |-
                         The port number that the instance is listening on.  This is the internal
                         port which Unikraft Cloud will forward traffic to.
+                    format: uint32
                 handlers:
                     type: array
                     items:

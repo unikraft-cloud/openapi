@@ -719,8 +719,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                GetAutoscaleConfigurations returns the current states and configurations of
-                autoscale configurations.
+                Returns the current states and configurations of autoscale configurations
+                for a given set of service groups given their UUIDs or names.
             operationId: GetAutoscaleConfigurations
             requestBody:
                 content:
@@ -741,8 +741,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                CreateAutoscaleConfiguration creates an autoscale configuration for the
-                specified service.
+                Creates an autoscale configuration for the specified service groups given
+                their UUIDs or names.
             operationId: CreateAutoscaleConfiguration
             requestBody:
                 content:
@@ -760,7 +760,9 @@ paths:
         delete:
             tags:
                 - Autoscale
-            description: DeleteAutoscaleConfigurations deletes autoscale configurations.
+            description: |-
+                Deletes autoscale configuration for a given set of service groups given
+                their UUIDs or names.
             operationId: DeleteAutoscaleConfigurations
             requestBody:
                 content:
@@ -837,8 +839,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                GetAutoscaleConfigurationsByServiceGroupUUID returns the current states
-                and configurations of autoscale configurations by service UUID.
+                Returns the current states and configurations of autoscale configurations
+                given a service group UUID.
             operationId: GetAutoscaleConfigurationsByServiceGroupUUID
             parameters:
                 - name: uuid
@@ -859,8 +861,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                CreateAutoscaleConfigurationsByServiceGroupUUID creates an autoscale
-                configuration for the specified service by UUID.
+                Creates an autoscale configuration for the specified service group given
+                its UUID.
             operationId: CreateAutoscaleConfigurationsByServiceGroupUUID
             parameters:
                 - name: uuid
@@ -889,8 +891,14 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                DeleteAutoscaleConfigurationsByServiceGroupUUID deletes autoscale
-                configurations by service UUID.
+                Deletes the autoscale configuration for the service group given its UUID.
+
+                Unikraft Cloud will immediately drain all connections from all instances
+                that have been created by autoscale and delete the instances afterwards.
+                The draining phase is allowed to take at most `cooldown_time_ms`
+                milliseconds after which remaining connections are forcefully closed.  The
+                master instance is never deleted.  However, deleting the autoscale
+                configuration causes the master instance to start if it is stopped.
             operationId: DeleteAutoscaleConfigurationsByServiceGroupUUID
             parameters:
                 - name: uuid
@@ -911,9 +919,7 @@ paths:
         get:
             tags:
                 - Autoscale
-            description: |-
-                GetAutoscaleConfigurationPolicies returns the current state and
-                configuration of an autoscale policy.
+            description: Lists the autoscale policies for a given service group given its UUID.
             operationId: GetAutoscaleConfigurationPolicies
             parameters:
                 - name: uuid
@@ -938,8 +944,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                CreateAutoscaleConfigurationPolicy adds a new autoscale policy to an
-                autoscale configuration.
+                Adds a new autoscale policy to an autoscale configuration given a serivce
+                group UUID.
             operationId: CreateAutoscaleConfigurationPolicy
             parameters:
                 - name: uuid
@@ -963,7 +969,7 @@ paths:
         delete:
             tags:
                 - Autoscale
-            description: DeleteAutoscaleConfigurationPolicies deletes an autoscale policy.
+            description: Deletes one or more autoscale policies for a given service group.
             operationId: DeleteAutoscaleConfigurationPolicies
             parameters:
                 - name: uuid
@@ -989,8 +995,8 @@ paths:
             tags:
                 - Autoscale
             description: |-
-                GetAutoscaleConfigurationPolicyByName returns the current state and
-                configuration of an autoscale policy by it's name.
+                Returns the current state and configuration of an autoscale policy given
+                the service group UUID and the name of the policy.
             operationId: GetAutoscaleConfigurationPolicyByName
             parameters:
                 - name: uuid
@@ -1016,9 +1022,7 @@ paths:
         delete:
             tags:
                 - Autoscale
-            description: |-
-                DeleteAutoscaleConfigurationPolicyByName deletes an autoscale policy by
-                name.
+            description: Deletes an autoscale policy by name given the service group UUID.
             operationId: DeleteAutoscaleConfigurationPolicyByName
             parameters:
                 - name: uuid

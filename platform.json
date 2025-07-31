@@ -1984,6 +1984,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 46,
                 "type": "integer",
@@ -2306,6 +2313,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 32,
                 "type": "integer",
@@ -2484,6 +2498,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 34,
                 "type": "integer",
@@ -2617,6 +2638,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 32,
@@ -2938,6 +2966,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 875,
             "type": "integer",
@@ -3081,6 +3116,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 46,
             "type": "integer",
@@ -3154,6 +3196,13 @@
               },
               "data": {
                 "$ref": "#/components/schemas/CreateVolumeResponseData"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 46,
@@ -3240,6 +3289,13 @@
                   }
                 ],
                 "description": "The response data for this request."
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 54,
@@ -3357,6 +3413,13 @@
                   }
                 ],
                 "description": "The response data for this request."
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 60,
@@ -3484,6 +3547,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 42,
             "type": "integer",
@@ -3594,6 +3664,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 221,
@@ -3724,6 +3801,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 46,
             "type": "integer",
@@ -3831,6 +3915,13 @@
                   }
                 ],
                 "description": "The response data for this request."
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 46,
@@ -3987,6 +4078,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 46,
                 "type": "integer",
@@ -4126,6 +4224,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 12,
                 "type": "integer",
@@ -4246,6 +4351,13 @@
                   }
                 ],
                 "description": "The response data for this request."
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 50,
@@ -4417,6 +4529,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 55,
             "type": "integer",
@@ -4462,6 +4581,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 46,
@@ -4559,6 +4685,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 47,
@@ -4689,6 +4822,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 76,
@@ -4839,6 +4979,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 432,
             "type": "integer",
@@ -4924,6 +5071,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 46,
             "type": "integer",
@@ -5006,6 +5160,13 @@
                   }
                 ],
                 "description": "The response data for this request."
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
               },
               "op_time_us": {
                 "example": 46,
@@ -5707,6 +5868,13 @@
                 ],
                 "description": "The response data for this request."
               },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
               "op_time_us": {
                 "example": 46,
                 "type": "integer",
@@ -5791,6 +5959,18 @@
             "format": "int64"
           }
         }
+      },
+      "ResponseError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "example": 401,
+            "type": "integer",
+            "description": "The HTTP status code of the error.",
+            "format": "uint64"
+          }
+        },
+        "description": "The error response message for an API request."
       },
       "Service": {
         "required": [
@@ -5949,6 +6129,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 256,
             "type": "integer",
@@ -6068,6 +6255,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 23,
@@ -6364,6 +6558,13 @@
               }
             ],
             "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
             "example": 450,

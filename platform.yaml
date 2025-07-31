@@ -1450,6 +1450,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/AttachVolumesResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -1692,6 +1697,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 32
                         type: integer
@@ -1814,6 +1824,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/CreateAutoscaleConfigurationResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 34
                         type: integer
@@ -1911,6 +1926,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CreateCertificateResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 32
                     type: integer
@@ -2218,6 +2238,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CreateInstanceResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 875
                     type: integer
@@ -2342,6 +2367,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CreateServiceGroupResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 46
                     type: integer
@@ -2409,6 +2439,11 @@ components:
                         format: enum
                     data:
                         $ref: '#/components/schemas/CreateVolumeResponseData'
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -2468,6 +2503,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 54
                         type: integer
@@ -2548,6 +2588,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 60
                         type: integer
@@ -2636,6 +2681,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/DeleteCertificatesResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 42
                     type: integer
@@ -2718,6 +2768,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/DeleteInstancesResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 221
                     type: integer
@@ -2817,6 +2872,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/DeleteServiceGroupsResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 46
                     type: integer
@@ -2896,6 +2956,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/DeleteVolumesResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -3007,6 +3072,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/DetachVolumesResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -3105,6 +3175,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 12
                         type: integer
@@ -3186,6 +3261,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/GetAutoscaleConfigurationsResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 50
                         type: integer
@@ -3313,6 +3393,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetCertificatesResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 55
                     type: integer
@@ -3349,6 +3434,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetImageResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 46
                     type: integer
@@ -3431,6 +3521,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetInstanceLogsResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 47
                     type: integer
@@ -3534,6 +3629,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetInstanceMetricsResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 76
                     type: integer
@@ -3660,6 +3760,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetInstancesResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 432
                     type: integer
@@ -3718,6 +3823,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/GetServiceGroupsResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 46
                     type: integer
@@ -3776,6 +3886,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/GetVolumesResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -4536,6 +4651,11 @@ components:
                         allOf:
                             - $ref: '#/components/schemas/QuotasResponseData'
                         description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
                     op_time_us:
                         example: 46
                         type: integer
@@ -4600,6 +4720,15 @@ components:
                     type: integer
                     description: Total size of all volumes in megabytes
                     format: int64
+        ResponseError:
+            type: object
+            properties:
+                status:
+                    example: 401
+                    type: integer
+                    description: The HTTP status code of the error.
+                    format: uint64
+            description: The error response message for an API request.
         Service:
             required:
                 - port
@@ -4803,6 +4932,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/StartInstanceResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 256
                     type: integer
@@ -4892,6 +5026,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/StopInstanceResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 23
                     type: integer
@@ -5118,6 +5257,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/WaitInstanceResponseData'
                     description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
                 op_time_us:
                     example: 450
                     type: integer

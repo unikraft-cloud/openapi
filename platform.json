@@ -5489,6 +5489,19 @@
               "$ref": "#/components/schemas/InstanceNetworkInterface"
             },
             "description": "The network interfaces of the instance."
+          },
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the instance.  This field is only set when this message\nobject is used as a response message.",
+            "format": "enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
           }
         },
         "description": "An instance is a unikernel virtual machine running an application."

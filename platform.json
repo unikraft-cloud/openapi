@@ -277,14 +277,6 @@
             "schema": {
               "type": "boolean"
             }
-          },
-          {
-            "name": "metrics",
-            "in": "query",
-            "description": "Whether to include metrics about the instance in the response.  By default\nthis is set to false, meaning that no metrics will be included in the\nresponse.",
-            "schema": {
-              "type": "boolean"
-            }
           }
         ],
         "requestBody": {
@@ -616,14 +608,6 @@
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the instance in the response.  By default\nthis is set to true, meaning that all information about the instance will\nbe included in the response.  If set to false, only the basic information\nabout the instance will be included, such as its name and UUID.",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "metrics",
-            "in": "query",
-            "description": "Whether to include metrics about the instance in the response.  By default\nthis is set to false, meaning that no metrics will be included in the\nresponse.",
             "schema": {
               "type": "boolean"
             }

@@ -195,14 +195,6 @@ paths:
                     about the instance will be included, such as its name and UUID.
                   schema:
                     type: boolean
-                - name: metrics
-                  in: query
-                  description: |-
-                    Whether to include metrics about the instance in the response.  By default
-                    this is set to false, meaning that no metrics will be included in the
-                    response.
-                  schema:
-                    type: boolean
             requestBody:
                 content:
                     application/json:
@@ -445,14 +437,6 @@ paths:
                     this is set to true, meaning that all information about the instance will
                     be included in the response.  If set to false, only the basic information
                     about the instance will be included, such as its name and UUID.
-                  schema:
-                    type: boolean
-                - name: metrics
-                  in: query
-                  description: |-
-                    Whether to include metrics about the instance in the response.  By default
-                    this is set to false, meaning that no metrics will be included in the
-                    response.
                   schema:
                     type: boolean
             responses:

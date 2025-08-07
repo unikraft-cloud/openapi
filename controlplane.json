@@ -116,6 +116,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 56,
             "type": "integer",
@@ -219,6 +226,13 @@
             ],
             "description": "The response data for this request."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
           "op_time_us": {
             "example": 87,
             "type": "integer",
@@ -240,6 +254,18 @@
             "description": "A unique identifier for the request.  This can be used to track the\nrequest in the system."
           }
         }
+      },
+      "ResponseError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "example": 401,
+            "type": "integer",
+            "description": "The HTTP status code of the error.",
+            "format": "uint64"
+          }
+        },
+        "description": "The error response message for an API request."
       }
     },
     "securitySchemes": {

@@ -329,25 +329,6 @@ paths:
                 Stops one or more running instance by their UUID(s) or name(s) or does
                 nothing if the instance is already stopped.
             operationId: StopInstances
-            parameters:
-                - name: force
-                  in: query
-                  description: Whether to immediately force stop the instance.
-                  schema:
-                    type: boolean
-                - name: drain_timeout_ms
-                  in: query
-                  description: |-
-                    Timeout for draining connections in milliseconds.  The instance does not
-                    receive new connections in the draining phase.  The instance is stopped
-                    when the last connection has been closed or the timeout expired.  The
-                    maximum timeout may vary.  Use -1 for the largest possible value.
-
-                    Note: This endpoint does not block.  Use the wait endpoint for the
-                    instance to reach the stopped state.
-                  schema:
-                    type: integer
-                    format: uint64
             requestBody:
                 content:
                     application/json:
@@ -5080,28 +5061,36 @@ components:
                     description: The previous state of the instance before the stop operation was invoked.
                     format: enum
         StopInstancesRequestID:
+            required:
+                - uuid
+                - name
             type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the instance to stop.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: The name of the instance to stop.  Mutually exclusive with UUID.
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the instance to stop.  Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the instance to stop.  Mutually exclusive with UUID.
+                force:
+                    example: false
+                    type: boolean
+                    description: Whether to immediately force stop the instance.
+                drain_timeout_ms:
+                    example: 250
+                    type: integer
+                    description: |-
+                        Timeout for draining connections in milliseconds.  The instance does not
+                        receive new connections in the draining phase.  The instance is stopped
+                        when the last connection has been closed or the timeout expired.  The
+                        maximum timeout may vary.  Use -1 for the largest possible value.
+
+                        Note: This endpoint does not block.  Use the wait endpoint for the
+                        instance to reach the stopped state.
+                    format: uint64
             description: An identifier for the instance(s) to start.
         Volume:
             type: object

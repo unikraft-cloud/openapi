@@ -708,12 +708,14 @@ paths:
             description: |-
                 Creates an autoscale configuration for the specified service groups given
                 their UUIDs or names.
-            operationId: CreateAutoscaleConfiguration
+            operationId: CreateAutoscaleConfigurations
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateAutoscaleConfigurationRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationsRequestConfiguration'
                 required: true
             responses:
                 default:
@@ -721,7 +723,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponse'
         delete:
             tags:
                 - Autoscale
@@ -851,7 +853,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreateAutoscaleConfigurationResponse'
+                                $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponse'
         delete:
             tags:
                 - Autoscale
@@ -1577,6 +1579,24 @@ components:
                         - "error"
                     type: string
                     format: enum
+        ConfigurationInstanceCreateArgs:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: roms
+                      type: object
+                      properties:
+                        roms:
+                            allOf:
+                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms'
+                            description: The ROM to use for the autoscale configuration.
+                    - title: template
+                      type: object
+                      properties:
+                        template:
+                            allOf:
+                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest'
+                            description: The template to use for the autoscale configuration.
         CreateAutoscaleConfigurationByServiceGroupUUIDRequest:
             type: object
             properties:
@@ -1709,7 +1729,7 @@ components:
                     example: funky-policy
                     type: string
                     description: The name of the service of the added policy.
-        CreateAutoscaleConfigurationRequest:
+        CreateAutoscaleConfigurationsRequestConfiguration:
             type: object
             properties:
                 uuid:
@@ -1747,33 +1767,14 @@ components:
                     format: int64
                 create_args:
                     allOf:
-                        - $ref: '#/components/schemas/CreateAutoscaleConfigurationRequestInstanceCreateArgs'
+                        - $ref: '#/components/schemas/ConfigurationInstanceCreateArgs'
                     description: The arguments to use when creating the autoscale configuration.
                 policies:
                     type: array
                     items:
                         $ref: '#/components/schemas/AutoscalePolicy'
                     description: The policies to apply to the autoscale configuration.
-            description: The request to create an autoscale configuration for a service.
-        CreateAutoscaleConfigurationRequestInstanceCreateArgs:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: roms
-                      type: object
-                      properties:
-                        roms:
-                            allOf:
-                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms'
-                            description: The ROM to use for the autoscale configuration.
-                    - title: template
-                      type: object
-                      properties:
-                        template:
-                            allOf:
-                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest'
-                            description: The template to use for the autoscale configuration.
-        CreateAutoscaleConfigurationResponse:
+        CreateAutoscaleConfigurationsResponse:
             type: object
             allOf:
                 - type: object
@@ -1787,7 +1788,7 @@ components:
                         format: enum
                     data:
                         allOf:
-                            - $ref: '#/components/schemas/CreateAutoscaleConfigurationResponseData'
+                            - $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseData'
                         description: The response data for this request.
                     errors:
                         type: array
@@ -1810,7 +1811,7 @@ components:
                             type: string
                             description: An optional message providing additional information about the response.
             description: The response to a CreateAutoscaleConfigurationRequest.
-        CreateAutoscaleConfigurationResponseConfigurationsResponse:
+        CreateAutoscaleConfigurationsResponseConfigurationsResponse:
             type: object
             properties:
                 status:
@@ -1829,13 +1830,13 @@ components:
                     example: funky-instance-template
                     type: string
                     description: The name of the service where the configuration was created.
-        CreateAutoscaleConfigurationResponseData:
+        CreateAutoscaleConfigurationsResponseData:
             type: object
             properties:
                 service_groups:
                     type: array
                     items:
-                        $ref: '#/components/schemas/CreateAutoscaleConfigurationResponseConfigurationsResponse'
+                        $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseConfigurationsResponse'
                     description: The configuration(s) which were created by the request.
         CreateCertificateRequest:
             required:

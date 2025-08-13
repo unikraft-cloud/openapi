@@ -986,12 +986,15 @@
           "Autoscale"
         ],
         "description": "Creates an autoscale configuration for the specified service groups given\ntheir UUIDs or names.",
-        "operationId": "CreateAutoscaleConfiguration",
+        "operationId": "CreateAutoscaleConfigurations",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAutoscaleConfigurationRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationsRequestConfiguration"
+                }
               }
             }
           },
@@ -1003,7 +1006,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponse"
                 }
               }
             }
@@ -1183,7 +1186,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponse"
+                  "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponse"
                 }
               }
             }
@@ -2150,6 +2153,43 @@
           }
         }
       },
+      "ConfigurationInstanceCreateArgs": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "roms",
+                "type": "object",
+                "properties": {
+                  "roms": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms"
+                      }
+                    ],
+                    "description": "The ROM to use for the autoscale configuration."
+                  }
+                }
+              },
+              {
+                "title": "template",
+                "type": "object",
+                "properties": {
+                  "template": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest"
+                      }
+                    ],
+                    "description": "The template to use for the autoscale configuration."
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
       "CreateAutoscaleConfigurationByServiceGroupUUIDRequest": {
         "type": "object",
         "properties": {
@@ -2347,7 +2387,7 @@
           }
         }
       },
-      "CreateAutoscaleConfigurationRequest": {
+      "CreateAutoscaleConfigurationsRequestConfiguration": {
         "type": "object",
         "properties": {
           "uuid": {
@@ -2388,7 +2428,7 @@
           "create_args": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateAutoscaleConfigurationRequestInstanceCreateArgs"
+                "$ref": "#/components/schemas/ConfigurationInstanceCreateArgs"
               }
             ],
             "description": "The arguments to use when creating the autoscale configuration."
@@ -2400,47 +2440,9 @@
             },
             "description": "The policies to apply to the autoscale configuration."
           }
-        },
-        "description": "The request to create an autoscale configuration for a service."
+        }
       },
-      "CreateAutoscaleConfigurationRequestInstanceCreateArgs": {
-        "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "roms",
-                "type": "object",
-                "properties": {
-                  "roms": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceCreateRequestRoms"
-                      }
-                    ],
-                    "description": "The ROM to use for the autoscale configuration."
-                  }
-                }
-              },
-              {
-                "title": "template",
-                "type": "object",
-                "properties": {
-                  "template": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest"
-                      }
-                    ],
-                    "description": "The template to use for the autoscale configuration."
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "CreateAutoscaleConfigurationResponse": {
+      "CreateAutoscaleConfigurationsResponse": {
         "type": "object",
         "allOf": [
           {
@@ -2458,7 +2460,7 @@
               "data": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseData"
+                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponseData"
                   }
                 ],
                 "description": "The response data for this request."
@@ -2496,7 +2498,7 @@
         ],
         "description": "The response to a CreateAutoscaleConfigurationRequest."
       },
-      "CreateAutoscaleConfigurationResponseConfigurationsResponse": {
+      "CreateAutoscaleConfigurationsResponseConfigurationsResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -2521,13 +2523,13 @@
           }
         }
       },
-      "CreateAutoscaleConfigurationResponseData": {
+      "CreateAutoscaleConfigurationsResponseData": {
         "type": "object",
         "properties": {
           "service_groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreateAutoscaleConfigurationResponseConfigurationsResponse"
+              "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponseConfigurationsResponse"
             },
             "description": "The configuration(s) which were created by the request."
           }

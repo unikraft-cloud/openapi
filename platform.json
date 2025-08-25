@@ -198,6 +198,27 @@
         }
       }
     },
+    "/v1/healthz": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "description": "Return the status of a full-system health check of the platform.",
+        "operationId": "Healthz",
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthzResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/images/digest/{digest}": {
       "get": {
         "tags": [
@@ -5180,6 +5201,53 @@
           }
         }
       },
+      "HealthzResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "success",
+                  "error"
+                ],
+                "type": "string",
+                "description": "The status of the response.",
+                "format": "enum"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
+              "op_time_us": {
+                "example": 875,
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "example": "Invalid name 'non-funky-town'",
+                    "type": "string",
+                    "description": "An optional message providing additional information about the response."
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
       "Image": {
         "type": "object",
         "properties": {
@@ -6668,6 +6736,9 @@
     {
       "name": "ServiceGroups",
       "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
+    },
+    {
+      "name": "System"
     },
     {
       "name": "Users",

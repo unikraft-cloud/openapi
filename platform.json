@@ -2833,6 +2833,13 @@
                   "$ref": "#/components/schemas/CreateInstanceRequestDomain"
                 },
                 "description": "Similarly, if no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Service"
+                },
+                "description": "If no existing service identifier is provided, one or more new\n(ephemeral, non-persistent) service(s) can be created with the following\ndefinitions."
               }
             }
           },

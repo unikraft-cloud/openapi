@@ -2106,6 +2106,14 @@ components:
                             identifier, a new (ephemeral) service group can be created.  In addition
                             to the services it must expose, you can specify which domains it should
                             use too.
+                    services:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/Service'
+                        description: |-
+                            If no existing service identifier is provided, one or more new
+                            (ephemeral, non-persistent) service(s) can be created with the following
+                            definitions.
                 - oneOf:
                     - title: uuid
                       required:

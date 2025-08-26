@@ -264,6 +264,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
+        patch:
+            tags:
+                - Instances
+            description: |-
+                Update (modify) one or more instances. The instances must be in a stopped
+                state for most update operations.
+            operationId: UpdateInstances
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateInstancesRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateInstancesResponse'
     /v1/instances/log:
         get:
             tags:
@@ -463,6 +483,36 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
+        patch:
+            tags:
+                - Instances
+            description: |-
+                Update (modify) an instance by its UUID. The instance must be in a stopped
+                state for most update operations. Supported properties include: image, args,
+                env, memory_mb, vcpus, scale_to_zero, tags, and delete_lock.
+            operationId: UpdateInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the instance to update.
+                  required: true
+                  schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateInstanceByUUIDRequestBody'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateInstancesResponse'
     /v1/instances/{uuid}/log:
         get:
             tags:
@@ -3904,6 +3954,8 @@ components:
                     items:
                         $ref: '#/components/schemas/Volume'
                     description: The volume(s) which were retrieved by the request.
+        GoogleProtobufValue:
+            description: Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values.
         HealthzResponse:
             type: object
             allOf:
@@ -5158,6 +5210,196 @@ components:
                         instance to reach the stopped state.
                     format: uint64
             description: An identifier for the instance(s) to start.
+        UpdateInstanceByUUIDRequestBody:
+            required:
+                - prop
+                - op
+            type: object
+            properties:
+                id:
+                    example: op-1
+                    type: string
+                    description: (Optional). A client-provided identifier for tracking this operation in the response.
+                prop:
+                    example: memory_mb
+                    enum:
+                        - image
+                        - args
+                        - env
+                        - memory_mb
+                        - vcpus
+                        - scale_to_zero
+                        - tags
+                        - delete_lock
+                    type: string
+                    description: |-
+                        The property to modify. Must be one of the supported properties:
+                        - "image": Change the instance image (SET only)
+                        - "args": Update application arguments (SET only)
+                        - "env": Modify environment variables (SET, ADD, DEL)
+                        - "memory_mb": Change memory allocation (SET only)
+                        - "vcpus": Change CPU allocation (SET only)
+                        - "scale_to_zero": Configure scale-to-zero settings (SET only)
+                        - "tags": Manage instance tags (SET, ADD, DEL)
+                        - "delete_lock": Enable/disable deletion protection (SET only)
+                op:
+                    example: set
+                    enum:
+                        - set
+                        - add
+                        - del
+                    type: string
+                    description: |-
+                        The operation to perform on the property. Valid operations depend on the property:
+                        - "set": Supported by all properties
+                        - "add": Only supported by "env" and "tags"
+                        - "del": Only supported by "env" and "tags"
+                value:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        The value for the update operation. The type depends on the property and operation:
+                        - For "image": string
+                        - For "args": string or array of strings
+                        - For "env": object (for SET/ADD) or string/array of strings (for DEL)
+                        - For "memory_mb": integer
+                        - For "vcpus": integer
+                        - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
+                        - For "tags": array of strings
+                        - For "delete_lock": boolean
+        UpdateInstancesRequest:
+            required:
+                - prop
+                - op
+            type: object
+            properties:
+                id:
+                    example: op-1
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: (Optional). A client-provided identifier for tracking this operation in the response.
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the instance to update. Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the instance to update. Mutually exclusive with UUID.
+                prop:
+                    example: memory_mb
+                    enum:
+                        - image
+                        - args
+                        - env
+                        - memory_mb
+                        - vcpus
+                        - scale_to_zero
+                        - tags
+                        - delete_lock
+                    type: string
+                    description: |-
+                        The property to modify. Must be one of the supported properties:
+                        - "image": Change the instance image (SET only)
+                        - "args": Update application arguments (SET only)
+                        - "env": Modify environment variables (SET, ADD, DEL)
+                        - "memory_mb": Change memory allocation (SET only)
+                        - "vcpus": Change CPU allocation (SET only)
+                        - "scale_to_zero": Configure scale-to-zero settings (SET only)
+                        - "tags": Manage instance tags (SET, ADD, DEL)
+                        - "delete_lock": Enable/disable deletion protection (SET only)
+                op:
+                    example: set
+                    enum:
+                        - set
+                        - add
+                        - del
+                    type: string
+                    description: |-
+                        The operation to perform on the property. Valid operations depend on the property:
+                        - "set": Supported by all properties
+                        - "add": Only supported by "env" and "tags"
+                        - "del": Only supported by "env" and "tags"
+                value:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        The value for the update operation. The type depends on the property and operation:
+                        - For "image": string
+                        - For "args": string or array of strings
+                        - For "env": object (for SET/ADD) or string/array of strings (for DEL)
+                        - For "memory_mb": integer
+                        - For "vcpus": integer
+                        - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
+                        - For "tags": array of strings
+                        - For "delete_lock": boolean
+            description: A single update operation to be applied to an instance.
+        UpdateInstancesResponse:
+            type: object
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    example: Successfully updated 2 instances
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/UpdateInstancesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 76
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
+            description: The response message for updating one or more instances.
+        UpdateInstancesResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UpdateInstancesResponseUpdatedInstance'
+                    description: List of instances that were processed during the update operation.
+        UpdateInstancesResponseUpdatedInstance:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    uuid:
+                        example: 123e4567-e89b-12d3-a456-426614174000
+                        type: string
+                        description: The UUID of the instance that was updated.
+                        format: uuid
+                    name:
+                        example: funky-town-g756b5d
+                        type: string
+                        description: The name of the instance that was updated.
+                    status:
+                        example: success
+                        type: string
+                        description: The status of this particular instance update operation.
+                - oneOf:
+                    - title: id
+                      type: object
+                      properties:
+                        id:
+                            example: op-1
+                            type: string
+                            description: (Optional). The client-provided ID from the request.
         Volume:
             type: object
             properties:

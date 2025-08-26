@@ -5223,6 +5223,14 @@
                 },
                 "description": "A list of errors which may have occurred during the request."
               },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/HealthzResponseData"
+                  }
+                ],
+                "description": "The response data for this request."
+              },
               "op_time_us": {
                 "example": 875,
                 "type": "integer",
@@ -5247,6 +5255,11 @@
             ]
           }
         ]
+      },
+      "HealthzResponseData": {
+        "type": "object",
+        "properties": {},
+        "description": "For now, no additional data is returned by the health check."
       },
       "Image": {
         "type": "object",

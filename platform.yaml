@@ -3921,6 +3921,10 @@ components:
                         items:
                             $ref: '#/components/schemas/ResponseError'
                         description: A list of errors which may have occurred during the request.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/HealthzResponseData'
+                        description: The response data for this request.
                     op_time_us:
                         example: 875
                         type: integer
@@ -3936,6 +3940,10 @@ components:
                             example: Invalid name 'non-funky-town'
                             type: string
                             description: An optional message providing additional information about the response.
+        HealthzResponseData:
+            type: object
+            properties: {}
+            description: For now, no additional data is returned by the health check.
         Image:
             type: object
             properties:

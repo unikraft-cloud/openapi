@@ -5258,7 +5258,14 @@
       },
       "HealthzResponseData": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "services": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
         "description": "For now, no additional data is returned by the health check."
       },
       "Image": {

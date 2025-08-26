@@ -3942,7 +3942,11 @@ components:
                             description: An optional message providing additional information about the response.
         HealthzResponseData:
             type: object
-            properties: {}
+            properties:
+                services:
+                    type: object
+                    additionalProperties:
+                        type: string
             description: For now, no additional data is returned by the health check.
         Image:
             type: object

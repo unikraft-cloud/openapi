@@ -138,7 +138,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DeleteCertificatesResponse'
     /v1/healthz:
-        post:
+        get:
             tags:
                 - System
             description: Return the status of a full-system health check of the platform.

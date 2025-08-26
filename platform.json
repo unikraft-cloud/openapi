@@ -199,7 +199,7 @@
       }
     },
     "/v1/healthz": {
-      "post": {
+      "get": {
         "tags": [
           "System"
         ],

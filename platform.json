@@ -6532,7 +6532,8 @@
               "delete_lock"
             ],
             "type": "string",
-            "description": "The property to modify. Must be one of the supported properties:\n- \"image\": Change the instance image (SET only)\n- \"args\": Update application arguments (SET only)\n- \"env\": Modify environment variables (SET, ADD, DEL)\n- \"memory_mb\": Change memory allocation (SET only)\n- \"vcpus\": Change CPU allocation (SET only)\n- \"scale_to_zero\": Configure scale-to-zero settings (SET only)\n- \"tags\": Manage instance tags (SET, ADD, DEL)\n- \"delete_lock\": Enable/disable deletion protection (SET only)"
+            "description": "The property to modify.",
+            "format": "enum"
           },
           "op": {
             "example": "set",
@@ -6542,7 +6543,8 @@
               "del"
             ],
             "type": "string",
-            "description": "The operation to perform on the property. Valid operations depend on the property:\n- \"set\": Supported by all properties\n- \"add\": Only supported by \"env\" and \"tags\"\n- \"del\": Only supported by \"env\" and \"tags\""
+            "description": "The operation to perform on the property.",
+            "format": "enum"
           },
           "value": {
             "allOf": [
@@ -6594,7 +6596,8 @@
               "delete_lock"
             ],
             "type": "string",
-            "description": "The property to modify. Must be one of the supported properties:\n- \"image\": Change the instance image (SET only)\n- \"args\": Update application arguments (SET only)\n- \"env\": Modify environment variables (SET, ADD, DEL)\n- \"memory_mb\": Change memory allocation (SET only)\n- \"vcpus\": Change CPU allocation (SET only)\n- \"scale_to_zero\": Configure scale-to-zero settings (SET only)\n- \"tags\": Manage instance tags (SET, ADD, DEL)\n- \"delete_lock\": Enable/disable deletion protection (SET only)"
+            "description": "The property to modify.",
+            "format": "enum"
           },
           "op": {
             "example": "set",
@@ -6604,7 +6607,8 @@
               "del"
             ],
             "type": "string",
-            "description": "The operation to perform on the property. Valid operations depend on the property:\n- \"set\": Supported by all properties\n- \"add\": Only supported by \"env\" and \"tags\"\n- \"del\": Only supported by \"env\" and \"tags\""
+            "description": "The operation to perform on the property.",
+            "format": "enum"
           },
           "value": {
             "allOf": [

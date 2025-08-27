@@ -5223,37 +5223,26 @@ components:
                 prop:
                     example: memory_mb
                     enum:
-                        - image
-                        - args
-                        - env
-                        - memory_mb
-                        - vcpus
-                        - scale_to_zero
-                        - tags
-                        - delete_lock
+                        - "image"
+                        - "args"
+                        - "env"
+                        - "memory_mb"
+                        - "vcpus"
+                        - "scale_to_zero"
+                        - "tags"
+                        - "delete_lock"
                     type: string
-                    description: |-
-                        The property to modify. Must be one of the supported properties:
-                        - "image": Change the instance image (SET only)
-                        - "args": Update application arguments (SET only)
-                        - "env": Modify environment variables (SET, ADD, DEL)
-                        - "memory_mb": Change memory allocation (SET only)
-                        - "vcpus": Change CPU allocation (SET only)
-                        - "scale_to_zero": Configure scale-to-zero settings (SET only)
-                        - "tags": Manage instance tags (SET, ADD, DEL)
-                        - "delete_lock": Enable/disable deletion protection (SET only)
+                    description: The property to modify.
+                    format: enum
                 op:
                     example: set
                     enum:
-                        - set
-                        - add
-                        - del
+                        - "set"
+                        - "add"
+                        - "del"
                     type: string
-                    description: |-
-                        The operation to perform on the property. Valid operations depend on the property:
-                        - "set": Supported by all properties
-                        - "add": Only supported by "env" and "tags"
-                        - "del": Only supported by "env" and "tags"
+                    description: The operation to perform on the property.
+                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -5290,37 +5279,26 @@ components:
                 prop:
                     example: memory_mb
                     enum:
-                        - image
-                        - args
-                        - env
-                        - memory_mb
-                        - vcpus
-                        - scale_to_zero
-                        - tags
-                        - delete_lock
+                        - "image"
+                        - "args"
+                        - "env"
+                        - "memory_mb"
+                        - "vcpus"
+                        - "scale_to_zero"
+                        - "tags"
+                        - "delete_lock"
                     type: string
-                    description: |-
-                        The property to modify. Must be one of the supported properties:
-                        - "image": Change the instance image (SET only)
-                        - "args": Update application arguments (SET only)
-                        - "env": Modify environment variables (SET, ADD, DEL)
-                        - "memory_mb": Change memory allocation (SET only)
-                        - "vcpus": Change CPU allocation (SET only)
-                        - "scale_to_zero": Configure scale-to-zero settings (SET only)
-                        - "tags": Manage instance tags (SET, ADD, DEL)
-                        - "delete_lock": Enable/disable deletion protection (SET only)
+                    description: The property to modify.
+                    format: enum
                 op:
                     example: set
                     enum:
-                        - set
-                        - add
-                        - del
+                        - "set"
+                        - "add"
+                        - "del"
                     type: string
-                    description: |-
-                        The operation to perform on the property. Valid operations depend on the property:
-                        - "set": Supported by all properties
-                        - "add": Only supported by "env" and "tags"
-                        - "del": Only supported by "env" and "tags"
+                    description: The operation to perform on the property.
+                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'

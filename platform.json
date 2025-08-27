@@ -1038,6 +1038,38 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Update one or more service groups.",
+        "operationId": "UpdateServiceGroups",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateServiceGroupsRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/services/autoscale": {
@@ -1205,6 +1237,48 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteServiceGroupsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ServiceGroups"
+        ],
+        "description": "Update a service group by its UUID.",
+        "operationId": "UpdateServiceGroupByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group to update.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateServiceGroupByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateServiceGroupsResponse"
                 }
               }
             }
@@ -6782,6 +6856,210 @@
                     "example": "op-1",
                     "type": "string",
                     "description": "(Optional). The client-provided ID from the request."
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "UpdateServiceGroupByUUIDRequestBody": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+          },
+          "prop": {
+            "example": "services",
+            "enum": [
+              "services",
+              "domains",
+              "soft_limit",
+              "hard_limit"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "set",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects\n- For \"domains\": array of Domain objects\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+          }
+        }
+      },
+      "UpdateServiceGroupsRequestItem": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the service group to update.  Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the service group to update.  Mutually exclusive with UUID."
+          },
+          "prop": {
+            "example": "services",
+            "enum": [
+              "services",
+              "domains",
+              "soft_limit",
+              "hard_limit"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "set",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects\n- For \"domains\": array of Domain objects\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+          }
+        },
+        "description": "A single update operation to be applied to a service group"
+      },
+      "UpdateServiceGroupsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "example": "Successfully updated 2 service groups",
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateServiceGroupsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating one or more service groups."
+      },
+      "UpdateServiceGroupsResponseData": {
+        "type": "object",
+        "properties": {
+          "service_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateServiceGroupsResponseUpdatedServiceGroup"
+            },
+            "description": "List of service groups that were processed during the update operation."
+          }
+        }
+      },
+      "UpdateServiceGroupsResponseUpdatedServiceGroup": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "string",
+                "description": "The UUID of the service group that was updated.",
+                "format": "uuid"
+              },
+              "name": {
+                "example": "funky-town-g756b5d",
+                "type": "string",
+                "description": "The name of the service group that was updated."
+              },
+              "status": {
+                "example": "success",
+                "type": "string",
+                "description": "The status of this particular service group update operation."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "id",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "op-1",
+                    "type": "string",
+                    "description": "(Optional).  The client-provided ID from the request."
                   }
                 }
               }

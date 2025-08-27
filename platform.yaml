@@ -4052,40 +4052,34 @@ components:
             description: Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values.
         HealthzResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
-                        description: The status of the response.
-                        format: enum
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/HealthzResponseData'
-                        description: The response data for this request.
-                    op_time_us:
-                        example: 875
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Invalid name 'non-funky-town'
-                            type: string
-                            description: An optional message providing additional information about the response.
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    example: Invalid name 'non-funky-town'
+                    type: string
+                    description: An optional message providing additional information about the response.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/HealthzResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    example: 875
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         HealthzResponseData:
             type: object
             properties:

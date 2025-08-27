@@ -1675,6 +1675,38 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Updates one or more volumes specified by either UUID(s) or name(s)",
+        "operationId": "UpdateVolumes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateVolumesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateVolumesResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/volumes/attach": {
@@ -1806,6 +1838,48 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Volumes"
+        ],
+        "description": "Updates the specified volume by its UUID.",
+        "operationId": "UpdateVolumeByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the service group to update.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVolumeByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateVolumesResponse"
                 }
               }
             }
@@ -6708,6 +6782,209 @@
                     "example": "op-1",
                     "type": "string",
                     "description": "(Optional). The client-provided ID from the request."
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "UpdateVolumeByUUIDRequestBody": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+          },
+          "prop": {
+            "example": "size_mb",
+            "enum": [
+              "size_mb",
+              "tags",
+              "quota_policy",
+              "delete_lock"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "set",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": \"static\" or \"dynamic\"\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
+          }
+        }
+      },
+      "UpdateVolumesRequestItem": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the volume to update.  Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the volume to update.  Mutually exclusive with UUID."
+          },
+          "prop": {
+            "example": "size_mb",
+            "enum": [
+              "size_mb",
+              "tags",
+              "quota_policy",
+              "delete_lock"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "set",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": 1 - static reservation, 2 - dynamic reservation\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
+          }
+        }
+      },
+      "UpdateVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
+          },
+          "message": {
+            "example": "Successfully updated 2 volumes",
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating one or more volume(s)."
+      },
+      "UpdateVolumesResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateVolumesResponseUpdatedVolume"
+            },
+            "description": "List of volumes that were processed during the update operation."
+          }
+        }
+      },
+      "UpdateVolumesResponseUpdatedVolume": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "string",
+                "description": "The UUID of the volume that was updated.",
+                "format": "uuid"
+              },
+              "name": {
+                "example": "funky-town-g756b5d",
+                "type": "string",
+                "description": "The name of the service group that was updated."
+              },
+              "status": {
+                "example": "success",
+                "type": "string",
+                "description": "The status of this particular service group update operation."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "id",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "op-1",
+                    "type": "string",
+                    "description": "(Optional).  The client-provided ID from the request."
                   }
                 }
               }

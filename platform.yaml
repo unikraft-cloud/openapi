@@ -4246,6 +4246,12 @@ components:
                         list of command-line arguments that were provided to the instance at
                         startup.  These arguments can be used to configure the behavior of the
                         instance and its applications.
+                env:
+                    example: {"ENV_VAR": "value"}
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Environment variables set for the instance.
                 start_count:
                     example: 6
                     type: integer

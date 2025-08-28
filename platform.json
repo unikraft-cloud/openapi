@@ -5663,6 +5663,12 @@
             "description": "The total number of times the instance has been started.  This is a counter\nthat increments each time the instance is started, regardless of whether it\nwas manually stopped or restarted.  This can be useful for tracking the\nusage of the instance over time and/or for debugging purposes.",
             "format": "uint64"
           },
+          "restart_count": {
+            "example": 1,
+            "type": "integer",
+            "description": "The total number of times the instance has been restarted. This is a counter\nthat increments each time the instance has been restarted. This can be\nuseful for tracking the usage of the instance over time and/or for\ndebugging purposes.",
+            "format": "uint64"
+          },
           "started_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",

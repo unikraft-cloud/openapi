@@ -2380,7 +2380,35 @@
           },
           "common_name": {
             "example": "my-common-name",
-            "type": "string"
+            "type": "string",
+            "description": "The common name (CN) field from the certificate's subject.\n\nThis is typically the primary domain name that the certificate is issued\nfor. It represents the main identity that the certificate validates."
+          },
+          "subject": {
+            "example": "example.com",
+            "type": "string",
+            "description": "The complete subject distinguished name (DN) of the certificate.\n\nThis contains the full subject information from the certificate, including\nthe common name, organization, organizational unit, locality, state, and\ncountry. The subject identifies the entity that the certificate is issued to."
+          },
+          "issuer": {
+            "example": "CN=R10,O=Let's Encrypt,C=US",
+            "type": "string",
+            "description": "The complete issuer distinguished name (DN) of the certificate.\n\nThis identifies the Certificate Authority (CA) that issued the certificate.\nIt contains information about the CA including its common name, organization,\nand country."
+          },
+          "serial_number": {
+            "example": "123456789ABCDEF123456789ABCDEF123456",
+            "type": "string",
+            "description": "The unique serial number assigned to the certificate by the issuing CA.\n\nThis is a unique identifier within the scope of the issuing CA that can be\nused to identify and track the certificate. Serial numbers are typically\nrepresented as hexadecimal strings."
+          },
+          "not_before": {
+            "example": "2023-10-01T12:00:00Z",
+            "type": "string",
+            "description": "The date and time when the certificate becomes valid.\n\nThe certificate should not be trusted before this date. This timestamp\nmarks the beginning of the certificate's validity period.",
+            "format": "date-time"
+          },
+          "not_after": {
+            "example": "2023-10-01T12:00:00Z",
+            "type": "string",
+            "description": "The date and time when the certificate expires.\n\nThe certificate should not be trusted after this date. This timestamp\nmarks the end of the certificate's validity period. Certificates should\nbe renewed before this date to maintain service availability.",
+            "format": "date-time"
           },
           "state": {
             "enum": [
@@ -2389,6 +2417,7 @@
               "error"
             ],
             "type": "string",
+            "description": "The current state of the certificate.\n\nThis indicates whether the certificate is pending issuance, valid and\nready for use, or in an error state. See CertificateState enum for\ndetailed state descriptions.",
             "format": "enum"
           }
         }

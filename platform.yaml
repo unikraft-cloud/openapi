@@ -4487,6 +4487,11 @@ components:
                     items:
                         $ref: '#/components/schemas/InstanceNetworkInterface'
                     description: The network interfaces of the instance.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: The tags associated with the instance.
                 status:
                     enum:
                         - "success"
@@ -5847,6 +5852,11 @@ components:
                     items:
                         $ref: '#/components/schemas/VolumeVolumeInstanceMount'
                     description: List of instances that have this volume mounted.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: The tags associated with the volume.
         VolumeInstanceID:
             type: object
             allOf:

@@ -6262,6 +6262,12 @@
             "description": "Number of instances that are not in the `stopped` state",
             "format": "int64"
           },
+          "live_vcpus": {
+            "example": 4,
+            "type": "integer",
+            "description": "Number of vCPUs",
+            "format": "int64"
+          },
           "live_memory_mb": {
             "example": 2048,
             "type": "integer",

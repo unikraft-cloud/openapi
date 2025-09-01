@@ -4918,6 +4918,16 @@ components:
                     type: integer
                     description: Maximum size of an autoscale group
                     format: int64
+                min_vcpus:
+                    example: 2
+                    type: integer
+                    description: Minimum number of vCPUs
+                    format: int64
+                max_vcpus:
+                    example: 4
+                    type: integer
+                    description: Maximum number of vCPUs
+                    format: int64
         QuotasResponse:
             type: object
             allOf:

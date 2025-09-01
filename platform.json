@@ -5109,6 +5109,18 @@
             "description": "Consumed CPU time in milliseconds.",
             "format": "uint64"
           },
+          "boot_time_us": {
+            "example": 560007005,
+            "type": "integer",
+            "description": "The boot time of the instance in microseconds.  We take a pragmatic\napproach is to define the boot time.  We calculate this as the difference\nin time between the moment the virtualization toolstack is invoked to\nrespond to a VM boot request and the moment the OS starts executing user\ncode (i.e., the end of the guest OS boot process).  This is essentially the\ntime that a user would experience in a deployment, minus the application\ninitialization time, which we leave out since it is independent from the\nOS.",
+            "format": "uint64"
+          },
+          "net_time_us": {
+            "example": 560007005,
+            "type": "integer",
+            "description": "This is the time it took for the user-level application to start listening\non a non-localhost port measured in microseconds.  This is the time from\nwhen the instance started until it reasonably ready to start responding to\nnetwork requests.  This is useful for measuring the time it takes for the\ninstance to become operationally ready.",
+            "format": "uint64"
+          },
           "rx_bytes": {
             "example": 12312353,
             "type": "integer",

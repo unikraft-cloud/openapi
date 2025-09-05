@@ -45,7 +45,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/GetCertificatesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -85,7 +85,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/DeleteCertificatesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -214,7 +214,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/GetInstancesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -255,7 +255,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/DeleteInstancesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -312,16 +312,12 @@ paths:
             parameters:
                 - name: uuid
                   in: query
-                  description: |-
-                    The UUID of the instance to retrieve metrics for.  Mutually exclusive
-                    with name.
+                  description: Mutually exclusive with name.
                   schema:
                     type: string
                 - name: name
                   in: query
-                  description: |-
-                    The name of the instance to retrieve metrics for.  Mutually exclusive
-                    with UUID.
+                  description: Mutually exclusive with UUID.
                   schema:
                     type: string
             responses:
@@ -345,7 +341,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/StartInstancesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -421,7 +417,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/WaitInstancesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -687,7 +683,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/GetServiceGroupsRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -733,7 +729,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/DeleteServiceGroupsRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -776,7 +772,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/GetAutoscaleConfigurationsRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -820,7 +816,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/DeleteAutoscaleConfigurationsRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -1186,7 +1182,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/GetVolumesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -1232,7 +1228,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/DeleteVolumesRequestID'
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -1809,7 +1805,7 @@ components:
                       properties:
                         template:
                             allOf:
-                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest'
+                                - $ref: '#/components/schemas/NameOrUUID'
                             description: The template to use for the autoscale configuration.
         CreateAutoscaleConfigurationByServiceGroupUUIDRequest:
             type: object
@@ -1864,7 +1860,7 @@ components:
                       properties:
                         template:
                             allOf:
-                                - $ref: '#/components/schemas/InstanceCreateArgsInstanceTemplateCreateRequest'
+                                - $ref: '#/components/schemas/NameOrUUID'
                             description: The template to use for the autoscale configuration.
         CreateAutoscaleConfigurationPolicyRequest:
             required:
@@ -2236,38 +2232,6 @@ components:
                         Features to enable for the instance.  Features are specific
                         configurations or capabilities that can be enabled for the instance.
             description: The request message for creating a new instance.
-        CreateInstanceRequestCertificate:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-cert-g756b5d
-                            type: string
-                            description: |-
-                                (Optional).  The name of the existing certificate.  Mutually
-                                exclusive with UUID.
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                (Optional).  The UUID for the existing certificate.  Mutually
-                                exclusive with name.
-                            format: uuid
-            description: |-
-                A reference to an existing certificate which can be used for the
-                specified domain.  If unspecified, Unikraft Cloud will
-                automatically generate a new certificate for the domain based on Let's
-                Encrypt and seek to accomplish a DNS-01 challenge.
         CreateInstanceRequestDomain:
             required:
                 - name
@@ -2291,10 +2255,12 @@ components:
                       properties:
                         certificate:
                             allOf:
-                                - $ref: '#/components/schemas/CreateInstanceRequestCertificate'
+                                - $ref: '#/components/schemas/NameOrUUID'
                             description: |-
-                                Use an existing certificate for the domain.  If this field is specified,
-                                the domain must be associated with a valid certificate.
+                                A reference to an existing certificate which can be used for the
+                                specified domain.  If unspecified, Unikraft Cloud will
+                                automatically generate a new certificate for the domain based on Let's
+                                Encrypt and seek to accomplish a DNS-01 challenge.
             description: |-
                 The domain configuration for the service group.
 
@@ -2508,35 +2474,11 @@ components:
                         subdomain of the target metro.
                 certificate:
                     allOf:
-                        - $ref: '#/components/schemas/CreateServiceGroupRequestID'
+                        - $ref: '#/components/schemas/NameOrUUID'
                     description: |-
                         Use an existing certificate for the domain.  If this field is
                         specified, the domain must be associated with a valid certificate.
             description: A domain name
-        CreateServiceGroupRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 12345678-90ab-cdef-1234-567890abcdef
-                            type: string
-                            description: The UUID of the certificate to use for the service group.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: my-cert
-                            type: string
-                            description: The name of the certificate to use for the service group.
-            description: An identifier for the domain certificate to use for the service group.
         CreateServiceGroupResponse:
             type: object
             properties:
@@ -2733,33 +2675,6 @@ components:
                     example: funky-policy
                     type: string
                     description: The name of the service of the deleted policy.
-        DeleteAutoscaleConfigurationsRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                The UUID of the service to delete a configuration for.
-                                Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-service
-                            type: string
-                            description: |-
-                                The name of the service to delete a configuration for.
-                                Mutually exclusive with UUID.
         DeleteAutoscaleConfigurationsResponse:
             type: object
             allOf:
@@ -2823,34 +2738,6 @@ components:
                     example: funky-instance-template
                     type: string
                     description: The name of the service where the configuration was deleted.
-        DeleteCertificatesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                The UUID of the certificate to retrieve.
-                                Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-certificate
-                            type: string
-                            description: |-
-                                The name of the certificate to retrieve.
-                                Mutually exclusive with UUID.
-            description: An identifier for the certificate(s) to delete.
         DeleteCertificatesResponse:
             type: object
             properties:
@@ -2914,30 +2801,6 @@ components:
                     type: string
                     description: The name of the certificate which was deleted.
             description: Details of the certificate which was deleted by this request.
-        DeleteInstancesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the instance to retrieve.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: The name of the instance to retrieve.  Mutually exclusive with UUID.
-            description: An identifier for the instance(s) to delete.
         DeleteInstancesResponse:
             type: object
             properties:
@@ -3014,34 +2877,6 @@ components:
                     example: funky-policy
                     type: string
                     description: The Name of the policy to delete.
-        DeleteServiceGroupsRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 12345678-90ab-cdef-1234-567890abcdef
-                            type: string
-                            description: |-
-                                The UUID of the service group to retrieve.
-                                Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-service-g7gum5cj
-                            type: string
-                            description: |-
-                                The name of the service group to retrieve.
-                                Mutually exclusive with UUID.
-            description: An identifier for the service group(s) to delete.
         DeleteServiceGroupsResponse:
             type: object
             properties:
@@ -3105,29 +2940,6 @@ components:
                     type: string
                     description: The name of the service group which was deleted.
             description: Details of the service group which was deleted by this request.
-        DeleteVolumesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            type: string
-                            description: The UUID of the volume to delete.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-vol-g7gum5cj
-                            type: string
-                            description: The name of the volume to delete.  Mutually exclusive with UUID.
-            description: An identifier for the volume(s) to delete.
         DeleteVolumesResponse:
             type: object
             allOf:
@@ -3405,34 +3217,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/AutoscalePolicy'
                     description: The policy which was retrieved by the request.
-        GetAutoscaleConfigurationsRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                The UUID of the service to create a configuration for.
-                                Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-service
-                            type: string
-                            description: |-
-                                The name of the service to create a configuration for.
-                                Mutually exclusive with UUID.
-            description: An identifier for the configuration(s) to get.
         GetAutoscaleConfigurationsResponse:
             type: object
             allOf:
@@ -3539,30 +3323,6 @@ components:
                     items:
                         $ref: '#/components/schemas/AutoscalePolicy'
                     description: The policies applied to the autoscale configuration.
-        GetCertificatesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the certificate to get.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-certificate
-                            type: string
-                            description: The name of the certificate to get.  Mutually exclusive with UUID.
-            description: An identifier for the certificate(s) to get.
         GetCertificatesResponse:
             type: object
             properties:
@@ -3930,30 +3690,6 @@ components:
                     type: integer
                     description: Total number of inbound connections and HTTP requests handled.
                     format: uint64
-        GetInstancesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the instance to get.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: The name of the instance to get.  Mutually exclusive with UUID.
-            description: An identifier for the instance(s) to get.
         GetInstancesResponse:
             type: object
             properties:
@@ -3992,30 +3728,6 @@ components:
                     items:
                         $ref: '#/components/schemas/Instance'
                     description: The instance(s) that were retrieved by the request.
-        GetServiceGroupsRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 12345678-90ab-cdef-1234-567890abcdef
-                            type: string
-                            description: The UUID of the service group to get.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-service-g7gum5cj
-                            type: string
-                            description: The name of the service group to get.  Mutually exclusive with UUID.
-            description: An identifier for the service group(s) to get.
         GetServiceGroupsResponse:
             type: object
             properties:
@@ -4057,30 +3769,6 @@ components:
                     items:
                         $ref: '#/components/schemas/ServiceGroup'
                     description: The service group(s) which were retrieved by the request.
-        GetVolumesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                            type: string
-                            description: The UUID of the volume to get.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-vol-g7gum5cj
-                            type: string
-                            description: The name of the volume to get.  Mutually exclusive with UUID.
-            description: An identifier for the volume(s) to get.
         GetVolumesResponse:
             type: object
             allOf:
@@ -4596,68 +4284,6 @@ components:
                 image:
                     type: string
                     description: The image of the ROM to use for the autoscale configuration.
-        InstanceCreateArgsInstanceTemplateCreateRequest:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            type: string
-                            description: The name of the template to use for the autoscale configuration.
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            type: string
-                            description: The UUID of the template to use for the autoscale configuration.
-                            format: uuid
-        InstanceDomainInstanceDomainCertificate:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                The UUID of the certificate.
-
-                                This is a unique identifier for the certificate that is generated
-                                when the certificate is created.  The UUID is used to reference the
-                                certificate in API calls and can be used to identify the certificate
-                                in all API calls that require a certificate identifier.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d.internal
-                            type: string
-                            description: |-
-                                The name of the certificate.
-
-                                This is a human-readable name that can be used to identify the
-                                certificate.  The name is unique within the context of your account.
-                                The name can also be used to identify the certificate in API calls.
-            description: |-
-                The certificate associated with the domain.
-
-                The certificate is used to secure the domain with TLS/SSL.  If no
-                certificate is specified, Unikraft Cloud will automatically generate a
-                new certificate for the domain based on Let's Encrypt and seek to
-                accomplish a DNS-01 challenge.
         InstanceInstanceServiceGroup:
             type: object
             properties:
@@ -4831,8 +4457,14 @@ components:
                       properties:
                         certificate:
                             allOf:
-                                - $ref: '#/components/schemas/InstanceDomainInstanceDomainCertificate'
-                            description: The certificate associated with the domain.
+                                - $ref: '#/components/schemas/NameOrUUID'
+                            description: |-
+                                The certificate associated with the domain.
+
+                                The certificate is used to secure the domain with TLS/SSL.  If no
+                                certificate is specified, Unikraft Cloud will automatically generate a
+                                new certificate for the domain based on Let's Encrypt and seek to
+                                accomplish a DNS-01 challenge.
             description: |-
                 The domain configuration for the service group.
 
@@ -4842,6 +4474,30 @@ components:
                 certificate is specified and a FQDN is provided, Unikraft Cloud will
                 automatically generate a new certificate for the domain based on Let's
                 Encrypt and seek to accomplish a DNS-01 challenge.
+        NameOrUUID:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: Mutually exclusive with UUID.
+            description: An identifier for a resource.  Either a name or a UUID.
         Object:
             type: object
             properties:
@@ -5282,30 +4938,6 @@ components:
                     example: stopped
                     type: string
                     description: The previous state of the instance before it was deleted.
-        StartInstancesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the instance to start.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: The name of the instance to start.  Mutually exclusive with UUID.
-            description: An identifier for the instance(s) to start.
         StopInstanceResponse:
             type: object
             properties:
@@ -6087,30 +5719,6 @@ components:
                     type: string
                     description: The current state of the instance.
                     format: enum
-        WaitInstancesRequestID:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: The UUID of the instance to wait for.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: The name of the instance to wait for.  Mutually exclusive with UUID.
-            description: An identifier for the instance(s) to wait for.
     securitySchemes:
         bearerToken:
             type: http

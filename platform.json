@@ -4271,7 +4271,8 @@
               "status": {
                 "enum": [
                   "success",
-                  "error"
+                  "error",
+                  "unconfigured"
                 ],
                 "type": "string",
                 "description": "The status of the response.",

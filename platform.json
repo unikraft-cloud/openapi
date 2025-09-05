@@ -288,7 +288,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
+        "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by ID(s) (name or UUID).",
         "operationId": "GetInstances",
         "parameters": [
           {
@@ -330,7 +330,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Creates one or more new instances.",
+        "description": "Create one or more new instances.",
         "operationId": "CreateInstance",
         "requestBody": {
           "content": {
@@ -359,7 +359,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Delete the specified instance(s).  After this call the name of the\ninstances are no longer valid.  If the instances are currently running,\nthey are force stopped.",
+        "description": "Delete the specified instance(s) by ID(s) (name or UUID).  After this call\nthe name of the instances are no longer valid.  If the instances are\ncurrently running, they are force-stopped.",
         "operationId": "DeleteInstances",
         "requestBody": {
           "content": {
@@ -391,7 +391,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Update (modify) one or more instances. The instances must be in a stopped\nstate for most update operations.",
+        "description": "Update (modify) one or more instances by ID(s) (name or UUID).  The\ninstances must be in a stopped state for most update operations.",
         "operationId": "UpdateInstances",
         "requestBody": {
           "content": {
@@ -422,7 +422,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Retrieve the logs of an instance by its UUID or name.",
+        "description": "Retrieve the logs of one or more instances by ID(s) (name or UUID).",
         "operationId": "GetInstanceLogs",
         "requestBody": {
           "content": {
@@ -492,7 +492,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Starts previously stopped instances by their UUID(s) or name(s) or does\nnothing if the instance is already running.",
+        "description": "Start previously stopped instances by ID(s) (name or UUID) or do\nnothing if the instances are already running.",
         "operationId": "StartInstances",
         "requestBody": {
           "content": {
@@ -526,7 +526,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Stops one or more running instance by their UUID(s) or name(s) or does\nnothing if the instance is already stopped.",
+        "description": "Stop one or more running instance by ID(s) (name or UUID) or do\nnothing if the instances are already stopped.",
         "operationId": "StopInstances",
         "requestBody": {
           "content": {
@@ -560,7 +560,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Waits for an instance to reach a certain state by its UUID or name.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
+        "description": "Wait for one or more instances to reach certain states by ID(s)\n(name or UUID).\n\nIf the instances are already in the desired states, the request will return\nimmediately.  If the instances are not in the desired state, the request will\nblock until the instances reach the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstances reach the desired states.",
         "operationId": "WaitInstances",
         "parameters": [
           {
@@ -622,7 +622,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Get a single instance by its ID which can either be its name or UUID.",
+        "description": "Get a single instance by its UUID.",
         "operationId": "GetInstanceByUUID",
         "parameters": [
           {
@@ -661,7 +661,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Delete a specified instance by its UUID.  After this call the UUID of the\ninstances are no longer valid.  If the instances are currently running,\nthey are force stopped.",
+        "description": "Delete a specified instance by its UUID.  After this call the UUID of the\ninstance is no longer valid.  If the instance is currently running,\nit is force-stopped.",
         "operationId": "DeleteInstanceByUUID",
         "parameters": [
           {
@@ -692,7 +692,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Update (modify) an instance by its UUID. The instance must be in a stopped\nstate for most update operations. Supported properties include: image, args,\nenv, memory_mb, vcpus, scale_to_zero, tags, and delete_lock.",
+        "description": "Update (modify) an instance by its UUID.  The instance must be in a stopped\nstate for most update operations.",
         "operationId": "UpdateInstanceByUUID",
         "parameters": [
           {
@@ -813,7 +813,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Starts previously stopped instance by its UUID or does nothing if the\ninstance is already running.",
+        "description": "Start a previously stopped instance by its UUID or do nothing if the\ninstance is already running.",
         "operationId": "StartInstanceByUUID",
         "parameters": [
           {
@@ -846,7 +846,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Stops a running instance by its UUID or does nothing if the instance is\nalready stopped.",
+        "description": "Stop a running instance by its UUID or do nothing if the instance is\nalready stopped.",
         "operationId": "StopInstanceByUUID",
         "parameters": [
           {
@@ -896,7 +896,7 @@
         "tags": [
           "Instances"
         ],
-        "description": "Waits for an instance to reach a certain state by its UUID.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
+        "description": "Wait for an instance to reach a certain state, by its UUID.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
         "operationId": "WaitInstanceByUUID",
         "parameters": [
           {
@@ -2912,7 +2912,7 @@
           "name": {
             "example": "funky-town-g756b5d",
             "type": "string",
-            "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated. The name must be unique."
+            "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated.  The name must be unique."
           },
           "image": {
             "example": "nginx:latest",
@@ -4659,7 +4659,7 @@
                 "$ref": "#/components/schemas/GetInstanceLogsResponseRange"
               }
             ],
-            "description": "Description of the range that was returned. Useful for requests with\noffset relative to end."
+            "description": "Description of the range that was returned.  Useful for requests with\noffset relative to end."
           },
           "state": {
             "enum": [
@@ -4752,7 +4752,7 @@
           "rss_bytes": {
             "example": 5677765543,
             "type": "integer",
-            "description": "Resident set size of the VMM in bytes.\n\nThe resident set size (RSS) specifies the amount of physical memory that\nhas been touched by the instance and is currently reserved for the\ninstance on the Unikraft Cloud server.  The RSS grows until the instance\nhas touched all memory assigned to it via the memory_mb setting and may\nalso exceed this value as supporting services running outside the\ninstance acquire memory. The RSS is different from the current amount of\nmemory allocated by the application, which is likely to fluctuate over\nthe lifetime of the application.  The RSS is not a cumulative metric.\nWhen the instance is stopped rss goes down to 0.",
+            "description": "Resident set size of the VMM in bytes.\n\nThe resident set size (RSS) specifies the amount of physical memory that\nhas been touched by the instance and is currently reserved for the\ninstance on the Unikraft Cloud server.  The RSS grows until the instance\nhas touched all memory assigned to it via the memory_mb setting and may\nalso exceed this value as supporting services running outside the\ninstance acquire memory.  The RSS is different from the current amount of\nmemory allocated by the application, which is likely to fluctuate over\nthe lifetime of the application.  The RSS is not a cumulative metric.\nWhen the instance is stopped rss goes down to 0.",
             "format": "uint64"
           },
           "cpu_time_ms": {
@@ -5302,13 +5302,13 @@
           "exit_code": {
             "example": 137,
             "type": "integer",
-            "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific. See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.",
+            "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific.  See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.",
             "format": "uint32"
           },
           "stop_code": {
             "example": 33024,
             "type": "integer",
-            "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop. See `StopCodeReason`.\n\n[^1]: Reserved for future use.",
+            "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop.  See `StopCodeReason`.\n\n[^1]: Reserved for future use.",
             "format": "uint32"
           },
           "restart_policy": {
@@ -5318,7 +5318,7 @@
               "on_failure"
             ],
             "type": "string",
-            "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops. If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay.",
+            "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops.  If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay.",
             "format": "enum"
           },
           "scale_to_zero": {
@@ -5327,7 +5327,7 @@
                 "$ref": "#/components/schemas/InstanceScaleToZero"
               }
             ],
-            "description": "The scale-to-zero configuration for the instance.\n\nWith conventional cloud platforms you need to keep at least one instance\nrunning at all times to be able to respond to incoming requests. Performing\na just-in-time cold boot is simply too time-consuming and would create a\nresponse latency of multiple seconds.  This is not the case with Unikraft\nCloud.  Instances on Unikraft Cloud are able to cold boot within\nmilliseconds, which allows us to perform low-latency scale-to-zero.\n\nTo enable scale-to-zero for an instance it is sufficient to add a\n`scale_to_zero` configuration block.  Unikraft Cloud will then put the\ninstance into standby if there is no traffic to your service within the\nwindow of a cooldown period. When there is new traffic coming in, it is\nautomatically started again.\n\nIf you have a heavyweight application that takes long to cold boot or has\nbad first request latency (e.g., with JIT compilation) consider to enable\nstateful scale-to-zero."
+            "description": "The scale-to-zero configuration for the instance.\n\nWith conventional cloud platforms you need to keep at least one instance\nrunning at all times to be able to respond to incoming requests. Performing\na just-in-time cold boot is simply too time-consuming and would create a\nresponse latency of multiple seconds.  This is not the case with Unikraft\nCloud.  Instances on Unikraft Cloud are able to cold boot within\nmilliseconds, which allows us to perform low-latency scale-to-zero.\n\nTo enable scale-to-zero for an instance it is sufficient to add a\n`scale_to_zero` configuration block.  Unikraft Cloud will then put the\ninstance into standby if there is no traffic to your service within the\nwindow of a cooldown period.  When there is new traffic coming in, it is\nautomatically started again.\n\nIf you have a heavyweight application that takes long to cold boot or has\nbad first request latency (e.g., with JIT compilation) consider to enable\nstateful scale-to-zero."
           },
           "volumes": {
             "type": "array",
@@ -5551,7 +5551,7 @@
             ]
           }
         ],
-        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID. If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
+        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
       },
       "NameOrUUID": {
         "type": "object",
@@ -6192,7 +6192,7 @@
           "id": {
             "example": "op-1",
             "type": "string",
-            "description": "(Optional). A client-provided identifier for tracking this operation in the response."
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
           },
           "prop": {
             "example": "memory_mb",
@@ -6245,7 +6245,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "(Optional). A client-provided identifier for tracking this operation in the response."
+            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -6294,7 +6294,7 @@
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
           }
         },
-        "description": "A single update operation to be applied to an instance."
+        "description": "The request message for updating one or more instances."
       },
       "UpdateInstancesResponse": {
         "type": "object",
@@ -6382,7 +6382,7 @@
                   "id": {
                     "example": "op-1",
                     "type": "string",
-                    "description": "(Optional). The client-provided ID from the request."
+                    "description": "(Optional).  The client-provided ID from the request."
                   }
                 }
               }

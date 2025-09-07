@@ -1560,12 +1560,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/AttachVolumesResponseData'
@@ -1597,12 +1594,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                     type: string
@@ -1882,12 +1876,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData'
@@ -1924,12 +1915,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -1990,12 +1978,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseData'
@@ -2025,12 +2010,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -2088,12 +2070,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No certificate with name 'funky-certificate'
                     type: string
@@ -2378,12 +2357,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'non-funky-town'
                     type: string
@@ -2483,12 +2459,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Port 443 must use HTTP and TLS termination
                     type: string
@@ -2561,12 +2534,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         $ref: '#/components/schemas/CreateVolumeResponseData'
                     errors:
@@ -2602,12 +2572,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                     type: string
@@ -2623,12 +2590,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData'
@@ -2665,12 +2629,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 name:
                     example: funky-policy
                     type: string
@@ -2681,12 +2642,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponseData'
@@ -2723,12 +2681,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -2742,12 +2697,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No certificate with name 'funky-certificate'
                     type: string
@@ -2783,14 +2735,11 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: |-
                         Indicates whether the delete operation was successful or not for this
                         certificate.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -2805,12 +2754,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d'
                     type: string
@@ -2846,14 +2792,11 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: |-
                         Indicates whether the start operation was successful or not for this
                         instance.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -2881,12 +2824,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No service group with name 'funky-service-g7gum5cj' (code=8)
                     type: string
@@ -2922,14 +2862,11 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: |-
                         Indicates whether the delete operation was successful or not for this
                         service group.
-                    format: enum
                 uuid:
                     example: 12345678-90ab-cdef-1234-567890abcdef
                     type: string
@@ -2946,12 +2883,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/DeleteVolumesResponseData'
@@ -2988,12 +2922,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                     type: string
@@ -3062,12 +2993,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/DetachVolumesResponseData'
@@ -3165,12 +3093,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponseData'
@@ -3207,12 +3132,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 policy:
                     allOf:
                         - $ref: '#/components/schemas/AutoscalePolicy'
@@ -3266,12 +3188,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -3328,12 +3247,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No certificate with name 'funky-certificate'
                     type: string
@@ -3369,12 +3285,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No image with name 'my-image:latest'
                     type: string
@@ -3456,12 +3369,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d'
                     type: string
@@ -3564,12 +3474,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d'
                     type: string
@@ -3695,12 +3602,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     type: string
                     description: An optional message providing additional information about the response.
@@ -3733,12 +3637,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: No service group with name 'funky-service-g7gum5cj' (code=8)
                     type: string
@@ -3776,12 +3677,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/GetVolumesResponseData'
@@ -3823,12 +3721,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'non-funky-town'
                     type: string
@@ -4262,14 +4157,11 @@ components:
                         type: string
                     description: The tags associated with the instance.
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: |-
                         The status of the instance.  This field is only set when this message
                         object is used as a response message.
-                    format: enum
                 message:
                     type: string
                     description: An optional message providing additional information about the response.
@@ -4591,12 +4483,9 @@ components:
                 - type: object
                   properties:
                     status:
-                        enum:
-                            - "success"
-                            - "error"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
-                        format: enum
                     data:
                         allOf:
                             - $ref: '#/components/schemas/QuotasResponseData'
@@ -4684,6 +4573,13 @@ components:
                     description: The HTTP status code of the error.
                     format: uint64
             description: The error response message for an API request.
+        ResponseStatus:
+            enum:
+                - "success"
+                - "error"
+            type: string
+            description: The response status of an API request.
+            format: enum
         Service:
             required:
                 - port
@@ -4873,12 +4769,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d'
                     type: string
@@ -4914,14 +4807,11 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: |-
                         Indicates whether the start operation was successful or not for this
                         instance.
-                    format: enum
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -4943,12 +4833,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d'
                     type: string
@@ -5155,12 +5042,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Successfully updated 2 instances
                     type: string
@@ -5308,12 +5192,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Successfully updated 2 service groups
                     type: string
@@ -5460,12 +5341,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Successfully updated 2 volumes
                     type: string
@@ -5662,12 +5540,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     example: Invalid name 'funky-town-g756b5d
                     type: string

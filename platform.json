@@ -2176,13 +2176,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -2229,13 +2228,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
@@ -2571,13 +2569,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -2635,13 +2632,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -2718,13 +2714,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -2771,13 +2766,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -2854,13 +2848,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No certificate with name 'funky-certificate'",
@@ -3149,13 +3142,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'non-funky-town'",
@@ -3260,13 +3252,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Port 443 must use HTTP and TLS termination",
@@ -3351,13 +3342,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "$ref": "#/components/schemas/CreateVolumeResponseData"
@@ -3411,13 +3401,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
@@ -3439,13 +3428,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -3503,13 +3491,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "name": {
             "example": "funky-policy",
@@ -3525,13 +3512,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -3589,13 +3575,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -3614,13 +3599,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No certificate with name 'funky-certificate'",
@@ -3667,13 +3651,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "Indicates whether the delete operation was successful or not for this\ncertificate.",
-            "format": "enum"
+            "description": "Indicates whether the delete operation was successful or not for this\ncertificate."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -3693,13 +3676,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d'",
@@ -3746,13 +3728,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "Indicates whether the start operation was successful or not for this\ninstance.",
-            "format": "enum"
+            "description": "Indicates whether the start operation was successful or not for this\ninstance."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -3790,13 +3771,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
@@ -3843,13 +3823,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "Indicates whether the delete operation was successful or not for this\nservice group.",
-            "format": "enum"
+            "description": "Indicates whether the delete operation was successful or not for this\nservice group."
           },
           "uuid": {
             "example": "12345678-90ab-cdef-1234-567890abcdef",
@@ -3872,13 +3851,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -3936,13 +3914,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
@@ -4034,13 +4011,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -4180,13 +4156,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -4244,13 +4219,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "policy": {
             "allOf": [
@@ -4334,13 +4308,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -4403,13 +4376,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No certificate with name 'funky-certificate'",
@@ -4456,13 +4428,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No image with name 'my-image:latest'",
@@ -4560,13 +4531,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d'",
@@ -4697,13 +4667,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d'",
@@ -4827,13 +4796,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "type": "string",
@@ -4879,13 +4847,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
@@ -4935,13 +4902,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -5003,13 +4969,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'non-funky-town'",
@@ -5359,13 +5324,12 @@
             "description": "The tags associated with the instance."
           },
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the instance.  This field is only set when this message\nobject is used as a response message.",
-            "format": "enum"
+            "description": "The status of the instance.  This field is only set when this message\nobject is used as a response message."
           },
           "message": {
             "type": "string",
@@ -5709,13 +5673,12 @@
             "type": "object",
             "properties": {
               "status": {
-                "enum": [
-                  "success",
-                  "error"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
                 ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
+                "description": "The status of the response."
               },
               "data": {
                 "allOf": [
@@ -5834,6 +5797,15 @@
           }
         },
         "description": "The error response message for an API request."
+      },
+      "ResponseStatus": {
+        "enum": [
+          "success",
+          "error"
+        ],
+        "type": "string",
+        "description": "The response status of an API request.",
+        "format": "enum"
       },
       "Service": {
         "required": [
@@ -5971,13 +5943,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d'",
@@ -6024,13 +5995,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "Indicates whether the start operation was successful or not for this\ninstance.",
-            "format": "enum"
+            "description": "Indicates whether the start operation was successful or not for this\ninstance."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -6059,13 +6029,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d'",
@@ -6300,13 +6269,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Successfully updated 2 instances",
@@ -6504,13 +6472,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Successfully updated 2 service groups",
@@ -6707,13 +6674,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Successfully updated 2 volumes",
@@ -6977,13 +6943,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "example": "Invalid name 'funky-town-g756b5d",

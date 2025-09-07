@@ -69,12 +69,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     type: string
                     description: An optional message providing additional information about the response.
@@ -164,12 +161,9 @@ components:
             type: object
             properties:
                 status:
-                    enum:
-                        - "success"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                    format: enum
                 message:
                     type: string
                     description: An optional message providing additional information about the response.
@@ -210,6 +204,13 @@ components:
                     description: The HTTP status code of the error.
                     format: uint64
             description: The error response message for an API request.
+        ResponseStatus:
+            enum:
+                - "success"
+                - "error"
+            type: string
+            description: The response status of an API request.
+            format: enum
     securitySchemes:
         bearerToken:
             type: http

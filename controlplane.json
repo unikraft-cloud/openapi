@@ -96,13 +96,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "type": "string",
@@ -206,13 +205,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "success",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
             ],
-            "type": "string",
-            "description": "The status of the response.",
-            "format": "enum"
+            "description": "The status of the response."
           },
           "message": {
             "type": "string",
@@ -266,6 +264,15 @@
           }
         },
         "description": "The error response message for an API request."
+      },
+      "ResponseStatus": {
+        "enum": [
+          "success",
+          "error"
+        ],
+        "type": "string",
+        "description": "The response status of an API request.",
+        "format": "enum"
       }
     },
     "securitySchemes": {

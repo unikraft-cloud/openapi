@@ -6809,7 +6809,8 @@
             },
             "description": "The tags associated with the volume."
           }
-        }
+        },
+        "description": "A volume represents a storage device that can be attached to an instance."
       },
       "VolumeInstanceID": {
         "type": "object",

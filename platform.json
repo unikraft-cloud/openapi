@@ -6209,11 +6209,7 @@
         "properties": {
           "id": {
             "example": "op-1",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
+            "type": "string",
             "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "uuid": {
@@ -6367,11 +6363,7 @@
         "properties": {
           "id": {
             "example": "op-1",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
+            "type": "string",
             "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "prop": {
@@ -6416,11 +6408,7 @@
         "properties": {
           "id": {
             "example": "op-1",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
+            "type": "string",
             "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "uuid": {
@@ -6570,11 +6558,7 @@
         "properties": {
           "id": {
             "example": "op-1",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
+            "type": "string",
             "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "prop": {
@@ -6619,11 +6603,7 @@
         "properties": {
           "id": {
             "example": "op-1",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
+            "type": "string",
             "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
           },
           "uuid": {

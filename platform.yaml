@@ -4989,8 +4989,7 @@ components:
             properties:
                 id:
                     example: op-1
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    type: string
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
@@ -5108,8 +5107,7 @@ components:
             properties:
                 id:
                     example: op-1
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    type: string
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 prop:
                     example: services
@@ -5147,8 +5145,7 @@ components:
             properties:
                 id:
                     example: op-1
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    type: string
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
@@ -5258,8 +5255,7 @@ components:
             properties:
                 id:
                     example: op-1
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    type: string
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 prop:
                     example: size_mb
@@ -5297,8 +5293,7 @@ components:
             properties:
                 id:
                     example: op-1
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    type: string
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000

@@ -2213,9 +2213,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "funky-town-g7gum5cj",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -2245,6 +2245,17 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was attached."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -2417,6 +2428,25 @@
             "type": "string",
             "description": "The current state of the certificate.\n\nThis indicates whether the certificate is pending issuance, valid and\nready for use, or in an error state. See CertificateState enum for\ndetailed state descriptions.",
             "format": "enum"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
+          },
+          "message": {
+            "example": "No certificate with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -2606,9 +2636,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No service with name 'funky-service'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -2649,6 +2679,17 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the added policy."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -2751,9 +2792,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No service with name 'funky-service'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -2783,6 +2824,17 @@
             "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -2856,9 +2908,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No certificate with name 'funky-certificate'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3150,9 +3202,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'non-funky-town'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3260,9 +3312,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Port 443 must use HTTP and TLS termination",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3374,9 +3426,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "Value of 'size_mb' must be in the range 8 to 1024.",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -3418,6 +3470,17 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the newly created volume."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -3465,9 +3528,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No policy with name 'funky-policy'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -3502,6 +3565,17 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the deleted policy."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -3549,9 +3623,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No service with name 'funky-service'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -3592,6 +3666,17 @@
             "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was deleted."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -3607,9 +3692,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No certificate with name 'funky-certificate'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3668,6 +3753,17 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate which was deleted."
+          },
+          "message": {
+            "example": "No certificate with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "Details of the certificate which was deleted by this request."
@@ -3684,9 +3780,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3750,6 +3846,17 @@
             "example": "stopped",
             "type": "string",
             "description": "The previous state of the instance before it was deleted."
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "Details of the instance which was deleted by this request."
@@ -3779,9 +3886,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -3840,6 +3947,17 @@
             "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "The name of the service group which was deleted."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "Details of the service group which was deleted by this request."
@@ -3888,9 +4006,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No volume with name 'funky-vol-g7gum5cj' (code=8)",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -3931,6 +4049,17 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was deleted."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -4048,9 +4177,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No volume with name 'funky-vol-g7gum5cj' (code=8)",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -4064,43 +4193,46 @@
           "volumes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DetachVolumesResponseInstanceID"
+              "$ref": "#/components/schemas/DetachVolumesResponseDetachedVolume"
             },
             "description": "The volume(s) which were detached by the request."
           }
         }
       },
-      "DetachVolumesResponseInstanceID": {
+      "DetachVolumesResponseDetachedVolume": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                "type": "string",
-                "description": "The UUID of the instance that the volume is detached from.",
-                "format": "uuid"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g7gum5cj",
-                    "type": "string",
-                    "description": "The name of the instance that the volume is detached from."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the volume that was detached.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-vol-g7gum5cj",
+            "type": "string",
+            "description": "The name of the volume that was detached."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
-        ],
-        "description": "Reference to the instance to detach the volume from."
+        }
       },
       "Domain": {
         "type": "object",
@@ -4193,9 +4325,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No policy with name 'funky-policy'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -4233,6 +4365,17 @@
               }
             ],
             "description": "The policy which was retrieved by the request."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -4282,9 +4425,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "funky-instance-template",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -4369,6 +4512,17 @@
               "$ref": "#/components/schemas/AutoscalePolicy"
             },
             "description": "The policies applied to the autoscale configuration."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -4384,9 +4538,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No certificate with name 'funky-certificate'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -4539,9 +4693,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -4643,6 +4797,17 @@
             "type": "string",
             "description": "State of the instance when the logs were retrieved.",
             "format": "enum"
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -4675,9 +4840,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -4789,6 +4954,17 @@
             "type": "integer",
             "description": "Total number of inbound connections and HTTP requests handled.",
             "format": "uint64"
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -4804,8 +4980,9 @@
             "description": "The status of the response."
           },
           "message": {
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -4855,9 +5032,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No service group with name 'funky-service-g7gum5cj' (code=8)",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -4939,9 +5116,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "No volume with name 'funky-vol-g7gum5cj'",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -5329,11 +5506,18 @@
                 "$ref": "#/components/schemas/ResponseStatus"
               }
             ],
-            "description": "The status of the instance.  This field is only set when this message\nobject is used as a response message."
+            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
           },
           "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "An instance is a unikernel virtual machine running an application."
@@ -5610,6 +5794,25 @@
               }
             ],
             "description": "Additional limits"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
+          },
+          "message": {
+            "example": "No user with name 'funky-user'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -5710,9 +5913,9 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "funky-vol-g7gum5cj",
+                    "example": "Failed to perform all operations",
                     "type": "string",
-                    "description": "An optional message providing additional information about the response."
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
                   }
                 }
               }
@@ -5903,6 +6106,25 @@
               "$ref": "#/components/schemas/ServiceGroupInstance"
             },
             "description": "List of instances assigned to the service."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
@@ -5951,9 +6173,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6022,6 +6244,17 @@
             "example": "stopped",
             "type": "string",
             "description": "The previous state of the instance before it was deleted."
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -6037,9 +6270,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d'",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6116,6 +6349,17 @@
             "type": "string",
             "description": "The previous state of the instance before the stop operation was invoked.",
             "format": "enum"
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -6273,9 +6517,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Successfully updated 2 instances",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6315,44 +6559,40 @@
       },
       "UpdateInstancesResponseUpdatedInstance": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "123e4567-e89b-12d3-a456-426614174000",
-                "type": "string",
-                "description": "The UUID of the instance that was updated.",
-                "format": "uuid"
-              },
-              "name": {
-                "example": "funky-town-g756b5d",
-                "type": "string",
-                "description": "The name of the instance that was updated."
-              },
-              "status": {
-                "example": "success",
-                "type": "string",
-                "description": "The status of this particular instance update operation."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance that was updated.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "id",
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "example": "op-1",
-                    "type": "string",
-                    "description": "(Optional).  The client-provided ID from the request."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance that was updated."
+          },
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular instance update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
-        ]
+        }
       },
       "UpdateServiceGroupByUUIDRequestBody": {
         "required": [
@@ -6468,9 +6708,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Successfully updated 2 service groups",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6510,44 +6750,40 @@
       },
       "UpdateServiceGroupsResponseUpdatedServiceGroup": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "123e4567-e89b-12d3-a456-426614174000",
-                "type": "string",
-                "description": "The UUID of the service group that was updated.",
-                "format": "uuid"
-              },
-              "name": {
-                "example": "funky-town-g756b5d",
-                "type": "string",
-                "description": "The name of the service group that was updated."
-              },
-              "status": {
-                "example": "success",
-                "type": "string",
-                "description": "The status of this particular service group update operation."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the service group that was updated.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "id",
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "example": "op-1",
-                    "type": "string",
-                    "description": "(Optional).  The client-provided ID from the request."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the service group that was updated."
+          },
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular service group update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No service with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
-        ]
+        }
       },
       "UpdateVolumeByUUIDRequestBody": {
         "required": [
@@ -6662,9 +6898,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Successfully updated 2 volumes",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6704,44 +6940,40 @@
       },
       "UpdateVolumesResponseUpdatedVolume": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "123e4567-e89b-12d3-a456-426614174000",
-                "type": "string",
-                "description": "The UUID of the volume that was updated.",
-                "format": "uuid"
-              },
-              "name": {
-                "example": "funky-town-g756b5d",
-                "type": "string",
-                "description": "The name of the service group that was updated."
-              },
-              "status": {
-                "example": "success",
-                "type": "string",
-                "description": "The status of this particular service group update operation."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the volume that was updated.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "id",
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "example": "op-1",
-                    "type": "string",
-                    "description": "(Optional).  The client-provided ID from the request."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the service group that was updated."
+          },
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular volume update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
-        ]
+        }
       },
       "Volume": {
         "type": "object",
@@ -6808,6 +7040,25 @@
               "type": "string"
             },
             "description": "The tags associated with the volume."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
+            "format": "int32"
           }
         },
         "description": "A volume represents a storage device that can be attached to an instance."
@@ -6932,9 +7183,9 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "Invalid name 'funky-town-g756b5d",
+            "example": "Failed to perform all operations",
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
           },
           "data": {
             "allOf": [
@@ -6998,6 +7249,17 @@
             "type": "string",
             "description": "The current state of the instance.",
             "format": "enum"
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       }

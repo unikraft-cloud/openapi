@@ -8,17 +8,14 @@ info:
         email: support@unikraft.com
     version: v1.0.0
 servers:
-    - url: https://api.{metro}.unikraft.cloud
-      description: Official Unikraft Cloud Metros
-      variables:
-        metro:
-            enum:
-                - dal0
-                - fra0
-                - sin0
-                - was1
-            default: fra0
-            description: The IATA and numeric code of the metro to connect to.
+    - url: https://api.fra.unikraft.cloud
+      description: Frankfurt, DE
+    - url: https://api.dal.unikraft.cloud
+      description: Dallas, TX, USA
+    - url: https://api.sin.unikraft.cloud
+      description: Singapore
+    - url: https://api.was.unikraft.cloud
+      description: Washington, DC, USA
 paths:
     /v1/certificates:
         get:

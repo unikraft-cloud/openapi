@@ -34,6 +34,7 @@
         "tags": [
           "Certificates"
         ],
+        "summary": "List Certificates",
         "description": "Get one or many certificates with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
         "operationId": "GetCertificates",
         "parameters": [
@@ -76,6 +77,7 @@
         "tags": [
           "Certificates"
         ],
+        "summary": "Create Certificate",
         "description": "Upload a new certificate with the given configuration.",
         "operationId": "CreateCertificate",
         "requestBody": {
@@ -105,7 +107,8 @@
         "tags": [
           "Certificates"
         ],
-        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
+        "summary": "Delete Certificates",
+        "description": "Delete the specified certificate(s).  After this call the name of the\ncertificate(s) are no longer valid.",
         "operationId": "DeleteCertificates",
         "requestBody": {
           "content": {
@@ -139,6 +142,7 @@
         "tags": [
           "Certificates"
         ],
+        "summary": "Get Certificate by UUID",
         "description": "Get a specified certificate by its UUID.",
         "operationId": "GetCertificateByUUID",
         "parameters": [
@@ -170,7 +174,8 @@
         "tags": [
           "Certificates"
         ],
-        "description": "Delete the specified certificate(s).  After this call the name of the\ncertificate(s) are no longer valid.",
+        "summary": "Delete Certificate by UUID",
+        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
         "operationId": "DeleteCertificateByUUID",
         "parameters": [
           {
@@ -203,6 +208,7 @@
         "tags": [
           "System"
         ],
+        "summary": "Health Check",
         "description": "Return the status of a full-system health check of the platform.",
         "operationId": "Healthz",
         "responses": {
@@ -224,7 +230,8 @@
         "tags": [
           "Images"
         ],
-        "description": "GetImageByDigest retrieves an image by its digest.",
+        "summary": "Get Image by Digest",
+        "description": "Retrieve an image by its digest.",
         "operationId": "GetImageByDigest",
         "parameters": [
           {
@@ -256,7 +263,8 @@
         "tags": [
           "Images"
         ],
-        "description": "GetImageByTag retrieves an image by its tag.",
+        "summary": "Get Image by Tag",
+        "description": "Retrieve an image by its tag.",
         "operationId": "GetImageByTag",
         "parameters": [
           {
@@ -288,6 +296,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "List Instances",
         "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by ID(s) (name or UUID).",
         "operationId": "GetInstances",
         "parameters": [
@@ -330,7 +339,8 @@
         "tags": [
           "Instances"
         ],
-        "description": "Create one or more new instances.",
+        "summary": "Create Instance",
+        "description": "Create an instance in Unikraft Cloud.",
         "operationId": "CreateInstance",
         "requestBody": {
           "content": {
@@ -359,6 +369,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Delete Instances",
         "description": "Delete the specified instance(s) by ID(s) (name or UUID).  After this call\nthe name of the instances are no longer valid.  If the instances are\ncurrently running, they are force-stopped.",
         "operationId": "DeleteInstances",
         "requestBody": {
@@ -391,6 +402,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Update Instances",
         "description": "Update (modify) one or more instances by ID(s) (name or UUID).  The\ninstances must be in a stopped state for most update operations.",
         "operationId": "UpdateInstances",
         "requestBody": {
@@ -422,6 +434,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Get Instances Logs",
         "description": "Retrieve the logs of one or more instances by ID(s) (name or UUID).",
         "operationId": "GetInstanceLogs",
         "requestBody": {
@@ -453,6 +466,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Get Instances Metrics",
         "description": "Get the metrics of an instance by its UUID or name.",
         "operationId": "GetInstanceMetrics",
         "parameters": [
@@ -492,6 +506,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Start Instances",
         "description": "Start previously stopped instances by ID(s) (name or UUID) or do\nnothing if the instances are already running.",
         "operationId": "StartInstances",
         "requestBody": {
@@ -526,6 +541,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Stop Instances",
         "description": "Stop one or more running instance by ID(s) (name or UUID) or do\nnothing if the instances are already stopped.",
         "operationId": "StopInstances",
         "requestBody": {
@@ -560,6 +576,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Wait for Instances States",
         "description": "Wait for one or more instances to reach certain states by ID(s)\n(name or UUID).\n\nIf the instances are already in the desired states, the request will return\nimmediately.  If the instances are not in the desired state, the request will\nblock until the instances reach the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstances reach the desired states.",
         "operationId": "WaitInstances",
         "parameters": [
@@ -622,6 +639,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Get Instance by UUID",
         "description": "Get a single instance by its UUID.",
         "operationId": "GetInstanceByUUID",
         "parameters": [
@@ -661,6 +679,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Delete Instance by UUID",
         "description": "Delete a specified instance by its UUID.  After this call the UUID of the\ninstance is no longer valid.  If the instance is currently running,\nit is force-stopped.",
         "operationId": "DeleteInstanceByUUID",
         "parameters": [
@@ -692,6 +711,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Update Instance by UUID",
         "description": "Update (modify) an instance by its UUID.  The instance must be in a stopped\nstate for most update operations.",
         "operationId": "UpdateInstanceByUUID",
         "parameters": [
@@ -736,6 +756,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Get Instance Logs by UUID",
         "description": "Retrieve the logs of an instance by its UUID.",
         "operationId": "GetInstanceLogsByUUID",
         "parameters": [
@@ -780,6 +801,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Get Instance Metrics by UUID",
         "description": "Get the metrics of an instance by its UUID.",
         "operationId": "GetInstanceMetricsByUUID",
         "parameters": [
@@ -813,6 +835,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Start Instance by UUID",
         "description": "Start a previously stopped instance by its UUID or do nothing if the\ninstance is already running.",
         "operationId": "StartInstanceByUUID",
         "parameters": [
@@ -846,6 +869,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Stop Instance by UUID",
         "description": "Stop a running instance by its UUID or do nothing if the instance is\nalready stopped.",
         "operationId": "StopInstanceByUUID",
         "parameters": [
@@ -896,6 +920,7 @@
         "tags": [
           "Instances"
         ],
+        "summary": "Wait for Instance State by UUID",
         "description": "Wait for an instance to reach a certain state, by its UUID.\n\nIf the instance is already in the desired state, the request will return\nimmediately.  If the instance is not in the desired state, the request will\nblock until the instance reaches the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstance reaches the desired state.",
         "operationId": "WaitInstanceByUUID",
         "parameters": [
@@ -940,6 +965,7 @@
         "tags": [
           "ServiceGroups"
         ],
+        "summary": "List Service Groups",
         "description": "Get one or many service groups with their current status and configuration.\nIt's possible to filter this list by name or UUID.",
         "operationId": "GetServiceGroups",
         "parameters": [
@@ -982,6 +1008,7 @@
         "tags": [
           "ServiceGroups"
         ],
+        "summary": "Create Service Group",
         "description": "Create a new service with the given configuration.\n\nNote that the service properties like published ports can only be defined\nduring creation.  They cannot be changed later.  Each port in a service can\nspecify a list of handlers that determine how traffic arriving at the port\nis handled. See Connection Handlers for a complete overview.",
         "operationId": "CreateServiceGroup",
         "requestBody": {
@@ -1011,7 +1038,8 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Delete a specified service group by its UUID.  After this call the UUID of\nthe service group are no longer valid.",
+        "summary": "Delete Service Groups",
+        "description": "Delete the specified service group(s).  After this call the name of the\nservice group(s) are no longer valid.",
         "operationId": "DeleteServiceGroups",
         "requestBody": {
           "content": {
@@ -1043,6 +1071,7 @@
         "tags": [
           "ServiceGroups"
         ],
+        "summary": "Update Service Groups",
         "description": "Update one or more service groups.",
         "operationId": "UpdateServiceGroups",
         "requestBody": {
@@ -1077,7 +1106,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Returns the current states and configurations of autoscale configurations\nfor a given set of service groups given their UUIDs or names.",
+        "summary": "List Autoscale Configurations",
+        "description": "Return the current states and configurations of autoscale configurations\nfor a given set of service groups given their UUIDs or names.",
         "operationId": "GetAutoscaleConfigurations",
         "requestBody": {
           "content": {
@@ -1109,7 +1139,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Creates an autoscale configuration for the specified service groups given\ntheir UUIDs or names.",
+        "summary": "Create Autoscale Configurations",
+        "description": "Create one or more autoscale configurations for the specified service groups\ngiven their UUIDs or names.",
         "operationId": "CreateAutoscaleConfigurations",
         "requestBody": {
           "content": {
@@ -1141,7 +1172,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Deletes autoscale configuration for a given set of service groups given\ntheir UUIDs or names.",
+        "summary": "Delete Autoscale Configurations",
+        "description": "Delete autoscale configuration for a given set of service groups given\ntheir UUIDs or names.",
         "operationId": "DeleteAutoscaleConfigurations",
         "requestBody": {
           "content": {
@@ -1175,6 +1207,7 @@
         "tags": [
           "ServiceGroups"
         ],
+        "summary": "Get Service Group by UUID",
         "description": "Get a specified service group by its UUID.",
         "operationId": "GetServiceGroupByUUID",
         "parameters": [
@@ -1215,7 +1248,8 @@
         "tags": [
           "ServiceGroups"
         ],
-        "description": "Delete the specified service group(s).  After this call the name of the\nservice group(s) are no longer valid.",
+        "summary": "Delete Service Group by UUID",
+        "description": "Delete a specified service group by its UUID.  After this call the UUID of\nthe service group is no longer valid.",
         "operationId": "DeleteServiceGroupByUUID",
         "parameters": [
           {
@@ -1247,6 +1281,7 @@
         "tags": [
           "ServiceGroups"
         ],
+        "summary": "Update Service Group by UUID",
         "description": "Update a service group by its UUID.",
         "operationId": "UpdateServiceGroupByUUID",
         "parameters": [
@@ -1291,7 +1326,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Returns the current states and configurations of autoscale configurations\ngiven a service group UUID.",
+        "summary": "Get Autoscale Configurations by Service Group UUID",
+        "description": "Return the current states and configurations of autoscale configurations\ngiven a service group UUID.",
         "operationId": "GetAutoscaleConfigurationsByServiceGroupUUID",
         "parameters": [
           {
@@ -1322,8 +1358,9 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Creates an autoscale configuration for the specified service group given\nits UUID.",
-        "operationId": "CreateAutoscaleConfigurationsByServiceGroupUUID",
+        "summary": "Create Autoscale Configuration by Service Group UUID",
+        "description": "Create an autoscale configuration for the specified service group given\nits UUID.",
+        "operationId": "CreateAutoscaleConfigurationByServiceGroupUUID",
         "parameters": [
           {
             "name": "uuid",
@@ -1363,7 +1400,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Deletes the autoscale configuration for the service group given its UUID.\n\nUnikraft Cloud will immediately drain all connections from all instances\nthat have been created by autoscale and delete the instances afterwards.\nThe draining phase is allowed to take at most `cooldown_time_ms`\nmilliseconds after which remaining connections are forcefully closed.  The\nmaster instance is never deleted.  However, deleting the autoscale\nconfiguration causes the master instance to start if it is stopped.",
+        "summary": "Delete Autoscale Configurations by Service Group UUID",
+        "description": "Delete the autoscale configuration for the service group given its UUID.\n\nUnikraft Cloud will immediately drain all connections from all instances\nthat have been created by autoscale and delete the instances afterwards.\nThe draining phase is allowed to take at most `cooldown_time_ms`\nmilliseconds after which remaining connections are forcefully closed.  The\nmaster instance is never deleted.  However, deleting the autoscale\nconfiguration causes the master instance to start if it is stopped.",
         "operationId": "DeleteAutoscaleConfigurationsByServiceGroupUUID",
         "parameters": [
           {
@@ -1396,7 +1434,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Lists the autoscale policies for a given service group given its UUID.",
+        "summary": "List Autoscale Configuration Policies",
+        "description": "List the autoscale policies for a given service group given its UUID.",
         "operationId": "GetAutoscaleConfigurationPolicies",
         "parameters": [
           {
@@ -1435,7 +1474,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Adds a new autoscale policy to an autoscale configuration given a serivce\ngroup UUID.",
+        "summary": "Create Autoscale Configuration Policy",
+        "description": "Add a new autoscale policy to an autoscale configuration given a service\ngroup UUID.",
         "operationId": "CreateAutoscaleConfigurationPolicy",
         "parameters": [
           {
@@ -1474,7 +1514,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Deletes one or more autoscale policies for a given service group.",
+        "summary": "Delete Autoscale Configuration Policies",
+        "description": "Delete one or more autoscale policies for a given service group.",
         "operationId": "DeleteAutoscaleConfigurationPolicies",
         "parameters": [
           {
@@ -1515,7 +1556,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Returns the current state and configuration of an autoscale policy given\nthe service group UUID and the name of the policy.",
+        "summary": "Get Autoscale Configuration Policy by Name",
+        "description": "Return the current state and configuration of an autoscale policy given\nthe service group UUID and the name of the policy.",
         "operationId": "GetAutoscaleConfigurationPolicyByName",
         "parameters": [
           {
@@ -1555,7 +1597,8 @@
         "tags": [
           "Autoscale"
         ],
-        "description": "Deletes an autoscale policy by name given the service group UUID.",
+        "summary": "Delete Autoscale Configuration Policy by Name",
+        "description": "Delete an autoscale policy by name given the service group UUID.",
         "operationId": "DeleteAutoscaleConfigurationPolicyByName",
         "parameters": [
           {
@@ -1597,7 +1640,8 @@
         "tags": [
           "Users"
         ],
-        "description": "Lists quota usage and limits of your user account.\nLimits are hard limits that cannot be exceeded.",
+        "summary": "Get Current User Quotas",
+        "description": "List quota usage and limits of your user account.\nLimits are hard limits that cannot be exceeded.",
         "operationId": "GetUser",
         "responses": {
           "default": {
@@ -1618,7 +1662,8 @@
         "tags": [
           "Users"
         ],
-        "description": "Lists quota usage and limits of your user account by UUID.\nLimits are hard limits that cannot be exceeded.",
+        "summary": "Get User Quotas by UUID",
+        "description": "List quota usage and limits of a user account by UUID.\nLimits are hard limits that cannot be exceeded.",
         "operationId": "GetUserByUUID",
         "parameters": [
           {
@@ -1651,7 +1696,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Returns the current status and the configuration of a particular volume if\nname is specified. Otherwise, returns the current status and configuration\nof all volumes.",
+        "summary": "List Volumes",
+        "description": "Return the current status and the configuration of one or more volumes\nspecified by either UUID(s) or name(s).  If no identifier is provided,\nall volumes are returned.",
         "operationId": "GetVolumes",
         "parameters": [
           {
@@ -1693,7 +1739,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Creates one or more volumes with the given configuration.\nThe volumes are automatically initialized with an empty file system.\nAfter initialization the volumes are in the available state and can be\nattached to an instance with the `PUT /v1/volumes/attach` endpoint.\nNote that, the size of a volume cannot be changed after creation.",
+        "summary": "Create Volume",
+        "description": "Create a volume given the specified configuration parameters.\nThe volume is automatically initialized with an empty file system.\nAfter initialization, the volume is in the `available` state and can be\nattached to an instance with the `PUT /v1/volumes/attach` endpoint.\nNote that, the size of a volume cannot be changed after creation.",
         "operationId": "CreateVolume",
         "requestBody": {
           "content": {
@@ -1722,8 +1769,9 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Deletes the specified volume by its name or UUID. Fails if the volume is\nstill attached to an instance. After this call the IDs associated with\nthe volume are no longer valid.",
-        "operationId": "DeleteVolume",
+        "summary": "Delete Volumes",
+        "description": "Delete one or more volumes by their UUID(s) or name(s).  If the volumes are\nstill attached to an instance, the operation fails.  After this call, the\nIDs associated with the volumes are no longer valid.",
+        "operationId": "DeleteVolumes",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1754,7 +1802,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Updates one or more volumes specified by either UUID(s) or name(s)",
+        "summary": "Update Volumes",
+        "description": "Update one or more volumes specified by either UUID(s) or name(s).",
         "operationId": "UpdateVolumes",
         "requestBody": {
           "content": {
@@ -1788,7 +1837,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Attaches a volume to an instance so that the volume is mounted when the\ninstance starts. The volume needs to be in available state and the instance\nmust in stopped state. Currently, each instance can have only one volume\nattached at most.",
+        "summary": "Attach Volumes",
+        "description": "Attach one or more volumes specified by ID(s) (name or UUID) to instances\nso that the volumes are mounted when the instances start.  The volumes need\nto be in `available` state and the instances must be in `stopped` state.",
         "operationId": "AttachVolumes",
         "requestBody": {
           "content": {
@@ -1819,7 +1869,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Detaches a volume from instances. If no particular instance is specified\nthe volume is detached from all instances. The instances from which to\ndetach must not have the volume mounted. The API returns an error for each\ninstance from which it was unable to detach the volume. If the volume has\nbeen created together with an instance, detaching the volume will make it\npersistent (i.e., it survives the deletion of the instance).",
+        "summary": "Detach Volumes",
+        "description": "Detach volumes specified by ID(s) (name or UUID) from instances.  If no\nparticular instance is specified the volume is detached from all instances.\nThe instances from which to detach must not have the volumes mounted.  The\nAPI returns an error for each instance from which it was unable to detach\nthe volume.  If the volume has been created together with an instance,\ndetaching the volume will make it persistent (i.e., it survives the\ndeletion of the instance).",
         "operationId": "DetachVolumes",
         "requestBody": {
           "content": {
@@ -1850,7 +1901,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Returns the current status and the configuration of a particular volume if\nthe UUID is specified.",
+        "summary": "Get Volume by UUID",
+        "description": "Return the current status and the configuration of a particular volume by\nits UUID.",
         "operationId": "GetVolumeByUUID",
         "parameters": [
           {
@@ -1890,7 +1942,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Deletes the specified volume by its UUID. Fails if the volume is still\nattached to an instance. After this call the IDs associated with the\nvolume are no longer valid.",
+        "summary": "Delete Volume by UUID",
+        "description": "Delete the specified volume by its UUID.  If the volume is still attached\nto an instance, the operation fails.  After this call, the IDs associated\nwith the volume are no longer valid.",
         "operationId": "DeleteVolumeByUUID",
         "parameters": [
           {
@@ -1922,7 +1975,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Updates the specified volume by its UUID.",
+        "summary": "Update Volume by UUID",
+        "description": "Update the specified volume by its UUID.",
         "operationId": "UpdateVolumeByUUID",
         "parameters": [
           {
@@ -1966,7 +2020,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Attaches a volume by UUID to an instance so that the volume is mounted when\nthe instance starts. The volume needs to be in available state and the\ninstance must in stopped state. Currently, each instance can have only one\nvolume attached at most.",
+        "summary": "Attach Volume by UUID",
+        "description": "Attach a volume by UUID to an instance so that the volume is mounted when\nthe instance starts.  The volume needs to be in `available` state and the\ninstance must be in `stopped` state.",
         "operationId": "AttachVolumeByUUID",
         "parameters": [
           {
@@ -2010,7 +2065,8 @@
         "tags": [
           "Volumes"
         ],
-        "description": "Detaches a volume by UUID from instances. If no particular instance is\nspecified the volume is detached from all instances. The instances from\nwhich to detach must not have the volume mounted. The API returns an error\nfor each instance from which it was unable to detach the volume. If the\nvolume has been created together with an instance, detaching the volume\nwill make it persistent (i.e., it survives the deletion of the instance).",
+        "summary": "Detach Volume by UUID",
+        "description": "Detaches a volume by UUID from instances.  If no particular instance is\nspecified the volume is detached from all instances.  The instances from\nwhich to detach must not have the volume mounted.  The API returns an error\nfor each instance from which it was unable to detach the volume.  If the\nvolume has been created together with an instance, detaching the volume\nwill make it persistent (i.e., it survives the deletion of the instance).",
         "operationId": "DetachVolumeByUUID",
         "parameters": [
           {
@@ -2135,7 +2191,7 @@
             "description": "Whether the volume should be mounted read-only."
           }
         },
-        "description": "The request message for attaching one or more volume(s) to instances by\ntheir UUID(s) or name(s).\n\nAttaches a volume to an instance so that the volume is mounted when the\ninstance starts. The volume needs to be in available state and the instance\nmust in stopped state. Currently, each instance can have only one volume\nattached at most."
+        "description": "The request message for attaching one or more volume(s) to instances by\ntheir UUID(s) or name(s)."
       },
       "AttachVolumesRequestInstanceID": {
         "type": "object",
@@ -2531,7 +2587,7 @@
             "description": "The policies to apply to the autoscale configuration."
           }
         },
-        "description": "The request to create an autoscale configuration for a service group based on\nits UUID."
+        "description": "The request message to create an autoscale configuration for a service group\nbased on its UUID."
       },
       "CreateAutoscaleConfigurationByServiceGroupUUIDRequestInstanceCreateArgs": {
         "type": "object",
@@ -2590,7 +2646,8 @@
             ],
             "description": "The policy type to add to the autoscale configuration."
           }
-        }
+        },
+        "description": "The request message to create an autoscale configuration policy for a\nservice."
       },
       "CreateAutoscaleConfigurationPolicyResponse": {
         "type": "object",
@@ -3276,7 +3333,8 @@
             "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
             "format": "uint64"
           }
-        }
+        },
+        "description": "The request message for creating a new service group."
       },
       "CreateServiceGroupRequestDomain": {
         "required": [
@@ -3385,7 +3443,7 @@
             ]
           }
         ],
-        "description": "Creates one or more volumes with the given configuration. The volumes are\nautomatically initialized with an empty file system. After initialization\nthe volumes are in the available state and can be attached to an instance\nwith the `PUT /v1/volumes/attach` endpoint. Note that, the size of a volume\ncannot be changed after creation."
+        "description": "The request message for creating a volume."
       },
       "CreateVolumeResponse": {
         "type": "object",
@@ -3872,7 +3930,8 @@
             "type": "string",
             "description": "The Name of the policy to delete."
           }
-        }
+        },
+        "description": "The request message to delete an autoscale configuration policy by name."
       },
       "DeleteServiceGroupsResponse": {
         "type": "object",
@@ -4099,7 +4158,7 @@
             "description": "UUID or name of the instance to detach the volume from."
           }
         },
-        "description": "Detaches a volume from instances. If no particular instance is specified the\nvolume is detached from all instances. The instances from which to detach\nmust not have the volume mounted. The API returns an error for each instance\nfrom which it was unable to detach the volume. If the volume has been\ncreated together with an instance, detaching the volume will make it\npersistent (i.e., it survives the deletion of the instance)."
+        "description": "The request message for detaching one or more volume(s) from instances by\ntheir UUID(s) or name(s)."
       },
       "DetachVolumesRequestInstanceID": {
         "type": "object",
@@ -4277,9 +4336,10 @@
           "name": {
             "example": "funky-policy",
             "type": "string",
-            "description": "The Name  of the policy to get."
+            "description": "The Name of the policy to get."
           }
-        }
+        },
+        "description": "The request message to get an autoscale configuration policy by name."
       },
       "GetAutoscaleConfigurationPolicyResponse": {
         "type": "object",
@@ -4433,7 +4493,8 @@
               }
             ]
           }
-        ]
+        ],
+        "description": "The response message for a GetAutoscaleConfigurationsRequest."
       },
       "GetAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -5179,7 +5240,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "description": "The response message for a health check of the platform."
       },
       "HealthzResponseData": {
         "type": "object",

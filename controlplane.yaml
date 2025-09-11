@@ -15,10 +15,11 @@ paths:
         post:
             tags:
                 - Auth
+            summary: Check Authorization of Sign-In Request
             description: |-
-                CheckAuthorization is used to check the authorization status of a request.
-                It streams responses back to the client, indicating whether the signin
-                request is authorized or not.
+                Check the authorization status of a request.  The responses are streamed
+                back to the client, indicating whether the signin request is authorized or
+                not.
             operationId: CheckAuthorization
             requestBody:
                 content:
@@ -37,9 +38,10 @@ paths:
         post:
             tags:
                 - Auth
+            summary: Request Sign-In
             description: |-
-                RequestSignin initiates the sign-in process and returns an authorization
-                URL.  The user should be redirected to this URL to complete the sign-in.
+                Initiate the sign-in process and return an authorization URL.  The user
+                should be redirected to this URL to complete the sign-in.
             operationId: RequestSignin
             requestBody:
                 content:

@@ -142,9 +142,9 @@ paths:
     /v1/healthz:
         get:
             tags:
-                - System
+                - Node
             summary: Health Check
-            description: Return the status of a full-system health check of the platform.
+            description: Return the status of a full-system health check of the node.
             operationId: Healthz
             responses:
                 default:
@@ -6089,6 +6089,7 @@ tags:
         component.
     - name: Instances
       description: An instance is a unikernel virtual machine running an application.
+    - name: Node
     - name: ServiceGroups
       description: |-
         A service group on Unikraft Cloud is used to describe how your application
@@ -6109,7 +6110,6 @@ tags:
         indicate that the application exposes some ports, Unikraft Cloud will
         generates a random DNS name for you.  Unikraft Cloud also supports custom
         domains like www.example.com and wildcard domains like *.example.com.
-    - name: System
     - name: Users
       description: |-
         This document describes the Unikraft Cloud Users API (v1) for retrieving

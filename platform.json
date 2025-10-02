@@ -206,10 +206,10 @@
     "/v1/healthz": {
       "get": {
         "tags": [
-          "System"
+          "Node"
         ],
         "summary": "Health Check",
-        "description": "Return the status of a full-system health check of the platform.",
+        "description": "Return the status of a full-system health check of the node.",
         "operationId": "Healthz",
         "responses": {
           "default": {
@@ -7356,11 +7356,11 @@
       "description": "An instance is a unikernel virtual machine running an application."
     },
     {
-      "name": "ServiceGroups",
-      "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
+      "name": "Node"
     },
     {
-      "name": "System"
+      "name": "ServiceGroups",
+      "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
     },
     {
       "name": "Users",

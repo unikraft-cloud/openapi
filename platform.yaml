@@ -1158,6 +1158,22 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
+    /v1/users:
+        post:
+            tags:
+                - Users
+            summary: Add Users
+            description: |-
+                Create new user accounts. This will return 409 Conflict when any of the
+                requested users already existed on the target.
+            operationId: AddUsers
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddUsersResponse'
     /v1/users/quotas:
         get:
             tags:
@@ -1510,6 +1526,49 @@ paths:
                                 $ref: '#/components/schemas/DetachVolumesResponse'
 components:
     schemas:
+        AddUsersResponse:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    status:
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
+                        description: The status of the response.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/AddUsersResponseData'
+                        description: The response data for this request.
+                    op_time_us:
+                        example: 46
+                        type: integer
+                        description: |-
+                            The operation time in microseconds.  This is the time it took to process
+                            the request and generate the response.
+                        format: uint64
+                - oneOf:
+                    - title: message
+                      type: object
+                      properties:
+                        message:
+                            example: Failed to perform all operations
+                            type: string
+                            description: |-
+                                An optional message providing additional information about the status.
+                                This field is useful when the status is not `success`.
+        AddUsersResponseData:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DataResult'
+                    description: The status of the operation for each user in the request.
         AttachVolumeByUUIDRequestBody:
             required:
                 - attach_to
@@ -2717,6 +2776,15 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+        DataResult:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                added:
+                    example: true
+                    type: boolean
         DeleteAutoscaleConfigurationPolicyResponse:
             type: object
             allOf:
@@ -6112,8 +6180,8 @@ tags:
         domains like www.example.com and wildcard domains like *.example.com.
     - name: Users
       description: |-
-        This document describes the Unikraft Cloud Users API (v1) for retrieving
-        information about your user account.
+        Unikraft Cloud user accounts are used to manage resources, grant permissions
+        and control usage quotas when interacting with the Unikraft Cloud API.
     - name: Volumes
       description: |-
         Initrd (initial ramdisk) and actual volumes serve different purposes.

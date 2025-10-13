@@ -370,7 +370,7 @@
           "Instances"
         ],
         "summary": "Delete Instances",
-        "description": "Delete the specified instance(s) by ID(s) (name or UUID).  After this call\nthe name of the instances are no longer valid.  If the instances are\ncurrently running, they are force-stopped.",
+        "description": "Delete the specified instance(s) by ID(s) (name or UUID).  After this call\nthe IDs of the instances are no longer valid.  If the instances are\ncurrently running, they are force-stopped.",
         "operationId": "DeleteInstances",
         "requestBody": {
           "content": {
@@ -571,6 +571,281 @@
         }
       }
     },
+    "/v1/instances/templates": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "List template instances",
+        "description": "Get one or more template instances by their UUID(s) or name(s).",
+        "operationId": "GetTemplateInstances",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the templates in the response.  By default\nthis is set to true, meaning that all information about the templates will\nbe included in the response.  If set to false, only the basic information\nabout the templates will be included, such as their name and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "from_uuid",
+            "in": "query",
+            "description": "If set, the listing starts from (but does not include) the template with\nthe given UUID.  This is useful for pagination.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of template instances to return.  This is useful for\npagination.  If not set, all the template instances matching filters will\nbe returned.  When filtering by IDs, this should not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A list of tags to filter the template instances by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Create template instances from Instances",
+        "description": "Convert one or more existing instances by their UUID(s) or name(s) into\ntemplate instances that can be used to create new instances.\n\nThe existing instances must be in the `stopped` state and not have existing\nsnapshots.",
+        "operationId": "CreateTemplateInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateInstancesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete template instances",
+        "description": "Delete the specified template instance(s) by ID(s) (name or UUID).  After\nthis call the IDs of the template instances are no longer valid.",
+        "operationId": "DeleteTemplateInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update template instances",
+        "description": "Update (modify) one or more template instances by ID(s) (name or UUID).",
+        "operationId": "UpdateTemplateInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateTemplateInstancesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instances/templates/{uuid}": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get template instance by UUID",
+        "description": "Get a single template instance by its UUID.",
+        "operationId": "GetTemplateInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the template instance to retrieve.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the templates in the response.  By default\nthis is set to true, meaning that all information about the templates will\nbe included in the response.  If set to false, only the basic information\nabout the templates will be included, such as their name and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete template instance by UUID",
+        "description": "Delete a specified template instance by its UUID.  After this call the UUID\nof the template instance is no longer valid.",
+        "operationId": "DeleteTemplateInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the template instance to delete.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update template instance by UUID",
+        "description": "Update (modify) a template instance by its UUID.",
+        "operationId": "UpdateTemplateInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the template instance to update.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTemplateInstanceByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTemplateInstancesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/instances/wait": {
       "get": {
         "tags": [
@@ -591,6 +866,7 @@
                 "running",
                 "draining",
                 "stopping",
+                "template",
                 "standby"
               ],
               "type": "string",
@@ -3140,7 +3416,7 @@
                 "$ref": "#/components/schemas/CreateInstanceRequestServiceGroup"
               }
             ],
-            "description": "(Optional).  The service group configuration when creating an instance.\n\nWhen creating an instance, either a previously created (persistent) service\ngroup can be referenced (either through its name or UUID), or a new\n(ephemeral) service group can be created for the instance by specifying the\nlist of services it should expose and optionally the domains it should use."
+            "description": "(Optional).  The service group configuration when creating an instance.\n\nWhen creating an instance, either a previously created (persistent) service\ngroup can be referenced (either through its name or UUID), or a new\n(ephemeral) service group can be created for the instance by specifying the\nlist of services it should expose and optionally the domains it should use.\nNot used by template instances."
           },
           "volumes": {
             "type": "array",
@@ -3327,7 +3603,7 @@
             "type": "string",
             "description": "The mount point for the volume in the instance."
           },
-          "read_only": {
+          "readonly": {
             "example": 256,
             "type": "boolean",
             "description": "Whether the volume is read-only.\n\nIf this field is set to true, the volume will be mounted as read-only in\nthe instance.  This field is optional and defaults to false and is only\napplicable when using an existing volume."
@@ -3495,6 +3771,120 @@
               "$ref": "#/components/schemas/ServiceGroup"
             },
             "description": "The service group which was created by this request.\n\nNote: only one service group can be specified in the request, so this\nwill always contain a single entry."
+          }
+        }
+      },
+      "CreateTemplateInstancesRequest": {
+        "required": [
+          "ids"
+        ],
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NameOrUUID"
+            },
+            "description": "The list of IDs of the instances to convert to templates."
+          }
+        },
+        "description": "The request message for converting one or more instances to templates."
+      },
+      "CreateTemplateInstancesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateTemplateInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating one or more template instances."
+      },
+      "CreateTemplateInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateTemplateInstancesResponseTemplateInstance"
+            },
+            "description": "List of template instances that were created during the operation."
+          }
+        }
+      },
+      "CreateTemplateInstancesResponseTemplateInstance": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular template instance creation operation."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the template instance that was created.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the template instance that was created."
+          },
+          "state": {
+            "enum": [
+              "stopped",
+              "starting",
+              "running",
+              "draining",
+              "stopping",
+              "template",
+              "standby"
+            ],
+            "type": "string",
+            "description": "The current state of the instance.",
+            "format": "enum"
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
           }
         }
       },
@@ -3973,13 +4363,13 @@
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DeleteInstancesResponseDeletedInstance"
+              "$ref": "#/components/schemas/DeleteInstancesResponseInstance"
             },
             "description": "The instance(s) which were deleted by the request."
           }
         }
       },
-      "DeleteInstancesResponseDeletedInstance": {
+      "DeleteInstancesResponseInstance": {
         "type": "object",
         "properties": {
           "status": {
@@ -4121,6 +4511,90 @@
           }
         },
         "description": "Details of the service group which was deleted by this request."
+      },
+      "DeleteTemplateInstancesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteTemplateInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for deleting one or more template instances."
+      },
+      "DeleteTemplateInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteTemplateInstancesResponseTemplateInstance"
+            },
+            "description": "List of template instances that were processed during the delete operation."
+          }
+        }
+      },
+      "DeleteTemplateInstancesResponseTemplateInstance": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the template instance that was deleted.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the template instance that was deleted."
+          },
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular template instance deletion operation."
+          },
+          "message": {
+            "example": "No template instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        }
       },
       "DeleteVolumesResponse": {
         "type": "object",
@@ -4954,6 +5428,7 @@
               "running",
               "draining",
               "stopping",
+              "template",
               "standby"
             ],
             "type": "string",
@@ -5234,6 +5709,58 @@
           }
         }
       },
+      "GetTemplateInstancesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetTemplateInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more template instances."
+      },
+      "GetTemplateInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Instance"
+            },
+            "description": "List of template instances that were retrieved during the operation."
+          }
+        }
+      },
       "GetVolumesResponse": {
         "type": "object",
         "allOf": [
@@ -5492,6 +6019,7 @@
               "running",
               "draining",
               "stopping",
+              "template",
               "standby"
             ],
             "type": "string",
@@ -5541,79 +6069,79 @@
           "start_count": {
             "example": 6,
             "type": "integer",
-            "description": "The total number of times the instance has been started.  This is a counter\nthat increments each time the instance is started, regardless of whether it\nwas manually stopped or restarted.  This can be useful for tracking the\nusage of the instance over time and/or for debugging purposes.",
+            "description": "The total number of times the instance has been started.  This is a counter\nthat increments each time the instance is started, regardless of whether it\nwas manually stopped or restarted.  This can be useful for tracking the\nusage of the instance over time and/or for debugging purposes.\n\nNot used for template instances.",
             "format": "uint64"
           },
           "restart_count": {
             "example": 1,
             "type": "integer",
-            "description": "The total number of times the instance has been restarted. This is a counter\nthat increments each time the instance has been restarted. This can be\nuseful for tracking the usage of the instance over time and/or for\ndebugging purposes.",
+            "description": "The total number of times the instance has been restarted. This is a counter\nthat increments each time the instance has been restarted. This can be\nuseful for tracking the usage of the instance over time and/or for\ndebugging purposes.\nNot used for template instances.",
             "format": "uint64"
           },
           "started_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
-            "description": "The time the instance was started.  This is the timestamp when the\ninstance was last started.",
+            "description": "The time the instance was started.  This is the timestamp when the\ninstance was last started.\nNot used for template instances.",
             "format": "date-time"
           },
           "stopped_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
-            "description": "The time the instance was stopped.  This is the timestamp when the\ninstance was last stopped.  If the instance is currently running, this\nfield will be empty.",
+            "description": "The time the instance was stopped.  This is the timestamp when the\ninstance was last stopped.  If the instance is currently running, this\nfield will be empty.\nNot used for template instances.",
             "format": "date-time"
           },
           "uptime_ms": {
             "example": 8954050300,
             "type": "integer",
-            "description": "The total amount of time the instance has been running in milliseconds.",
+            "description": "The total amount of time the instance has been running in milliseconds.\nNot used for template instances.",
             "format": "uint64"
           },
           "vmm_start_time_us": {
             "example": 70040,
             "type": "integer",
-            "description": "(Developer-only).  The time taken between the main controller and the\nbeginning of execution of the VMM (Virtual Machine Monitor) measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
+            "description": "(Developer-only).  The time taken between the main controller and the\nbeginning of execution of the VMM (Virtual Machine Monitor) measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.\nNot used for template instances.",
             "format": "uint64"
           },
           "vmm_load_time_us": {
             "example": 4050,
             "type": "integer",
-            "description": "(Developer-only).  The time it took the VMM (Virtual Machine Monitor) to\nload the instance's kernel and initramfs into VM memory measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.",
+            "description": "(Developer-only).  The time it took the VMM (Virtual Machine Monitor) to\nload the instance's kernel and initramfs into VM memory measured in\nmicroseconds.  This field is primarily used for debugging and performance\nanalysis purposes.\nNot used for template instances.",
             "format": "uint64"
           },
           "vmm_ready_time_us": {
             "example": 400,
             "type": "integer",
-            "description": "(Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to\nbecome ready to execute the instance measured in microseconds.  This is the\ntime from when the VMM started until it was ready to execute the instance's\ncode.  This field is primarily used for debugging and performance analysis\npurposes.",
+            "description": "(Developer-only).  The time taken for the VMM (Virtual Machine Monitor) to\nbecome ready to execute the instance measured in microseconds.  This is the\ntime from when the VMM started until it was ready to execute the instance's\ncode.  This field is primarily used for debugging and performance analysis\npurposes.\nNot used for template instances.",
             "format": "uint64"
           },
           "boot_time_us": {
             "example": 9000,
             "type": "integer",
-            "description": "The boot time of the instance in microseconds.  We take a pragmatic\napproach is to define the boot time.  We calculate this as the difference\nin time between the moment the virtualization toolstack is invoked to\nrespond to a VM boot request and the moment the OS starts executing user\ncode (i.e., the end of the guest OS boot process).  This is essentially the\ntime that a user would experience in a deployment, minus the application\ninitialization time, which we leave out since it is independent from the\nOS.",
+            "description": "The boot time of the instance in microseconds.  We take a pragmatic\napproach is to define the boot time.  We calculate this as the difference\nin time between the moment the virtualization toolstack is invoked to\nrespond to a VM boot request and the moment the OS starts executing user\ncode (i.e., the end of the guest OS boot process).  This is essentially the\ntime that a user would experience in a deployment, minus the application\ninitialization time, which we leave out since it is independent from the\nOS.\nNot used for template instances.",
             "format": "uint64"
           },
           "net_time_us": {
             "example": 11000,
             "type": "integer",
-            "description": "This is the time it took for the user-level application to start listening\non a non-localhost port measured in microseconds.  This is the time from\nwhen the instance started until it reasonably ready to start responding to\nnetwork requests.  This is useful for measuring the time it takes for the\ninstance to become operationally ready.",
+            "description": "This is the time it took for the user-level application to start listening\non a non-localhost port measured in microseconds.  This is the time from\nwhen the instance started until it reasonably ready to start responding to\nnetwork requests.  This is useful for measuring the time it takes for the\ninstance to become operationally ready.\nNot used for template instances.",
             "format": "uint64"
           },
           "stop_reason": {
             "example": 15,
             "type": "integer",
-            "description": "The instance stop reason.\n\nProvides reason as to why an instance is stopped or in the process of\nshutting down.  The stop reason is a bitmask that tells you the origin of\nthe shutdown:\n\n| Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |\n|---------|------------|------------|------------|------------|--------------|\n| Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |\n\n- **Forced**:   This was a force stop.  A forced stop does not give the\n                instance a chance to perform a clean shutdown.  Bits 0\n                (Kernel) and 1 (App) can thus never be set for forced\n                shutdowns.  Consequently, there won't be an `exit_code` or\n                `stop_code`.\n- **User**:     Stop initiated by user, e.g. via an API call.\n- **Platform**: Stop initiated by platform, e.g. an autoscale policy.\n- **App**:      The Application exited.  The `exit_code` field will be set.\n- **Kernel**:   The kernel exited.  The `stop_code` field will be set.\n\nFor example, the stop reason will contain the following values in the given\nscenarios:\n\n| Value | Bitmask | Aliases | Scenario |\n|-------|---------|---------|----------|\n| 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |\n| 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |\n| 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |\n| 0     | `00000` | `-----` | The stop reason is unknown. |",
+            "description": "The instance stop reason.\n\nProvides reason as to why an instance is stopped or in the process of\nshutting down.  The stop reason is a bitmask that tells you the origin of\nthe shutdown:\n\n| Bit     | 4          | 3          | 2          | 1          | 0 (LSB)      |\n|---------|------------|------------|------------|------------|--------------|\n| Purpose | [F]orced   | [U]ser     | [P]latform | [A]pp      | [K]ernel     |\n\n- **Forced**:   This was a force stop.  A forced stop does not give the\n                instance a chance to perform a clean shutdown.  Bits 0\n                (Kernel) and 1 (App) can thus never be set for forced\n                shutdowns.  Consequently, there won't be an `exit_code` or\n                `stop_code`.\n- **User**:     Stop initiated by user, e.g. via an API call.\n- **Platform**: Stop initiated by platform, e.g. an autoscale policy.\n- **App**:      The Application exited.  The `exit_code` field will be set.\n- **Kernel**:   The kernel exited.  The `stop_code` field will be set.\n\nFor example, the stop reason will contain the following values in the given\nscenarios:\n\n| Value | Bitmask | Aliases | Scenario |\n|-------|---------|---------|----------|\n| 28    | `11100` | `FUP--` | Forced user-initiated shutdown. |\n| 15    | `01111` | `-UPAK` | Regular user-initiated shutdown. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 13    | `01101` | `-UP-K` | The user initiated a shutdown but the application was forcefully killed by the kernel during shutdown. This can be the case if the image does not support a clean application exit or the application crashed after receiving a termination signal. The exit_code won’t be present in this scenario. |\n| 7     | `00111` | `--PAK` | Unikraft Cloud initiated the shutdown, for example, due to scale-to-zero. The application and kernel have exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 3     | `00011` | `---AK` | The application exited. The exit_code and stop_code indicate if the application and kernel shut down cleanly. |\n| 1     | `00001` | `----K` | The instance likely expierenced a fatal crash and the stop_code contains more information about the cause of the crash. |\n| 0     | `00000` | `-----` | The stop reason is unknown. |\nNot used for template instances.",
             "format": "uint32"
           },
           "exit_code": {
             "example": 137,
             "type": "integer",
-            "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific.  See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.",
+            "description": "The application exit code.\n\nThis is the code which the application returns upon leaving its main entry\npoint.  The encoding of the exit code is application specific.  See the\ndocumentation of the application for more details.  Usually, an exit code\nof `0` indicates success / no failure.\nNot used for template instances.",
             "format": "uint32"
           },
           "stop_code": {
             "example": 33024,
             "type": "integer",
-            "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop.  See `StopCodeReason`.\n\n[^1]: Reserved for future use.",
+            "description": "The kernel stop code.\n\nThis value encodes multiple details about the stop irrespective of the\napplication.\n\n```\nMSB                                                     LSB\n┌──────────────┬──────────┬──────────┬───────────┬────────┐\n│ 31 ────── 24 │ 23 ── 16 │    15    │ 14 ──── 8 │ 7 ── 0 │\n├──────────────┼──────────┼──────────┼───────────┼────────┤\n│ reserved[^1] │ errno    │ shutdown │ initlevel │ reason │\n└──────────────┴──────────┴──────────┴───────────┴────────┘\n```\n\n- **errno**:     The application errno, using Linux's errno.h values.\n                 (Optional, can be 0.)\n- **shutdown**:  Whether the shutdown originated from the inittable (0) or\n                 from the termtable (1).\n- **initlevel**: The initlevel at the time of the stop.\n- **reason**:    The reason for the stop.  See `StopCodeReason`.\n\n[^1]: Reserved for future use.\nNot used for template instances.",
             "format": "uint32"
           },
           "restart_policy": {
@@ -5637,14 +6165,14 @@
           "volumes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InstanceInstanceVolume"
+              "$ref": "#/components/schemas/InstanceVolume"
             },
             "description": "The list of volumes attached to the instance."
           },
           "service_group": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/InstanceInstanceServiceGroup"
+                "$ref": "#/components/schemas/InstanceServiceGroup"
               }
             ],
             "description": "The service group configuration for the instance."
@@ -5654,7 +6182,7 @@
             "items": {
               "$ref": "#/components/schemas/InstanceNetworkInterface"
             },
-            "description": "The network interfaces of the instance."
+            "description": "The network interfaces of the instance.\nNot used for template instances."
           },
           "tags": {
             "type": "array",
@@ -5681,6 +6209,26 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "snapshot": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceSnapshot"
+              }
+            ],
+            "description": "The snapshot of the instance, if exists."
+          },
+          "delete_lock": {
+            "type": "boolean",
+            "description": "If set to true, the instance cannot be deleted until the lock is removed."
+          },
+          "restart": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceRestartAttempt"
+              }
+            ],
+            "description": "The current restart attempt for the instance.\nNot used for template instances."
           }
         },
         "description": "An instance is a unikernel virtual machine running an application."
@@ -5700,57 +6248,6 @@
             "description": "The image of the ROM to use for the autoscale configuration."
           }
         }
-      },
-      "InstanceInstanceServiceGroup": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-service-g756b5d",
-            "type": "string",
-            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
-          },
-          "domains": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InstanceServiceGroupInstanceDomain"
-            },
-            "description": "The domain configuration for the service group."
-          }
-        },
-        "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
-      },
-      "InstanceInstanceVolume": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-volume-g756b5d",
-            "type": "string",
-            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
-          },
-          "at": {
-            "example": "/mnt/funky-volume",
-            "type": "string",
-            "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
-          },
-          "read_only": {
-            "example": true,
-            "type": "boolean",
-            "description": "Whether the volume is read-only or not."
-          }
-        },
-        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
       },
       "InstanceNetworkInterface": {
         "type": "object",
@@ -5798,6 +6295,39 @@
         },
         "description": "An instance network interface."
       },
+      "InstanceRestartAttempt": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "attempt": {
+                "example": 1,
+                "type": "integer",
+                "description": "Current restart attempt number. This is incremented each time the instance\nis restarted automatically by the platform.",
+                "format": "uint32"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "next_at",
+                "type": "object",
+                "properties": {
+                  "next_at": {
+                    "example": "2023-10-05T14:48:00Z",
+                    "type": "string",
+                    "description": "Timestamp of the next scheduled restart attempt.",
+                    "format": "date-time"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Records the current restart attempt of an instance."
+      },
       "InstanceScaleToZero": {
         "type": "object",
         "properties": {
@@ -5830,39 +6360,67 @@
         },
         "description": "Scale-to-zero defines the configuration for scaling the instance to zero.\nWhen an instance is scaled-to-zero it can be either stopped (and fully\nshutdown) or paused wherein the state of the instance is preserved (e.g., RAM\ncontents) and the instance can be resumed later without losing its state,\ni.e. \"stateful\"."
       },
-      "InstanceServiceGroupInstanceDomain": {
+      "InstanceServiceGroup": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "fqdn": {
-                "example": "funky-town-g756b5d.fra0.unikraft.app.",
-                "type": "string",
-                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "certificate",
-                "type": "object",
-                "properties": {
-                  "certificate": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/NameOrUUID"
-                      }
-                    ],
-                    "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-service-g756b5d",
+            "type": "string",
+            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGroupInstanceDomain"
+            },
+            "description": "The domain configuration for the service group."
           }
-        ],
-        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
+        },
+        "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
+      },
+      "InstanceSnapshot": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the snapshot.",
+            "format": "uuid"
+          }
+        },
+        "description": "The snapshot UUID of the instance."
+      },
+      "InstanceVolume": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-volume-g756b5d",
+            "type": "string",
+            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
+          },
+          "at": {
+            "example": "/mnt/funky-volume",
+            "type": "string",
+            "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
+          },
+          "readonly": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the volume is read-only or not."
+          }
+        },
+        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
       },
       "NameOrUUID": {
         "type": "object",
@@ -6308,6 +6866,40 @@
           }
         }
       },
+      "ServiceGroupInstanceDomain": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "fqdn": {
+                "example": "funky-town-g756b5d.fra0.unikraft.app.",
+                "type": "string",
+                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "certificate",
+                "type": "object",
+                "properties": {
+                  "certificate": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/NameOrUUID"
+                      }
+                    ],
+                    "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
+      },
       "ServiceGroupTemplate": {
         "type": "object",
         "properties": {
@@ -6494,6 +7086,7 @@
               "running",
               "draining",
               "stopping",
+              "template",
               "standby"
             ],
             "type": "string",
@@ -6507,6 +7100,7 @@
               "running",
               "draining",
               "stopping",
+              "template",
               "standby"
             ],
             "type": "string",
@@ -6948,6 +7542,193 @@
           }
         }
       },
+      "UpdateTemplateInstanceByUUIDRequestBody": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+          },
+          "prop": {
+            "example": "tags",
+            "enum": [
+              "tags",
+              "delete_lock"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "add",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform on the property.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
+          }
+        }
+      },
+      "UpdateTemplateInstancesRequestItem": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the template instance to update. Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the template instance to update. Mutually exclusive with UUID."
+          },
+          "prop": {
+            "example": "tags",
+            "enum": [
+              "tags",
+              "delete_lock"
+            ],
+            "type": "string",
+            "description": "The property to modify.",
+            "format": "enum"
+          },
+          "op": {
+            "example": "add",
+            "enum": [
+              "set",
+              "add",
+              "del"
+            ],
+            "type": "string",
+            "description": "The operation to perform on the property.",
+            "format": "enum"
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
+          }
+        },
+        "description": "A single update operation to be applied to a template instance."
+      },
+      "UpdateTemplateInstancesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateTemplateInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating a template instance by its UUID."
+      },
+      "UpdateTemplateInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateTemplateInstancesResponseTemplateInstance"
+            },
+            "description": "List of template instances that were processed during the update operation."
+          }
+        }
+      },
+      "UpdateTemplateInstancesResponseTemplateInstance": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the template instance that was updated.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the template instance that was updated."
+          },
+          "status": {
+            "example": "success",
+            "type": "string",
+            "description": "The status of this particular template instance update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No template instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        }
+      },
       "UpdateVolumeByUUIDRequestBody": {
         "required": [
           "prop",
@@ -7307,6 +8088,7 @@
                   "running",
                   "draining",
                   "stopping",
+                  "template",
                   "standby"
                 ],
                 "type": "string",
@@ -7407,6 +8189,7 @@
               "running",
               "draining",
               "stopping",
+              "template",
               "standby"
             ],
             "type": "string",

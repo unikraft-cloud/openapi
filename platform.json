@@ -3543,9 +3543,6 @@
             "oneOf": [
               {
                 "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
                 "type": "object",
                 "properties": {
                   "uuid": {
@@ -3558,9 +3555,6 @@
               },
               {
                 "title": "name",
-                "required": [
-                  "name"
-                ],
                 "type": "object",
                 "properties": {
                   "name": {

@@ -2653,8 +2653,6 @@ components:
                             definitions.
                 - oneOf:
                     - title: uuid
-                      required:
-                        - uuid
                       type: object
                       properties:
                         uuid:
@@ -2665,8 +2663,6 @@ components:
                                 UUID.  Mutually exclusive with name.
                             format: uuid
                     - title: name
-                      required:
-                        - name
                       type: object
                       properties:
                         name:

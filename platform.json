@@ -409,7 +409,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateInstancesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateInstancesRequestItem"
+                }
               }
             }
           },
@@ -441,7 +444,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GetInstanceLogsRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetInstancesLogsRequestItem"
+                }
               }
             }
           },
@@ -453,7 +459,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetInstanceLogsResponse"
+                  "$ref": "#/components/schemas/GetInstancesLogsResponse"
                 }
               }
             }
@@ -467,33 +473,28 @@
           "Instances"
         ],
         "summary": "Get Instances Metrics",
-        "description": "Get the metrics of an instance by its UUID or name.",
+        "description": "Get the metrics of one or more instances by their ID(s) (name or UUID).",
         "operationId": "GetInstanceMetrics",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "query",
-            "description": "Mutually exclusive with name.",
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
             }
           },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Mutually exclusive with UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetInstanceMetricsResponse"
+                  "$ref": "#/components/schemas/GetInstancesMetricsResponse"
                 }
               }
             }
@@ -528,7 +529,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StartInstanceResponse"
+                  "$ref": "#/components/schemas/StartInstancesResponse"
                 }
               }
             }
@@ -550,7 +551,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/StopInstancesRequestID"
+                  "$ref": "#/components/schemas/StopInstancesRequestItem"
                 }
               }
             }
@@ -563,7 +564,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StopInstanceResponse"
+                  "$ref": "#/components/schemas/StopInstancesResponse"
                 }
               }
             }
@@ -854,42 +855,13 @@
         "summary": "Wait for Instances States",
         "description": "Wait for one or more instances to reach certain states by ID(s)\n(name or UUID).\n\nIf the instances are already in the desired states, the request will return\nimmediately.  If the instances are not in the desired state, the request will\nblock until the instances reach the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstances reach the desired states.",
         "operationId": "WaitInstances",
-        "parameters": [
-          {
-            "name": "state",
-            "in": "query",
-            "description": "The desired state to wait for.  Default is `running`.",
-            "schema": {
-              "enum": [
-                "stopped",
-                "starting",
-                "running",
-                "draining",
-                "stopping",
-                "template",
-                "standby"
-              ],
-              "type": "string",
-              "format": "enum"
-            }
-          },
-          {
-            "name": "timeout_ms",
-            "in": "query",
-            "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/NameOrUUID"
+                  "$ref": "#/components/schemas/WaitInstancesRequestItem"
                 }
               }
             }
@@ -902,7 +874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitInstanceResponse"
+                  "$ref": "#/components/schemas/WaitInstancesResponse"
                 }
               }
             }
@@ -1064,7 +1036,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetInstanceLogsResponse"
+                  "$ref": "#/components/schemas/GetInstancesLogsResponse"
                 }
               }
             }
@@ -1098,7 +1070,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetInstanceMetricsResponse"
+                  "$ref": "#/components/schemas/GetInstancesMetricsResponse"
                 }
               }
             }
@@ -1132,7 +1104,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StartInstanceResponse"
+                  "$ref": "#/components/schemas/StartInstancesResponse"
                 }
               }
             }
@@ -1183,7 +1155,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StopInstanceResponse"
+                  "$ref": "#/components/schemas/StopInstancesResponse"
                 }
               }
             }
@@ -1228,7 +1200,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitInstanceResponse"
+                  "$ref": "#/components/schemas/WaitInstancesResponse"
                 }
               }
             }
@@ -3519,54 +3491,49 @@
       },
       "CreateInstanceRequestServiceGroup": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "domains": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CreateInstanceRequestDomain"
-                },
-                "description": "Similarly, if no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
-              },
-              "services": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Service"
-                },
-                "description": "If no existing service identifier is provided, one or more new\n(ephemeral, non-persistent) service(s) can be created with the following\ndefinitions."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "uuid",
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "example": "123e4567-e89b-12d3-a456-426614174000",
-                    "type": "string",
-                    "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
-                    "format": "uuid"
-                  }
-                }
-              },
-              {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-service-g756b5d",
-                    "type": "string",
-                    "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-service-g756b5d",
+            "type": "string",
+            "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstanceRequestDomain"
+            },
+            "description": "If no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Service"
+            },
+            "description": "If no existing service group identifier is provided, one or more new\n(ephemeral, non-persistent) service(s) can be created with the following\ndefinitions."
+          },
+          "soft_limit": {
+            "example": 100,
+            "maximum": 65535,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The soft limit for the number of services that can be created in this\nservice group.",
+            "format": "uint32"
+          },
+          "hard_limit": {
+            "example": 200,
+            "maximum": 65535,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The hard limit for the number of services that can be created in this\nservice group.",
+            "format": "uint32"
           }
-        ],
+        },
         "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections."
       },
       "CreateInstanceRequestVolume": {
@@ -5278,11 +5245,7 @@
           }
         }
       },
-      "GetInstanceLogsRequest": {
-        "required": [
-          "uuid",
-          "name"
-        ],
+      "GetInstancesLogsRequestItem": {
         "type": "object",
         "properties": {
           "uuid": {
@@ -5309,9 +5272,9 @@
             "format": "int64"
           }
         },
-        "description": "The request message for getting the logs of an instance by their UUID or\nname."
+        "description": "A single item in the request."
       },
-      "GetInstanceLogsResponse": {
+      "GetInstancesLogsResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -5330,7 +5293,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetInstanceLogsResponseData"
+                "$ref": "#/components/schemas/GetInstancesLogsResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -5349,9 +5312,9 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the logs of an instance given its UUID(s) or\nname(s)."
+        "description": "The response message for getting the logs of one or more instance(s) by\ntheir UUID(s) or name(s)."
       },
-      "GetInstanceLogsResponseAvailable": {
+      "GetInstancesLogsResponseAvailable": {
         "type": "object",
         "properties": {
           "start": {
@@ -5368,19 +5331,19 @@
           }
         }
       },
-      "GetInstanceLogsResponseData": {
+      "GetInstancesLogsResponseData": {
         "type": "object",
         "properties": {
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetInstanceLogsResponseLoggedInstance"
+              "$ref": "#/components/schemas/GetInstancesLogsResponseLoggedInstance"
             },
             "description": "The instance which this requested waited on.\n\nNote: only one instance can be specified in the request, so this will\nalways contain a single entry."
           }
         }
       },
-      "GetInstanceLogsResponseLoggedInstance": {
+      "GetInstancesLogsResponseLoggedInstance": {
         "type": "object",
         "properties": {
           "uuid": {
@@ -5402,7 +5365,7 @@
           "available": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetInstanceLogsResponseAvailable"
+                "$ref": "#/components/schemas/GetInstancesLogsResponseAvailable"
               }
             ],
             "description": "Description of the log availability."
@@ -5410,7 +5373,7 @@
           "range": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetInstanceLogsResponseRange"
+                "$ref": "#/components/schemas/GetInstancesLogsResponseRange"
               }
             ],
             "description": "Description of the range that was returned.  Useful for requests with\noffset relative to end."
@@ -5442,7 +5405,7 @@
           }
         }
       },
-      "GetInstanceLogsResponseRange": {
+      "GetInstancesLogsResponseRange": {
         "type": "object",
         "properties": {
           "start": {
@@ -5459,7 +5422,7 @@
           }
         }
       },
-      "GetInstanceMetricsResponse": {
+      "GetInstancesMetricsResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -5478,7 +5441,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetInstanceMetricsResponseData"
+                "$ref": "#/components/schemas/GetInstancesMetricsResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -5499,19 +5462,19 @@
         },
         "description": "The response message for getting the metrics of one or more instance(s)\ngiven their UUID(s) or name(s)."
       },
-      "GetInstanceMetricsResponseData": {
+      "GetInstancesMetricsResponseData": {
         "type": "object",
         "properties": {
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetInstanceMetricsResponseInstanceMetrics"
+              "$ref": "#/components/schemas/GetInstancesMetricsResponseInstanceMetrics"
             },
             "description": "The instance which this requested metrics for.  Note: only one instance\ncan be specified in the request, so this will always contain a single\nentry."
           }
         }
       },
-      "GetInstanceMetricsResponseInstanceMetrics": {
+      "GetInstancesMetricsResponseInstanceMetrics": {
         "type": "object",
         "properties": {
           "rss_bytes": {
@@ -6910,7 +6873,7 @@
           }
         }
       },
-      "StartInstanceResponse": {
+      "StartInstancesResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -6929,7 +6892,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/StartInstanceResponseData"
+                "$ref": "#/components/schemas/StartInstancesResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -6950,19 +6913,19 @@
         },
         "description": "The response message for starting one or more instance(s) given their UUID(s)\nor name(s)."
       },
-      "StartInstanceResponseData": {
+      "StartInstancesResponseData": {
         "type": "object",
         "properties": {
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StartInstanceResponseStartedInstance"
+              "$ref": "#/components/schemas/StartInstancesResponseStartedInstance"
             },
             "description": "The instance(s) which were started by the request."
           }
         }
       },
-      "StartInstanceResponseStartedInstance": {
+      "StartInstancesResponseStartedInstance": {
         "type": "object",
         "properties": {
           "status": {
@@ -7007,7 +6970,35 @@
           }
         }
       },
-      "StopInstanceResponse": {
+      "StopInstancesRequestItem": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+          },
+          "force": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether to immediately force stop the instance."
+          },
+          "drain_timeout_ms": {
+            "example": 250,
+            "type": "integer",
+            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
+            "format": "uint64"
+          }
+        },
+        "description": "A single request item to stop an instance."
+      },
+      "StopInstancesResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -7026,7 +7017,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/StopInstanceResponseData"
+                "$ref": "#/components/schemas/StopInstancesResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -7047,19 +7038,19 @@
         },
         "description": "The response message for stopping one or more instance(s) given their UUID(s)\nor name(s)."
       },
-      "StopInstanceResponseData": {
+      "StopInstancesResponseData": {
         "type": "object",
         "properties": {
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StopInstanceResponseStoppedInstance"
+              "$ref": "#/components/schemas/StopInstancesResponseStoppedInstance"
             },
             "description": "The instance(s) which were stopped by the request."
           }
         }
       },
-      "StopInstanceResponseStoppedInstance": {
+      "StopInstancesResponseStoppedInstance": {
         "type": "object",
         "properties": {
           "uuid": {
@@ -7114,38 +7105,6 @@
           }
         }
       },
-      "StopInstancesRequestID": {
-        "required": [
-          "uuid",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to stop.  Mutually exclusive with UUID."
-          },
-          "force": {
-            "example": false,
-            "type": "boolean",
-            "description": "Whether to immediately force stop the instance."
-          },
-          "drain_timeout_ms": {
-            "example": 250,
-            "type": "integer",
-            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
-            "format": "uint64"
-          }
-        },
-        "description": "An identifier for the instance(s) to start."
-      },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [
           "prop",
@@ -7195,7 +7154,7 @@
           }
         }
       },
-      "UpdateInstancesRequest": {
+      "UpdateInstancesRequestItem": {
         "required": [
           "prop",
           "op"
@@ -7205,7 +7164,7 @@
           "id": {
             "example": "op-1",
             "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
           },
           "uuid": {
             "example": "123e4567-e89b-12d3-a456-426614174000",
@@ -7254,7 +7213,7 @@
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
           }
         },
-        "description": "The request message for updating one or more instances."
+        "description": "A single update operation to be applied to an instance."
       },
       "UpdateInstancesResponse": {
         "type": "object",
@@ -8110,7 +8069,44 @@
         ],
         "description": "Wait parameters."
       },
-      "WaitInstanceResponse": {
+      "WaitInstancesRequestItem": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
+          },
+          "state": {
+            "enum": [
+              "stopped",
+              "starting",
+              "running",
+              "draining",
+              "stopping",
+              "template",
+              "standby"
+            ],
+            "type": "string",
+            "description": "The desired state to wait for.  Default is `running`.",
+            "format": "enum"
+          },
+          "timeout_ms": {
+            "example": 450,
+            "type": "integer",
+            "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
+            "format": "int64"
+          }
+        },
+        "description": "A single wait operation to be applied to an instance."
+      },
+      "WaitInstancesResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -8129,7 +8125,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/WaitInstanceResponseData"
+                "$ref": "#/components/schemas/WaitInstancesResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -8150,19 +8146,19 @@
         },
         "description": "The response message for waiting for one or more instance(s) to reach a\ncertain state given their UUID(s) or name(s)."
       },
-      "WaitInstanceResponseData": {
+      "WaitInstancesResponseData": {
         "type": "object",
         "properties": {
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WaitInstanceResponseWaitedInstance"
+              "$ref": "#/components/schemas/WaitInstancesResponseWaitedInstance"
             },
             "description": "The instance(s) which this requested waited on."
           }
         }
       },
-      "WaitInstanceResponseWaitedInstance": {
+      "WaitInstancesResponseWaitedInstance": {
         "type": "object",
         "properties": {
           "uuid": {

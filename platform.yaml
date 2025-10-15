@@ -284,7 +284,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdateInstancesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/UpdateInstancesRequestItem'
                 required: true
             responses:
                 default:
@@ -304,7 +306,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/GetInstanceLogsRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/GetInstancesLogsRequestItem'
                 required: true
             responses:
                 default:
@@ -312,32 +316,29 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetInstanceLogsResponse'
+                                $ref: '#/components/schemas/GetInstancesLogsResponse'
     /v1/instances/metrics:
         get:
             tags:
                 - Instances
             summary: Get Instances Metrics
-            description: Get the metrics of an instance by its UUID or name.
+            description: Get the metrics of one or more instances by their ID(s) (name or UUID).
             operationId: GetInstanceMetrics
-            parameters:
-                - name: uuid
-                  in: query
-                  description: Mutually exclusive with name.
-                  schema:
-                    type: string
-                - name: name
-                  in: query
-                  description: Mutually exclusive with UUID.
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/NameOrUUID'
+                required: true
             responses:
                 default:
                     description: default
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetInstanceMetricsResponse'
+                                $ref: '#/components/schemas/GetInstancesMetricsResponse'
     /v1/instances/start:
         put:
             tags:
@@ -361,7 +362,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/StartInstanceResponse'
+                                $ref: '#/components/schemas/StartInstancesResponse'
     /v1/instances/stop:
         put:
             tags:
@@ -377,7 +378,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/StopInstancesRequestID'
+                                $ref: '#/components/schemas/StopInstancesRequestItem'
                 required: true
             responses:
                 default:
@@ -385,7 +386,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/StopInstanceResponse'
+                                $ref: '#/components/schemas/StopInstancesResponse'
     /v1/instances/templates:
         get:
             tags:
@@ -601,38 +602,13 @@ paths:
                 If the timeout is -1, the request will block indefinitely until the
                 instances reach the desired states.
             operationId: WaitInstances
-            parameters:
-                - name: state
-                  in: query
-                  description: The desired state to wait for.  Default is `running`.
-                  schema:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
-                    format: enum
-                - name: timeout_ms
-                  in: query
-                  description: |-
-                    Timeout in milliseconds to wait for the instance to reach the desired
-                    state.  If the timeout is reached, the request will fail with an error.
-                    A value of -1 means to wait indefinitely until the instance reaches the
-                    desired state.
-                  schema:
-                    type: integer
-                    format: int64
             requestBody:
                 content:
                     application/json:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/NameOrUUID'
+                                $ref: '#/components/schemas/WaitInstancesRequestItem'
                 required: true
             responses:
                 default:
@@ -640,7 +616,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/WaitInstanceResponse'
+                                $ref: '#/components/schemas/WaitInstancesResponse'
     /v1/instances/{uuid}:
         get:
             tags:
@@ -754,7 +730,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetInstanceLogsResponse'
+                                $ref: '#/components/schemas/GetInstancesLogsResponse'
     /v1/instances/{uuid}/metrics:
         get:
             tags:
@@ -776,7 +752,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetInstanceMetricsResponse'
+                                $ref: '#/components/schemas/GetInstancesMetricsResponse'
     /v1/instances/{uuid}/start:
         put:
             tags:
@@ -800,7 +776,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/StartInstanceResponse'
+                                $ref: '#/components/schemas/StartInstancesResponse'
     /v1/instances/{uuid}/stop:
         put:
             tags:
@@ -842,7 +818,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/StopInstanceResponse'
+                                $ref: '#/components/schemas/StopInstancesResponse'
     /v1/instances/{uuid}/wait:
         get:
             tags:
@@ -879,7 +855,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/WaitInstanceResponse'
+                                $ref: '#/components/schemas/WaitInstancesResponse'
     /v1/services:
         get:
             tags:
@@ -2631,46 +2607,55 @@ components:
                 DNS-01 challenge.
         CreateInstanceRequestServiceGroup:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    domains:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/CreateInstanceRequestDomain'
-                        description: |-
-                            Similarly, if no existing (persistent) service group is specified via its
-                            identifier, a new (ephemeral) service group can be created.  In addition
-                            to the services it must expose, you can specify which domains it should
-                            use too.
-                    services:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/Service'
-                        description: |-
-                            If no existing service identifier is provided, one or more new
-                            (ephemeral, non-persistent) service(s) can be created with the following
-                            definitions.
-                - oneOf:
-                    - title: uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: |-
-                                (Optional).  Reference an existing (persistent) service group by its
-                                UUID.  Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-service-g756b5d
-                            type: string
-                            description: |-
-                                (Optional).  Reference an existing (persistent) service group by its
-                                name.  Mutually exclusive with UUID.
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        (Optional).  Reference an existing (persistent) service group by its
+                        UUID.  Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-service-g756b5d
+                    type: string
+                    description: |-
+                        (Optional).  Reference an existing (persistent) service group by its
+                        name.  Mutually exclusive with UUID.
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestDomain'
+                    description: |-
+                        If no existing (persistent) service group is specified via its
+                        identifier, a new (ephemeral) service group can be created.  In addition
+                        to the services it must expose, you can specify which domains it should
+                        use too.
+                services:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Service'
+                    description: |-
+                        If no existing service group identifier is provided, one or more new
+                        (ephemeral, non-persistent) service(s) can be created with the following
+                        definitions.
+                soft_limit:
+                    example: 100
+                    maximum: !!float 65535
+                    minimum: !!float 1
+                    type: integer
+                    description: |-
+                        The soft limit for the number of services that can be created in this
+                        service group.
+                    format: uint32
+                hard_limit:
+                    example: 200
+                    maximum: !!float 65535
+                    minimum: !!float 1
+                    type: integer
+                    description: |-
+                        The hard limit for the number of services that can be created in this
+                        service group.
+                    format: uint32
             description: |-
                 The service group configuration when creating an instance.
 
@@ -4021,10 +4006,7 @@ components:
                     type: integer
                     description: The amount of bytes to return at most.
                     format: int64
-        GetInstanceLogsRequest:
-            required:
-                - uuid
-                - name
+        GetInstancesLogsRequestItem:
             type: object
             properties:
                 uuid:
@@ -4052,10 +4034,8 @@ components:
                     type: integer
                     description: The amount of bytes to return at most.
                     format: int64
-            description: |-
-                The request message for getting the logs of an instance by their UUID or
-                name.
-        GetInstanceLogsResponse:
+            description: A single item in the request.
+        GetInstancesLogsResponse:
             type: object
             properties:
                 status:
@@ -4070,7 +4050,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/GetInstanceLogsResponseData'
+                        - $ref: '#/components/schemas/GetInstancesLogsResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -4085,9 +4065,9 @@ components:
                         the request and generate the response.
                     format: uint64
             description: |-
-                The response message for getting the logs of an instance given its UUID(s) or
-                name(s).
-        GetInstanceLogsResponseAvailable:
+                The response message for getting the logs of one or more instance(s) by
+                their UUID(s) or name(s).
+        GetInstancesLogsResponseAvailable:
             type: object
             properties:
                 start:
@@ -4100,19 +4080,19 @@ components:
                     type: integer
                     description: The last byte offset that can be retrieved.
                     format: uint64
-        GetInstanceLogsResponseData:
+        GetInstancesLogsResponseData:
             type: object
             properties:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/GetInstanceLogsResponseLoggedInstance'
+                        $ref: '#/components/schemas/GetInstancesLogsResponseLoggedInstance'
                     description: |-
                         The instance which this requested waited on.
 
                         Note: only one instance can be specified in the request, so this will
                         always contain a single entry.
-        GetInstanceLogsResponseLoggedInstance:
+        GetInstancesLogsResponseLoggedInstance:
             type: object
             properties:
                 uuid:
@@ -4130,11 +4110,11 @@ components:
                     description: Base64 encoded log output of the instance.
                 available:
                     allOf:
-                        - $ref: '#/components/schemas/GetInstanceLogsResponseAvailable'
+                        - $ref: '#/components/schemas/GetInstancesLogsResponseAvailable'
                     description: Description of the log availability.
                 range:
                     allOf:
-                        - $ref: '#/components/schemas/GetInstanceLogsResponseRange'
+                        - $ref: '#/components/schemas/GetInstancesLogsResponseRange'
                     description: |-
                         Description of the range that was returned.  Useful for requests with
                         offset relative to end.
@@ -4163,7 +4143,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        GetInstanceLogsResponseRange:
+        GetInstancesLogsResponseRange:
             type: object
             properties:
                 start:
@@ -4176,7 +4156,7 @@ components:
                     type: integer
                     description: The last retrieved byte.
                     format: uint64
-        GetInstanceMetricsResponse:
+        GetInstancesMetricsResponse:
             type: object
             properties:
                 status:
@@ -4191,7 +4171,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/GetInstanceMetricsResponseData'
+                        - $ref: '#/components/schemas/GetInstancesMetricsResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -4208,18 +4188,18 @@ components:
             description: |-
                 The response message for getting the metrics of one or more instance(s)
                 given their UUID(s) or name(s).
-        GetInstanceMetricsResponseData:
+        GetInstancesMetricsResponseData:
             type: object
             properties:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/GetInstanceMetricsResponseInstanceMetrics'
+                        $ref: '#/components/schemas/GetInstancesMetricsResponseInstanceMetrics'
                     description: |-
                         The instance which this requested metrics for.  Note: only one instance
                         can be specified in the request, so this will always contain a single
                         entry.
-        GetInstanceMetricsResponseInstanceMetrics:
+        GetInstancesMetricsResponseInstanceMetrics:
             type: object
             properties:
                 rss_bytes:
@@ -5649,7 +5629,7 @@ components:
                     type: string
                     description: The UUID of the template used for the autoscale configuration.
                     format: uuid
-        StartInstanceResponse:
+        StartInstancesResponse:
             type: object
             properties:
                 status:
@@ -5664,7 +5644,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/StartInstanceResponseData'
+                        - $ref: '#/components/schemas/StartInstancesResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -5681,15 +5661,15 @@ components:
             description: |-
                 The response message for starting one or more instance(s) given their UUID(s)
                 or name(s).
-        StartInstanceResponseData:
+        StartInstancesResponseData:
             type: object
             properties:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/StartInstanceResponseStartedInstance'
+                        $ref: '#/components/schemas/StartInstancesResponseStartedInstance'
                     description: The instance(s) which were started by the request.
-        StartInstanceResponseStartedInstance:
+        StartInstancesResponseStartedInstance:
             type: object
             properties:
                 status:
@@ -5728,7 +5708,36 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        StopInstanceResponse:
+        StopInstancesRequestItem:
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the instance to stop.  Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the instance to stop.  Mutually exclusive with UUID.
+                force:
+                    example: false
+                    type: boolean
+                    description: Whether to immediately force stop the instance.
+                drain_timeout_ms:
+                    example: 250
+                    type: integer
+                    description: |-
+                        Timeout for draining connections in milliseconds.  The instance does not
+                        receive new connections in the draining phase.  The instance is stopped
+                        when the last connection has been closed or the timeout expired.  The
+                        maximum timeout may vary.  Use -1 for the largest possible value.
+
+                        Note: This endpoint does not block.  Use the wait endpoint for the
+                        instance to reach the stopped state.
+                    format: uint64
+            description: A single request item to stop an instance.
+        StopInstancesResponse:
             type: object
             properties:
                 status:
@@ -5743,7 +5752,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/StopInstanceResponseData'
+                        - $ref: '#/components/schemas/StopInstancesResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -5760,15 +5769,15 @@ components:
             description: |-
                 The response message for stopping one or more instance(s) given their UUID(s)
                 or name(s).
-        StopInstanceResponseData:
+        StopInstancesResponseData:
             type: object
             properties:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/StopInstanceResponseStoppedInstance'
+                        $ref: '#/components/schemas/StopInstancesResponseStoppedInstance'
                     description: The instance(s) which were stopped by the request.
-        StopInstanceResponseStoppedInstance:
+        StopInstancesResponseStoppedInstance:
             type: object
             properties:
                 uuid:
@@ -5817,38 +5826,6 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        StopInstancesRequestID:
-            required:
-                - uuid
-                - name
-            type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the instance to stop.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the instance to stop.  Mutually exclusive with UUID.
-                force:
-                    example: false
-                    type: boolean
-                    description: Whether to immediately force stop the instance.
-                drain_timeout_ms:
-                    example: 250
-                    type: integer
-                    description: |-
-                        Timeout for draining connections in milliseconds.  The instance does not
-                        receive new connections in the draining phase.  The instance is stopped
-                        when the last connection has been closed or the timeout expired.  The
-                        maximum timeout may vary.  Use -1 for the largest possible value.
-
-                        Note: This endpoint does not block.  Use the wait endpoint for the
-                        instance to reach the stopped state.
-                    format: uint64
-            description: An identifier for the instance(s) to start.
         UpdateInstanceByUUIDRequestBody:
             required:
                 - prop
@@ -5897,7 +5874,7 @@ components:
                         - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                         - For "tags": array of strings
                         - For "delete_lock": boolean
-        UpdateInstancesRequest:
+        UpdateInstancesRequestItem:
             required:
                 - prop
                 - op
@@ -5906,7 +5883,9 @@ components:
                 id:
                     example: op-1
                     type: string
-                    description: (Optional).  A client-provided identifier for tracking this operation in the response.
+                    description: |-
+                        (Optional).  A client-provided identifier for tracking this operation in
+                        the response.
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
                     type: string
@@ -5952,7 +5931,7 @@ components:
                         - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                         - For "tags": array of strings
                         - For "delete_lock": boolean
-            description: The request message for updating one or more instances.
+            description: A single update operation to be applied to an instance.
         UpdateInstancesResponse:
             type: object
             properties:
@@ -6652,7 +6631,41 @@ components:
                                 desired state.
                             format: int64
             description: Wait parameters.
-        WaitInstanceResponse:
+        WaitInstancesRequestItem:
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the instance to wait for.  Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the instance to wait for.  Mutually exclusive with UUID.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "template"
+                        - "standby"
+                    type: string
+                    description: The desired state to wait for.  Default is `running`.
+                    format: enum
+                timeout_ms:
+                    example: 450
+                    type: integer
+                    description: |-
+                        Timeout in milliseconds to wait for the instance to reach the desired
+                        state.  If the timeout is reached, the request will fail with an error.
+                        A value of -1 means to wait indefinitely until the instance reaches the
+                        desired state.
+                    format: int64
+            description: A single wait operation to be applied to an instance.
+        WaitInstancesResponse:
             type: object
             properties:
                 status:
@@ -6667,7 +6680,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/WaitInstanceResponseData'
+                        - $ref: '#/components/schemas/WaitInstancesResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -6684,15 +6697,15 @@ components:
             description: |-
                 The response message for waiting for one or more instance(s) to reach a
                 certain state given their UUID(s) or name(s).
-        WaitInstanceResponseData:
+        WaitInstancesResponseData:
             type: object
             properties:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/WaitInstanceResponseWaitedInstance'
+                        $ref: '#/components/schemas/WaitInstancesResponseWaitedInstance'
                     description: The instance(s) which this requested waited on.
-        WaitInstanceResponseWaitedInstance:
+        WaitInstancesResponseWaitedInstance:
             type: object
             properties:
                 uuid:

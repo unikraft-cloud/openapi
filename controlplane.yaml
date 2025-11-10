@@ -56,6 +56,48 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/RequestSigninResponse'
+    /v1/node/activate:
+        post:
+            tags:
+                - Node
+            description: |-
+                NodeActivate accepts a certificate signing request.
+                It returns a signed certificate for initial node activation.
+            operationId: NodeActivate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/NodeActivateRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NodeActivateResponse'
+    /v1/node/renew:
+        post:
+            tags:
+                - Node
+            description: |-
+                RenewCertificate accepts a certificate signing request and existing the certificate.
+                It returns a renewed certificate for the node.
+            operationId: RenewCertificate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/NodeRenewRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NodeRenewResponse'
 components:
     schemas:
         CheckAuthorizationRequest:
@@ -100,6 +142,141 @@ components:
                 token:
                     type: string
                     description: The authorization token which can be used to authenticate requests.
+        NodeActivateRequest:
+            type: object
+            properties:
+                csr:
+                    example: LS0tLS1CRUdJTklDQVRFIFJFUVVFU1QtLS0tLQ
+                    type: string
+                    description: |-
+                        The csr is the certificate signing request (CSR) for the new certificate
+                        in base64 URL encoded PEM format.
+
+                        The Organization(O) should be the organization UUID.
+                        The OrganizationalUnit(OU) should have one item which is the machineID.
+                        The CommonName(CN) should be the DNS hostname of the node.
+                hostname:
+                    example: my-machine.local
+                    type: string
+                    description: The hostname is the name of the machine making the request.
+                os:
+                    example: linux
+                    type: string
+                    description: The operating system of the machine making the request.
+                os_version:
+                    example: 5.10.0-17-amd64
+                    type: string
+                    description: |-
+                        The version of the operating system of the machine making the request, if
+                        available.
+
+                        For Android, it's like "10", "11", "12", etc.  For iOS and macOS it's like
+                        "15.6.1" or "12.4.0".  For Windows it's like "10.0.19044.1889". For FreeBSD
+                        it's like "12.3-STABLE".  For Linux, this is simply the kernel version on
+                        Linux, like "5.10.0-17-amd64".
+                distro:
+                    example: ubuntu
+                    type: string
+                    description: The OS distribution, if known.  E.g. "debian", "ubuntu", "nixos", ...
+                distro_version:
+                    example: 20.04
+                    type: string
+                    description: The OS distribution version if known.  E.g. "20.04", ...
+                distro_codename:
+                    example: jammy
+                    type: string
+                    description: The OS distribution codename if known.  E.g. "jammy", "bullseye", ...
+                kernel_features:
+                    example: ["kvm", "virtio-net"]
+                    type: array
+                    items:
+                        type: string
+                    description: The features supported by the kernel.
+                region_hint:
+                    example: eu-central-1
+                    type: string
+                    description: The region of the machine making the request.
+            description: The request message for certificate activation.
+        NodeActivateResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    type: string
+                    description: / An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/NodeActivateResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 234
+                    type: integer
+                    description: The operation time in microseconds.
+                    format: uint64
+            description: The response message for certificate activation.
+        NodeActivateResponseData:
+            type: object
+            properties:
+                certificate:
+                    type: string
+                    description: The issued certificate in base64 URL encoded PEM format.
+        NodeRenewRequest:
+            type: object
+            properties:
+                csr:
+                    example: LS0tLS1CRUdJTklDQVRFIFJFUVVFU1QtLS0tLQ
+                    type: string
+                    description: |-
+                        The csr is the certificate signing request (CSR) for the new certificate
+                        in base64 URL encoded PEM format.
+
+                        The Organization(O) should be the organization UUID.
+                        The OrganizationalUnit(OU) should have one item which is the machineID.
+                        The CommonName(CN) should be the DNS hostname of the node.
+                previous_serial:
+                    example: 52BEDB1BB57DEB669E54BFD6855312AC355CAEB5
+                    type: string
+                    description: The serial number of the certificate that ought to be renewed.
+            description: The request message for certificate renewal.
+        NodeRenewResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/NodeRenewResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 189
+                    type: integer
+                    description: The operation time in microseconds.
+                    format: uint64
+            description: The response message for certificate renewal.
+        NodeRenewResponseData:
+            type: object
+            properties:
+                certificate:
+                    type: string
+                    description: The renewed certificate in base64 URL encoded PEM format.
         RequestSigninRequest:
             type: object
             properties:
@@ -219,3 +396,6 @@ components:
             scheme: bearer
 tags:
     - name: Auth
+      description: Authenticate with Unikraft Cloud.
+    - name: Node
+      description: Node certificate management service.

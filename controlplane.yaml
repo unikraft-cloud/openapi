@@ -60,9 +60,7 @@ paths:
         post:
             tags:
                 - Node
-            description: |-
-                NodeActivate accepts a certificate signing request.
-                It returns a signed certificate for initial node activation.
+            description: Activates a new node.
             operationId: NodeActivate
             requestBody:
                 content:
@@ -81,10 +79,8 @@ paths:
         post:
             tags:
                 - Node
-            description: |-
-                RenewCertificate accepts a certificate signing request and existing the certificate.
-                It returns a renewed certificate for the node.
-            operationId: RenewCertificate
+            description: Renews a node's license.
+            operationId: NodeRenew
             requestBody:
                 content:
                     application/json:

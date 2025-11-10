@@ -86,7 +86,7 @@
         "tags": [
           "Node"
         ],
-        "description": "NodeActivate accepts a certificate signing request.\nIt returns a signed certificate for initial node activation.",
+        "description": "Activates a new node.",
         "operationId": "NodeActivate",
         "requestBody": {
           "content": {
@@ -117,8 +117,8 @@
         "tags": [
           "Node"
         ],
-        "description": "RenewCertificate accepts a certificate signing request and existing the certificate.\nIt returns a renewed certificate for the node.",
-        "operationId": "RenewCertificate",
+        "description": "Renews a node's license.",
+        "operationId": "NodeRenew",
         "requestBody": {
           "content": {
             "application/json": {

@@ -201,6 +201,14 @@
           "token": {
             "type": "string",
             "description": "The authorization token which can be used to authenticate requests."
+          },
+          "organization_name": {
+            "type": "string",
+            "description": "The organization name the token is associated with."
+          },
+          "organization_display_name": {
+            "type": "string",
+            "description": "The display name of the organization the token is associated with."
           }
         }
       },

@@ -81,6 +81,28 @@
         }
       }
     },
+    "/v1/metros": {
+      "get": {
+        "tags": [
+          "Metros"
+        ],
+        "summary": "Get Metros",
+        "description": "ListMetros lists all available metros.",
+        "operationId": "ListMetros",
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMetroResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/node/activate": {
       "post": {
         "tags": [
@@ -209,6 +231,88 @@
           "organization_display_name": {
             "type": "string",
             "description": "The display name of the organization the token is associated with."
+          }
+        }
+      },
+      "ListMetroResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ListMetroResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 87,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        }
+      },
+      "ListMetroResponseData": {
+        "type": "object",
+        "properties": {
+          "metros": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metro"
+            },
+            "description": "The list of metros."
+          }
+        }
+      },
+      "Metro": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the metro.",
+            "format": "uuid"
+          },
+          "endpoint": {
+            "example": "https://api.metro1.unikraft.cloud/v1",
+            "type": "string",
+            "description": "The API endpoint for the metro.",
+            "format": "uri"
+          },
+          "name": {
+            "example": "metro1",
+            "type": "string",
+            "description": "The name of the metro."
+          },
+          "iata_code": {
+            "example": "FRA",
+            "type": "string",
+            "description": "The IATA code of the metro."
+          },
+          "country": {
+            "example": "de",
+            "type": "string",
+            "description": "The country where the metro is located."
           }
         }
       },
@@ -527,6 +631,9 @@
     {
       "name": "Auth",
       "description": "Authenticate with Unikraft Cloud."
+    },
+    {
+      "name": "Metros"
     },
     {
       "name": "Node",

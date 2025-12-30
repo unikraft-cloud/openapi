@@ -225,65 +225,40 @@
         }
       }
     },
-    "/v1/images/digest/{digest}": {
+    "/v1/images/list": {
       "get": {
         "tags": [
           "Images"
         ],
-        "summary": "Get Image by Digest",
-        "description": "Retrieve an image by its digest.",
-        "operationId": "GetImageByDigest",
+        "summary": "Get Images",
+        "description": "Retrieve all images.",
+        "operationId": "GetImages",
         "parameters": [
           {
-            "name": "digest",
-            "in": "path",
-            "required": true,
+            "name": "namespace",
+            "in": "query",
+            "description": "Optional namespace to filter images by.",
             "schema": {
-              "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
               "type": "string"
             }
           }
         ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetImageResponse"
-                }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagOrDigest"
               }
             }
           }
-        }
-      }
-    },
-    "/v1/images/tag/{tag}": {
-      "get": {
-        "tags": [
-          "Images"
-        ],
-        "summary": "Get Image by Tag",
-        "description": "Retrieve an image by its tag.",
-        "operationId": "GetImageByTag",
-        "parameters": [
-          {
-            "name": "tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "example": "my-image:latest",
-              "type": "string"
-            }
-          }
-        ],
+        },
         "responses": {
           "default": {
             "description": "default",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetImageResponse"
+                  "$ref": "#/components/schemas/GetImagesResponse"
                 }
               }
             }
@@ -5175,7 +5150,7 @@
           }
         }
       },
-      "GetImageResponse": {
+      "GetImagesResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -5187,14 +5162,14 @@
             "description": "The status of the response."
           },
           "message": {
-            "example": "No image with name 'my-image:latest'",
+            "example": "No images found",
             "type": "string",
             "description": "An optional message providing additional information about the response."
           },
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetImageResponseData"
+                "$ref": "#/components/schemas/GetImagesResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -5207,24 +5182,22 @@
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 46,
+            "example": 123,
             "type": "integer",
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        },
-        "description": "The response message for retrieving a single image."
+        }
       },
-      "GetImageResponseData": {
+      "GetImagesResponseData": {
         "type": "object",
         "properties": {
-          "image": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Image"
-              }
-            ],
-            "description": "The instance that was created in this request."
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "description": "The list of images."
           }
         }
       },
@@ -5843,110 +5816,57 @@
       "Image": {
         "type": "object",
         "properties": {
-          "tag": {
-            "example": "my-image:latest",
-            "type": "string",
-            "description": "The canonical name of the image is known as the \"tag\"."
-          },
           "digest": {
             "example": 256,
             "type": "string",
             "description": "The digest of the image is a unique identifier of the image manifest which\nis a string representation including the hashing algorithm and the hash\nvalue separated by a colon."
           },
-          "description": {
-            "example": "My image description",
-            "type": "string",
-            "description": "A description of the image."
-          },
-          "created_at": {
-            "example": "2023-10-01T12:00:00Z",
-            "type": "string",
-            "description": "When the image was created.",
-            "format": "date-time"
-          },
-          "arch": {
-            "example": "x86_64",
-            "type": "string",
-            "description": "The architecture of the image."
-          },
-          "entrypoint": {
+          "tags": {
             "example": [
-              "/bin/sh",
-              "-c"
+              "my-image:latest"
             ],
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "The entrypoint of the image is the command that is run when the image is\nstarted."
+            "description": "The canonical name of the image is known as the \"tag\"."
           },
-          "cmd": {
+          "initrd": {
+            "example": true,
+            "type": "boolean"
+          },
+          "size_in_bytes": {
+            "example": 10485760,
+            "type": "integer",
+            "format": "int64"
+          },
+          "args": {
+            "example": "--verbose",
+            "type": "string"
+          },
+          "kernel_args": {
+            "example": "console=ttyS0",
+            "type": "string"
+          },
+          "users": {
             "example": [
-              "/bin/sh",
-              "-c"
+              "root",
+              "admin"
             ],
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "The command to run when the image is started."
-          },
-          "env": {
-            "example": [
-              "ENV_VAR=value"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The environment variables to set when the image is started."
-          },
-          "ports": {
-            "example": [
-              "8080:80"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Documented port mappings for the image."
-          },
-          "volumes": {
-            "example": [
-              "/data"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Documented volumes for the image."
+            }
           },
           "labels": {
+            "example": {
+              "env": "production",
+              "version": 1
+            },
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            },
-            "description": "Labels are key-value pairs."
-          },
-          "workdir": {
-            "example": "/app",
-            "type": "string",
-            "description": "The working directory for the image is the directory that is set as the\ncurrent working directory when the image is started."
-          },
-          "kernel": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Object"
-              }
-            ],
-            "description": "The kernel object is a reference to the kernel that is used by the image."
-          },
-          "auxiliary_roms": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Object"
-            },
-            "description": "List of auxiliary ROMs that are used by the image."
+            }
           }
         }
       },
@@ -6417,28 +6337,6 @@
           }
         ],
         "description": "An identifier for a resource.  Either a name or a UUID."
-      },
-      "Object": {
-        "type": "object",
-        "properties": {
-          "digest": {
-            "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-            "type": "string",
-            "description": "The digest is a string representation including the hashing\nalgorithm and the hash value separated by a colon."
-          },
-          "media_type": {
-            "example": "application/vnd.oci.image.layer.v1.tar",
-            "type": "string",
-            "description": "The media type of the layer is a string that identifies the type of\ncontent that the layer contains."
-          },
-          "size": {
-            "example": 655,
-            "type": "integer",
-            "description": "The size of the layer in bytes.",
-            "format": "int64"
-          }
-        },
-        "description": "An object is a single component of an image which is external and can be\nuniquely identified by its digest."
       },
       "Quotas": {
         "type": "object",
@@ -7104,6 +7002,41 @@
             "format": "int32"
           }
         }
+      },
+      "TagOrDigest": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "digest",
+                "required": [
+                  "digest"
+                ],
+                "type": "object",
+                "properties": {
+                  "digest": {
+                    "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "title": "tag",
+                "required": [
+                  "tag"
+                ],
+                "type": "object",
+                "properties": {
+                  "tag": {
+                    "example": "my-image:latest",
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        ]
       },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [

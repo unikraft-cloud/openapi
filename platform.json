@@ -5208,7 +5208,7 @@
             "example": 56000,
             "type": "integer",
             "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
-            "format": "uint64"
+            "format": "int64"
           },
           "limit": {
             "example": 1500,
@@ -5236,7 +5236,7 @@
             "example": 450,
             "type": "integer",
             "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
-            "format": "uint64"
+            "format": "int64"
           },
           "limit": {
             "example": 3000,

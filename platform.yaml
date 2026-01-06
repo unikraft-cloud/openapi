@@ -4057,12 +4057,12 @@ components:
                     example: 250
                     type: integer
                     description: The first byte offset that can be retrieved.
-                    format: uint64
+                    format: int64
                 end:
                     example: 2700
                     type: integer
                     description: The last byte offset that can be retrieved.
-                    format: uint64
+                    format: int64
         GetInstancesLogsResponseData:
             type: object
             properties:
@@ -4133,12 +4133,12 @@ components:
                     example: 450
                     type: integer
                     description: The first retrieved byte.
-                    format: uint64
+                    format: int64
                 end:
                     example: funky-town-g756b5d
                     type: integer
                     description: The last retrieved byte.
-                    format: uint64
+                    format: int64
         GetInstancesMetricsResponse:
             type: object
             properties:

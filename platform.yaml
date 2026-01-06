@@ -5733,6 +5733,12 @@ components:
                     type: string
                     description: The previous state of the instance before the stop operation was invoked.
                     format: enum
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: |-
+                        An optional field representing the status of the request.  This field is
+                        only set when this message object is used as a response message.
                 message:
                     example: No instance with name 'funky-town-g756b5d'
                     type: string

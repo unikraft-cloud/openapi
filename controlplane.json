@@ -320,55 +320,9 @@
         "type": "object",
         "properties": {
           "csr": {
-            "example": "LS0tLS1CRUdJTklDQVRFIFJFUVVFU1QtLS0tLQ",
+            "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
             "type": "string",
-            "description": "The csr is the certificate signing request (CSR) for the new certificate\nin base64 URL encoded PEM format.\n\nThe Organization(O) should be the organization UUID.\nThe OrganizationalUnit(OU) should have one item which is the machineID.\nThe CommonName(CN) should be the DNS hostname of the node."
-          },
-          "hostname": {
-            "example": "my-machine.local",
-            "type": "string",
-            "description": "The hostname is the name of the machine making the request."
-          },
-          "os": {
-            "example": "linux",
-            "type": "string",
-            "description": "The operating system of the machine making the request."
-          },
-          "os_version": {
-            "example": "5.10.0-17-amd64",
-            "type": "string",
-            "description": "The version of the operating system of the machine making the request, if\navailable.\n\nFor Android, it's like \"10\", \"11\", \"12\", etc.  For iOS and macOS it's like\n\"15.6.1\" or \"12.4.0\".  For Windows it's like \"10.0.19044.1889\". For FreeBSD\nit's like \"12.3-STABLE\".  For Linux, this is simply the kernel version on\nLinux, like \"5.10.0-17-amd64\"."
-          },
-          "distro": {
-            "example": "ubuntu",
-            "type": "string",
-            "description": "The OS distribution, if known.  E.g. \"debian\", \"ubuntu\", \"nixos\", ..."
-          },
-          "distro_version": {
-            "example": 20.04,
-            "type": "string",
-            "description": "The OS distribution version if known.  E.g. \"20.04\", ..."
-          },
-          "distro_codename": {
-            "example": "jammy",
-            "type": "string",
-            "description": "The OS distribution codename if known.  E.g. \"jammy\", \"bullseye\", ..."
-          },
-          "kernel_features": {
-            "example": [
-              "kvm",
-              "virtio-net"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The features supported by the kernel."
-          },
-          "region_hint": {
-            "example": "eu-central-1",
-            "type": "string",
-            "description": "The region of the machine making the request."
+            "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
           }
         },
         "description": "The request message for certificate activation."
@@ -415,9 +369,9 @@
       "NodeActivateResponseData": {
         "type": "object",
         "properties": {
-          "certificate": {
+          "license": {
             "type": "string",
-            "description": "The issued certificate in base64 URL encoded PEM format."
+            "description": "The issued license certificate in base64 URL encoded PEM format."
           }
         }
       },
@@ -425,12 +379,12 @@
         "type": "object",
         "properties": {
           "csr": {
-            "example": "LS0tLS1CRUdJTklDQVRFIFJFUVVFU1QtLS0tLQ",
+            "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
             "type": "string",
-            "description": "The csr is the certificate signing request (CSR) for the new certificate\nin base64 URL encoded PEM format.\n\nThe Organization(O) should be the organization UUID.\nThe OrganizationalUnit(OU) should have one item which is the machineID.\nThe CommonName(CN) should be the DNS hostname of the node."
+            "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
           },
           "previous_serial": {
-            "example": "52BEDB1BB57DEB669E54BFD6855312AC355CAEB5",
+            "example": "18EBA06C81FF245EF54F0F6D0701B856",
             "type": "string",
             "description": "The serial number of the certificate that ought to be renewed."
           }
@@ -479,9 +433,9 @@
       "NodeRenewResponseData": {
         "type": "object",
         "properties": {
-          "certificate": {
+          "license": {
             "type": "string",
-            "description": "The renewed certificate in base64 URL encoded PEM format."
+            "description": "The renewed license certificate in base64 URL encoded PEM format."
           }
         }
       },

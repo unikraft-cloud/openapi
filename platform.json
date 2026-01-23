@@ -3423,6 +3423,12 @@
               "format": "enum"
             },
             "description": "Features to enable for the instance.  Features are specific\nconfigurations or capabilities that can be enabled for the instance."
+          },
+          "timeout_s": {
+            "example": 2000,
+            "type": "integer",
+            "description": "Timeout to wait for all new instances to reach running state in\nmilliseconds.  If you autostart your new instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait timeout\ngreater than zero.  No wait performed for a value of 0.",
+            "format": "int64"
           }
         },
         "description": "The request message for creating a new instance."

@@ -3396,7 +3396,7 @@
           "scale_to_zero": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/InstanceScaleToZero"
+                "$ref": "#/components/schemas/CreateInstanceScaleToZero"
               }
             ],
             "description": "Scale-to-zero configuration for the instance."
@@ -3602,6 +3602,38 @@
               "$ref": "#/components/schemas/Instance"
             },
             "description": "The instance that was created in this request."
+          }
+        }
+      },
+      "CreateInstanceScaleToZero": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "enum": [
+              "on",
+              "off",
+              "idle"
+            ],
+            "type": "string",
+            "description": "The specific policy to use for scaling the instance to zero.",
+            "format": "enum"
+          },
+          "stateful": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the instance should be stateful when scaled to zero. If set to\ntrue, the instance will retain its state (e.g., RAM contents) when scaled\nto zero.  This is useful for instances that need to maintain their state\nacross scale-to-zero operations.  If set to false, the instance will lose\nits state when scaled to zero, and it will be restarted from scratch when\nscaled back up."
+          },
+          "cooldown_time_ms": {
+            "example": 3000,
+            "type": "integer",
+            "description": "The cooldown time in milliseconds before the instance can be scaled to\nzero again.  This is useful to prevent rapid scaling to zero and back up,\nwhich can lead to performance issues or resource exhaustion.",
+            "format": "int32"
+          },
+          "notify_time_ms": {
+            "example": 1000,
+            "type": "integer",
+            "description": "The notification time in milliseconds before the instance is scaled to\nzero. This allows the instance to perform any necessary cleanup or state\nsaving before being scaled down.",
+            "format": "int32"
           }
         }
       },
@@ -6238,6 +6270,12 @@
             "example": 3000,
             "type": "integer",
             "description": "The cooldown time in milliseconds before the instance can be scaled to\nzero again.  This is useful to prevent rapid scaling to zero and back up,\nwhich can lead to performance issues or resource exhaustion.",
+            "format": "int32"
+          },
+          "notify_time_ms": {
+            "example": 1000,
+            "type": "integer",
+            "description": "The notification time in milliseconds before the instance is scaled to\nzero. This allows the instance to perform any necessary cleanup or state\nsaving before being scaled down.",
             "format": "int32"
           }
         },

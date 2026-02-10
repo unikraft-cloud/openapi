@@ -2556,6 +2556,16 @@ components:
                         finish starting with a blocking API call if you specify a wait timeout
                         greater than zero.  No wait performed for a value of 0.
                     format: int64
+                roms:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestRom'
+                    description: |-
+                        Read-Only Memory (ROM) blobs to attach to the instance.
+                        Unikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs
+                        to instances. It allows you to create a general-purpose base image and
+                        then customize individual instances by attaching code or data as separate
+                        ROM blobs.
             description: The request message for creating a new instance.
         CreateInstanceRequestDomain:
             required:
@@ -2597,6 +2607,20 @@ components:
                 and a FQDN is provided, Unikraft Cloud will automatically generate a new
                 certificate for the domain based on Let's Encrypt and seek to accomplish a
                 DNS-01 challenge.
+        CreateInstanceRequestRom:
+            required:
+                - image
+            type: object
+            properties:
+                name:
+                    example: funky-rom
+                    type: string
+                    description: The name of the ROM to use for the instance configuration.
+                image:
+                    example: nginx:latest
+                    type: string
+                    description: The image of the ROM to use for the instance configuration.
+            description: Read-Only Memory (ROM) blob to attach to the instance.
         CreateInstanceRequestServiceGroup:
             type: object
             properties:
@@ -4944,6 +4968,16 @@ components:
                     description: |-
                         The current restart attempt for the instance.
                         Not used for template instances.
+                roms:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceRom'
+                    description: |-
+                        Read-Only Memory (ROM) blobs to attach to the instance.
+                        Unikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs
+                        to instances. It allows you to create a general-purpose base image and
+                        then customize individual instances by attaching code or data as separate
+                        ROM blobs.
             description: An instance is a unikernel virtual machine running an application.
         InstanceCreateArgsInstanceCreateRequestRoms:
             required:
@@ -5020,6 +5054,20 @@ components:
                             description: Timestamp of the next scheduled restart attempt.
                             format: date-time
             description: Records the current restart attempt of an instance.
+        InstanceRom:
+            required:
+                - image
+            type: object
+            properties:
+                name:
+                    example: funky-rom
+                    type: string
+                    description: The name of the ROM to use for the instance configuration.
+                image:
+                    example: nginx:latest
+                    type: string
+                    description: The image of the ROM to use for the instance configuration.
+            description: Read-Only Memory (ROM) blob to attach to the instance.
         InstanceScaleToZero:
             type: object
             properties:

@@ -3429,6 +3429,13 @@
             "type": "integer",
             "description": "Timeout to wait for all new instances to reach running state in\nseconds.  If you autostart your new instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait timeout\ngreater than zero.  No wait performed for a value of 0.",
             "format": "int64"
+          },
+          "roms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstanceRequestRom"
+            },
+            "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           }
         },
         "description": "The request message for creating a new instance."
@@ -3469,6 +3476,25 @@
           }
         ],
         "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge."
+      },
+      "CreateInstanceRequestRom": {
+        "required": [
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "funky-rom",
+            "type": "string",
+            "description": "The name of the ROM to use for the instance configuration."
+          },
+          "image": {
+            "example": "nginx:latest",
+            "type": "string",
+            "description": "The image of the ROM to use for the instance configuration."
+          }
+        },
+        "description": "Read-Only Memory (ROM) blob to attach to the instance."
       },
       "CreateInstanceRequestServiceGroup": {
         "type": "object",
@@ -6144,6 +6170,13 @@
               }
             ],
             "description": "The current restart attempt for the instance.\nNot used for template instances."
+          },
+          "roms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceRom"
+            },
+            "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           }
         },
         "description": "An instance is a unikernel virtual machine running an application."
@@ -6242,6 +6275,25 @@
           }
         ],
         "description": "Records the current restart attempt of an instance."
+      },
+      "InstanceRom": {
+        "required": [
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "funky-rom",
+            "type": "string",
+            "description": "The name of the ROM to use for the instance configuration."
+          },
+          "image": {
+            "example": "nginx:latest",
+            "type": "string",
+            "description": "The image of the ROM to use for the instance configuration."
+          }
+        },
+        "description": "Read-Only Memory (ROM) blob to attach to the instance."
       },
       "InstanceScaleToZero": {
         "type": "object",

@@ -2109,6 +2109,37 @@
         }
       }
     },
+    "/v1/volumes/clone": {
+      "post": {
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Clone Volumes",
+        "operationId": "CloneVolumes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneVolumesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneVolumeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/volumes/detach": {
       "put": {
         "tags": [
@@ -2298,6 +2329,50 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AttachVolumesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volumes/{uuid}/clone": {
+      "post": {
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Clone Volume by UUID",
+        "operationId": "CloneVolumeByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the volume to clone.",
+            "required": true,
+            "schema": {
+              "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneVolumeByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneVolumeResponse"
                 }
               }
             }
@@ -2814,6 +2889,162 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
+          }
+        }
+      },
+      "CloneVolumeByUUIDRequestBody": {
+        "type": "object",
+        "properties": {
+          "vol_name": {
+            "example": "funky-vol-g7gum5cj",
+            "type": "string",
+            "description": "The name of the new cloned volume."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags associated with the volume.\nMaximum 16 tags are allowed, and each tag may not be longer than 256 characters."
+          }
+        }
+      },
+      "CloneVolumeResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResponseStatus"
+                  }
+                ],
+                "description": "The status of the response."
+              },
+              "data": {
+                "$ref": "#/components/schemas/CloneVolumeResponseData"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseError"
+                },
+                "description": "A list of errors which may have occurred during the request."
+              },
+              "op_time_us": {
+                "example": 46,
+                "type": "integer",
+                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+                "format": "uint64"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "message",
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "example": "Failed to perform all operations",
+                    "type": "string",
+                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "The response message for cloning a volume."
+      },
+      "CloneVolumeResponseData": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CloneVolumeResponseVolume"
+            },
+            "description": "The volume(s) which were created by the request."
+          }
+        }
+      },
+      "CloneVolumeResponseVolume": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "state": {
+            "enum": [
+              "uninitialized",
+              "initializing",
+              "available",
+              "idle",
+              "mounted",
+              "busy",
+              "error"
+            ],
+            "type": "string",
+            "description": "Current state of the volume.",
+            "format": "enum"
+          },
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "UUID of the newly created volume.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-vol-g7gum5cj",
+            "type": "string",
+            "description": "The name of the newly created volume."
+          },
+          "message": {
+            "example": "No volume with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        }
+      },
+      "CloneVolumesRequest": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the volume to clone. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g7gum5cj",
+            "type": "string",
+            "description": "The name of the volume to clone. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
+          },
+          "vol_name": {
+            "example": "funky-vol-g7gum5cj",
+            "type": "string",
+            "description": "The name of the new cloned volume."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags associated with the volume.\nMaximum 16 tags are allowed, and each tag may not be longer than 256 characters."
           }
         }
       },
@@ -3995,6 +4226,20 @@
               }
             ],
             "description": "The status of the response."
+          },
+          "state": {
+            "enum": [
+              "uninitialized",
+              "initializing",
+              "available",
+              "idle",
+              "mounted",
+              "busy",
+              "error"
+            ],
+            "type": "string",
+            "description": "Current state of the volume.",
+            "format": "enum"
           },
           "uuid": {
             "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
@@ -7973,7 +8218,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The tags associated with the volume."
+            "description": "The tags associated with the volume.\nMaximum 16 tags are allowed, and each tag may not be longer than 256 characters."
           },
           "status": {
             "allOf": [

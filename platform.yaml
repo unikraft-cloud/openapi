@@ -777,24 +777,12 @@ paths:
                   schema:
                     type: string
                     format: uuid
-                - name: force
-                  in: query
-                  description: Whether to immediately force stop the instance.
-                  schema:
-                    type: boolean
-                - name: drain_timeout_ms
-                  in: query
-                  description: |-
-                    Timeout for draining connections in milliseconds.  The instance does not
-                    receive new connections in the draining phase.  The instance is stopped
-                    when the last connection has been closed or the timeout expired.  The
-                    maximum timeout may vary.  Use -1 for the largest possible value.
-
-                    Note: This endpoint does not block.  Use the wait endpoint for the instance
-                    to reach the stopped state.
-                  schema:
-                    type: integer
-                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StopInstanceByUUIDRequestBody'
+                required: true
             responses:
                 default:
                     description: default
@@ -5913,6 +5901,40 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+        StopInstanceByUUIDRequestBody:
+            type: object
+            properties:
+                force:
+                    example: true
+                    type: boolean
+                    description: Whether to immediately force stop the instance.
+                drain_timeout_ms:
+                    example: 550
+                    type: integer
+                    description: |-
+                        Timeout for draining connections in milliseconds.
+                        No draining will occur if set to 0.  The instance
+                        does not receive new connections in the draining
+                        phase.  The instance is stopped when the last
+                        connection has been closed or the timeout expired.
+                        The maximum timeout may vary.  Use -1 for the
+                        largest possible value.  Ignored if force is set.
+
+                        Note: This endpoint does not block.  Use the wait
+                        endpoint for the instance to reach the stopped
+                        state.
+                    format: uint64
+                quick:
+                    example: false
+                    type: boolean
+                    description: |-
+                        Whether to perform a quick shutdown.  This flag is
+                        overridden by force.
+                ifstate:
+                    example: running
+                    type: string
+                    description: Only stop the instance if it is in this state.
+            description: Parameters for stopping the instance.
         StopInstancesRequestItem:
             type: object
             properties:

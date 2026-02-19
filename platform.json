@@ -1105,25 +1105,18 @@
               "type": "string",
               "format": "uuid"
             }
-          },
-          {
-            "name": "force",
-            "in": "query",
-            "description": "Whether to immediately force stop the instance.",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "drain_timeout_ms",
-            "in": "query",
-            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the instance\nto reach the stopped state.",
-            "schema": {
-              "type": "integer",
-              "format": "uint64"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopInstanceByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
@@ -7208,6 +7201,33 @@
             "format": "int32"
           }
         }
+      },
+      "StopInstanceByUUIDRequestBody": {
+        "type": "object",
+        "properties": {
+          "force": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether to immediately force stop the instance."
+          },
+          "drain_timeout_ms": {
+            "example": 550,
+            "type": "integer",
+            "description": "Timeout for draining connections in milliseconds.\nNo draining will occur if set to 0.  The instance\ndoes not receive new connections in the draining\nphase.  The instance is stopped when the last\nconnection has been closed or the timeout expired.\nThe maximum timeout may vary.  Use -1 for the\nlargest possible value.  Ignored if force is set.\n\nNote: This endpoint does not block.  Use the wait\nendpoint for the instance to reach the stopped\nstate.",
+            "format": "uint64"
+          },
+          "quick": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether to perform a quick shutdown.  This flag is\noverridden by force."
+          },
+          "ifstate": {
+            "example": "running",
+            "type": "string",
+            "description": "Only stop the instance if it is in this state."
+          }
+        },
+        "description": "Parameters for stopping the instance."
       },
       "StopInstancesRequestItem": {
         "type": "object",

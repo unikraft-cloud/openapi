@@ -2662,11 +2662,15 @@ components:
                 autostart:
                     example: true
                     type: boolean
-                    description: Whether the instance should start automatically on creation.
+                    description: |-
+                        Whether the instance should start automatically on creation.
+                        Must be set to true when `timeout_s` is specified.
                 replicas:
                     example: 5
                     type: integer
-                    description: Number of replicas for the instance.
+                    description: |-
+                        (Optional).  Number of additional replicas to create.  The total
+                        number of instances created is `replicas + 1`.  Defaults to 0.
                     format: int64
                 restart_policy:
                     enum:
@@ -2675,26 +2679,33 @@ components:
                         - "on_failure"
                     type: string
                     description: |-
-                        Restart policy for the instance.  This defines how the instance should
-                        behave when it stops or crashes.
+                        Restart policy for the instance.  This defines how the instance
+                        should behave when it stops or crashes.  Cannot be combined with
+                        the `delete-on-stop` feature.
                     format: enum
                 scale_to_zero:
                     allOf:
                         - $ref: '#/components/schemas/CreateInstanceScaleToZero'
-                    description: Scale-to-zero configuration for the instance.
+                    description: |-
+                        Scale-to-zero configuration for the instance.  Requires
+                        `service_group` to be set.  Cannot be combined with the
+                        `delete-on-stop` feature.
                 vcpus:
                     example: 1
                     type: integer
-                    description: Number of vCPUs to allocate for the instance.
+                    description: |-
+                        (Optional).  Number of vCPUs to allocate for the instance.
+                        Defaults to 1.
                     format: int32
                 wait_timeout_ms:
                     example: 2000
                     type: integer
                     description: |-
-                        Timeout to wait for all new instances to reach running state in
-                        milliseconds.  If you autostart your new instance, you can wait for it to
-                        finish starting with a blocking API call if you specify a wait timeout
-                        greater than zero.  No wait performed for a value of 0.
+                        Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to
+                        wait for all new instances to reach running state.  Requires
+                        `autostart` to be set.  If `timeout_s` is not set, this value is
+                        converted by rounding up to the next full second.  No wait
+                        performed for a value of 0.
                     format: int64
                 features:
                     type: array
@@ -2705,15 +2716,18 @@ components:
                         format: enum
                     description: |-
                         Features to enable for the instance.  Features are specific
-                        configurations or capabilities that can be enabled for the instance.
+                        configurations or capabilities that can be enabled for the
+                        instance.  The `scale-to-zero` and `delete-on-stop` features are
+                        mutually exclusive.
                 timeout_s:
                     example: 2
                     type: integer
                     description: |-
-                        Timeout to wait for all new instances to reach running state in
-                        seconds.  If you autostart your new instance, you can wait for it to
-                        finish starting with a blocking API call if you specify a wait timeout
-                        greater than zero.  No wait performed for a value of 0.
+                        Timeout in seconds to wait for all new instances to reach running
+                        state.  Requires `autostart` to be set.  If you autostart your
+                        new instance, you can wait for it to finish starting with a
+                        blocking API call if you specify a wait timeout greater than
+                        zero.  No wait performed for a value of 0.
                     format: int64
                 roms:
                     type: array
@@ -2725,6 +2739,24 @@ components:
                         to instances. It allows you to create a general-purpose base image and
                         then customize individual instances by attaching code or data as separate
                         ROM blobs.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: (Optional).  Tags to associate with the instance.
+                template:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    allOf:
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: (Optional).  The UUID of a template instance to create the instance from.
+                    format: uuid
+                sched_priority:
+                    example: 10
+                    type: integer
+                    description: |-
+                        (Optional).  The scheduling priority for the instance.  Higher values
+                        indicate higher priority.
+                    format: int32
             description: The request message for creating a new instance.
         CreateInstanceRequestDomain:
             required:

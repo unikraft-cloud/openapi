@@ -377,42 +377,11 @@ paths:
             summary: List template instances
             description: Get one or more template instances by their UUID(s) or name(s).
             operationId: GetTemplateInstances
-            parameters:
-                - name: details
-                  in: query
-                  description: |-
-                    Whether to include details about the templates in the response.  By default
-                    this is set to true, meaning that all information about the templates will
-                    be included in the response.  If set to false, only the basic information
-                    about the templates will be included, such as their name and UUID.
-                  schema:
-                    type: boolean
-                - name: from_uuid
-                  in: query
-                  description: |-
-                    If set, the listing starts from (but does not include) the template with
-                    the given UUID.  This is useful for pagination.
-                  schema:
-                    type: string
-                - name: count
-                  in: query
-                  description: |-
-                    The maximum number of template instances to return.  This is useful for
-                    pagination.  If not set, all the template instances matching filters will
-                    be returned.  When filtering by IDs, this should not be set.
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: tags
-                  in: query
-                  description: A list of tags to filter the template instances by.
-                  schema:
-                    type: array
-                    items:
-                        type: string
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetTemplateInstancesRequest'
                 required: true
             responses:
                 default:
@@ -4637,6 +4606,43 @@ components:
                     items:
                         $ref: '#/components/schemas/ServiceGroup'
                     description: The service group(s) which were retrieved by the request.
+        GetTemplateInstancesRequest:
+            type: object
+            properties:
+                ids:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        The list of IDs of the template instances to retrieve.  If not set,
+                        all template instances matching filters will be returned.
+                details:
+                    type: boolean
+                    description: |-
+                        Whether to include details about the templates in the response.  By default
+                        this is set to true, meaning that all information about the templates will
+                        be included in the response.  If set to false, only the basic information
+                        about the templates will be included, such as their name and UUID.
+                from_uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        If set, the listing starts from (but does not include) the template with
+                        the given UUID.  This is useful for pagination.
+                    format: uuid
+                count:
+                    type: integer
+                    description: |-
+                        The maximum number of template instances to return.  This is useful for
+                        pagination.  If not set, all the template instances matching filters will
+                        be returned.  When filtering by IDs, this should not be set.
+                    format: uint32
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: A list of tags to filter the template instances by.
+            description: The request message for getting one or more template instances.
         GetTemplateInstancesResponse:
             type: object
             properties:

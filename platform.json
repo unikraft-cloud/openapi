@@ -593,6 +593,12 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",

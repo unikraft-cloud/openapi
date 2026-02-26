@@ -387,13 +387,6 @@ paths:
                     about the templates will be included, such as their name and UUID.
                   schema:
                     type: boolean
-                - name: from_uuid
-                  in: query
-                  description: |-
-                    If set, the listing starts from (but does not include) the template with
-                    the given UUID.  This is useful for pagination.
-                  schema:
-                    type: string
                 - name: count
                   in: query
                   description: |-

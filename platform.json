@@ -565,14 +565,6 @@
             }
           },
           {
-            "name": "from_uuid",
-            "in": "query",
-            "description": "If set, the listing starts from (but does not include) the template with\nthe given UUID.  This is useful for pagination.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "count",
             "in": "query",
             "description": "The maximum number of template instances to return.  This is useful for\npagination.  If not set, all the template instances matching filters will\nbe returned.  When filtering by IDs, this should not be set.",

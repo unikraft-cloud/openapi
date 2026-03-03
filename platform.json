@@ -26,6 +26,10 @@
     {
       "url": "https://api.was.unikraft.cloud",
       "description": "Washington, DC, USA"
+    },
+    {
+      "url": "https://api.sfo.unikraft.cloud",
+      "description": "San Francisco, CA, USA"
     }
   ],
   "paths": {

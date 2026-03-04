@@ -2605,8 +2605,6 @@ components:
                         Note: only one certificate can be specified in the request, so this
                         will always contain a single entry.
         CreateInstanceRequest:
-            required:
-                - image
             type: object
             properties:
                 name:

@@ -3550,9 +3550,6 @@
         }
       },
       "CreateInstanceRequest": {
-        "required": [
-          "image"
-        ],
         "type": "object",
         "properties": {
           "name": {

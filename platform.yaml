@@ -2748,11 +2748,9 @@ components:
                         type: string
                     description: (Optional).  Tags to associate with the instance.
                 template:
-                    example: 123e4567-e89b-12d3-a456-426614174000
                     allOf:
                         - $ref: '#/components/schemas/NameOrUUID'
                     description: (Optional).  The UUID of a template instance to create the instance from.
-                    format: uuid
                 sched_priority:
                     example: 10
                     type: integer

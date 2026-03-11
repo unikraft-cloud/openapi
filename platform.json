@@ -5139,7 +5139,7 @@
           {
             "type": "object",
             "properties": {
-              "name": {
+              "fqdn": {
                 "example": "example.com.",
                 "type": "string",
                 "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\nbe a valid Full Qualified Domain Name (FQDN), otherwise it will become a\nsubdomain of the target metro."
@@ -5165,7 +5165,7 @@
             ]
           }
         ],
-        "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a name is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
+        "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a FQDN is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
       },
       "GetAutoscaleConfigurationPolicyRequest": {
         "required": [
@@ -7088,7 +7088,7 @@
           {
             "type": "object",
             "properties": {
-              "name": {
+              "fqdn": {
                 "example": "funky-town-g756b5d.fra0.unikraft.app.",
                 "type": "string",
                 "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
@@ -7114,7 +7114,7 @@
             ]
           }
         ],
-        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a name is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
+        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
       },
       "ServiceGroupTemplate": {
         "type": "object",
@@ -7674,7 +7674,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation:\n- For \"services\": array of Service objects\n- For \"domains\": array of Domain objects\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
           }
         }
       },
@@ -7730,7 +7730,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation:\n- For \"services\": array of Service objects\n- For \"domains\": array of Domain objects\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
           }
         },
         "description": "A single update operation to be applied to a service group"

@@ -3948,7 +3948,7 @@ components:
             allOf:
                 - type: object
                   properties:
-                    name:
+                    fqdn:
                         example: example.com.
                         type: string
                         description: |-
@@ -3971,7 +3971,7 @@ components:
                 Domain names are completely specified with all labels in the hierarchy of the
                 DNS, having no parts omitted.  The domain can be associated with an existing
                 certificate by specifying the certificate's name or UUID.  If no certificate
-                is specified and a name is provided, Unikraft Cloud will automatically
+                is specified and a FQDN is provided, Unikraft Cloud will automatically
                 generate a new certificate for the domain based on Let's Encrypt and seek to
                 accomplish a DNS-01 challenge.
         GetAutoscaleConfigurationPolicyRequest:
@@ -5809,7 +5809,7 @@ components:
             allOf:
                 - type: object
                   properties:
-                    name:
+                    fqdn:
                         example: funky-town-g756b5d.fra0.unikraft.app.
                         type: string
                         description: |-
@@ -5838,7 +5838,7 @@ components:
                 Domain names are completely specified with all labels in the hierarchy of
                 the DNS, having no parts omitted.  The domain can be associated with an
                 existing certificate by specifying the certificate's name or UUID.  If no
-                certificate is specified and a name is provided, Unikraft Cloud will
+                certificate is specified and a FQDN is provided, Unikraft Cloud will
                 automatically generate a new certificate for the domain based on Let's
                 Encrypt and seek to accomplish a DNS-01 challenge.
         ServiceGroupTemplate:
@@ -6321,8 +6321,8 @@ components:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
                     description: |-
                         The value for the update operation:
-                        - For "services": array of Service objects
-                        - For "domains": array of Domain objects
+                        - For "services": array of Service objects (same as for creation)
+                        - For "domains": array of Domain objects (same as for creation)
                         - For "soft_limit": integer (1–65535), must be <= "hard_limit"
                         - For "hard_limit": integer (1–65535), must be >= "soft_limit"
         UpdateServiceGroupsRequestItem:
@@ -6368,8 +6368,8 @@ components:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
                     description: |-
                         The value for the update operation:
-                        - For "services": array of Service objects
-                        - For "domains": array of Domain objects
+                        - For "services": array of Service objects (same as for creation)
+                        - For "domains": array of Domain objects (same as for creation)
                         - For "soft_limit": integer (1–65535), must be <= "hard_limit"
                         - For "hard_limit": integer (1–65535), must be >= "soft_limit"
             description: A single update operation to be applied to a service group

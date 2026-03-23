@@ -495,7 +495,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/NameOrUUID"
+                  "$ref": "#/components/schemas/StartInstancesRequestItem"
                 }
               }
             }
@@ -1082,6 +1082,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartInstanceByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
@@ -7131,6 +7141,53 @@
             "format": "uuid"
           }
         }
+      },
+      "StartInstanceByUUIDRequestBody": {
+        "type": "object",
+        "properties": {
+          "wait_timeout_ms": {
+            "example": 2000,
+            "type": "integer",
+            "description": "Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to\nwait for the instance to reach running state.  If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond.  No wait performed for a value of 0.",
+            "format": "int64"
+          },
+          "timeout_s": {
+            "example": 2,
+            "type": "integer",
+            "description": "Timeout in seconds to wait for the instance to reach running\nstate.  If you start your instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait\ntimeout greater than zero.  No wait performed for a value of 0.",
+            "format": "int64"
+          }
+        },
+        "description": "Parameters for starting the instance."
+      },
+      "StartInstancesRequestItem": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance to start.  Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance to start.  Mutually exclusive with UUID."
+          },
+          "wait_timeout_ms": {
+            "example": 2000,
+            "type": "integer",
+            "description": "Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to\nwait for the instance to reach running state.  If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond.  No wait performed for a value of 0.",
+            "format": "int64"
+          },
+          "timeout_s": {
+            "example": 2,
+            "type": "integer",
+            "description": "Timeout in seconds to wait for the instance to reach running\nstate.  If you start your instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait\ntimeout greater than zero.  No wait performed for a value of 0.",
+            "format": "int64"
+          }
+        },
+        "description": "A single request item to start an instance."
       },
       "StartInstancesResponse": {
         "type": "object",

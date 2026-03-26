@@ -2101,7 +2101,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AttachVolumesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AttachVolumesRequestItem"
+                }
               }
             }
           },
@@ -2168,7 +2171,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DetachVolumesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DetachVolumesRequestItem"
+                }
               }
             }
           },
@@ -2843,8 +2849,10 @@
           }
         ]
       },
-      "AttachVolumesRequest": {
+      "AttachVolumesRequestItem": {
         "required": [
+          "uuid",
+          "name",
           "attach_to",
           "at"
         ],
@@ -2864,7 +2872,7 @@
           "attach_to": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/AttachVolumesRequestInstanceID"
+                "$ref": "#/components/schemas/NameOrUUID"
               }
             ],
             "description": "UUID or name of the instance to attach the volume to."
@@ -2882,39 +2890,7 @@
             "description": "Whether the volume should be mounted read-only."
           }
         },
-        "description": "The request message for attaching one or more volume(s) to instances by\ntheir UUID(s) or name(s)."
-      },
-      "AttachVolumesRequestInstanceID": {
-        "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                "type": "string",
-                "description": "The UUID of the instance that the volume is attached to.",
-                "format": "uuid"
-              }
-            }
-          },
-          {
-            "oneOf": [
-              {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g7gum5cj",
-                    "type": "string",
-                    "description": "The name of the instance that the volume is attached to."
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "description": "Reference to the instance to attach the volume to."
+        "description": "A single request item for attaching a volume to an instance."
       },
       "AttachVolumesResponse": {
         "type": "object",
@@ -4674,6 +4650,21 @@
                 "type": "integer",
                 "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
                 "format": "uint64"
+              },
+              "state": {
+                "enum": [
+                  "uninitialized",
+                  "initializing",
+                  "available",
+                  "idle",
+                  "mounted",
+                  "busy",
+                  "error",
+                  "template"
+                ],
+                "type": "string",
+                "description": "Current state of the volume.",
+                "format": "enum"
               }
             }
           },
@@ -5546,62 +5537,57 @@
           }
         }
       },
-      "DetachVolumesRequest": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-            "type": "string",
-            "description": "The UUID of the volume to detach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g7gum5cj",
-            "type": "string",
-            "description": "The name of the volume to detach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
-          },
-          "from": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetachVolumesRequestInstanceID"
-              }
-            ],
-            "description": "UUID or name of the instance to detach the volume from."
-          }
-        },
-        "description": "The request message for detaching one or more volume(s) from instances by\ntheir UUID(s) or name(s)."
-      },
-      "DetachVolumesRequestInstanceID": {
+      "DetachVolumesRequestItem": {
         "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "uuid": {
-                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                "type": "string",
-                "description": "The UUID of the instance that the volume is detached from.",
-                "format": "uuid"
+              "from": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NameOrUUID"
+                  }
+                ],
+                "description": "UUID or name of the instance to detach the volume from."
               }
             }
           },
           {
             "oneOf": [
               {
+                "title": "uuid",
+                "required": [
+                  "uuid"
+                ],
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+                    "type": "string",
+                    "description": "The UUID of the volume to detach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
                 "title": "name",
+                "required": [
+                  "name"
+                ],
                 "type": "object",
                 "properties": {
                   "name": {
                     "example": "funky-town-g7gum5cj",
                     "type": "string",
-                    "description": "The name of the instance that the volume is detached from."
+                    "description": "The name of the volume to detach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
                   }
                 }
               }
             ]
           }
         ],
-        "description": "Reference to the instance to detach the volume from."
+        "description": "A single request of detaching a volume."
       },
       "DetachVolumesResponse": {
         "type": "object",
@@ -9051,7 +9037,8 @@
             ],
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": 1 - static reservation, 2 - dynamic reservation\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
           }
-        }
+        },
+        "description": "A single request item for updating a volume."
       },
       "UpdateVolumesResponse": {
         "type": "object",

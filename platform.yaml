@@ -1489,7 +1489,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/AttachVolumesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/AttachVolumesRequestItem'
                 required: true
             responses:
                 default:
@@ -1542,7 +1544,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/DetachVolumesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/DetachVolumesRequestItem'
                 required: true
             responses:
                 default:
@@ -2031,8 +2035,10 @@ components:
                             example: false
                             type: boolean
                             description: Whether the volume should be mounted read-only.
-        AttachVolumesRequest:
+        AttachVolumesRequestItem:
             required:
+                - uuid
+                - name
                 - attach_to
                 - at
             type: object
@@ -2052,7 +2058,7 @@ components:
                         Exactly one of uuid or name must be provided.
                 attach_to:
                     allOf:
-                        - $ref: '#/components/schemas/AttachVolumesRequestInstanceID'
+                        - $ref: '#/components/schemas/NameOrUUID'
                     description: UUID or name of the instance to attach the volume to.
                 at:
                     example: /mnt/my-volume
@@ -2069,28 +2075,7 @@ components:
                     example: false
                     type: boolean
                     description: Whether the volume should be mounted read-only.
-            description: |-
-                The request message for attaching one or more volume(s) to instances by
-                their UUID(s) or name(s).
-        AttachVolumesRequestInstanceID:
-            type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                        type: string
-                        description: The UUID of the instance that the volume is attached to.
-                        format: uuid
-                - oneOf:
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g7gum5cj
-                            type: string
-                            description: The name of the instance that the volume is attached to.
-            description: Reference to the instance to attach the volume to.
+            description: A single request item for attaching a volume to an instance.
         AttachVolumesResponse:
             type: object
             allOf:
@@ -3608,6 +3593,19 @@ components:
                             The operation time in microseconds.  This is the time it took to process
                             the request and generate the response.
                         format: uint64
+                    state:
+                        enum:
+                            - "uninitialized"
+                            - "initializing"
+                            - "available"
+                            - "idle"
+                            - "mounted"
+                            - "busy"
+                            - "error"
+                            - "template"
+                        type: string
+                        description: Current state of the volume.
+                        format: enum
                 - oneOf:
                     - title: message
                       type: object
@@ -4268,48 +4266,40 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/BodyInstanceID'
                     description: UUID or name of the instance to detach the volume from.
-        DetachVolumesRequest:
-            type: object
-            properties:
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: |-
-                        The UUID of the volume to detach. Mutually exclusive with name.
-                        Exactly one of uuid or name must be provided.
-                    format: uuid
-                name:
-                    example: funky-town-g7gum5cj
-                    type: string
-                    description: |-
-                        The name of the volume to detach. Mutually exclusive with UUID.
-                        Exactly one of uuid or name must be provided.
-                from:
-                    allOf:
-                        - $ref: '#/components/schemas/DetachVolumesRequestInstanceID'
-                    description: UUID or name of the instance to detach the volume from.
-            description: |-
-                The request message for detaching one or more volume(s) from instances by
-                their UUID(s) or name(s).
-        DetachVolumesRequestInstanceID:
+        DetachVolumesRequestItem:
             type: object
             allOf:
                 - type: object
                   properties:
-                    uuid:
-                        example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                        type: string
-                        description: The UUID of the instance that the volume is detached from.
-                        format: uuid
+                    from:
+                        allOf:
+                            - $ref: '#/components/schemas/NameOrUUID'
+                        description: UUID or name of the instance to detach the volume from.
                 - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                            type: string
+                            description: |-
+                                The UUID of the volume to detach. Mutually exclusive with name.
+                                Exactly one of uuid or name must be provided.
+                            format: uuid
                     - title: name
+                      required:
+                        - name
                       type: object
                       properties:
                         name:
                             example: funky-town-g7gum5cj
                             type: string
-                            description: The name of the instance that the volume is detached from.
-            description: Reference to the instance to detach the volume from.
+                            description: |-
+                                The name of the volume to detach. Mutually exclusive with UUID.
+                                Exactly one of uuid or name must be provided.
+            description: A single request of detaching a volume.
         DetachVolumesResponse:
             type: object
             allOf:
@@ -7460,6 +7450,7 @@ components:
                         - For "quota_policy": 1 - static reservation, 2 - dynamic reservation
                         - For "tags": array of Strings
                         - For "delete_lock": boolean
+            description: A single request item for updating a volume.
         UpdateVolumesResponse:
             type: object
             properties:

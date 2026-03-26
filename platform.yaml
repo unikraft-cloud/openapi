@@ -1503,12 +1503,19 @@ paths:
             tags:
                 - Volumes
             summary: Clone Volumes
+            description: |-
+                Clone one or more volumes given by their ID(s) (name or UUID).  The
+                volumes to be cloned must not be mounted to any instance or only mounted
+                as read-only.  They also need to not be busy or in an error state.  This
+                operation is most useful when cloning template volumes.
             operationId: CloneVolumes
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CloneVolumesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/CloneVolumesRequestItem'
                 required: true
             responses:
                 default:
@@ -1516,7 +1523,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CloneVolumeResponse'
+                                $ref: '#/components/schemas/CloneVolumesResponse'
     /v1/volumes/detach:
         put:
             tags:
@@ -1544,6 +1551,222 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DetachVolumesResponse'
+    /v1/volumes/templates:
+        get:
+            tags:
+                - Volumes
+            summary: List template volumes
+            description: |-
+                Return the current status and the configuration of one or more template
+                volumes specified by either UUID(s) or name(s).  If no identifier is
+                provided, all template volumes are returned.
+            operationId: GetTemplateVolumes
+            parameters:
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the template volumes in the response.  By
+                    default this is set to true, meaning that all information about the
+                    templates will be included in the response.  If set to false, only the
+                    basic information about the templates will be included, such as their name
+                    and UUID.
+                  schema:
+                    type: boolean
+                - name: count
+                  in: query
+                  description: |-
+                    The maximum number of template volumes to return.  If set to 0 or not set,
+                    all volumes matching filters will be returned.  When filtering by IDs, this
+                    should not be set.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: uuid
+                  in: query
+                  description: |-
+                    If set, the listing starts from (but does not include) the template volume
+                    with the given UUID.  When count is 0 or not set, this parameter may be
+                    used to match by UUID.
+                  schema:
+                    type: string
+                - name: tags
+                  in: query
+                  description: A list of tags to filter the template volumes by.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/NameOrUUID'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTemplateVolumesResponse'
+        post:
+            tags:
+                - Volumes
+            summary: Create template volume
+            description: |-
+                Converts one or more existing volumes given by their ID(s) (name or UUID)
+                into template volumes.  This operation is irreversible in the sense that a
+                template volume cannot be converted back into a regular volume.
+
+                The existing volume(s) must not be attached to any instance and must be in
+                the `available` state.
+            operationId: CreateTemplateVolume
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateTemplateVolumesRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateTemplateVolumesResponse'
+        delete:
+            tags:
+                - Volumes
+            summary: Delete template volumes
+            description: |-
+                Delete one or more template volumes by their UUID(s) or name(s).  After this
+                call, the IDs associated with the template volumes are no longer valid.
+            operationId: DeleteTemplateVolumes
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/NameOrUUID'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteTemplateVolumesResponse'
+        patch:
+            tags:
+                - Volumes
+            summary: Update template volumes
+            description: Update one or more template volumes specified by either UUID(s) or name(s).
+            operationId: UpdateTemplateVolumes
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/UpdateTemplateVolumesRequestItem'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateTemplateVolumesResponse'
+    /v1/volumes/templates/{uuid}:
+        get:
+            tags:
+                - Volumes
+            summary: Get template volume by UUID
+            description: |-
+                Return the current status and the configuration of a particular template
+                volume by its UUID.
+            operationId: GetTemplateVolumeByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the template volume to retrieve.
+                  required: true
+                  schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    format: uuid
+                - name: details
+                  in: query
+                  description: |-
+                    Whether to include details about the template volume in the response.  By
+                    default this is set to true, meaning that all information about the
+                    template will be included in the response.  If set to false, only the
+                    basic information about the template will be included, such as its name
+                    and UUID.
+                  schema:
+                    type: boolean
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTemplateVolumesResponse'
+        delete:
+            tags:
+                - Volumes
+            summary: Delete template volume by UUID
+            description: |-
+                Delete the specified template volume by its UUID.  After this call, the IDs
+                associated with the template volume are no longer valid.
+            operationId: DeleteTemplateVolumeByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the template volume to delete.
+                  required: true
+                  schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    format: uuid
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteTemplateVolumesResponse'
+        patch:
+            tags:
+                - Volumes
+            summary: Update template volume by UUID
+            description: Update the specified template volume by its UUID.
+            operationId: UpdateTemplateVolumeByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the template volume to update.
+                  required: true
+                  schema:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateTemplateVolumeByUUIDRequestBody'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateTemplateVolumesResponse'
     /v1/volumes/{uuid}:
         get:
             tags:
@@ -1613,7 +1836,7 @@ paths:
             parameters:
                 - name: uuid
                   in: path
-                  description: The UUID of the service group to update.
+                  description: The UUID of the volume to update.
                   required: true
                   schema:
                     example: 123e4567-e89b-12d3-a456-426614174000
@@ -1669,6 +1892,11 @@ paths:
             tags:
                 - Volumes
             summary: Clone Volume by UUID
+            description: |-
+                Clone a volume given by its UUID.  The volume to be cloned must not be
+                mounted to any instance or only mounted as read-only.  It also needs to not
+                be busy or in an error state.  This operation is most useful when cloning
+                template volumes.
             operationId: CloneVolumeByUUID
             parameters:
                 - name: uuid
@@ -1691,14 +1919,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CloneVolumeResponse'
+                                $ref: '#/components/schemas/CloneVolumesResponse'
     /v1/volumes/{uuid}/detach:
         put:
             tags:
                 - Volumes
             summary: Detach Volume by UUID
             description: |-
-                Detaches a volume by UUID from instances.  If no particular instance is
+                Detach a volume by UUID from instances.  If no particular instance is
                 specified the volume is detached from all instances.  The instances from
                 which to detach must not have the volume mounted.  The API returns an error
                 for each instance from which it was unable to detach the volume.  If the
@@ -2132,17 +2360,63 @@ components:
             type: object
             properties:
                 vol_name:
-                    example: funky-vol-g7gum5cj
+                    example: funky-vol-t7qumh5j
                     type: string
-                    description: The name of the new cloned volume.
+                    description: |-
+                        The name of the new cloned volume.  If not provided, a random name
+                        of the form `vol-X` is generated for you, where `X` is a 5 character
+                        long random alphanumeric suffix.
+                quota_policy:
+                    example: static
+                    enum:
+                        - "static"
+                        - "dynamic"
+                    type: string
+                    description: |-
+                        The quota policy for the new cloned volume.  If not provided, the quota
+                        policy of the source volume is used.
+                    format: enum
                 tags:
                     type: array
                     items:
                         type: string
+                    description: A list of tags to assign to the new cloned volume.
+        CloneVolumesRequestItem:
+            type: object
+            properties:
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the volume to clone.  Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-vol-g7gum5cj
+                    type: string
+                    description: The name of the volume to clone.  Mutually exclusive with UUID.
+                vol_name:
+                    example: funky-vol-t7qumh5j
+                    type: string
                     description: |-
-                        The tags associated with the volume.
-                        Maximum 16 tags are allowed, and each tag may not be longer than 256 characters.
-        CloneVolumeResponse:
+                        The name of the new cloned volume.  If not provided, a random name
+                        of the form `vol-X` is generated for you, where `X` is a 5 character
+                        long random alphanumeric suffix.
+                quota_policy:
+                    example: static
+                    enum:
+                        - "static"
+                        - "dynamic"
+                    type: string
+                    description: |-
+                        The quota policy for the new cloned volume.  If not provided, the quota
+                        policy of the source volume is used.
+                    format: enum
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: A list of tags to assign to the new cloned volume.
+            description: A single request item describing the volume to clone.
+        CloneVolumesResponse:
             type: object
             allOf:
                 - type: object
@@ -2152,7 +2426,9 @@ components:
                             - $ref: '#/components/schemas/ResponseStatus'
                         description: The status of the response.
                     data:
-                        $ref: '#/components/schemas/CloneVolumeResponseData'
+                        allOf:
+                            - $ref: '#/components/schemas/CloneVolumesResponseData'
+                        description: The response data for this request.
                     errors:
                         type: array
                         items:
@@ -2175,22 +2451,31 @@ components:
                             description: |-
                                 An optional message providing additional information about the status.
                                 This field is useful when the status is not `success`.
-            description: The response message for cloning a volume.
-        CloneVolumeResponseData:
+            description: The response message for cloning one or more volume(s).
+        CloneVolumesResponseData:
             type: object
             properties:
                 volumes:
                     type: array
                     items:
-                        $ref: '#/components/schemas/CloneVolumeResponseVolume'
-                    description: The volume(s) which were created by the request.
-        CloneVolumeResponseVolume:
+                        $ref: '#/components/schemas/CloneVolumesResponseVolume'
+                    description: The volume(s) which were cloned by the request.
+        CloneVolumesResponseVolume:
             type: object
             properties:
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the newly cloned volume.
+                    format: uuid
+                name:
+                    example: funky-vol-g7gum5cj
+                    type: string
+                    description: The name of the newly cloned volume.
                 state:
                     enum:
                         - "uninitialized"
@@ -2200,18 +2485,10 @@ components:
                         - "mounted"
                         - "busy"
                         - "error"
+                        - "template"
                     type: string
-                    description: Current state of the volume.
+                    description: The state of the volume.
                     format: enum
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: UUID of the newly created volume.
-                    format: uuid
-                name:
-                    example: funky-vol-g7gum5cj
-                    type: string
-                    description: The name of the newly created volume.
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -2225,33 +2502,6 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        CloneVolumesRequest:
-            type: object
-            properties:
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: |-
-                        The UUID of the volume to clone. Mutually exclusive with name.
-                        Exactly one of uuid or name must be provided.
-                    format: uuid
-                name:
-                    example: funky-town-g7gum5cj
-                    type: string
-                    description: |-
-                        The name of the volume to clone. Mutually exclusive with UUID.
-                        Exactly one of uuid or name must be provided.
-                vol_name:
-                    example: funky-vol-g7gum5cj
-                    type: string
-                    description: The name of the new cloned volume.
-                tags:
-                    type: array
-                    items:
-                        type: string
-                    description: |-
-                        The tags associated with the volume.
-                        Maximum 16 tags are allowed, and each tag may not be longer than 256 characters.
         ConfigurationInstanceCreateArgs:
             type: object
             allOf:
@@ -3207,6 +3457,106 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+        CreateTemplateVolumesRequest:
+            required:
+                - ids
+            type: object
+            properties:
+                ids:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        The list of IDs of the volumes that will be converted into templates.
+                        Each ID can be either a UUID or a name.
+            description: The request message for creating one or more template volumes.
+        CreateTemplateVolumesResponse:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    status:
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
+                        description: The status of the response.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/CreateTemplateVolumesResponseData'
+                        description: The response data for this request
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
+                    op_time_us:
+                        example: 46
+                        type: integer
+                        description: |-
+                            The operation time in microseconds.  This is the time it took to process
+                            the request and generate the response.
+                        format: uint64
+                - oneOf:
+                    - title: message
+                      type: object
+                      properties:
+                        message:
+                            example: Failed to perform all operations
+                            type: string
+                            description: |-
+                                An optional message providing additional information about the status.
+                                This field is useful when the status is not `success`.
+            description: The response message for creating one or more template volumes.
+        CreateTemplateVolumesResponseData:
+            type: object
+            properties:
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateTemplateVolumesResponseTemplateVolume'
+                    description: The template volume(s) which were created by the request.
+        CreateTemplateVolumesResponseTemplateVolume:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the volume converted into a template.
+                    format: uuid
+                name:
+                    example: funky-vol-g7gum5cj
+                    type: string
+                    description: The name of the volume converted into a template.
+                state:
+                    example: available
+                    enum:
+                        - "uninitialized"
+                        - "initializing"
+                        - "available"
+                        - "idle"
+                        - "mounted"
+                        - "busy"
+                        - "error"
+                        - "template"
+                    type: string
+                    description: The state of the volume.
+                    format: enum
+                message:
+                    example: No volume with name 'funky-town-g756b5d'
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                error:
+                    example: 8
+                    type: integer
+                    description: |-
+                        An optional error code providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                    format: int32
         CreateVolumeRequest:
             required:
                 - size_mb
@@ -3284,18 +3634,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
-                state:
-                    enum:
-                        - "uninitialized"
-                        - "initializing"
-                        - "available"
-                        - "idle"
-                        - "mounted"
-                        - "busy"
-                        - "error"
-                    type: string
-                    description: Current state of the volume.
-                    format: enum
                 uuid:
                     example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                     type: string
@@ -3305,6 +3643,19 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the newly created volume.
+                state:
+                    enum:
+                        - "uninitialized"
+                        - "initializing"
+                        - "available"
+                        - "idle"
+                        - "mounted"
+                        - "busy"
+                        - "error"
+                        - "template"
+                    type: string
+                    description: The state of the volume.
+                    format: enum
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -3754,6 +4105,79 @@ components:
                     description: The status of this particular template instance deletion operation.
                 message:
                     example: No template instance with name 'funky-town-g756b5d'
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                error:
+                    example: 8
+                    type: integer
+                    description: |-
+                        An optional error code providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                    format: int32
+        DeleteTemplateVolumesResponse:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    status:
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
+                        description: The status of the response.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/DeleteTemplateVolumesResponseData'
+                        description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
+                    op_time_us:
+                        example: 46
+                        type: integer
+                        description: |-
+                            The operation time in microseconds.  This is the time it took to process
+                            the request and generate the response.
+                        format: uint64
+                - oneOf:
+                    - title: message
+                      type: object
+                      properties:
+                        message:
+                            example: Failed to perform all operations
+                            type: string
+                            description: |-
+                                An optional message providing additional information about the status.
+                                This field is useful when the status is not `success`.
+            description: The response message for deleting one or more template volumes.
+        DeleteTemplateVolumesResponseData:
+            type: object
+            properties:
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DeleteTemplateVolumesResponseTemplateVolume'
+                    description: The template volume(s) which were deleted by the request.
+        DeleteTemplateVolumesResponseTemplateVolume:
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the template volume that was deleted.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the template volume that was deleted.
+                status:
+                    example: success
+                    type: string
+                    description: The status of this particular template volume deletion operation.
+                message:
+                    example: No volume with name 'funky-town-g756b5d'
                     type: string
                     description: |-
                         An optional message providing additional information about the status.
@@ -4685,6 +5109,50 @@ components:
                     items:
                         $ref: '#/components/schemas/Instance'
                     description: List of template instances that were retrieved during the operation.
+        GetTemplateVolumesResponse:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    status:
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
+                        description: The status of the response.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/GetTemplateVolumesResponseData'
+                        description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
+                    op_time_us:
+                        example: 46
+                        type: integer
+                        description: |-
+                            The operation time in microseconds.  This is the time it took to process
+                            the request and generate the response.
+                        format: uint64
+                - oneOf:
+                    - title: message
+                      type: object
+                      properties:
+                        message:
+                            example: Partial success
+                            type: string
+                            description: |-
+                                An optional message providing additional information about the status.
+                                This field is useful when the status is not `success`.
+            description: The response message for getting one or more template volumes.
+        GetTemplateVolumesResponseData:
+            type: object
+            properties:
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Volume'
+                    description: The template volume(s) which were retrieved by the request.
         GetVolumesResponse:
             type: object
             allOf:
@@ -6744,6 +7212,169 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+        UpdateTemplateVolumeByUUIDRequestBody:
+            required:
+                - prop
+                - op
+            type: object
+            properties:
+                id:
+                    example: op-1
+                    type: string
+                    description: |-
+                        (Optional).  A client-provided identifier for tracking this operation in
+                        the response.
+                prop:
+                    example: tags
+                    enum:
+                        - "tags"
+                        - "delete_lock"
+                    type: string
+                    description: The property to modify.
+                    format: enum
+                op:
+                    example: set
+                    enum:
+                        - "set"
+                        - "add"
+                        - "del"
+                    type: string
+                    description: The operation to perform.
+                    format: enum
+                value:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        The value for the update operation. The type depends on the property and operation:
+                        - For "tags": array of Strings
+                        - For "delete_lock": boolean
+        UpdateTemplateVolumesRequestItem:
+            required:
+                - prop
+                - op
+            type: object
+            properties:
+                id:
+                    example: op-1
+                    type: string
+                    description: |-
+                        (Optional).  A client-provided identifier for tracking this operation in
+                        the response.
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        The UUID of the template volume to update.  Mutually exclusive with
+                        name.
+                    format: uuid
+                name:
+                    example: funky-vol-g7gum5cj
+                    type: string
+                    description: |-
+                        The name of the template volume to update.  Mutually exclusive with
+                        UUID.
+                prop:
+                    example: tags
+                    enum:
+                        - "tags"
+                        - "delete_lock"
+                    type: string
+                    description: The property to modify.
+                    format: enum
+                op:
+                    example: add
+                    enum:
+                        - "set"
+                        - "add"
+                        - "del"
+                    type: string
+                    description: The operation to perform.
+                    format: enum
+                value:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        The value for the update operation. The type depends on the property and operation:
+                        - For "tags": array of Strings
+                        - For "delete_lock": boolean
+            description: A single update operation to be applied to a template volume.
+        UpdateTemplateVolumesResponse:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    status:
+                        allOf:
+                            - $ref: '#/components/schemas/ResponseStatus'
+                        description: The status of the response.
+                    data:
+                        allOf:
+                            - $ref: '#/components/schemas/UpdateTemplateVolumesResponseData'
+                        description: The response data for this request.
+                    errors:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ResponseError'
+                        description: A list of errors which may have occurred during the request.
+                    op_time_us:
+                        example: 46
+                        type: integer
+                        description: |-
+                            The operation time in microseconds.  This is the time it took to process
+                            the request and generate the response.
+                        format: uint64
+                - oneOf:
+                    - title: message
+                      type: object
+                      properties:
+                        message:
+                            example: Failed to perform all operations
+                            type: string
+                            description: |-
+                                An optional message providing additional information about the status.
+                                This field is useful when the status is not `success`.
+            description: The response message for updating one or more template volumes.
+        UpdateTemplateVolumesResponseData:
+            type: object
+            properties:
+                volumes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UpdateTemplateVolumesResponseTemplateVolume'
+                    description: The template volume(s) which were updated by the request.
+        UpdateTemplateVolumesResponseTemplateVolume:
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the template volume that was updated.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the template volume that was updated.
+                status:
+                    example: success
+                    type: string
+                    description: The status of this particular volume update operation.
+                id:
+                    example: op-1
+                    type: string
+                    description: (Optional).  The client-provided ID from the request.
+                message:
+                    example: No volume with name 'funky-town-g756b5d'
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                error:
+                    example: 8
+                    type: integer
+                    description: |-
+                        An optional error code providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                    format: int32
         UpdateVolumeByUUIDRequestBody:
             required:
                 - prop
@@ -6878,7 +7509,7 @@ components:
                 name:
                     example: funky-town-g756b5d
                     type: string
-                    description: The name of the service group that was updated.
+                    description: The name of the volume that was updated.
                 status:
                     example: success
                     type: string
@@ -6937,6 +7568,7 @@ components:
                         - "mounted"
                         - "busy"
                         - "error"
+                        - "template"
                     type: string
                     description: Current state of the volume.
                     format: enum
@@ -6959,8 +7591,10 @@ components:
                 mounted_by:
                     type: array
                     items:
-                        $ref: '#/components/schemas/VolumeVolumeInstanceMount'
-                    description: List of instances that have this volume mounted.
+                        $ref: '#/components/schemas/VolumeInstanceMount'
+                    description: |-
+                        List of instances that have this volume mounted.
+                        This does not apply to template volumes.
                 tags:
                     type: array
                     items:
@@ -6989,6 +7623,19 @@ components:
                         This field is only set when this message object is used as a response
                         message, and is useful when the status is not `success`.
                     format: int32
+                quota_policy:
+                    example: static
+                    type: string
+                    description: Either static or dynamic reservation.
+                delete_lock:
+                    example: false
+                    type: boolean
+                    description: If set to true, the volume cannot be deleted.
+                free_mb:
+                    example: 32
+                    type: integer
+                    description: The amount of free space in the volume in megabytes.
+                    format: uint32
             description: A volume represents a storage device that can be attached to an instance.
         VolumeInstanceID:
             type: object
@@ -7009,28 +7656,22 @@ components:
                             type: string
                             description: The name of the instance that the volume is attached to.
             description: Reference to the instance to attach the volume to.
-        VolumeVolumeInstanceMount:
+        VolumeInstanceMount:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: funky-town-g7gum5cj
-                        type: string
-                        description: The UUID of the instance that the volume is mounted in.
-                        format: uuid
-                    read_only:
-                        example: true
-                        type: boolean
-                        description: Whether the volume is mounted read-only or read-write.
-                - oneOf:
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g7gum5cj
-                            type: string
-                            description: The name of the instance that the volume is mounted in.
+            properties:
+                uuid:
+                    example: funky-town-g7gum5cj
+                    type: string
+                    description: The UUID of the instance that the volume is mounted in.
+                    format: uuid
+                name:
+                    example: funky-town-g7gum5cj
+                    type: string
+                    description: The name of the instance that the volume is mounted in.
+                readonly:
+                    example: true
+                    type: boolean
+                    description: Whether the volume is mounted read-only or read-write.
         WaitInstanceByUUIDRequestBody:
             type: object
             allOf:

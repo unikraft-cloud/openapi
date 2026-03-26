@@ -7337,6 +7337,16 @@
             "type": "integer",
             "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
             "format": "uint64"
+          },
+          "quick": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether to perform a quick shutdown.  This flag is\noverridden by force."
+          },
+          "ifstate": {
+            "example": "running",
+            "type": "string",
+            "description": "Only stop the instance if it is in this state."
           }
         },
         "description": "A single request item to stop an instance."

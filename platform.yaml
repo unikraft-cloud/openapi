@@ -2762,6 +2762,15 @@ components:
                         (Optional).  The scheduling priority for the instance.  Higher values
                         indicate higher priority.
                     format: int32
+                schedules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Schedule'
+                    description: |-
+                        (Optional).  Schedules for the instance.  Scheduled operations let you
+                        automatically start, stop, or delete the instance on a calendar-based
+                        schedule.  Each instance stores its own schedules, and cloning preserves
+                        them.
             description: The request message for creating a new instance.
         CreateInstanceRequestDomain:
             required:
@@ -5186,6 +5195,15 @@ components:
                         to instances. It allows you to create a general-purpose base image and
                         then customize individual instances by attaching code or data as separate
                         ROM blobs.
+                schedules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Schedule'
+                    description: |-
+                        Scheduled operations for this instance.
+
+                        Each schedule defines a calendar expression and an action (`start`,
+                        `stop`, or `delete`) to perform at matching times.
             description: An instance is a unikernel virtual machine running an application.
         InstanceCreateArgsInstanceCreateRequestRoms:
             required:
@@ -5616,6 +5634,60 @@ components:
             type: string
             description: The response status of an API request.
             format: enum
+        Schedule:
+            required:
+                - name
+                - when
+                - action
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The name of the schedule.
+
+                        Must be unique within an instance.
+                when:
+                    type: string
+                    description: |-
+                        The calendar expression specifying when the action should be performed.
+
+                        Uses systemd calendar event syntax.
+                        See https://www.man7.org/linux/man-pages/man7/systemd.time.7.html
+                action:
+                    enum:
+                        - "start"
+                        - "stop"
+                        - "delete"
+                    type: string
+                    description: The action to perform at the scheduled time.
+                    format: enum
+                next_at:
+                    readOnly: true
+                    type: integer
+                    description: |-
+                        The timestamp of when the next scheduled action will occur.
+
+                        This field is populated only in responses (not settable in requests).
+                        Unix timestamp in seconds.  Omitted if no next execution is scheduled.
+                    format: int64
+            description: |-
+                A schedule defines when an action should be performed on an instance.
+
+                Each schedule specifies a name, a calendar expression following systemd
+                calendar event syntax, and an action (start, stop, or delete).
+
+                Calendar expressions format: [weekday] [[year-]month-day] [hour:minute[:second]]
+
+                Supported syntax:
+                - `*` - Any value
+                - `5` - Exact value
+                - `1..5` - Range
+                - `1..5/2` - Range with step
+                - `1,2,5` - Comma-separated list
+
+                Example: `*-*-* 09:00:00` - Every day at 09:00 UTC
+                Example: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC
         Service:
             required:
                 - port
@@ -6202,6 +6274,7 @@ components:
                         - "scale_to_zero"
                         - "tags"
                         - "delete_lock"
+                        - "schedules"
                     type: string
                     description: The property to modify.
                     format: enum
@@ -6227,6 +6300,7 @@ components:
                         - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                         - For "tags": array of strings
                         - For "delete_lock": boolean
+                        - For "schedules": array of schedule objects (with name, when, and action fields)
         UpdateInstancesRequestItem:
             required:
                 - prop
@@ -6259,6 +6333,7 @@ components:
                         - "scale_to_zero"
                         - "tags"
                         - "delete_lock"
+                        - "schedules"
                     type: string
                     description: The property to modify.
                     format: enum
@@ -6284,6 +6359,7 @@ components:
                         - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                         - For "tags": array of strings
                         - For "delete_lock": boolean
+                        - For "schedules": array of schedule objects (with name, when, and action fields)
             description: A single update operation to be applied to an instance.
         UpdateInstancesResponse:
             type: object

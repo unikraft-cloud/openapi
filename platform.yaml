@@ -39,6 +39,49 @@ paths:
                     and UUID.
                   schema:
                     type: boolean
+                - name: count
+                  in: query
+                  description: |-
+                    The maximum number of certificates to return.  If set to 0 or not set, all
+                    certificates matching filters will be returned.  When filtering by IDs,
+                    this should not be set.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: from
+                  in: query
+                  description: |-
+                    If set, the listing starts from the certificate with the given UUID or at
+                    the given ISO8601 creation timestamp (inclusive).  When count is 0 or not
+                    set, a UUID value may be used to match a specific certificate by UUID.
+                  schema:
+                    type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned certificates.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the certificates by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:
@@ -199,6 +242,56 @@ paths:
                     about the instance will be included, such as its name and UUID.
                   schema:
                     type: boolean
+                - name: count
+                  in: query
+                  description: |-
+                    The maximum number of instances to return.  If set to 0 or not set, all
+                    instances matching filters will be returned.  When filtering by IDs, this
+                    should not be set.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: from
+                  in: query
+                  description: |-
+                    If set, the listing starts from the instance with the given UUID or at
+                    the given ISO8601 creation timestamp (inclusive).  When count is 0 or not
+                    set, a UUID value may be used to match a specific instance by UUID.
+                  schema:
+                    type: string
+                - name: tags
+                  in: query
+                  description: A list of tags to filter the instances by.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned instances.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the instances by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:
@@ -392,9 +485,9 @@ paths:
                 - name: count
                   in: query
                   description: |-
-                    The maximum number of template instances to return.  This is useful for
-                    pagination.  If not set, all the template instances matching filters will
-                    be returned.  When filtering by IDs, this should not be set.
+                    The maximum number of template instances to return.  If set to 0 or not
+                    set, all the template instances matching filters will be returned.  When
+                    filtering by IDs, this should not be set.
                   schema:
                     type: integer
                     format: uint32
@@ -405,6 +498,40 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: from
+                  in: query
+                  description: |-
+                    If set, the listing starts from the template with the given UUID or at the
+                    given ISO8601 creation timestamp (inclusive).  When count is 0 or not set,
+                    a UUID value may be used to match a specific template by UUID.
+                  schema:
+                    type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned template instances.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the template instances by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:
@@ -856,6 +983,50 @@ paths:
                     UUID.
                   schema:
                     type: boolean
+                - name: count
+                  in: query
+                  description: |-
+                    The maximum number of service groups to return.  If set to 0 or not set,
+                    all service groups matching filters will be returned.  When filtering by
+                    IDs, this should not be set.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: from
+                  in: query
+                  description: |-
+                    If set, the listing starts from the service group with the given UUID or
+                    at the given ISO8601 creation timestamp (inclusive).  When count is 0 or
+                    not set, a UUID value may be used to match a specific service group by
+                    UUID.
+                  schema:
+                    type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned service groups.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the service groups by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:
@@ -1391,6 +1562,56 @@ paths:
                     and UUID.
                   schema:
                     type: boolean
+                - name: count
+                  in: query
+                  description: |-
+                    The maximum number of volumes to return.  If set to 0 or not set, all
+                    volumes matching filters will be returned.  When filtering by IDs, this
+                    should not be set.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: from
+                  in: query
+                  description: |-
+                    If set, the listing starts from the volume with the given UUID or at the
+                    given ISO8601 creation timestamp (inclusive).  When count is 0 or not set,
+                    a UUID value may be used to match a specific volume by UUID.
+                  schema:
+                    type: string
+                - name: tags
+                  in: query
+                  description: A list of tags to filter the volumes by.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned volumes.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the volumes by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:
@@ -1585,12 +1806,12 @@ paths:
                   schema:
                     type: integer
                     format: uint32
-                - name: uuid
+                - name: from
                   in: query
                   description: |-
-                    If set, the listing starts from (but does not include) the template volume
-                    with the given UUID.  When count is 0 or not set, this parameter may be
-                    used to match by UUID.
+                    If set, the listing starts from the template with the given UUID or at the
+                    given ISO8601 creation timestamp (inclusive).  When count is 0 or not set,
+                    a UUID value may be used to match a specific template by UUID.
                   schema:
                     type: string
                 - name: tags
@@ -1600,6 +1821,32 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: order
+                  in: query
+                  description: |-
+                    The sort order for the returned template volumes.
+
+                    Valid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and
+                    `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
+                    `PAGINATION_ORDER_ASC`.
+                  schema:
+                    enum:
+                        - "asc"
+                        - "desc"
+                    type: string
+                    format: enum
+                - name: sortby
+                  in: query
+                  description: |-
+                    The field to sort the template volumes by.
+
+                    Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
+                    `PAGINATION_SORT_BY_CREATE_TIME`.
+                  schema:
+                    enum:
+                        - "create_time"
+                    type: string
+                    format: enum
             requestBody:
                 content:
                     application/json:

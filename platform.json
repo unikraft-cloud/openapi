@@ -49,6 +49,48 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of certificates to return.  If set to 0 or not set, all\ncertificates matching filters will be returned.  When filtering by IDs,\nthis should not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the certificate with the given UUID or at\nthe given ISO8601 creation timestamp (inclusive).  When count is 0 or not\nset, a UUID value may be used to match a specific certificate by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned certificates.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the certificates by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
           }
         ],
         "requestBody": {
@@ -285,6 +327,59 @@
             "description": "Whether to include details about the instance in the response.  By default\nthis is set to true, meaning that all information about the instance will\nbe included in the response.  If set to false, only the basic information\nabout the instance will be included, such as its name and UUID.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of instances to return.  If set to 0 or not set, all\ninstances matching filters will be returned.  When filtering by IDs, this\nshould not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the instance with the given UUID or at\nthe given ISO8601 creation timestamp (inclusive).  When count is 0 or not\nset, a UUID value may be used to match a specific instance by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A list of tags to filter the instances by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
             }
           }
         ],
@@ -571,7 +666,7 @@
           {
             "name": "count",
             "in": "query",
-            "description": "The maximum number of template instances to return.  This is useful for\npagination.  If not set, all the template instances matching filters will\nbe returned.  When filtering by IDs, this should not be set.",
+            "description": "The maximum number of template instances to return.  If set to 0 or not\nset, all the template instances matching filters will be returned.  When\nfiltering by IDs, this should not be set.",
             "schema": {
               "type": "integer",
               "format": "uint32"
@@ -586,6 +681,39 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the template with the given UUID or at the\ngiven ISO8601 creation timestamp (inclusive).  When count is 0 or not set,\na UUID value may be used to match a specific template by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned template instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the template instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
             }
           }
         ],
@@ -1210,6 +1338,48 @@
             "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of service groups to return.  If set to 0 or not set,\nall service groups matching filters will be returned.  When filtering by\nIDs, this should not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the service group with the given UUID or\nat the given ISO8601 creation timestamp (inclusive).  When count is 0 or\nnot set, a UUID value may be used to match a specific service group by\nUUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned service groups.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the service groups by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
             }
           }
         ],
@@ -1964,6 +2134,59 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of volumes to return.  If set to 0 or not set, all\nvolumes matching filters will be returned.  When filtering by IDs, this\nshould not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the volume with the given UUID or at the\ngiven ISO8601 creation timestamp (inclusive).  When count is 0 or not set,\na UUID value may be used to match a specific volume by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A list of tags to filter the volumes by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned volumes.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the volumes by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
           }
         ],
         "requestBody": {
@@ -2221,9 +2444,9 @@
             }
           },
           {
-            "name": "uuid",
+            "name": "from",
             "in": "query",
-            "description": "If set, the listing starts from (but does not include) the template volume\nwith the given UUID.  When count is 0 or not set, this parameter may be\nused to match by UUID.",
+            "description": "If set, the listing starts from the template with the given UUID or at the\ngiven ISO8601 creation timestamp (inclusive).  When count is 0 or not set,\na UUID value may be used to match a specific template by UUID.",
             "schema": {
               "type": "string"
             }
@@ -2237,6 +2460,31 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned template volumes.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string",
+              "format": "enum"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the template volumes by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "enum": [
+                "create_time"
+              ],
+              "type": "string",
+              "format": "enum"
             }
           }
         ],

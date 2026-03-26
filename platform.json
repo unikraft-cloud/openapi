@@ -4000,9 +4000,33 @@
               "$ref": "#/components/schemas/Schedule"
             },
             "description": "(Optional).  Schedules for the instance.  Scheduled operations let you\nautomatically start, stop, or delete the instance on a calendar-based\nschedule.  Each instance stores its own schedules, and cloning preserves\nthem."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateInstanceRequestAutokill"
+              }
+            ],
+            "description": "(Optional).  Automatic delete-on-idle/request-limit configuration.\nNot used for template instances."
           }
         },
         "description": "The request message for creating a new instance."
+      },
+      "CreateInstanceRequestAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "type": "integer",
+            "description": "Time in milliseconds after the instance was stopped before it is deleted.\nA value of 0 disables time-based autokill.",
+            "format": "uint64"
+          },
+          "num_requests": {
+            "type": "integer",
+            "description": "Maximum number of requests/connections the instance serves before it is\ndeleted. A value of 0 disables request-based autokill.",
+            "format": "uint32"
+          }
+        },
+        "description": "Automatic delete-on-idle/request-limit configuration for non-template\ninstances."
       },
       "CreateInstanceRequestDomain": {
         "required": [
@@ -4229,40 +4253,84 @@
       },
       "CreateServiceGroupRequest": {
         "type": "object",
-        "properties": {
-          "name": {
-            "example": "funky-service-g7gum5cj",
-            "type": "string",
-            "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "example": "funky-service-g7gum5cj",
+                "type": "string",
+                "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Service"
+                },
+                "description": "Description of exposed services."
+              },
+              "domains": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateServiceGroupRequestDomain"
+                },
+                "description": "Description of domains associated with the service group."
+              },
+              "soft_limit": {
+                "example": 1,
+                "type": "integer",
+                "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
+                "format": "uint64"
+              },
+              "hard_limit": {
+                "example": 100,
+                "type": "integer",
+                "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
+                "format": "uint64"
+              }
+            }
           },
-          "services": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Service"
-            },
-            "description": "Description of exposed services."
-          },
-          "domains": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateServiceGroupRequestDomain"
-            },
-            "description": "Description of domains associated with the service group."
-          },
-          "soft_limit": {
-            "example": 1,
-            "type": "integer",
-            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
-            "format": "uint64"
-          },
-          "hard_limit": {
-            "example": 100,
-            "type": "integer",
-            "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
-            "format": "uint64"
+          {
+            "oneOf": [
+              {
+                "title": "autokill",
+                "type": "object",
+                "properties": {
+                  "autokill": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CreateServiceGroupRequestAutokill"
+                      }
+                    ],
+                    "description": "Automatic delete-on-idle configuration."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The request message for creating a new service group."
+      },
+      "CreateServiceGroupRequestAutokill": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "time_ms",
+                "type": "object",
+                "properties": {
+                  "time_ms": {
+                    "type": "integer",
+                    "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
+                    "format": "uint64"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Automatic delete-on-idle configuration for service groups."
       },
       "CreateServiceGroupRequestDomain": {
         "required": [
@@ -7073,9 +7141,41 @@
               "$ref": "#/components/schemas/Schedule"
             },
             "description": "Scheduled operations for this instance.\n\nEach schedule defines a calendar expression and an action (`start`,\n`stop`, or `delete`) to perform at matching times."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceAutokill"
+              }
+            ],
+            "description": "Automatic delete-on-idle/request-limit configuration.\nNot used for template instances."
+          },
+          "template_autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceTemplateAutokill"
+              }
+            ],
+            "description": "Template-specific automatic delete-on-idle configuration.\nNot used for non-template instances."
           }
         },
         "description": "An instance is a unikernel virtual machine running an application."
+      },
+      "InstanceAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "type": "integer",
+            "description": "Time in milliseconds after the instance was stopped before it is deleted.\nA value of 0 disables time-based autokill.",
+            "format": "uint64"
+          },
+          "num_requests": {
+            "type": "integer",
+            "description": "Maximum number of requests/connections the instance serves before it is\ndeleted. A value of 0 disables request-based autokill.",
+            "format": "uint32"
+          }
+        },
+        "description": "Automatic delete-on-idle/request-limit configuration for non-template instances.\nNot used for template instances."
       },
       "InstanceCreateArgsInstanceCreateRequestRoms": {
         "required": [
@@ -7263,6 +7363,27 @@
           }
         },
         "description": "The snapshot UUID of the instance."
+      },
+      "InstanceTemplateAutokill": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "time_ms",
+                "type": "object",
+                "properties": {
+                  "time_ms": {
+                    "type": "integer",
+                    "description": "Time in milliseconds after the template was last used for cloning before\nit is deleted. A value of 0 disables template autokill.",
+                    "format": "uint64"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Automatic delete-on-idle configuration for template instances."
       },
       "InstanceVolume": {
         "type": "object",
@@ -7728,9 +7849,38 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGroupAutokill"
+              }
+            ],
+            "description": "Automatic delete-on-idle configuration."
           }
         },
         "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
+      },
+      "ServiceGroupAutokill": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "time_ms",
+                "type": "object",
+                "properties": {
+                  "time_ms": {
+                    "type": "integer",
+                    "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
+                    "format": "uint64"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Automatic delete-on-idle configuration for service groups."
       },
       "ServiceGroupInstance": {
         "type": "object",
@@ -8180,7 +8330,8 @@
               "scale_to_zero",
               "tags",
               "delete_lock",
-              "schedules"
+              "schedules",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8203,7 +8354,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)\n- For \"autokill\": object with time_ms and num_requests fields"
           }
         }
       },
@@ -8241,7 +8392,8 @@
               "scale_to_zero",
               "tags",
               "delete_lock",
-              "schedules"
+              "schedules",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8264,7 +8416,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)\n- For \"autokill\": object with time_ms and num_requests fields"
           }
         },
         "description": "A single update operation to be applied to an instance."
@@ -8376,7 +8528,8 @@
               "services",
               "domains",
               "soft_limit",
-              "hard_limit"
+              "hard_limit",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8399,7 +8552,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\"\n- For \"autokill\": object with time_ms field"
           }
         }
       },
@@ -8432,7 +8585,8 @@
               "services",
               "domains",
               "soft_limit",
-              "hard_limit"
+              "hard_limit",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8455,7 +8609,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\""
+            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\"\n- For \"autokill\": object with time_ms field"
           }
         },
         "description": "A single update operation to be applied to a service group"
@@ -8565,7 +8719,8 @@
             "example": "tags",
             "enum": [
               "tags",
-              "delete_lock"
+              "delete_lock",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8588,7 +8743,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
           }
         }
       },
@@ -8619,7 +8774,8 @@
             "example": "tags",
             "enum": [
               "tags",
-              "delete_lock"
+              "delete_lock",
+              "autokill"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -8642,7 +8798,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
           }
         },
         "description": "A single update operation to be applied to a template instance."

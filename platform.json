@@ -446,6 +446,17 @@
         "summary": "Delete Instances",
         "description": "Delete the specified instance(s) by ID(s) (name or UUID).  After this call\nthe IDs of the instances are no longer valid.  If the instances are\ncurrently running, they are force-stopped.",
         "operationId": "DeleteInstances",
+        "parameters": [
+          {
+            "name": "timeout_s",
+            "in": "query",
+            "description": "Timeout in seconds to wait for the instances to be deleted.  No wait\nperformed for a value of 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1051,6 +1062,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "timeout_s",
+            "in": "query",
+            "description": "Timeout in seconds to wait for the instance to be deleted.  No wait\nperformed for a value of 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],

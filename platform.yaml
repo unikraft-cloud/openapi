@@ -335,6 +335,15 @@ paths:
                 the IDs of the instances are no longer valid.  If the instances are
                 currently running, they are force-stopped.
             operationId: DeleteInstances
+            parameters:
+                - name: timeout_s
+                  in: query
+                  description: |-
+                    Timeout in seconds to wait for the instances to be deleted.  No wait
+                    performed for a value of 0.
+                  schema:
+                    type: integer
+                    format: int64
             requestBody:
                 content:
                     application/json:
@@ -778,6 +787,14 @@ paths:
                   schema:
                     type: string
                     format: uuid
+                - name: timeout_s
+                  in: query
+                  description: |-
+                    Timeout in seconds to wait for the instance to be deleted.  No wait
+                    performed for a value of 0.
+                  schema:
+                    type: integer
+                    format: int64
             responses:
                 default:
                     description: default

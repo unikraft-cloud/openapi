@@ -4231,10 +4231,10 @@
           "template": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NameOrUUID"
+                "$ref": "#/components/schemas/CreateInstanceRequestTemplate"
               }
             ],
-            "description": "(Optional).  The UUID of a template instance to create the instance from."
+            "description": "Template instances.\nAn existing instance can be saved as a template. This template is then\nused to create new instances that inherit the exact configuration and\nstate the original instance had when the template was created."
           },
           "sched_priority": {
             "example": 10,
@@ -4378,6 +4378,33 @@
           }
         },
         "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections."
+      },
+      "CreateInstanceRequestTemplate": {
+        "type": "object",
+        "properties": {
+          "prepare": {
+            "example": false,
+            "type": "boolean",
+            "description": "(Optional).  Whether the instance needs to run in order to reach template state"
+          },
+          "nameOrUUID": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "(Optional).  The UUID of a template instance to create the instance from."
+          },
+          "create_args": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instance"
+              }
+            ],
+            "description": "(Optional). Configuration parameters to apply when building the new instance from the source template."
+          }
+        },
+        "description": "Defines the source template used to build a new instance."
       },
       "CreateInstanceRequestVolume": {
         "required": [

@@ -3235,8 +3235,12 @@ components:
                     description: (Optional).  Tags to associate with the instance.
                 template:
                     allOf:
-                        - $ref: '#/components/schemas/NameOrUUID'
-                    description: (Optional).  The UUID of a template instance to create the instance from.
+                        - $ref: '#/components/schemas/CreateInstanceRequestTemplate'
+                    description: |-
+                        Template instances.
+                        An existing instance can be saved as a template. This template is then
+                        used to create new instances that inherit the exact configuration and
+                        state the original instance had when the template was created.
                 sched_priority:
                     example: 10
                     type: integer
@@ -3392,6 +3396,22 @@ components:
                 exposed port by the instance.  A service is a combination of a public port,
                 an internal port, and a set of handlers that define how the service will
                 handle incoming connections.
+        CreateInstanceRequestTemplate:
+            type: object
+            properties:
+                prepare:
+                    example: false
+                    type: boolean
+                    description: (Optional).  Whether the instance needs to run in order to reach template state
+                nameOrUUID:
+                    allOf:
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: (Optional).  The UUID of a template instance to create the instance from.
+                create_args:
+                    allOf:
+                        - $ref: '#/components/schemas/Instance'
+                    description: (Optional). Configuration parameters to apply when building the new instance from the source template.
+            description: Defines the source template used to build a new instance.
         CreateInstanceRequestVolume:
             required:
                 - at

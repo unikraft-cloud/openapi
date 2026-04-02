@@ -3452,7 +3452,8 @@ components:
                         If this is the only specified field, then it will look up an existing
                         volume by this name.  If the volume does not exist, the request will
                         fail.  If a new volume is intended to be created, then this field must be
-                        specified along with the size in MiB and the mount point in the instance.
+                        specified along with the mount point in the instance and a provisioning
+                        source (size_mb or host_path).
                 size_mb:
                     example: 32
                     type: integer
@@ -3461,13 +3462,17 @@ components:
 
                         When creating a new volume as part of the instance create request,
                         specify the size of the volume in MiB.
-                    format: int64
+                    format: uint64
+                host_path:
+                    example: /srv/data/my-volume
+                    type: string
+                    description: A host path to create a managed volume from.
                 at:
                     example: /mnt/funky-volume
                     type: string
                     description: The mount point for the volume in the instance.
                 readonly:
-                    example: 256
+                    example: false
                     type: boolean
                     description: |-
                         Whether the volume is read-only.
@@ -3475,6 +3480,35 @@ components:
                         If this field is set to true, the volume will be mounted as read-only in
                         the instance.  This field is optional and defaults to false and is only
                         applicable when using an existing volume.
+                quota_policy:
+                    example: static
+                    type: string
+                    description: Quota policy for the volume.
+                filesystem:
+                    example: ext4
+                    type: string
+                    description: |-
+                        Filesystem type to format or configure.
+                        Without custom configuration, this is either `ext4` or `virtiofs`.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: Tags to assign to the new volume.
+                uid:
+                    type: integer
+                    description: Guest UID for managed volumes (host_path mode only).
+                    format: uint32
+                gid:
+                    type: integer
+                    description: Guest GID for managed volumes (host_path mode only).
+                    format: uint32
+                args:
+                    example: {"arg1": "value1", "arg2": "value2"}
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Script arguments passed to volume initialization scripts.
             description: A volume defines a storage volume that can be attached to the instance.
         CreateInstanceResponse:
             type: object
@@ -3875,32 +3909,65 @@ components:
                         This field is useful when the status is not `success`.
                     format: int32
         CreateVolumeRequest:
-            required:
-                - size_mb
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    size_mb:
-                        example: 64
-                        type: integer
-                        description: The size of the volume in megabytes.
-                        format: uint64
-                - oneOf:
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-vol-t7qumh5j
-                            type: string
-                            description: |-
-                                The name of the volume.
+            properties:
+                name:
+                    example: funky-vol-t7qumh5j
+                    type: string
+                    description: |-
+                        The name of the volume.
 
-                                This is a human-readable name that can be used to identify the volume.
-                                The name must be unique within the context of your account.  If no name is
-                                specified, a random name of the form `vol-X` is generated for you, where
-                                `X` is a 5 character long random alphanumeric suffix..  The name can also
-                                be used to identify the volume in API calls.
+                        This is a human-readable name that can be used to identify the volume.
+                        The name must be unique within the context of your account.  If no name is
+                        specified, a random name of the form `vol-X` is generated for you, where
+                        `X` is a 5 character long random alphanumeric suffix..  The name can also
+                        be used to identify the volume in API calls.
+                size_mb:
+                    example: 64
+                    type: integer
+                    description: The size of the volume in megabytes.
+                    format: uint64
+                host_path:
+                    example: /srv/data/my-volume
+                    type: string
+                    description: A host path to create a managed volume from.
+                template:
+                    allOf:
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: Source template volume to clone from.
+                quota_policy:
+                    example: static
+                    enum:
+                        - "static"
+                        - "dynamic"
+                    type: string
+                    description: Quota policy for the volume.
+                    format: enum
+                filesystem:
+                    example: ext4
+                    type: string
+                    description: |-
+                        Filesystem type to format or configure.
+                        Without custom configuration, this is either `ext4` or `virtiofs`.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: Tags to assign to the new volume.
+                uid:
+                    type: integer
+                    description: Guest UID for managed volumes (host_path mode only).
+                    format: uint32
+                gid:
+                    type: integer
+                    description: Guest GID for managed volumes (host_path mode only).
+                    format: uint32
+                args:
+                    example: {"arg1": "value1", "arg2": "value2"}
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Script arguments passed to volume initialization scripts.
             description: The request message for creating a volume.
         CreateVolumeResponse:
             type: object
@@ -3925,19 +3992,6 @@ components:
                             The operation time in microseconds.  This is the time it took to process
                             the request and generate the response.
                         format: uint64
-                    state:
-                        enum:
-                            - "uninitialized"
-                            - "initializing"
-                            - "available"
-                            - "idle"
-                            - "mounted"
-                            - "busy"
-                            - "error"
-                            - "template"
-                        type: string
-                        description: Current state of the volume.
-                        format: enum
                 - oneOf:
                     - title: message
                       type: object
@@ -7853,7 +7907,7 @@ components:
                     description: |-
                         The value for the update operation. The type depends on the property and operation:
                         - For "size_mb": unsigned integer
-                        - For "quota_policy": 1 - static reservation, 2 - dynamic reservation
+                        - For "quota_policy": "static" or "dynamic"
                         - For "tags": array of Strings
                         - For "delete_lock": boolean
             description: A single request item for updating a volume.
@@ -8022,8 +8076,12 @@ components:
                     format: int32
                 quota_policy:
                     example: static
+                    enum:
+                        - "static"
+                        - "dynamic"
                     type: string
                     description: Either static or dynamic reservation.
+                    format: enum
                 delete_lock:
                     example: false
                     type: boolean
@@ -8033,6 +8091,27 @@ components:
                     type: integer
                     description: The amount of free space in the volume in megabytes.
                     format: uint32
+                filesystem:
+                    example: ext4
+                    type: string
+                    description: |-
+                        The filesystem type of this volume.
+                        Without custom configuration, this is either `ext4` or `virtiofs`.
+                host_path:
+                    example: /usr/lib/unikraft/volumes/my-vol
+                    type: string
+                    description: |-
+                        Host path backing this managed volume.
+                        This field is only available for managed volumes and users with
+                        appropriate permissions.
+                args:
+                    example: {"arg1": "value1", "arg2": "value2"}
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: |-
+                        Optional script arguments that were applied to the custom volume filesystem
+                        initialization scripts.
             description: A volume represents a storage device that can be attached to an instance.
         VolumeInstanceID:
             type: object

@@ -3273,7 +3273,7 @@ components:
                     type: array
                     items:
                         enum:
-                            - "delete_on_stop"
+                            - "delete-on-stop"
                         type: string
                         format: enum
                     description: |-

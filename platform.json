@@ -181,6 +181,36 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Update Certificate",
+        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
+        "operationId": "UpdateCertificate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCertificateResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/certificates/{uuid}": {
@@ -242,6 +272,48 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteCertificatesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Update Certificate by UUID",
+        "description": "Update a specified certificate by its UUID with a new certificate chain\nand private key.",
+        "operationId": "UpdateCertificateByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the certificate to update.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateByUUIDRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCertificateResponse"
                 }
               }
             }
@@ -4027,48 +4099,37 @@
       },
       "CreateCertificateRequest": {
         "required": [
-          "cn",
           "chain",
           "pkey"
         ],
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "cn": {
-                "example": "funky-town.com",
-                "type": "string",
-                "description": "The common name (CN) of the certificate."
-              },
-              "chain": {
-                "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
-                "type": "string",
-                "description": "The chain of the certificate."
-              },
-              "pkey": {
-                "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
-                "type": "string",
-                "description": "The private key of the certificate."
-              }
-            }
+        "properties": {
+          "name": {
+            "example": "funky-certificate",
+            "type": "string",
+            "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
           },
-          {
-            "oneOf": [
-              {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-certificate",
-                    "type": "string",
-                    "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
-                  }
-                }
-              }
-            ]
+          "cn": {
+            "example": "funky-town.com",
+            "type": "string",
+            "description": "The common name (CN) of the certificate.\n\nDeprecated: Use `common_name` instead."
+          },
+          "common_name": {
+            "example": "funky-town.com",
+            "type": "string",
+            "description": "The common name (CN) of the certificate.\n\nThis must be a fully-qualified domain name (FQDN). Exactly one of `cn`\nor `common_name` must be specified."
+          },
+          "chain": {
+            "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
+            "type": "string",
+            "description": "The chain of the certificate."
+          },
+          "pkey": {
+            "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
+            "type": "string",
+            "description": "The private key of the certificate."
           }
-        ],
+        },
         "description": "The request message for creating/uploading a new certificate."
       },
       "CreateCertificateResponse": {
@@ -8667,6 +8728,112 @@
             ]
           }
         ]
+      },
+      "UpdateCertificateByUUIDRequest": {
+        "required": [
+          "chain",
+          "pkey"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the certificate to update.",
+            "format": "uuid"
+          },
+          "chain": {
+            "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
+            "type": "string",
+            "description": "The new certificate chain.\n\nThis is the public chain of the certificate in PEM format. The chain\nshould include the certificate and any intermediate certificates."
+          },
+          "pkey": {
+            "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
+            "type": "string",
+            "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
+          }
+        },
+        "description": "The request message for updating a certificate by its UUID."
+      },
+      "UpdateCertificateRequest": {
+        "required": [
+          "id",
+          "chain",
+          "pkey"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "The ID of the certificate to update."
+          },
+          "chain": {
+            "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
+            "type": "string",
+            "description": "The new certificate chain.\n\nThis is the public chain of the certificate in PEM format. The chain\nshould include the certificate and any intermediate certificates."
+          },
+          "pkey": {
+            "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
+            "type": "string",
+            "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
+          }
+        },
+        "description": "The request message for updating one or more certificate(s) by their\nUUID(s) or name(s)."
+      },
+      "UpdateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateCertificateResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 45,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating one or more certificate(s)."
+      },
+      "UpdateCertificateResponseData": {
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Certificate"
+            },
+            "description": "The certificate(s) which were updated by the request."
+          }
+        }
       },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [

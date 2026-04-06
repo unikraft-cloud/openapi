@@ -4328,7 +4328,7 @@
             "items": {
               "$ref": "#/components/schemas/Schedule"
             },
-            "description": "(Optional).  Schedules for the instance.  Scheduled operations let you\nautomatically start, stop, or delete the instance on a calendar-based\nschedule.  Each instance stores its own schedules, and cloning preserves\nthem."
+            "description": "(Optional).  Schedules for the instance.  Scheduled operations let you\nautomatically start, stop, delete, or exec a command in the instance on\na calendar-based schedule.  For `exec` schedules, set the `args` field\nto the command and its arguments.  Each instance stores its own\nschedules, and cloning preserves them."
           },
           "autokill": {
             "allOf": [
@@ -7562,7 +7562,7 @@
             "items": {
               "$ref": "#/components/schemas/Schedule"
             },
-            "description": "Scheduled operations for this instance.\n\nEach schedule defines a calendar expression and an action (`start`,\n`stop`, or `delete`) to perform at matching times."
+            "description": "Scheduled operations for this instance.\n\nEach schedule defines a calendar expression and an action (`start`,\n`stop`, `delete`, or `exec`) to perform at matching times.  When the\naction is `exec`, the `args` field of the schedule specifies the command\nto run inside the instance."
           },
           "autokill": {
             "allOf": [
@@ -7699,18 +7699,38 @@
           "image"
         ],
         "type": "object",
-        "properties": {
-          "name": {
-            "example": "funky-rom",
-            "type": "string",
-            "description": "The name of the ROM to use for the instance configuration."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "example": "funky-rom",
+                "type": "string",
+                "description": "The name of the ROM to use for the instance configuration."
+              },
+              "image": {
+                "example": "nginx:latest",
+                "type": "string",
+                "description": "The image of the ROM to use for the instance configuration."
+              }
+            }
           },
-          "image": {
-            "example": "nginx:latest",
-            "type": "string",
-            "description": "The image of the ROM to use for the instance configuration."
+          {
+            "oneOf": [
+              {
+                "title": "at",
+                "type": "object",
+                "properties": {
+                  "at": {
+                    "example": "/rom0",
+                    "type": "string",
+                    "description": "(Optional).  The path at which the ROM should be automatically mounted\ninside the instance.  When set, the platform mounts the ROM device at\nthe specified path so the guest does not need to mount it manually.\nWhen omitted, the ROM is exposed as a raw block device and the guest is\nresponsible for mounting it."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "Read-Only Memory (ROM) blob to attach to the instance."
       },
       "InstanceScaleToZero": {
@@ -8130,18 +8150,22 @@
         "type": "object",
         "properties": {
           "name": {
+            "example": "daily-stop",
             "type": "string",
             "description": "The name of the schedule.\n\nMust be unique within an instance."
           },
           "when": {
+            "example": null,
             "type": "string",
             "description": "The calendar expression specifying when the action should be performed.\n\nUses systemd calendar event syntax.\nSee https://www.man7.org/linux/man-pages/man7/systemd.time.7.html"
           },
           "action": {
+            "example": "stop",
             "enum": [
               "start",
               "stop",
-              "delete"
+              "delete",
+              "exec"
             ],
             "type": "string",
             "description": "The action to perform at the scheduled time.",
@@ -8149,12 +8173,25 @@
           },
           "next_at": {
             "readOnly": true,
+            "example": 1696512000,
             "type": "integer",
             "description": "The timestamp of when the next scheduled action will occur.\n\nThis field is populated only in responses (not settable in requests).\nUnix timestamp in seconds.  Omitted if no next execution is scheduled.",
             "format": "int64"
+          },
+          "args": {
+            "example": [
+              "/bin/sh",
+              "-c",
+              "echo hello"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The command to execute when the action is `exec`.\n\nRequired when `action` is `SCHEDULE_ACTION_EXEC`, ignored otherwise.\nEach element is a separate argument; the first element is the executable."
           }
         },
-        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, or delete).\n\nCalendar expressions format: [weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC"
+        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, delete, or exec).\n\nCalendar expressions format: [weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC"
       },
       "Service": {
         "required": [
@@ -8882,7 +8919,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)\n- For \"autokill\": object with time_ms and num_requests fields"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields"
           }
         }
       },
@@ -8944,7 +8981,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, and action fields)\n- For \"autokill\": object with time_ms and num_requests fields"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields"
           }
         },
         "description": "A single update operation to be applied to an instance."

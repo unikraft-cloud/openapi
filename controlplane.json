@@ -17,6 +17,28 @@
     }
   ],
   "paths": {
+    "/v1/auth": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get Authorization Status",
+        "description": "Get authorization details for a token.",
+        "operationId": "GetAuthorization",
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAuthorizationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/auth/check": {
       "post": {
         "tags": [
@@ -928,6 +950,58 @@
               "$ref": "#/components/schemas/Node"
             },
             "description": "The deleted nodes (with their final state before deletion)."
+          }
+        }
+      },
+      "GetAuthorizationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the response."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetAuthorizationResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 56,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting authorization details."
+      },
+      "GetAuthorizationResponseData": {
+        "type": "object",
+        "properties": {
+          "organization_name": {
+            "type": "string",
+            "description": "The organization name the token is associated with."
+          },
+          "organization_display_name": {
+            "type": "string",
+            "description": "The display name of the organization the token is associated with."
           }
         }
       },

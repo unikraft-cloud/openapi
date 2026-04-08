@@ -84,7 +84,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ListMetroResponse'
-    /v1/node:
+    /v1/nodes:
         get:
             tags:
                 - NodeService
@@ -236,7 +236,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateNodesResponse'
-    /v1/node/activate:
+    /v1/nodes/activate:
         post:
             tags:
                 - NodeActivationService
@@ -255,7 +255,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/NodeActivateResponse'
-    /v1/node/provider/{provider}/regions:
+    /v1/nodes/provider/{provider}/regions:
         get:
             tags:
                 - NodeService
@@ -284,7 +284,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ListRegionsResponse'
-    /v1/node/provider/{provider}/types:
+    /v1/nodes/provider/{provider}/types:
         get:
             tags:
                 - NodeService
@@ -318,7 +318,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ListMachineTypesResponse'
-    /v1/node/renew:
+    /v1/nodes/renew:
         post:
             tags:
                 - NodeActivationService
@@ -337,7 +337,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/NodeRenewResponse'
-    /v1/node/wait:
+    /v1/nodes/wait:
         get:
             tags:
                 - NodeService
@@ -376,7 +376,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/WaitNodesResponse'
-    /v1/node/{uuid}:
+    /v1/nodes/{uuid}:
         get:
             tags:
                 - NodeService
@@ -465,7 +465,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateNodesResponse'
-    /v1/node/{uuid}/wait:
+    /v1/nodes/{uuid}/wait:
         get:
             tags:
                 - NodeService

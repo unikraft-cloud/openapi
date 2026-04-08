@@ -125,7 +125,7 @@
         }
       }
     },
-    "/v1/node": {
+    "/v1/nodes": {
       "get": {
         "tags": [
           "NodeService"
@@ -335,7 +335,7 @@
         }
       }
     },
-    "/v1/node/activate": {
+    "/v1/nodes/activate": {
       "post": {
         "tags": [
           "NodeActivationService"
@@ -366,7 +366,7 @@
         }
       }
     },
-    "/v1/node/provider/{provider}/regions": {
+    "/v1/nodes/provider/{provider}/regions": {
       "get": {
         "tags": [
           "NodeService"
@@ -404,7 +404,7 @@
         }
       }
     },
-    "/v1/node/provider/{provider}/types": {
+    "/v1/nodes/provider/{provider}/types": {
       "get": {
         "tags": [
           "NodeService"
@@ -450,7 +450,7 @@
         }
       }
     },
-    "/v1/node/renew": {
+    "/v1/nodes/renew": {
       "post": {
         "tags": [
           "NodeActivationService"
@@ -481,7 +481,7 @@
         }
       }
     },
-    "/v1/node/wait": {
+    "/v1/nodes/wait": {
       "get": {
         "tags": [
           "NodeService"
@@ -537,7 +537,7 @@
         }
       }
     },
-    "/v1/node/{uuid}": {
+    "/v1/nodes/{uuid}": {
       "get": {
         "tags": [
           "NodeService"
@@ -659,7 +659,7 @@
         }
       }
     },
-    "/v1/node/{uuid}/wait": {
+    "/v1/nodes/{uuid}/wait": {
       "get": {
         "tags": [
           "NodeService"

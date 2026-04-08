@@ -1422,42 +1422,29 @@
         }
       },
       "NameOrUUID": {
-        "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "example": "123e4567-e89b-12d3-a456-426614174000",
-                    "type": "string",
-                    "description": "Mutually exclusive with name.",
-                    "format": "uuid"
-                  }
-                }
-              },
-              {
-                "title": "name",
-                "required": [
-                  "name"
-                ],
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g756b5d",
-                    "type": "string",
-                    "description": "Mutually exclusive with UUID."
-                  }
-                }
-              }
-            ]
-          }
+        "required": [
+          "uuid",
+          "name"
         ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "Mutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          }
+        },
         "description": "An identifier for a resource.  Either a name or a UUID."
       },
       "Node": {

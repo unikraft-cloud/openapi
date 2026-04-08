@@ -353,6 +353,14 @@
         "operationId": "GetImages",
         "parameters": [
           {
+            "name": "metro",
+            "in": "query",
+            "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "namespace",
             "in": "query",
             "description": "Optional namespace to filter images by.",
@@ -3309,6 +3317,11 @@
             "type": "string",
             "description": "The name of the volume that was attached."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -3341,6 +3354,11 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the policy."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the service group the policy applies to."
           },
           "enabled": {
             "example": true,
@@ -3443,6 +3461,11 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the certificate in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the certificate is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -3667,6 +3690,11 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the newly cloned volume."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "state": {
             "enum": [
@@ -3927,6 +3955,11 @@
             "type": "string",
             "description": "The name of the service of the added policy."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -3953,6 +3986,11 @@
             "example": "funky-service",
             "type": "string",
             "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to."
           },
           "min_size": {
             "example": 2,
@@ -4072,6 +4110,11 @@
             "type": "string",
             "description": "The name of the service where the configuration was created."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the configuration."
+          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4108,6 +4151,11 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "cn": {
             "example": "funky-town.com",
@@ -4196,6 +4244,11 @@
             "example": "nginx:latest",
             "type": "string",
             "description": "The image to use for the instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "args": {
             "example": "--port=8080 --debug",
@@ -4652,62 +4705,52 @@
       },
       "CreateServiceGroupRequest": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "name": {
-                "example": "funky-service-g7gum5cj",
-                "type": "string",
-                "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
-              },
-              "services": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Service"
-                },
-                "description": "Description of exposed services."
-              },
-              "domains": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CreateServiceGroupRequestDomain"
-                },
-                "description": "Description of domains associated with the service group."
-              },
-              "soft_limit": {
-                "example": 1,
-                "type": "integer",
-                "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
-                "format": "uint64"
-              },
-              "hard_limit": {
-                "example": 100,
-                "type": "integer",
-                "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
-                "format": "uint64"
-              }
-            }
+        "properties": {
+          "name": {
+            "example": "funky-service-g7gum5cj",
+            "type": "string",
+            "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
           },
-          {
-            "oneOf": [
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Service"
+            },
+            "description": "Description of exposed services."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateServiceGroupRequestDomain"
+            },
+            "description": "Description of domains associated with the service group."
+          },
+          "soft_limit": {
+            "example": 1,
+            "type": "integer",
+            "description": "The soft limit is used by the Unikraft Cloud load balancer to decide when\nto wake up another standby instance.\n\nFor example, if the soft limit is set to 5 and the service consists of 2\nstandby instances, one of the instances receives up to 5 concurrent\nrequests.  The 6th parallel requests wakes up the second instance.  If\nthere are no more standby instances to wake up, the number of requests\nassigned to each instance will exceed the soft limit.  The load balancer\nmakes sure that when the number of in-flight requests goes down again,\ninstances are put into standby as fast as possible.",
+            "format": "uint64"
+          },
+          "hard_limit": {
+            "example": 100,
+            "type": "integer",
+            "description": "The hard limit defines the maximum number of concurrent requests that an\ninstance assigned to the this service can handle.\n\nThe load balancer will never assign more requests to a single instance.  In\ncase there are no other instances available, excess requests fail (i.e.,\nthey are blocked and not queued).",
+            "format": "uint64"
+          },
+          "autokill": {
+            "allOf": [
               {
-                "title": "autokill",
-                "type": "object",
-                "properties": {
-                  "autokill": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/CreateServiceGroupRequestAutokill"
-                      }
-                    ],
-                    "description": "Automatic delete-on-idle configuration."
-                  }
-                }
+                "$ref": "#/components/schemas/CreateServiceGroupRequestAutokill"
               }
-            ]
+            ],
+            "description": "Automatic delete-on-idle configuration."
           }
-        ],
+        },
         "description": "The request message for creating a new service group."
       },
       "CreateServiceGroupRequestAutokill": {
@@ -4892,6 +4935,11 @@
             "type": "string",
             "description": "The name of the template instance that was created."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
+          },
           "state": {
             "enum": [
               "stopped",
@@ -5061,6 +5109,11 @@
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+          },
           "size_mb": {
             "example": 64,
             "type": "integer",
@@ -5210,6 +5263,11 @@
             "type": "string",
             "description": "The name of the newly created volume."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "state": {
             "enum": [
               "uninitialized",
@@ -5333,6 +5391,11 @@
             "type": "string",
             "description": "The name of the service of the deleted policy."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -5434,6 +5497,11 @@
             "type": "string",
             "description": "The name of the service where the configuration was deleted."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -5520,6 +5588,11 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate which was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the certificate."
           },
           "message": {
             "example": "No certificate with name 'funky-town-g756b5d'",
@@ -5608,6 +5681,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance which was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "previous_state": {
             "example": "stopped",
@@ -5715,6 +5793,11 @@
             "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "The name of the service group which was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the service group."
           },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
@@ -6001,6 +6084,11 @@
             "type": "string",
             "description": "The name of the volume that was deleted."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6167,6 +6255,11 @@
             "type": "string",
             "description": "The name of the volume that was detached."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6313,6 +6406,11 @@
             ],
             "description": "The policy which was retrieved by the request."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6416,6 +6514,11 @@
             "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the service group."
           },
           "enabled": {
             "example": true,
@@ -7280,6 +7383,11 @@
             "type": "string",
             "description": "The digest of the image is a unique identifier of the image manifest which\nis a string representation including the hashing algorithm and the hash\nvalue separated by a colon."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the image."
+          },
           "tags": {
             "example": [
               "my-image:latest"
@@ -7341,6 +7449,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance.\n\nThis is a human-readable name that can be used to identify the instance.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the instance in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the instance is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -7789,26 +7902,46 @@
       },
       "InstanceServiceGroup": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
-            "format": "uuid"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "string",
+                "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
+                "format": "uuid"
+              },
+              "name": {
+                "example": "funky-service-g756b5d",
+                "type": "string",
+                "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
+              },
+              "domains": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ServiceGroupInstanceDomain"
+                },
+                "description": "The domain configuration for the service group."
+              }
+            }
           },
-          "name": {
-            "example": "funky-service-g756b5d",
-            "type": "string",
-            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
-          },
-          "domains": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ServiceGroupInstanceDomain"
-            },
-            "description": "The domain configuration for the service group."
+          {
+            "oneOf": [
+              {
+                "title": "metro",
+                "type": "object",
+                "properties": {
+                  "metro": {
+                    "example": "fra",
+                    "type": "string",
+                    "description": "(Only applies when using global control plane).\nWhere the service group is located."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
       },
       "InstanceSnapshot": {
@@ -7845,68 +7978,75 @@
       },
       "InstanceVolume": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-volume-g756b5d",
-            "type": "string",
-            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
-          },
-          "at": {
-            "example": "/mnt/funky-volume",
-            "type": "string",
-            "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
-          },
-          "readonly": {
-            "example": true,
-            "type": "boolean",
-            "description": "Whether the volume is read-only or not."
-          }
-        },
-        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
-      },
-      "NameOrUUID": {
-        "type": "object",
         "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "example": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "string",
+                "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
+                "format": "uuid"
+              },
+              "name": {
+                "example": "funky-volume-g756b5d",
+                "type": "string",
+                "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
+              },
+              "at": {
+                "example": "/mnt/funky-volume",
+                "type": "string",
+                "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
+              },
+              "readonly": {
+                "example": true,
+                "type": "boolean",
+                "description": "Whether the volume is read-only or not."
+              }
+            }
+          },
           {
             "oneOf": [
               {
-                "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
+                "title": "metro",
                 "type": "object",
                 "properties": {
-                  "uuid": {
-                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                  "metro": {
+                    "example": "fra",
                     "type": "string",
-                    "description": "Mutually exclusive with name.",
-                    "format": "uuid"
-                  }
-                }
-              },
-              {
-                "title": "name",
-                "required": [
-                  "name"
-                ],
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g756b5d",
-                    "type": "string",
-                    "description": "Mutually exclusive with UUID."
+                    "description": "(Only applies when using global control plane).\nWhere the volume is located."
                   }
                 }
               }
             ]
           }
         ],
+        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
+      },
+      "NameOrUUID": {
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "Mutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "Mutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
+          }
+        },
         "description": "An identifier for a resource.  Either a name or a UUID."
       },
       "Quotas": {
@@ -8257,6 +8397,11 @@
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup. The name must be unique within the context of your account.  The\nname can also be used to identify the service in API calls."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the service group is located."
+          },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
@@ -8455,6 +8600,11 @@
             "type": "string",
             "description": "The name of the instance to start.  Mutually exclusive with UUID."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+          },
           "wait_timeout_ms": {
             "example": 2000,
             "type": "integer",
@@ -8544,6 +8694,11 @@
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
+          },
           "state": {
             "example": "running",
             "type": "string",
@@ -8607,6 +8762,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "force": {
             "example": false,
@@ -8697,6 +8857,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
             "enum": [
@@ -8962,6 +9127,11 @@
             "type": "string",
             "description": "The name of the instance to update. Mutually exclusive with UUID."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+          },
           "prop": {
             "example": "memory_mb",
             "enum": [
@@ -9072,6 +9242,11 @@
             "example": "success",
             "type": "string",
             "description": "The status of this particular instance update operation."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "id": {
             "example": "op-1",
@@ -9261,6 +9436,11 @@
             "type": "string",
             "description": "The name of the service group that was updated."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the service group."
+          },
           "status": {
             "example": "success",
             "type": "string",
@@ -9350,6 +9530,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template instance to update. Mutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "prop": {
             "example": "tags",
@@ -9449,6 +9634,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template instance that was updated."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "status": {
             "example": "success",
@@ -9843,6 +10033,11 @@
             "type": "string",
             "description": "The name of the volume that was updated."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "status": {
             "example": "success",
             "type": "string",
@@ -9879,6 +10074,11 @@
             "example": "funky-town-g7gum5cj",
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the volume is located."
           },
           "created_at": {
             "example": "2021-01-01T00:00:00Z",

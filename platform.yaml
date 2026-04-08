@@ -258,6 +258,13 @@ paths:
             description: Retrieve all images.
             operationId: GetImages
             parameters:
+                - name: metro
+                  in: query
+                  description: |-
+                    (Optional, only applies when using global control plane).
+                    The metro to route the request to.
+                  schema:
+                    type: string
                 - name: namespace
                   in: query
                   description: Optional namespace to filter images by.
@@ -2446,6 +2453,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the volume that was attached.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -2474,6 +2487,12 @@ components:
                     example: funky-policy
                     type: string
                     description: The name of the policy.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the service group the policy applies to.
                 enabled:
                     example: true
                     type: boolean
@@ -2564,6 +2583,12 @@ components:
                         This is a human-readable name that can be used to identify the certificate.
                         The name must be unique within the context of your account.  The name can
                         also be used to identify the certificate in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the certificate is located.
                 created_at:
                     example: 2023-10-01T12:00:00Z
                     type: string
@@ -2777,6 +2802,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the newly cloned volume.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 state:
                     enum:
                         - "uninitialized"
@@ -2952,6 +2983,12 @@ components:
                     example: funky-policy
                     type: string
                     description: The name of the service of the added policy.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the resource.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -2981,6 +3018,12 @@ components:
                     description: |-
                         The name of the service to create a configuration for.
                         Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Optional, only applies when using global control plane).
+                        The metro to route the request to.
                 min_size:
                     example: 2
                     type: integer
@@ -3062,6 +3105,12 @@ components:
                     example: funky-instance-template
                     type: string
                     description: The name of the service where the configuration was created.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the configuration.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -3099,6 +3148,12 @@ components:
                         The name must be unique within the context of your account.  If no name is
                         specified, a random name is generated for you.  The name can also be used
                         to identify the certificate in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 cn:
                     example: funky-town.com
                     type: string
@@ -3179,6 +3234,12 @@ components:
                     example: nginx:latest
                     type: string
                     description: The image to use for the instance.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 args:
                     example: --port=8080 --debug
                     type: array
@@ -3644,61 +3705,61 @@ components:
                     format: int32
         CreateServiceGroupRequest:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    name:
-                        example: funky-service-g7gum5cj
-                        type: string
-                        description: |-
-                            Name of the service group.  This is a human-readable name that can be used
-                            to identify the service group.  The name must be unique within the context
-                            of your account.  If no name is specified, a random name is generated for
-                            you.  The name can also be used to identify the service group in API calls.
-                    services:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/Service'
-                        description: Description of exposed services.
-                    domains:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/CreateServiceGroupRequestDomain'
-                        description: Description of domains associated with the service group.
-                    soft_limit:
-                        example: 1
-                        type: integer
-                        description: |-
-                            The soft limit is used by the Unikraft Cloud load balancer to decide when
-                            to wake up another standby instance.
+            properties:
+                name:
+                    example: funky-service-g7gum5cj
+                    type: string
+                    description: |-
+                        Name of the service group.  This is a human-readable name that can be used
+                        to identify the service group.  The name must be unique within the context
+                        of your account.  If no name is specified, a random name is generated for
+                        you.  The name can also be used to identify the service group in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
+                services:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Service'
+                    description: Description of exposed services.
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateServiceGroupRequestDomain'
+                    description: Description of domains associated with the service group.
+                soft_limit:
+                    example: 1
+                    type: integer
+                    description: |-
+                        The soft limit is used by the Unikraft Cloud load balancer to decide when
+                        to wake up another standby instance.
 
-                            For example, if the soft limit is set to 5 and the service consists of 2
-                            standby instances, one of the instances receives up to 5 concurrent
-                            requests.  The 6th parallel requests wakes up the second instance.  If
-                            there are no more standby instances to wake up, the number of requests
-                            assigned to each instance will exceed the soft limit.  The load balancer
-                            makes sure that when the number of in-flight requests goes down again,
-                            instances are put into standby as fast as possible.
-                        format: uint64
-                    hard_limit:
-                        example: 100
-                        type: integer
-                        description: |-
-                            The hard limit defines the maximum number of concurrent requests that an
-                            instance assigned to the this service can handle.
+                        For example, if the soft limit is set to 5 and the service consists of 2
+                        standby instances, one of the instances receives up to 5 concurrent
+                        requests.  The 6th parallel requests wakes up the second instance.  If
+                        there are no more standby instances to wake up, the number of requests
+                        assigned to each instance will exceed the soft limit.  The load balancer
+                        makes sure that when the number of in-flight requests goes down again,
+                        instances are put into standby as fast as possible.
+                    format: uint64
+                hard_limit:
+                    example: 100
+                    type: integer
+                    description: |-
+                        The hard limit defines the maximum number of concurrent requests that an
+                        instance assigned to the this service can handle.
 
-                            The load balancer will never assign more requests to a single instance.  In
-                            case there are no other instances available, excess requests fail (i.e.,
-                            they are blocked and not queued).
-                        format: uint64
-                - oneOf:
-                    - title: autokill
-                      type: object
-                      properties:
-                        autokill:
-                            allOf:
-                                - $ref: '#/components/schemas/CreateServiceGroupRequestAutokill'
-                            description: Automatic delete-on-idle configuration.
+                        The load balancer will never assign more requests to a single instance.  In
+                        case there are no other instances available, excess requests fail (i.e.,
+                        they are blocked and not queued).
+                    format: uint64
+                autokill:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateServiceGroupRequestAutokill'
+                    description: Automatic delete-on-idle configuration.
             description: The request message for creating a new service group.
         CreateServiceGroupRequestAutokill:
             type: object
@@ -3840,6 +3901,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template instance that was created.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the template instance.
                 state:
                     enum:
                         - "stopped"
@@ -3979,6 +4046,12 @@ components:
                         specified, a random name of the form `vol-X` is generated for you, where
                         `X` is a 5 character long random alphanumeric suffix..  The name can also
                         be used to identify the volume in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 size_mb:
                     example: 64
                     type: integer
@@ -4084,6 +4157,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the newly created volume.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 state:
                     enum:
                         - "uninitialized"
@@ -4173,6 +4252,12 @@ components:
                     example: funky-policy
                     type: string
                     description: The name of the service of the deleted policy.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the resource.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -4245,6 +4330,12 @@ components:
                     example: funky-instance-template
                     type: string
                     description: The name of the service where the configuration was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the resource.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -4316,6 +4407,12 @@ components:
                     example: funky-certificate
                     type: string
                     description: The name of the certificate which was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the certificate.
                 message:
                     example: No certificate with name 'funky-town-g756b5d'
                     type: string
@@ -4388,6 +4485,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance which was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 previous_state:
                     example: stopped
                     type: string
@@ -4474,6 +4577,12 @@ components:
                     example: funky-service-g7gum5cj
                     type: string
                     description: The name of the service group which was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the service group.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -4689,6 +4798,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the volume that was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -4802,6 +4917,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the volume that was detached.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -4910,6 +5031,12 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/AutoscalePolicy'
                     description: The policy which was retrieved by the request.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the resource.
                 message:
                     example: No service with name 'funky-town-g756b5d'
                     type: string
@@ -4987,6 +5114,12 @@ components:
                     example: funky-instance-template
                     type: string
                     description: The name of the service where the configuration was created.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the service group.
                 enabled:
                     example: true
                     type: boolean
@@ -5688,6 +5821,12 @@ components:
                         The digest of the image is a unique identifier of the image manifest which
                         is a string representation including the hashing algorithm and the hash
                         value separated by a colon.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the image.
                 tags:
                     example: ['my-image:latest']
                     type: array
@@ -5739,6 +5878,12 @@ components:
                         This is a human-readable name that can be used to identify the instance.
                         The name must be unique within the context of your account.  The name can
                         also be used to identify the instance in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the instance is located.
                 created_at:
                     example: 2023-10-01T12:00:00Z
                     type: string
@@ -6299,32 +6444,44 @@ components:
                 i.e. "stateful".
         InstanceServiceGroup:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of the service group.
+            allOf:
+                - type: object
+                  properties:
+                    uuid:
+                        example: 123e4567-e89b-12d3-a456-426614174000
+                        type: string
+                        description: |-
+                            The UUID of the service group.
 
-                        This is a unique identifier for the service group that is generated when
-                        the service is created.  The UUID is used to reference the service group
-                        in API calls and can be used to identify the service in all API calls
-                        that require an service identifier.
-                    format: uuid
-                name:
-                    example: funky-service-g756b5d
-                    type: string
-                    description: |-
-                        The name of the service group.
+                            This is a unique identifier for the service group that is generated when
+                            the service is created.  The UUID is used to reference the service group
+                            in API calls and can be used to identify the service in all API calls
+                            that require an service identifier.
+                        format: uuid
+                    name:
+                        example: funky-service-g756b5d
+                        type: string
+                        description: |-
+                            The name of the service group.
 
-                        This is a human-readable name that can be used to identify the service
-                        group.  The name is unique within the context of your account.  The name
-                        can also be used to identify the service group in API calls.
-                domains:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ServiceGroupInstanceDomain'
-                    description: The domain configuration for the service group.
+                            This is a human-readable name that can be used to identify the service
+                            group.  The name is unique within the context of your account.  The name
+                            can also be used to identify the service group in API calls.
+                    domains:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/ServiceGroupInstanceDomain'
+                        description: The domain configuration for the service group.
+                - oneOf:
+                    - title: metro
+                      type: object
+                      properties:
+                        metro:
+                            example: fra
+                            type: string
+                            description: |-
+                                (Only applies when using global control plane).
+                                Where the service group is located.
             description: |-
                 The service group configuration for the instance.
 
@@ -6355,65 +6512,75 @@ components:
             description: Automatic delete-on-idle configuration for template instances.
         InstanceVolume:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of the volume.
+            allOf:
+                - type: object
+                  properties:
+                    uuid:
+                        example: 123e4567-e89b-12d3-a456-426614174000
+                        type: string
+                        description: |-
+                            The UUID of the volume.
 
-                        This is a unique identifier for the volume that is generated when the
-                        volume is created.  The UUID is used to reference the volume in API calls
-                        and can be used to identify the volume in all API calls that require a
-                        volume identifier.
-                    format: uuid
-                name:
-                    example: funky-volume-g756b5d
-                    type: string
-                    description: |-
-                        The name of the volume.
+                            This is a unique identifier for the volume that is generated when the
+                            volume is created.  The UUID is used to reference the volume in API calls
+                            and can be used to identify the volume in all API calls that require a
+                            volume identifier.
+                        format: uuid
+                    name:
+                        example: funky-volume-g756b5d
+                        type: string
+                        description: |-
+                            The name of the volume.
 
-                        This is a human-readable name that can be used to identify the volume.
-                        The name must be unique within the context of your account.  The name can
-                        also be used to identify the volume in API calls.
-                at:
-                    example: /mnt/funky-volume
-                    type: string
-                    description: |-
-                        The mount point of the volume in the instance.  This is the directory in
-                        the instance where the volume will be mounted.
-                readonly:
-                    example: true
-                    type: boolean
-                    description: Whether the volume is read-only or not.
+                            This is a human-readable name that can be used to identify the volume.
+                            The name must be unique within the context of your account.  The name can
+                            also be used to identify the volume in API calls.
+                    at:
+                        example: /mnt/funky-volume
+                        type: string
+                        description: |-
+                            The mount point of the volume in the instance.  This is the directory in
+                            the instance where the volume will be mounted.
+                    readonly:
+                        example: true
+                        type: boolean
+                        description: Whether the volume is read-only or not.
+                - oneOf:
+                    - title: metro
+                      type: object
+                      properties:
+                        metro:
+                            example: fra
+                            type: string
+                            description: |-
+                                (Only applies when using global control plane).
+                                Where the volume is located.
             description: |-
                 A volume defines a storage which can be attached to the instance.
 
                 Volumes can be used to store persistent data which should remain available
                 even if the instance is stopped or restarted.
         NameOrUUID:
+            required:
+                - uuid
+                - name
             type: object
-            allOf:
-                - oneOf:
-                    - title: uuid
-                      required:
-                        - uuid
-                      type: object
-                      properties:
-                        uuid:
-                            example: 123e4567-e89b-12d3-a456-426614174000
-                            type: string
-                            description: Mutually exclusive with name.
-                            format: uuid
-                    - title: name
-                      required:
-                        - name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g756b5d
-                            type: string
-                            description: Mutually exclusive with UUID.
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: Mutually exclusive with name.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the resource.
             description: An identifier for a resource.  Either a name or a UUID.
         Quotas:
             type: object
@@ -6738,6 +6905,12 @@ components:
                         This is a human-readable name that can be used to identify the service
                         group. The name must be unique within the context of your account.  The
                         name can also be used to identify the service in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the service group is located.
                 created_at:
                     example: 2023-10-01T12:00:00Z
                     type: string
@@ -6968,6 +7141,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance to start.  Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 wait_timeout_ms:
                     example: 2000
                     type: integer
@@ -7045,6 +7224,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance which was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 state:
                     example: running
                     type: string
@@ -7112,6 +7297,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance to stop.  Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 force:
                     example: false
                     type: boolean
@@ -7191,6 +7382,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 state:
                     enum:
                         - "stopped"
@@ -7421,6 +7618,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance to update. Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro to route the request to.
                 prop:
                     example: memory_mb
                     enum:
@@ -7517,6 +7720,12 @@ components:
                     example: success
                     type: string
                     description: The status of this particular instance update operation.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 id:
                     example: op-1
                     type: string
@@ -7674,6 +7883,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the service group that was updated.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the service group.
                 status:
                     example: success
                     type: string
@@ -7756,6 +7971,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template instance to update. Mutually exclusive with UUID.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the template instance.
                 prop:
                     example: tags
                     enum:
@@ -7833,6 +8054,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template instance that was updated.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the template instance.
                 status:
                     example: success
                     type: string
@@ -8153,6 +8380,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the volume that was updated.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 status:
                     example: success
                     type: string
@@ -8197,6 +8430,12 @@ components:
                         This is a human-readable name that can be used to identify the volume.
                         The name must be unique within the context of your account.  The name can
                         also be used to identify the volume in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the volume is located.
                 created_at:
                     example: 2021-01-01T00:00:00Z
                     type: string

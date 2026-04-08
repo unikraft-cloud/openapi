@@ -3238,7 +3238,7 @@ components:
                     enum:
                         - "never"
                         - "always"
-                        - "on_failure"
+                        - "on-failure"
                     type: string
                     description: |-
                         Restart policy for the instance.  This defines how the instance
@@ -3610,8 +3610,8 @@ components:
             properties:
                 policy:
                     enum:
-                        - "on"
                         - "off"
+                        - "on"
                         - "idle"
                     type: string
                     description: The specific policy to use for scaling the instance to zero.
@@ -5978,7 +5978,7 @@ components:
                     enum:
                         - "never"
                         - "always"
-                        - "on_failure"
+                        - "on-failure"
                     type: string
                     description: |-
                         The restart configuration for the instance.
@@ -6251,8 +6251,8 @@ components:
                     description: Indicates whether scale-to-zero is enabled for the instance.
                 policy:
                     enum:
-                        - "on"
                         - "off"
+                        - "on"
                         - "idle"
                     type: string
                     description: The specific policy to use for scaling the instance to zero.

@@ -4252,7 +4252,7 @@
             "enum": [
               "never",
               "always",
-              "on_failure"
+              "on-failure"
             ],
             "type": "string",
             "description": "Restart policy for the instance.  This defines how the instance\nshould behave when it stops or crashes.  Cannot be combined with\nthe `delete-on-stop` feature.",
@@ -4623,8 +4623,8 @@
         "properties": {
           "policy": {
             "enum": [
-              "on",
               "off",
+              "on",
               "idle"
             ],
             "type": "string",
@@ -7468,7 +7468,7 @@
             "enum": [
               "never",
               "always",
-              "on_failure"
+              "on-failure"
             ],
             "type": "string",
             "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops.  If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay.",
@@ -7743,8 +7743,8 @@
           },
           "policy": {
             "enum": [
-              "on",
               "off",
+              "on",
               "idle"
             ],
             "type": "string",

@@ -6751,6 +6751,14 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
           }
         }
       },
@@ -6908,6 +6916,14 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
           }
         }
       },
@@ -8716,7 +8732,7 @@
                 "$ref": "#/components/schemas/ResponseStatus"
               }
             ],
-            "description": "An optional field representing the status of the request.  This field is\nonly set when this message object is used as a response message."
+            "description": "The status of the response."
           },
           "message": {
             "example": "No instance with name 'funky-town-g756b5d'",
@@ -10202,6 +10218,14 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
           }
         }
       }

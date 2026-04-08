@@ -5270,6 +5270,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
         GetInstancesLogsResponseRange:
             type: object
             properties:
@@ -5426,6 +5430,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
         GetInstancesResponse:
             type: object
             properties:
@@ -7210,9 +7218,7 @@ components:
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
-                    description: |-
-                        An optional field representing the status of the request.  This field is
-                        only set when this message object is used as a response message.
+                    description: The status of the response.
                 message:
                     example: No instance with name 'funky-town-g756b5d'
                     type: string
@@ -8476,6 +8482,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
     securitySchemes:
         bearerToken:
             type: http

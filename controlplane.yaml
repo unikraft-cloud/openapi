@@ -70,6 +70,33 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/RequestSigninResponse'
+    /v1/images:
+        get:
+            tags:
+                - Images
+            summary: List Images
+            description: ListImages lists all images for the authenticated user.
+            operationId: ListImages
+            parameters:
+                - name: details
+                  in: query
+                  description: Whether to include image tag details.
+                  schema:
+                    type: boolean
+                - name: namespace
+                  in: query
+                  description: Optional namespaces to filter images by.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListImagesResponse'
     /v1/metros:
         get:
             tags:
@@ -734,6 +761,64 @@ components:
                 organization_display_name:
                     type: string
                     description: The display name of the organization the token is associated with.
+        Image:
+            type: object
+            properties:
+                name:
+                    example: namespace/image1
+                    type: string
+                    description: The canonical name of the image.
+                tags:
+                    example: [{name: latest, digest: 'sha256:1111111111111111111111111111111111111111111111111111111111111111'}]
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ImageTag'
+                    description: The list of tags for the image.  Only populated when details are requested.
+        ImageTag:
+            type: object
+            properties:
+                name:
+                    example: latest
+                    type: string
+                    description: The tag name.
+                digest:
+                    example: sha256:1111111111111111111111111111111111111111111111111111111111111111
+                    type: string
+                    description: The digest for the tag.
+        ListImagesResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/ListImagesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 87
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
+        ListImagesResponseData:
+            type: object
+            properties:
+                images:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Image'
+                    description: The list of images.
         ListMachineTypesResponse:
             type: object
             properties:
@@ -1570,6 +1655,7 @@ components:
 tags:
     - name: Auth
       description: Authenticate with Unikraft Cloud.
+    - name: Images
     - name: Metros
     - name: NodeActivationService
       description: |-

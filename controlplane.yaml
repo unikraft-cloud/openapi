@@ -785,6 +785,16 @@ components:
                     example: sha256:1111111111111111111111111111111111111111111111111111111111111111
                     type: string
                     description: The digest for the tag.
+                size:
+                    example: 12345678
+                    type: integer
+                    description: The size of the image in bytes.
+                    format: uint64
+                push_time:
+                    example: 2024-01-02T15:04:05Z
+                    type: string
+                    description: The push time of the image.
+                    format: date-time
         ListImagesResponse:
             type: object
             properties:

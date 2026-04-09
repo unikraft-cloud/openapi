@@ -1019,26 +1019,36 @@ components:
                     type: string
                     description: The country where the metro is located.
         NameOrUUID:
-            required:
-                - uuid
-                - name
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro of the resource.
+            allOf:
+                - type: object
+                  properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro of the resource.
+                - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: Mutually exclusive with UUID.
             description: An identifier for a resource.  Either a name or a UUID.
         Node:
             type: object
@@ -1548,37 +1558,31 @@ components:
             description: SSHKey represents an SSH public key for authentication.
         UpdateNodePayload:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    property:
-                        enum:
-                            - "tags"
-                            - "delete_lock"
-                            - "ssh_keys"
-                        type: string
-                        description: The property to update.
-                        format: enum
-                    operation:
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
-                        description: The operation to perform on the property.
-                        format: enum
-                - oneOf:
-                    - title: value
-                      type: object
-                      properties:
-                        value:
-                            type: string
-                            description: |-
-                                The value for the update operation. The type depends on the property:
-                                - TAGS: google.protobuf.Struct with key-value pairs
-                                - DELETE_LOCK: google.protobuf.Value with boolean
-                                - SSH_KEYS: google.protobuf.ListValue with SSHKey objects
-                            format: bytes
+            properties:
+                property:
+                    enum:
+                        - "tags"
+                        - "delete_lock"
+                        - "ssh_keys"
+                    type: string
+                    description: The property to update.
+                    format: enum
+                operation:
+                    enum:
+                        - "set"
+                        - "add"
+                        - "del"
+                    type: string
+                    description: The operation to perform on the property.
+                    format: enum
+                value:
+                    type: string
+                    description: |-
+                        The value for the update operation. The type depends on the property:
+                        - TAGS: google.protobuf.Struct with key-value pairs
+                        - DELETE_LOCK: google.protobuf.Value with boolean
+                        - SSH_KEYS: google.protobuf.ListValue with SSHKey objects
+                    format: bytes
             description: UpdateNodePayload contains the changes to apply to a node.
         UpdateNodesResponse:
             type: object

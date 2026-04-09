@@ -3089,57 +3089,42 @@
     "schemas": {
       "AddUsersResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/AddUsersResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddUsersResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "AddUsersResponseData": {
         "type": "object",
@@ -3159,68 +3144,11 @@
           "at"
         ],
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "attach_to": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/BodyInstanceID"
-                  }
-                ],
-                "description": "UUID or name of the instance to attach the volume to."
-              },
-              "at": {
-                "example": "/mnt/my-volume",
-                "pattern": "^/(?!.*\\.\\./|.*\\.$|.*/\\.$)[^:]*$",
-                "type": "string",
-                "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
-                "format": "regex"
-              }
-            }
-          },
-          {
-            "oneOf": [
-              {
-                "title": "readonly",
-                "type": "object",
-                "properties": {
-                  "readonly": {
-                    "example": false,
-                    "type": "boolean",
-                    "description": "Whether the volume should be mounted read-only."
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "AttachVolumesRequestItem": {
-        "required": [
-          "uuid",
-          "name",
-          "attach_to",
-          "at"
-        ],
-        "type": "object",
         "properties": {
-          "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-            "type": "string",
-            "description": "The UUID of the volume to attach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-vol-g7gum5cj",
-            "type": "string",
-            "description": "The name of the volume to attach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
-          },
           "attach_to": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NameOrUUID"
+                "$ref": "#/components/schemas/BodyInstanceID"
               }
             ],
             "description": "UUID or name of the instance to attach the volume to."
@@ -3237,62 +3165,114 @@
             "type": "boolean",
             "description": "Whether the volume should be mounted read-only."
           }
-        },
-        "description": "A single request item for attaching a volume to an instance."
+        }
       },
-      "AttachVolumesResponse": {
+      "AttachVolumesRequestItem": {
+        "required": [
+          "attach_to",
+          "at"
+        ],
         "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "status": {
+              "attach_to": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ResponseStatus"
+                    "$ref": "#/components/schemas/NameOrUUID"
                   }
                 ],
-                "description": "The status of the response."
+                "description": "UUID or name of the instance to attach the volume to."
               },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/AttachVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
+              "at": {
+                "example": "/mnt/my-volume",
+                "pattern": "^/(?!.*\\.\\./|.*\\.$|.*/\\.$)[^:]*$",
+                "type": "string",
+                "description": "Path of the mountpoint.\n\nThe path must be absolute, not contain `.` and `..` components, and not\ncontain colons (`:`). The path must point to an empty directory. If the\ndirectory does not exist, it is created.",
+                "format": "regex"
               },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
+              "readonly": {
+                "example": false,
+                "type": "boolean",
+                "description": "Whether the volume should be mounted read-only."
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "message",
+                "title": "uuid",
+                "required": [
+                  "uuid"
+                ],
                 "type": "object",
                 "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
+                  "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                     "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                    "description": "The UUID of the volume to attach. Mutually exclusive with name.\nExactly one of uuid or name must be provided.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "required": [
+                  "name"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-vol-g7gum5cj",
+                    "type": "string",
+                    "description": "The name of the volume to attach. Mutually exclusive with UUID.\nExactly one of uuid or name must be provided."
                   }
                 }
               }
             ]
           }
         ],
+        "description": "A single request item for attaching a volume to an instance."
+      },
+      "AttachVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AttachVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
         "description": "The response message for attaching one or more volume(s) given their\nUUID(s) or name(s)."
       },
       "AttachVolumesResponseAttachedVolume": {
@@ -3418,34 +3398,19 @@
       },
       "BodyInstanceID": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                "type": "string",
-                "description": "The UUID of the instance that the volume is detached from.",
-                "format": "uuid"
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the instance that the volume is detached from.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g7gum5cj",
-                    "type": "string",
-                    "description": "The name of the instance that the volume is detached from."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-town-g7gum5cj",
+            "type": "string",
+            "description": "The name of the instance that the volume is detached from."
           }
-        ],
+        },
         "description": "Reference to the instance to detach the volume from."
       },
       "Certificate": {
@@ -3565,96 +3530,102 @@
       },
       "CloneVolumesRequestItem": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-            "type": "string",
-            "description": "The UUID of the volume to clone.  Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-vol-g7gum5cj",
-            "type": "string",
-            "description": "The name of the volume to clone.  Mutually exclusive with UUID."
-          },
-          "vol_name": {
-            "example": "funky-vol-t7qumh5j",
-            "type": "string",
-            "description": "The name of the new cloned volume.  If not provided, a random name\nof the form `vol-X` is generated for you, where `X` is a 5 character\nlong random alphanumeric suffix."
-          },
-          "quota_policy": {
-            "example": "static",
-            "enum": [
-              "static",
-              "dynamic"
-            ],
-            "type": "string",
-            "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used.",
-            "format": "enum"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "A list of tags to assign to the new cloned volume."
-          }
-        },
-        "description": "A single request item describing the volume to clone."
-      },
-      "CloneVolumesResponse": {
-        "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
+              "vol_name": {
+                "example": "funky-vol-t7qumh5j",
+                "type": "string",
+                "description": "The name of the new cloned volume.  If not provided, a random name\nof the form `vol-X` is generated for you, where `X` is a 5 character\nlong random alphanumeric suffix."
               },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CloneVolumesResponseData"
-                  }
+              "quota_policy": {
+                "example": "static",
+                "enum": [
+                  "static",
+                  "dynamic"
                 ],
-                "description": "The response data for this request."
+                "type": "string",
+                "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used.",
+                "format": "enum"
               },
-              "errors": {
+              "tags": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ResponseError"
+                  "type": "string"
                 },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
+                "description": "A list of tags to assign to the new cloned volume."
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "message",
+                "title": "uuid",
                 "type": "object",
                 "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
+                  "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
                     "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                    "description": "The UUID of the volume to clone.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-vol-g7gum5cj",
+                    "type": "string",
+                    "description": "The name of the volume to clone.  Mutually exclusive with UUID."
                   }
                 }
               }
             ]
           }
         ],
+        "description": "A single request item describing the volume to clone."
+      },
+      "CloneVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloneVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
         "description": "The response message for cloning one or more volume(s)."
       },
       "CloneVolumesResponseData": {
@@ -3869,57 +3840,42 @@
       },
       "CreateAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 32,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 32,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "CreateAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -3975,117 +3931,123 @@
       },
       "CreateAutoscaleConfigurationsRequestConfiguration": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-service",
-            "type": "string",
-            "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to."
-          },
-          "min_size": {
-            "example": 2,
-            "type": "integer",
-            "description": "The minimum number of instances to keep running.",
-            "format": "int64"
-          },
-          "max_size": {
-            "example": 12,
-            "type": "integer",
-            "description": "The maximum number of instances to keep running.",
-            "format": "int64"
-          },
-          "warmup_time_ms": {
-            "example": 100,
-            "type": "integer",
-            "description": "The warmup time in milliseconds for new instances.",
-            "format": "int64"
-          },
-          "cooldown_time_ms": {
-            "example": 100,
-            "type": "integer",
-            "description": "The cooldown time in milliseconds for the autoscale configuration.",
-            "format": "int64"
-          },
-          "create_args": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ConfigurationInstanceCreateArgs"
-              }
-            ],
-            "description": "The arguments to use when creating the autoscale configuration."
-          },
-          "policies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AutoscalePolicy"
-            },
-            "description": "The policies to apply to the autoscale configuration."
-          }
-        }
-      },
-      "CreateAutoscaleConfigurationsResponse": {
-        "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "status": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to."
+              },
+              "min_size": {
+                "example": 2,
+                "type": "integer",
+                "description": "The minimum number of instances to keep running.",
+                "format": "int64"
+              },
+              "max_size": {
+                "example": 12,
+                "type": "integer",
+                "description": "The maximum number of instances to keep running.",
+                "format": "int64"
+              },
+              "warmup_time_ms": {
+                "example": 100,
+                "type": "integer",
+                "description": "The warmup time in milliseconds for new instances.",
+                "format": "int64"
+              },
+              "cooldown_time_ms": {
+                "example": 100,
+                "type": "integer",
+                "description": "The cooldown time in milliseconds for the autoscale configuration.",
+                "format": "int64"
+              },
+              "create_args": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ResponseStatus"
+                    "$ref": "#/components/schemas/ConfigurationInstanceCreateArgs"
                   }
                 ],
-                "description": "The status of the response."
+                "description": "The arguments to use when creating the autoscale configuration."
               },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
+              "policies": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ResponseError"
+                  "$ref": "#/components/schemas/AutoscalePolicy"
                 },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 34,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
+                "description": "The policies to apply to the autoscale configuration."
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "message",
+                "title": "uuid",
                 "type": "object",
                 "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                    "description": "The UUID of the service to create a configuration for.\nMutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-service",
+                    "type": "string",
+                    "description": "The name of the service to create a configuration for.\nMutually exclusive with UUID."
                   }
                 }
               }
             ]
           }
-        ],
+        ]
+      },
+      "CreateAutoscaleConfigurationsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAutoscaleConfigurationsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 34,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
         "description": "The response to a CreateAutoscaleConfigurationRequest."
       },
       "CreateAutoscaleConfigurationsResponseConfigurationsResponse": {
@@ -4415,36 +4377,21 @@
           "name"
         ],
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "name": {
-                "example": "funky-town-g756b5d.fra0.unikraft.app.",
-                "type": "string",
-                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), e.g. `example.com.`; otherwise it will become a\nsubdomain of the target metro, e.g. `example` becomes\n`example.fra0.unikraft.app`."
-              }
-            }
+        "properties": {
+          "name": {
+            "example": "funky-town-g756b5d.fra0.unikraft.app.",
+            "type": "string",
+            "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), e.g. `example.com.`; otherwise it will become a\nsubdomain of the target metro, e.g. `example` becomes\n`example.fra0.unikraft.app`."
           },
-          {
-            "oneOf": [
+          "certificate": {
+            "allOf": [
               {
-                "title": "certificate",
-                "type": "object",
-                "properties": {
-                  "certificate": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/NameOrUUID"
-                      }
-                    ],
-                    "description": "A reference to an existing certificate which can be used for the\nspecified domain.  If unspecified, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
-                  }
-                }
+                "$ref": "#/components/schemas/NameOrUUID"
               }
-            ]
+            ],
+            "description": "A reference to an existing certificate which can be used for the\nspecified domain.  If unspecified, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
           }
-        ],
+        },
         "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge."
       },
       "CreateInstanceRequestRom": {
@@ -4468,49 +4415,70 @@
       },
       "CreateInstanceRequestServiceGroup": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
-            "format": "uuid"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "domains": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateInstanceRequestDomain"
+                },
+                "description": "If no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Service"
+                },
+                "description": "If no existing service group identifier is provided, one or more new\n(ephemeral, non-persistent) service(s) can be created with the following\ndefinitions."
+              },
+              "soft_limit": {
+                "example": 100,
+                "maximum": 65535,
+                "minimum": 1,
+                "type": "integer",
+                "description": "The soft limit for the number of services that can be created in this\nservice group.",
+                "format": "uint32"
+              },
+              "hard_limit": {
+                "example": 200,
+                "maximum": 65535,
+                "minimum": 1,
+                "type": "integer",
+                "description": "The hard limit for the number of services that can be created in this\nservice group.",
+                "format": "uint32"
+              }
+            }
           },
-          "name": {
-            "example": "funky-service-g756b5d",
-            "type": "string",
-            "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
-          },
-          "domains": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateInstanceRequestDomain"
-            },
-            "description": "If no existing (persistent) service group is specified via its\nidentifier, a new (ephemeral) service group can be created.  In addition\nto the services it must expose, you can specify which domains it should\nuse too."
-          },
-          "services": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Service"
-            },
-            "description": "If no existing service group identifier is provided, one or more new\n(ephemeral, non-persistent) service(s) can be created with the following\ndefinitions."
-          },
-          "soft_limit": {
-            "example": 100,
-            "maximum": 65535,
-            "minimum": 1,
-            "type": "integer",
-            "description": "The soft limit for the number of services that can be created in this\nservice group.",
-            "format": "uint32"
-          },
-          "hard_limit": {
-            "example": 200,
-            "maximum": 65535,
-            "minimum": 1,
-            "type": "integer",
-            "description": "The hard limit for the number of services that can be created in this\nservice group.",
-            "format": "uint32"
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "(Optional).  Reference an existing (persistent) service group by its\nUUID.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-service-g756b5d",
+                    "type": "string",
+                    "description": "(Optional).  Reference an existing (persistent) service group by its\nname.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections."
       },
       "CreateInstanceRequestTemplate": {
@@ -4545,78 +4513,99 @@
           "at"
         ],
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-volume-g756b5d",
-            "type": "string",
-            "description": "The name of the volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this name.  If the volume does not exist, the request will\nfail.  If a new volume is intended to be created, then this field must be\nspecified along with the mount point in the instance and a provisioning\nsource (size_mb or host_path)."
-          },
-          "size_mb": {
-            "example": 32,
-            "type": "integer",
-            "description": "The size of the volume when creating a new volume.\n\nWhen creating a new volume as part of the instance create request,\nspecify the size of the volume in MiB.",
-            "format": "uint64"
-          },
-          "host_path": {
-            "example": "/srv/data/my-volume",
-            "type": "string",
-            "description": "A host path to create a managed volume from."
-          },
-          "at": {
-            "example": "/mnt/funky-volume",
-            "type": "string",
-            "description": "The mount point for the volume in the instance."
-          },
-          "readonly": {
-            "example": false,
-            "type": "boolean",
-            "description": "Whether the volume is read-only.\n\nIf this field is set to true, the volume will be mounted as read-only in\nthe instance.  This field is optional and defaults to false and is only\napplicable when using an existing volume."
-          },
-          "quota_policy": {
-            "example": "static",
-            "type": "string",
-            "description": "Quota policy for the volume."
-          },
-          "filesystem": {
-            "example": "ext4",
-            "type": "string",
-            "description": "Filesystem type to format or configure.\nWithout custom configuration, this is either `ext4` or `virtiofs`."
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Tags to assign to the new volume."
-          },
-          "uid": {
-            "type": "integer",
-            "description": "Guest UID for managed volumes (host_path mode only).",
-            "format": "uint32"
-          },
-          "gid": {
-            "type": "integer",
-            "description": "Guest GID for managed volumes (host_path mode only).",
-            "format": "uint32"
-          },
-          "args": {
-            "example": {
-              "arg1": "value1",
-              "arg2": "value2"
-            },
+        "allOf": [
+          {
             "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Script arguments passed to volume initialization scripts."
+            "properties": {
+              "uuid": {
+                "example": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "string",
+                "description": "The UUID of an existing volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this UUID.",
+                "format": "uuid"
+              },
+              "name": {
+                "example": "funky-volume-g756b5d",
+                "type": "string",
+                "description": "The name of the volume.\n\nIf this is the only specified field, then it will look up an existing\nvolume by this name.  If the volume does not exist, the request will\nfail.  If a new volume is intended to be created, then this field must be\nspecified along with the mount point in the instance and a provisioning\nsource (size_mb or host_path)."
+              },
+              "at": {
+                "example": "/mnt/funky-volume",
+                "type": "string",
+                "description": "The mount point for the volume in the instance."
+              },
+              "readonly": {
+                "example": false,
+                "type": "boolean",
+                "description": "Whether the volume is read-only.\n\nIf this field is set to true, the volume will be mounted as read-only in\nthe instance.  This field is optional and defaults to false and is only\napplicable when using an existing volume."
+              },
+              "quota_policy": {
+                "example": "static",
+                "type": "string",
+                "description": "Quota policy for the volume."
+              },
+              "filesystem": {
+                "example": "ext4",
+                "type": "string",
+                "description": "Filesystem type to format or configure.\nWithout custom configuration, this is either `ext4` or `virtiofs`."
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Tags to assign to the new volume."
+              },
+              "uid": {
+                "type": "integer",
+                "description": "Guest UID for managed volumes (host_path mode only).",
+                "format": "uint32"
+              },
+              "gid": {
+                "type": "integer",
+                "description": "Guest GID for managed volumes (host_path mode only).",
+                "format": "uint32"
+              },
+              "args": {
+                "example": {
+                  "arg1": "value1",
+                  "arg2": "value2"
+                },
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Script arguments passed to volume initialization scripts."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "size_mb",
+                "type": "object",
+                "properties": {
+                  "size_mb": {
+                    "example": 32,
+                    "type": "integer",
+                    "description": "The size of the volume when creating a new volume.\n\nWhen creating a new volume as part of the instance create request,\nspecify the size of the volume in MiB.",
+                    "format": "uint64"
+                  }
+                }
+              },
+              {
+                "title": "host_path",
+                "type": "object",
+                "properties": {
+                  "host_path": {
+                    "example": "/srv/data/my-volume",
+                    "type": "string",
+                    "description": "A host path to create a managed volume from."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A volume defines a storage volume that can be attached to the instance."
       },
       "CreateInstanceResponse": {
@@ -4755,23 +4744,13 @@
       },
       "CreateServiceGroupRequestAutokill": {
         "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "time_ms",
-                "type": "object",
-                "properties": {
-                  "time_ms": {
-                    "type": "integer",
-                    "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
-                    "format": "uint64"
-                  }
-                }
-              }
-            ]
+        "properties": {
+          "time_ms": {
+            "type": "integer",
+            "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "Automatic delete-on-idle configuration for service groups."
       },
       "CreateServiceGroupRequestDomain": {
@@ -4985,57 +4964,42 @@
       },
       "CreateTemplateVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateTemplateVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request"
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateTemplateVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for creating one or more template volumes."
       },
       "CreateTemplateVolumesResponseData": {
@@ -5103,130 +5067,142 @@
       },
       "CreateVolumeRequest": {
         "type": "object",
-        "properties": {
-          "name": {
-            "example": "funky-vol-t7qumh5j",
-            "type": "string",
-            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
-          "size_mb": {
-            "example": 64,
-            "type": "integer",
-            "description": "The size of the volume in megabytes.",
-            "format": "uint64"
-          },
-          "host_path": {
-            "example": "/srv/data/my-volume",
-            "type": "string",
-            "description": "A host path to create a managed volume from."
-          },
-          "template": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrUUID"
-              }
-            ],
-            "description": "Source template volume to clone from."
-          },
-          "quota_policy": {
-            "example": "static",
-            "enum": [
-              "static",
-              "dynamic"
-            ],
-            "type": "string",
-            "description": "Quota policy for the volume.",
-            "format": "enum"
-          },
-          "filesystem": {
-            "example": "ext4",
-            "type": "string",
-            "description": "Filesystem type to format or configure.\nWithout custom configuration, this is either `ext4` or `virtiofs`."
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Tags to assign to the new volume."
-          },
-          "uid": {
-            "type": "integer",
-            "description": "Guest UID for managed volumes (host_path mode only).",
-            "format": "uint32"
-          },
-          "gid": {
-            "type": "integer",
-            "description": "Guest GID for managed volumes (host_path mode only).",
-            "format": "uint32"
-          },
-          "args": {
-            "example": {
-              "arg1": "value1",
-              "arg2": "value2"
-            },
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Script arguments passed to volume initialization scripts."
-          }
-        },
-        "description": "The request message for creating a volume."
-      },
-      "CreateVolumeResponse": {
-        "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
+              "name": {
+                "example": "funky-vol-t7qumh5j",
+                "type": "string",
+                "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
+              "quota_policy": {
+                "example": "static",
+                "enum": [
+                  "static",
+                  "dynamic"
                 ],
-                "description": "The status of the response."
+                "type": "string",
+                "description": "Quota policy for the volume.",
+                "format": "enum"
               },
-              "data": {
-                "$ref": "#/components/schemas/CreateVolumeResponseData"
+              "filesystem": {
+                "example": "ext4",
+                "type": "string",
+                "description": "Filesystem type to format or configure.\nWithout custom configuration, this is either `ext4` or `virtiofs`."
               },
-              "errors": {
+              "tags": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ResponseError"
+                  "type": "string"
                 },
-                "description": "A list of errors which may have occurred during the request."
+                "description": "Tags to assign to the new volume."
               },
-              "op_time_us": {
-                "example": 46,
+              "uid": {
                 "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
+                "description": "Guest UID for managed volumes (host_path mode only).",
+                "format": "uint32"
+              },
+              "gid": {
+                "type": "integer",
+                "description": "Guest GID for managed volumes (host_path mode only).",
+                "format": "uint32"
+              },
+              "args": {
+                "example": {
+                  "arg1": "value1",
+                  "arg2": "value2"
+                },
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Script arguments passed to volume initialization scripts."
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "message",
+                "title": "size_mb",
                 "type": "object",
                 "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
+                  "size_mb": {
+                    "example": 64,
+                    "type": "integer",
+                    "description": "The size of the volume in megabytes.",
+                    "format": "uint64"
+                  }
+                }
+              },
+              {
+                "title": "host_path",
+                "type": "object",
+                "properties": {
+                  "host_path": {
+                    "example": "/srv/data/my-volume",
                     "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                    "description": "A host path to create a managed volume from."
+                  }
+                }
+              },
+              {
+                "title": "template",
+                "type": "object",
+                "properties": {
+                  "template": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/NameOrUUID"
+                      }
+                    ],
+                    "description": "Source template volume to clone from."
                   }
                 }
               }
             ]
           }
         ],
+        "description": "The request message for creating a volume."
+      },
+      "CreateVolumeResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateVolumeResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
         "description": "The response message for creating of a volume."
       },
       "CreateVolumeResponseData": {
@@ -5311,57 +5287,42 @@
       },
       "DeleteAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 54,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 54,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "DeleteAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -5411,57 +5372,42 @@
       },
       "DeleteAutoscaleConfigurationsResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 60,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteAutoscaleConfigurationsResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 60,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "DeleteAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -5899,57 +5845,42 @@
       },
       "DeleteTemplateVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DeleteTemplateVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteTemplateVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for deleting one or more template volumes."
       },
       "DeleteTemplateVolumesResponseData": {
@@ -5998,57 +5929,42 @@
       },
       "DeleteVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DeleteVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "DeleteVolumesResponseData": {
         "type": "object",
@@ -6169,57 +6085,42 @@
       },
       "DetachVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DetachVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetachVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "DetachVolumesResponseData": {
         "type": "object",
@@ -6275,36 +6176,21 @@
       },
       "Domain": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "fqdn": {
-                "example": "example.com.",
-                "type": "string",
-                "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\nbe a valid Full Qualified Domain Name (FQDN), otherwise it will become a\nsubdomain of the target metro."
-              }
-            }
+        "properties": {
+          "fqdn": {
+            "example": "example.com.",
+            "type": "string",
+            "description": "Publicly accessible domain name.  If this name ends in a period `.` it must\nbe a valid Full Qualified Domain Name (FQDN), otherwise it will become a\nsubdomain of the target metro."
           },
-          {
-            "oneOf": [
+          "certificate": {
+            "allOf": [
               {
-                "title": "certificate",
-                "type": "object",
-                "properties": {
-                  "certificate": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/Certificate"
-                      }
-                    ],
-                    "description": "Use an existing certificate for the domain.  If this field is\nspecified, the domain must be associated with a valid certificate."
-                  }
-                }
+                "$ref": "#/components/schemas/Certificate"
               }
-            ]
+            ],
+            "description": "Use an existing certificate for the domain.  If this field is\nspecified, the domain must be associated with a valid certificate."
           }
-        ],
+        },
         "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a FQDN is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
       },
       "GetAutoscaleConfigurationPolicyRequest": {
@@ -6323,57 +6209,42 @@
       },
       "GetAutoscaleConfigurationPolicyResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 12,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetAutoscaleConfigurationPolicyResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 12,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ]
+        }
       },
       "GetAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -6426,59 +6297,44 @@
       },
       "GetAutoscaleConfigurationsResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "enum": [
-                  "success",
-                  "error",
-                  "unconfigured"
-                ],
-                "type": "string",
-                "description": "The status of the response.",
-                "format": "enum"
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 50,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error",
+              "unconfigured"
+            ],
+            "type": "string",
+            "description": "The status of the response.",
+            "format": "enum"
           },
-          {
-            "oneOf": [
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/GetAutoscaleConfigurationsResponseData"
               }
-            ]
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 50,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for a GetAutoscaleConfigurationsRequest."
       },
       "GetAutoscaleConfigurationsResponseData": {
@@ -6699,31 +6555,52 @@
       },
       "GetInstancesLogsRequestItem": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\nname.",
-            "format": "uuid"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "offset": {
+                "example": 450,
+                "type": "integer",
+                "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
+                "format": "int64"
+              },
+              "limit": {
+                "example": 3000,
+                "type": "integer",
+                "description": "The amount of bytes to return at most.",
+                "format": "int64"
+              }
+            }
           },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\nUUID."
-          },
-          "offset": {
-            "example": 450,
-            "type": "integer",
-            "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
-            "format": "int64"
-          },
-          "limit": {
-            "example": 3000,
-            "type": "integer",
-            "description": "The amount of bytes to return at most.",
-            "format": "int64"
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\nname.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\nUUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single item in the request."
       },
       "GetInstancesLogsResponse": {
@@ -7188,57 +7065,42 @@
       },
       "GetTemplateVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/GetTemplateVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Partial success",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Partial success",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetTemplateVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for getting one or more template volumes."
       },
       "GetTemplateVolumesResponseData": {
@@ -7255,57 +7117,42 @@
       },
       "GetVolumesResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/GetVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for getting one or more volume(s) given their\nUUID(s) or name(s)."
       },
       "GetVolumesResponseData": {
@@ -7792,35 +7639,20 @@
       },
       "InstanceRestartAttempt": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "attempt": {
-                "example": 1,
-                "type": "integer",
-                "description": "Current restart attempt number. This is incremented each time the instance\nis restarted automatically by the platform.",
-                "format": "uint32"
-              }
-            }
+        "properties": {
+          "attempt": {
+            "example": 1,
+            "type": "integer",
+            "description": "Current restart attempt number. This is incremented each time the instance\nis restarted automatically by the platform.",
+            "format": "uint32"
           },
-          {
-            "oneOf": [
-              {
-                "title": "next_at",
-                "type": "object",
-                "properties": {
-                  "next_at": {
-                    "example": "2023-10-05T14:48:00Z",
-                    "type": "string",
-                    "description": "Timestamp of the next scheduled restart attempt.",
-                    "format": "date-time"
-                  }
-                }
-              }
-            ]
+          "next_at": {
+            "example": "2023-10-05T14:48:00Z",
+            "type": "string",
+            "description": "Timestamp of the next scheduled restart attempt.",
+            "format": "date-time"
           }
-        ],
+        },
         "description": "Records the current restart attempt of an instance."
       },
       "InstanceRom": {
@@ -7828,38 +7660,23 @@
           "image"
         ],
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "name": {
-                "example": "funky-rom",
-                "type": "string",
-                "description": "The name of the ROM to use for the instance configuration."
-              },
-              "image": {
-                "example": "nginx:latest",
-                "type": "string",
-                "description": "The image of the ROM to use for the instance configuration."
-              }
-            }
+        "properties": {
+          "name": {
+            "example": "funky-rom",
+            "type": "string",
+            "description": "The name of the ROM to use for the instance configuration."
           },
-          {
-            "oneOf": [
-              {
-                "title": "at",
-                "type": "object",
-                "properties": {
-                  "at": {
-                    "example": "/rom0",
-                    "type": "string",
-                    "description": "(Optional).  The path at which the ROM should be automatically mounted\ninside the instance.  When set, the platform mounts the ROM device at\nthe specified path so the guest does not need to mount it manually.\nWhen omitted, the ROM is exposed as a raw block device and the guest is\nresponsible for mounting it."
-                  }
-                }
-              }
-            ]
+          "image": {
+            "example": "nginx:latest",
+            "type": "string",
+            "description": "The image of the ROM to use for the instance configuration."
+          },
+          "at": {
+            "example": "/rom0",
+            "type": "string",
+            "description": "(Optional).  The path at which the ROM should be automatically mounted\ninside the instance.  When set, the platform mounts the ROM device at\nthe specified path so the guest does not need to mount it manually.\nWhen omitted, the ROM is exposed as a raw block device and the guest is\nresponsible for mounting it."
           }
-        ],
+        },
         "description": "Read-Only Memory (ROM) blob to attach to the instance."
       },
       "InstanceScaleToZero": {
@@ -7902,46 +7719,31 @@
       },
       "InstanceServiceGroup": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "123e4567-e89b-12d3-a456-426614174000",
-                "type": "string",
-                "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
-                "format": "uuid"
-              },
-              "name": {
-                "example": "funky-service-g756b5d",
-                "type": "string",
-                "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
-              },
-              "domains": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ServiceGroupInstanceDomain"
-                },
-                "description": "The domain configuration for the service group."
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the service group.\n\nThis is a unique identifier for the service group that is generated when\nthe service is created.  The UUID is used to reference the service group\nin API calls and can be used to identify the service in all API calls\nthat require an service identifier.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "metro",
-                "type": "object",
-                "properties": {
-                  "metro": {
-                    "example": "fra",
-                    "type": "string",
-                    "description": "(Only applies when using global control plane).\nWhere the service group is located."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-service-g756b5d",
+            "type": "string",
+            "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the service group is located."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGroupInstanceDomain"
+            },
+            "description": "The domain configuration for the service group."
           }
-        ],
+        },
         "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
       },
       "InstanceSnapshot": {
@@ -7957,96 +7759,94 @@
       },
       "InstanceTemplateAutokill": {
         "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "time_ms",
-                "type": "object",
-                "properties": {
-                  "time_ms": {
-                    "type": "integer",
-                    "description": "Time in milliseconds after the template was last used for cloning before\nit is deleted. A value of 0 disables template autokill.",
-                    "format": "uint64"
-                  }
-                }
-              }
-            ]
+        "properties": {
+          "time_ms": {
+            "type": "integer",
+            "description": "Time in milliseconds after the template was last used for cloning before\nit is deleted. A value of 0 disables template autokill.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "Automatic delete-on-idle configuration for template instances."
       },
       "InstanceVolume": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-volume-g756b5d",
+            "type": "string",
+            "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the volume is located."
+          },
+          "at": {
+            "example": "/mnt/funky-volume",
+            "type": "string",
+            "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
+          },
+          "readonly": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the volume is read-only or not."
+          }
+        },
+        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
+      },
+      "NameOrUUID": {
         "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "uuid": {
-                "example": "123e4567-e89b-12d3-a456-426614174000",
+              "metro": {
+                "example": "fra",
                 "type": "string",
-                "description": "The UUID of the volume.\n\nThis is a unique identifier for the volume that is generated when the\nvolume is created.  The UUID is used to reference the volume in API calls\nand can be used to identify the volume in all API calls that require a\nvolume identifier.",
-                "format": "uuid"
-              },
-              "name": {
-                "example": "funky-volume-g756b5d",
-                "type": "string",
-                "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
-              },
-              "at": {
-                "example": "/mnt/funky-volume",
-                "type": "string",
-                "description": "The mount point of the volume in the instance.  This is the directory in\nthe instance where the volume will be mounted."
-              },
-              "readonly": {
-                "example": true,
-                "type": "boolean",
-                "description": "Whether the volume is read-only or not."
+                "description": "(Only applies when using global control plane).\nThe metro of the resource."
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "metro",
+                "title": "uuid",
+                "required": [
+                  "uuid"
+                ],
                 "type": "object",
                 "properties": {
-                  "metro": {
-                    "example": "fra",
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "(Only applies when using global control plane).\nWhere the volume is located."
+                    "description": "Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "required": [
+                  "name"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "Mutually exclusive with UUID."
                   }
                 }
               }
             ]
           }
         ],
-        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
-      },
-      "NameOrUUID": {
-        "required": [
-          "uuid",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "Mutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          }
-        },
         "description": "An identifier for a resource.  Either a name or a UUID."
       },
       "Quotas": {
@@ -8158,57 +7958,42 @@
       },
       "QuotasResponse": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ResponseStatus"
-                  }
-                ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/QuotasResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
-              }
-            }
-          },
-          {
-            "oneOf": [
+        "properties": {
+          "status": {
+            "allOf": [
               {
-                "title": "message",
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
-                    "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-                  }
-                }
+                "$ref": "#/components/schemas/ResponseStatus"
               }
-            ]
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotasResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "The response message for getting the quota of a user given their UUID."
       },
       "QuotasResponseData": {
@@ -8483,23 +8268,13 @@
       },
       "ServiceGroupAutokill": {
         "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "time_ms",
-                "type": "object",
-                "properties": {
-                  "time_ms": {
-                    "type": "integer",
-                    "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
-                    "format": "uint64"
-                  }
-                }
-              }
-            ]
+        "properties": {
+          "time_ms": {
+            "type": "integer",
+            "description": "Time in milliseconds after the service group becomes empty before it is\ndeleted. A value of 0 disables autokill.",
+            "format": "uint64"
           }
-        ],
+        },
         "description": "Automatic delete-on-idle configuration for service groups."
       },
       "ServiceGroupInstance": {
@@ -8520,36 +8295,21 @@
       },
       "ServiceGroupInstanceDomain": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "fqdn": {
-                "example": "funky-town-g756b5d.fra0.unikraft.app.",
-                "type": "string",
-                "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
-              }
-            }
+        "properties": {
+          "fqdn": {
+            "example": "funky-town-g756b5d.fra0.unikraft.app.",
+            "type": "string",
+            "description": "Publicly accessible domain name.\n\nIf this name ends in a period `.` it must be a valid Full Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro."
           },
-          {
-            "oneOf": [
+          "certificate": {
+            "allOf": [
               {
-                "title": "certificate",
-                "type": "object",
-                "properties": {
-                  "certificate": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/NameOrUUID"
-                      }
-                    ],
-                    "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
-                  }
-                }
+                "$ref": "#/components/schemas/NameOrUUID"
               }
-            ]
+            ],
+            "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
           }
-        ],
+        },
         "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
       },
       "ServiceGroupTemplate": {
@@ -8588,36 +8348,57 @@
       },
       "StartInstancesRequestItem": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to start.  Mutually exclusive with name.",
-            "format": "uuid"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
+              "wait_timeout_ms": {
+                "example": 2000,
+                "type": "integer",
+                "description": "Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to\nwait for the instance to reach running state.  If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond.  No wait performed for a value of 0.",
+                "format": "int64"
+              },
+              "timeout_s": {
+                "example": 2,
+                "type": "integer",
+                "description": "Timeout in seconds to wait for the instance to reach running\nstate.  If you start your instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait\ntimeout greater than zero.  No wait performed for a value of 0.",
+                "format": "int64"
+              }
+            }
           },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to start.  Mutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
-          "wait_timeout_ms": {
-            "example": 2000,
-            "type": "integer",
-            "description": "Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to\nwait for the instance to reach running state.  If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond.  No wait performed for a value of 0.",
-            "format": "int64"
-          },
-          "timeout_s": {
-            "example": 2,
-            "type": "integer",
-            "description": "Timeout in seconds to wait for the instance to reach running\nstate.  If you start your instance, you can wait for it to\nfinish starting with a blocking API call if you specify a wait\ntimeout greater than zero.  No wait performed for a value of 0.",
-            "format": "int64"
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to start.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to start.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single request item to start an instance."
       },
       "StartInstancesResponse": {
@@ -8751,45 +8532,66 @@
       },
       "StopInstancesRequestItem": {
         "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
-            "format": "uuid"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
+              "force": {
+                "example": false,
+                "type": "boolean",
+                "description": "Whether to immediately force stop the instance."
+              },
+              "drain_timeout_ms": {
+                "example": 250,
+                "type": "integer",
+                "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
+                "format": "uint64"
+              },
+              "quick": {
+                "example": false,
+                "type": "boolean",
+                "description": "Whether to perform a quick shutdown.  This flag is\noverridden by force."
+              },
+              "ifstate": {
+                "example": "running",
+                "type": "string",
+                "description": "Only stop the instance if it is in this state."
+              }
+            }
           },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to stop.  Mutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
-          "force": {
-            "example": false,
-            "type": "boolean",
-            "description": "Whether to immediately force stop the instance."
-          },
-          "drain_timeout_ms": {
-            "example": 250,
-            "type": "integer",
-            "description": "Timeout for draining connections in milliseconds.  The instance does not\nreceive new connections in the draining phase.  The instance is stopped\nwhen the last connection has been closed or the timeout expired.  The\nmaximum timeout may vary.  Use -1 for the largest possible value.\n\nNote: This endpoint does not block.  Use the wait endpoint for the\ninstance to reach the stopped state.",
-            "format": "uint64"
-          },
-          "quick": {
-            "example": false,
-            "type": "boolean",
-            "description": "Whether to perform a quick shutdown.  This flag is\noverridden by force."
-          },
-          "ifstate": {
-            "example": "running",
-            "type": "string",
-            "description": "Only stop the instance if it is in this state."
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to stop.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to stop.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single request item to stop an instance."
       },
       "StopInstancesResponse": {
@@ -9110,66 +8912,87 @@
           "op"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "example": "op-1",
-            "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-          },
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to update. Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to update. Mutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
-          "prop": {
-            "example": "memory_mb",
-            "enum": [
-              "image",
-              "args",
-              "env",
-              "memory_mb",
-              "vcpus",
-              "scale_to_zero",
-              "tags",
-              "delete_lock",
-              "schedules",
-              "autokill"
-            ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
-          },
-          "op": {
-            "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
-            ],
-            "type": "string",
-            "description": "The operation to perform on the property.",
-            "format": "enum"
-          },
-          "value": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
+              "prop": {
+                "example": "memory_mb",
+                "enum": [
+                  "image",
+                  "args",
+                  "env",
+                  "memory_mb",
+                  "vcpus",
+                  "scale_to_zero",
+                  "tags",
+                  "delete_lock",
+                  "schedules",
+                  "autokill"
+                ],
+                "type": "string",
+                "description": "The property to modify.",
+                "format": "enum"
+              },
+              "op": {
+                "example": "set",
+                "enum": [
+                  "set",
+                  "add",
+                  "del"
+                ],
+                "type": "string",
+                "description": "The operation to perform on the property.",
+                "format": "enum"
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields"
               }
-            ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields"
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to update. Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to update. Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single update operation to be applied to an instance."
       },
       "UpdateInstancesResponse": {
@@ -9318,56 +9141,77 @@
           "op"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "example": "op-1",
-            "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
-          },
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the service group to update.  Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the service group to update.  Mutually exclusive with UUID."
-          },
-          "prop": {
-            "example": "services",
-            "enum": [
-              "services",
-              "domains",
-              "soft_limit",
-              "hard_limit",
-              "autokill"
-            ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
-          },
-          "op": {
-            "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
-            ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
-          },
-          "value": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+              },
+              "prop": {
+                "example": "services",
+                "enum": [
+                  "services",
+                  "domains",
+                  "soft_limit",
+                  "hard_limit",
+                  "autokill"
+                ],
+                "type": "string",
+                "description": "The property to modify.",
+                "format": "enum"
+              },
+              "op": {
+                "example": "set",
+                "enum": [
+                  "set",
+                  "add",
+                  "del"
+                ],
+                "type": "string",
+                "description": "The operation to perform.",
+                "format": "enum"
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\"\n- For \"autokill\": object with time_ms field"
               }
-            ],
-            "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\"\n- For \"autokill\": object with time_ms field"
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the service group to update.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the service group to update.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single update operation to be applied to a service group"
       },
       "UpdateServiceGroupsResponse": {
@@ -9514,59 +9358,80 @@
           "op"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "example": "op-1",
-            "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-          },
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the template instance to update. Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the template instance to update. Mutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
-          },
-          "prop": {
-            "example": "tags",
-            "enum": [
-              "tags",
-              "delete_lock",
-              "autokill"
-            ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
-          },
-          "op": {
-            "example": "add",
-            "enum": [
-              "set",
-              "add",
-              "del"
-            ],
-            "type": "string",
-            "description": "The operation to perform on the property.",
-            "format": "enum"
-          },
-          "value": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro of the template instance."
+              },
+              "prop": {
+                "example": "tags",
+                "enum": [
+                  "tags",
+                  "delete_lock",
+                  "autokill"
+                ],
+                "type": "string",
+                "description": "The property to modify.",
+                "format": "enum"
+              },
+              "op": {
+                "example": "add",
+                "enum": [
+                  "set",
+                  "add",
+                  "del"
+                ],
+                "type": "string",
+                "description": "The operation to perform on the property.",
+                "format": "enum"
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
               }
-            ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the template instance to update. Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the template instance to update. Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single update operation to be applied to a template instance."
       },
       "UpdateTemplateInstancesResponse": {
@@ -9712,108 +9577,114 @@
           "op"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "example": "op-1",
-            "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-          },
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the template volume to update.  Mutually exclusive with\nname.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-vol-g7gum5cj",
-            "type": "string",
-            "description": "The name of the template volume to update.  Mutually exclusive with\nUUID."
-          },
-          "prop": {
-            "example": "tags",
-            "enum": [
-              "tags",
-              "delete_lock"
-            ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
-          },
-          "op": {
-            "example": "add",
-            "enum": [
-              "set",
-              "add",
-              "del"
-            ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
-          },
-          "value": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
-              }
-            ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
-          }
-        },
-        "description": "A single update operation to be applied to a template volume."
-      },
-      "UpdateTemplateVolumesResponse": {
-        "type": "object",
         "allOf": [
           {
             "type": "object",
             "properties": {
-              "status": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+              },
+              "prop": {
+                "example": "tags",
+                "enum": [
+                  "tags",
+                  "delete_lock"
+                ],
+                "type": "string",
+                "description": "The property to modify.",
+                "format": "enum"
+              },
+              "op": {
+                "example": "add",
+                "enum": [
+                  "set",
+                  "add",
+                  "del"
+                ],
+                "type": "string",
+                "description": "The operation to perform.",
+                "format": "enum"
+              },
+              "value": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ResponseStatus"
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The status of the response."
-              },
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdateTemplateVolumesResponseData"
-                  }
-                ],
-                "description": "The response data for this request."
-              },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ResponseError"
-                },
-                "description": "A list of errors which may have occurred during the request."
-              },
-              "op_time_us": {
-                "example": 46,
-                "type": "integer",
-                "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-                "format": "uint64"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
               }
             }
           },
           {
             "oneOf": [
               {
-                "title": "message",
+                "title": "uuid",
                 "type": "object",
                 "properties": {
-                  "message": {
-                    "example": "Failed to perform all operations",
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+                    "description": "The UUID of the template volume to update.  Mutually exclusive with\nname.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-vol-g7gum5cj",
+                    "type": "string",
+                    "description": "The name of the template volume to update.  Mutually exclusive with\nUUID."
                   }
                 }
               }
             ]
           }
         ],
+        "description": "A single update operation to be applied to a template volume."
+      },
+      "UpdateTemplateVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateTemplateVolumesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 46,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
         "description": "The response message for updating one or more template volumes."
       },
       "UpdateTemplateVolumesResponseData": {
@@ -9916,55 +9787,76 @@
           "op"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "example": "op-1",
-            "type": "string",
-            "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
-          },
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the volume to update.  Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the volume to update.  Mutually exclusive with UUID."
-          },
-          "prop": {
-            "example": "size_mb",
-            "enum": [
-              "size_mb",
-              "tags",
-              "quota_policy",
-              "delete_lock"
-            ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
-          },
-          "op": {
-            "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
-            ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
-          },
-          "value": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GoogleProtobufValue"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+              },
+              "prop": {
+                "example": "size_mb",
+                "enum": [
+                  "size_mb",
+                  "tags",
+                  "quota_policy",
+                  "delete_lock"
+                ],
+                "type": "string",
+                "description": "The property to modify.",
+                "format": "enum"
+              },
+              "op": {
+                "example": "set",
+                "enum": [
+                  "set",
+                  "add",
+                  "del"
+                ],
+                "type": "string",
+                "description": "The operation to perform.",
+                "format": "enum"
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": \"static\" or \"dynamic\"\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
               }
-            ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": \"static\" or \"dynamic\"\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the volume to update.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the volume to update.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "A single request item for updating a volume."
       },
       "UpdateVolumesResponse": {
@@ -10199,34 +10091,19 @@
       },
       "VolumeInstanceID": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "uuid": {
-                "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-                "type": "string",
-                "description": "The UUID of the instance that the volume is attached to.",
-                "format": "uuid"
-              }
-            }
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the instance that the volume is attached to.",
+            "format": "uuid"
           },
-          {
-            "oneOf": [
-              {
-                "title": "name",
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g7gum5cj",
-                    "type": "string",
-                    "description": "The name of the instance that the volume is attached to."
-                  }
-                }
-              }
-            ]
+          "name": {
+            "example": "funky-town-g7gum5cj",
+            "type": "string",
+            "description": "The name of the instance that the volume is attached to."
           }
-        ],
+        },
         "description": "Reference to the instance to attach the volume to."
       },
       "VolumeInstanceMount": {
@@ -10252,59 +10129,7 @@
       },
       "WaitInstanceByUUIDRequestBody": {
         "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "state": {
-                "enum": [
-                  "stopped",
-                  "starting",
-                  "running",
-                  "draining",
-                  "stopping",
-                  "template",
-                  "standby"
-                ],
-                "type": "string",
-                "description": "The desired state to wait for.  Default is `running`.",
-                "format": "enum"
-              }
-            }
-          },
-          {
-            "oneOf": [
-              {
-                "title": "timeout_ms",
-                "type": "object",
-                "properties": {
-                  "timeout_ms": {
-                    "example": 450,
-                    "type": "integer",
-                    "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
-                    "format": "int64"
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "description": "Wait parameters."
-      },
-      "WaitInstancesRequestItem": {
-        "type": "object",
         "properties": {
-          "uuid": {
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "type": "string",
-            "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g756b5d",
-            "type": "string",
-            "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
-          },
           "state": {
             "enum": [
               "stopped",
@@ -10326,6 +10151,64 @@
             "format": "int64"
           }
         },
+        "description": "Wait parameters."
+      },
+      "WaitInstancesRequestItem": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "state": {
+                "enum": [
+                  "stopped",
+                  "starting",
+                  "running",
+                  "draining",
+                  "stopping",
+                  "template",
+                  "standby"
+                ],
+                "type": "string",
+                "description": "The desired state to wait for.  Default is `running`.",
+                "format": "enum"
+              },
+              "timeout_ms": {
+                "example": 450,
+                "type": "integer",
+                "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to wait for.  Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
+          }
+        ],
         "description": "A single wait operation to be applied to an instance."
       },
       "WaitInstancesResponse": {

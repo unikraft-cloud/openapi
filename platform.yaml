@@ -2286,39 +2286,33 @@ components:
     schemas:
         AddUsersResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/AddUsersResponseData'
-                        description: The response data for this request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/AddUsersResponseData'
+                    description: The response data for this request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         AddUsersResponseData:
             type: object
             properties:
@@ -2332,56 +2326,10 @@ components:
                 - attach_to
                 - at
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    attach_to:
-                        allOf:
-                            - $ref: '#/components/schemas/BodyInstanceID'
-                        description: UUID or name of the instance to attach the volume to.
-                    at:
-                        example: /mnt/my-volume
-                        pattern: ^/(?!.*\.\./|.*\.$|.*/\.$)[^:]*$
-                        type: string
-                        description: |-
-                            Path of the mountpoint.
-
-                            The path must be absolute, not contain `.` and `..` components, and not
-                            contain colons (`:`). The path must point to an empty directory. If the
-                            directory does not exist, it is created.
-                        format: regex
-                - oneOf:
-                    - title: readonly
-                      type: object
-                      properties:
-                        readonly:
-                            example: false
-                            type: boolean
-                            description: Whether the volume should be mounted read-only.
-        AttachVolumesRequestItem:
-            required:
-                - uuid
-                - name
-                - attach_to
-                - at
-            type: object
             properties:
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: |-
-                        The UUID of the volume to attach. Mutually exclusive with name.
-                        Exactly one of uuid or name must be provided.
-                    format: uuid
-                name:
-                    example: funky-vol-g7gum5cj
-                    type: string
-                    description: |-
-                        The name of the volume to attach. Mutually exclusive with UUID.
-                        Exactly one of uuid or name must be provided.
                 attach_to:
                     allOf:
-                        - $ref: '#/components/schemas/NameOrUUID'
+                        - $ref: '#/components/schemas/BodyInstanceID'
                     description: UUID or name of the instance to attach the volume to.
                 at:
                     example: /mnt/my-volume
@@ -2398,42 +2346,87 @@ components:
                     example: false
                     type: boolean
                     description: Whether the volume should be mounted read-only.
-            description: A single request item for attaching a volume to an instance.
-        AttachVolumesResponse:
+        AttachVolumesRequestItem:
+            required:
+                - attach_to
+                - at
             type: object
             allOf:
                 - type: object
                   properties:
-                    status:
+                    attach_to:
                         allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/AttachVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
+                            - $ref: '#/components/schemas/NameOrUUID'
+                        description: UUID or name of the instance to attach the volume to.
+                    at:
+                        example: /mnt/my-volume
+                        pattern: ^/(?!.*\.\./|.*\.$|.*/\.$)[^:]*$
+                        type: string
                         description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
+                            Path of the mountpoint.
+
+                            The path must be absolute, not contain `.` and `..` components, and not
+                            contain colons (`:`). The path must point to an empty directory. If the
+                            directory does not exist, it is created.
+                        format: regex
+                    readonly:
+                        example: false
+                        type: boolean
+                        description: Whether the volume should be mounted read-only.
                 - oneOf:
-                    - title: message
+                    - title: uuid
+                      required:
+                        - uuid
                       type: object
                       properties:
-                        message:
-                            example: Failed to perform all operations
+                        uuid:
+                            example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                             type: string
                             description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+                                The UUID of the volume to attach. Mutually exclusive with name.
+                                Exactly one of uuid or name must be provided.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-vol-g7gum5cj
+                            type: string
+                            description: |-
+                                The name of the volume to attach. Mutually exclusive with UUID.
+                                Exactly one of uuid or name must be provided.
+            description: A single request item for attaching a volume to an instance.
+        AttachVolumesResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/AttachVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: |-
                 The response message for attaching one or more volume(s) given their
                 UUID(s) or name(s).
@@ -2543,22 +2536,16 @@ components:
                     format: int64
         BodyInstanceID:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                        type: string
-                        description: The UUID of the instance that the volume is detached from.
-                        format: uuid
-                - oneOf:
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g7gum5cj
-                            type: string
-                            description: The name of the instance that the volume is detached from.
+            properties:
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the instance that the volume is detached from.
+                    format: uuid
+                name:
+                    example: funky-town-g7gum5cj
+                    type: string
+                    description: The name of the instance that the volume is detached from.
             description: Reference to the instance to detach the volume from.
         Certificate:
             type: object
@@ -2709,74 +2696,77 @@ components:
                     description: A list of tags to assign to the new cloned volume.
         CloneVolumesRequestItem:
             type: object
-            properties:
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: The UUID of the volume to clone.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-vol-g7gum5cj
-                    type: string
-                    description: The name of the volume to clone.  Mutually exclusive with UUID.
-                vol_name:
-                    example: funky-vol-t7qumh5j
-                    type: string
-                    description: |-
-                        The name of the new cloned volume.  If not provided, a random name
-                        of the form `vol-X` is generated for you, where `X` is a 5 character
-                        long random alphanumeric suffix.
-                quota_policy:
-                    example: static
-                    enum:
-                        - "static"
-                        - "dynamic"
-                    type: string
-                    description: |-
-                        The quota policy for the new cloned volume.  If not provided, the quota
-                        policy of the source volume is used.
-                    format: enum
-                tags:
-                    type: array
-                    items:
-                        type: string
-                    description: A list of tags to assign to the new cloned volume.
-            description: A single request item describing the volume to clone.
-        CloneVolumesResponse:
-            type: object
             allOf:
                 - type: object
                   properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/CloneVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
+                    vol_name:
+                        example: funky-vol-t7qumh5j
+                        type: string
+                        description: |-
+                            The name of the new cloned volume.  If not provided, a random name
+                            of the form `vol-X` is generated for you, where `X` is a 5 character
+                            long random alphanumeric suffix.
+                    quota_policy:
+                        example: static
+                        enum:
+                            - "static"
+                            - "dynamic"
+                        type: string
+                        description: |-
+                            The quota policy for the new cloned volume.  If not provided, the quota
+                            policy of the source volume is used.
+                        format: enum
+                    tags:
                         type: array
                         items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
+                            type: string
+                        description: A list of tags to assign to the new cloned volume.
                 - oneOf:
-                    - title: message
+                    - title: uuid
                       type: object
                       properties:
-                        message:
-                            example: Failed to perform all operations
+                        uuid:
+                            example: c1d2e3f4-5678-90ab-cdef-1234567890ab
                             type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+                            description: The UUID of the volume to clone.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-vol-g7gum5cj
+                            type: string
+                            description: The name of the volume to clone.  Mutually exclusive with UUID.
+            description: A single request item describing the volume to clone.
+        CloneVolumesResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/CloneVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for cloning one or more volume(s).
         CloneVolumesResponseData:
             type: object
@@ -2926,39 +2916,33 @@ components:
                 service.
         CreateAutoscaleConfigurationPolicyResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 32
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 32
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         CreateAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -3004,90 +2988,93 @@ components:
                     format: int32
         CreateAutoscaleConfigurationsRequestConfiguration:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of the service to create a configuration for.
-                        Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-service
-                    type: string
-                    description: |-
-                        The name of the service to create a configuration for.
-                        Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Optional, only applies when using global control plane).
-                        The metro to route the request to.
-                min_size:
-                    example: 2
-                    type: integer
-                    description: The minimum number of instances to keep running.
-                    format: int64
-                max_size:
-                    example: 12
-                    type: integer
-                    description: The maximum number of instances to keep running.
-                    format: int64
-                warmup_time_ms:
-                    example: 100
-                    type: integer
-                    description: The warmup time in milliseconds for new instances.
-                    format: int64
-                cooldown_time_ms:
-                    example: 100
-                    type: integer
-                    description: The cooldown time in milliseconds for the autoscale configuration.
-                    format: int64
-                create_args:
-                    allOf:
-                        - $ref: '#/components/schemas/ConfigurationInstanceCreateArgs'
-                    description: The arguments to use when creating the autoscale configuration.
-                policies:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/AutoscalePolicy'
-                    description: The policies to apply to the autoscale configuration.
-        CreateAutoscaleConfigurationsResponse:
-            type: object
             allOf:
                 - type: object
                   properties:
-                    status:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Optional, only applies when using global control plane).
+                            The metro to route the request to.
+                    min_size:
+                        example: 2
+                        type: integer
+                        description: The minimum number of instances to keep running.
+                        format: int64
+                    max_size:
+                        example: 12
+                        type: integer
+                        description: The maximum number of instances to keep running.
+                        format: int64
+                    warmup_time_ms:
+                        example: 100
+                        type: integer
+                        description: The warmup time in milliseconds for new instances.
+                        format: int64
+                    cooldown_time_ms:
+                        example: 100
+                        type: integer
+                        description: The cooldown time in milliseconds for the autoscale configuration.
+                        format: int64
+                    create_args:
                         allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseData'
-                        description: The response data for this request.
-                    errors:
+                            - $ref: '#/components/schemas/ConfigurationInstanceCreateArgs'
+                        description: The arguments to use when creating the autoscale configuration.
+                    policies:
                         type: array
                         items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 34
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
+                            $ref: '#/components/schemas/AutoscalePolicy'
+                        description: The policies to apply to the autoscale configuration.
                 - oneOf:
-                    - title: message
+                    - title: uuid
                       type: object
                       properties:
-                        message:
-                            example: Failed to perform all operations
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
                             type: string
                             description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+                                The UUID of the service to create a configuration for.
+                                Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-service
+                            type: string
+                            description: |-
+                                The name of the service to create a configuration for.
+                                Mutually exclusive with UUID.
+        CreateAutoscaleConfigurationsResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 34
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response to a CreateAutoscaleConfigurationRequest.
         CreateAutoscaleConfigurationsResponseConfigurationsResponse:
             type: object
@@ -3421,31 +3408,25 @@ components:
             required:
                 - name
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    name:
-                        example: funky-town-g756b5d.fra0.unikraft.app.
-                        type: string
-                        description: |-
-                            Publicly accessible domain name.
+            properties:
+                name:
+                    example: funky-town-g756b5d.fra0.unikraft.app.
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.
 
-                            If this name ends in a period `.` it must be a valid Full Qualified
-                            Domain Name (FQDN), e.g. `example.com.`; otherwise it will become a
-                            subdomain of the target metro, e.g. `example` becomes
-                            `example.fra0.unikraft.app`.
-                - oneOf:
-                    - title: certificate
-                      type: object
-                      properties:
-                        certificate:
-                            allOf:
-                                - $ref: '#/components/schemas/NameOrUUID'
-                            description: |-
-                                A reference to an existing certificate which can be used for the
-                                specified domain.  If unspecified, Unikraft Cloud will
-                                automatically generate a new certificate for the domain based on Let's
-                                Encrypt and seek to accomplish a DNS-01 challenge.
+                        If this name ends in a period `.` it must be a valid Full Qualified
+                        Domain Name (FQDN), e.g. `example.com.`; otherwise it will become a
+                        subdomain of the target metro, e.g. `example` becomes
+                        `example.fra0.unikraft.app`.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        A reference to an existing certificate which can be used for the
+                        specified domain.  If unspecified, Unikraft Cloud will
+                        automatically generate a new certificate for the domain based on Let's
+                        Encrypt and seek to accomplish a DNS-01 challenge.
             description: |-
                 The domain configuration for the service group.
 
@@ -3473,55 +3454,64 @@ components:
             description: Read-Only Memory (ROM) blob to attach to the instance.
         CreateInstanceRequestServiceGroup:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        (Optional).  Reference an existing (persistent) service group by its
-                        UUID.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-service-g756b5d
-                    type: string
-                    description: |-
-                        (Optional).  Reference an existing (persistent) service group by its
-                        name.  Mutually exclusive with UUID.
-                domains:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/CreateInstanceRequestDomain'
-                    description: |-
-                        If no existing (persistent) service group is specified via its
-                        identifier, a new (ephemeral) service group can be created.  In addition
-                        to the services it must expose, you can specify which domains it should
-                        use too.
-                services:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Service'
-                    description: |-
-                        If no existing service group identifier is provided, one or more new
-                        (ephemeral, non-persistent) service(s) can be created with the following
-                        definitions.
-                soft_limit:
-                    example: 100
-                    maximum: !!float 65535
-                    minimum: !!float 1
-                    type: integer
-                    description: |-
-                        The soft limit for the number of services that can be created in this
-                        service group.
-                    format: uint32
-                hard_limit:
-                    example: 200
-                    maximum: !!float 65535
-                    minimum: !!float 1
-                    type: integer
-                    description: |-
-                        The hard limit for the number of services that can be created in this
-                        service group.
-                    format: uint32
+            allOf:
+                - type: object
+                  properties:
+                    domains:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/CreateInstanceRequestDomain'
+                        description: |-
+                            If no existing (persistent) service group is specified via its
+                            identifier, a new (ephemeral) service group can be created.  In addition
+                            to the services it must expose, you can specify which domains it should
+                            use too.
+                    services:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/Service'
+                        description: |-
+                            If no existing service group identifier is provided, one or more new
+                            (ephemeral, non-persistent) service(s) can be created with the following
+                            definitions.
+                    soft_limit:
+                        example: 100
+                        maximum: !!float 65535
+                        minimum: !!float 1
+                        type: integer
+                        description: |-
+                            The soft limit for the number of services that can be created in this
+                            service group.
+                        format: uint32
+                    hard_limit:
+                        example: 200
+                        maximum: !!float 65535
+                        minimum: !!float 1
+                        type: integer
+                        description: |-
+                            The hard limit for the number of services that can be created in this
+                            service group.
+                        format: uint32
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: |-
+                                (Optional).  Reference an existing (persistent) service group by its
+                                UUID.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-service-g756b5d
+                            type: string
+                            description: |-
+                                (Optional).  Reference an existing (persistent) service group by its
+                                name.  Mutually exclusive with UUID.
             description: |-
                 The service group configuration when creating an instance.
 
@@ -3551,82 +3541,91 @@ components:
             required:
                 - at
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of an existing volume.
-
-                        If this is the only specified field, then it will look up an existing
-                        volume by this UUID.
-                    format: uuid
-                name:
-                    example: funky-volume-g756b5d
-                    type: string
-                    description: |-
-                        The name of the volume.
-
-                        If this is the only specified field, then it will look up an existing
-                        volume by this name.  If the volume does not exist, the request will
-                        fail.  If a new volume is intended to be created, then this field must be
-                        specified along with the mount point in the instance and a provisioning
-                        source (size_mb or host_path).
-                size_mb:
-                    example: 32
-                    type: integer
-                    description: |-
-                        The size of the volume when creating a new volume.
-
-                        When creating a new volume as part of the instance create request,
-                        specify the size of the volume in MiB.
-                    format: uint64
-                host_path:
-                    example: /srv/data/my-volume
-                    type: string
-                    description: A host path to create a managed volume from.
-                at:
-                    example: /mnt/funky-volume
-                    type: string
-                    description: The mount point for the volume in the instance.
-                readonly:
-                    example: false
-                    type: boolean
-                    description: |-
-                        Whether the volume is read-only.
-
-                        If this field is set to true, the volume will be mounted as read-only in
-                        the instance.  This field is optional and defaults to false and is only
-                        applicable when using an existing volume.
-                quota_policy:
-                    example: static
-                    type: string
-                    description: Quota policy for the volume.
-                filesystem:
-                    example: ext4
-                    type: string
-                    description: |-
-                        Filesystem type to format or configure.
-                        Without custom configuration, this is either `ext4` or `virtiofs`.
-                tags:
-                    type: array
-                    items:
+            allOf:
+                - type: object
+                  properties:
+                    uuid:
+                        example: 123e4567-e89b-12d3-a456-426614174000
                         type: string
-                    description: Tags to assign to the new volume.
-                uid:
-                    type: integer
-                    description: Guest UID for managed volumes (host_path mode only).
-                    format: uint32
-                gid:
-                    type: integer
-                    description: Guest GID for managed volumes (host_path mode only).
-                    format: uint32
-                args:
-                    example: {"arg1": "value1", "arg2": "value2"}
-                    type: object
-                    additionalProperties:
+                        description: |-
+                            The UUID of an existing volume.
+
+                            If this is the only specified field, then it will look up an existing
+                            volume by this UUID.
+                        format: uuid
+                    name:
+                        example: funky-volume-g756b5d
                         type: string
-                    description: Script arguments passed to volume initialization scripts.
+                        description: |-
+                            The name of the volume.
+
+                            If this is the only specified field, then it will look up an existing
+                            volume by this name.  If the volume does not exist, the request will
+                            fail.  If a new volume is intended to be created, then this field must be
+                            specified along with the mount point in the instance and a provisioning
+                            source (size_mb or host_path).
+                    at:
+                        example: /mnt/funky-volume
+                        type: string
+                        description: The mount point for the volume in the instance.
+                    readonly:
+                        example: false
+                        type: boolean
+                        description: |-
+                            Whether the volume is read-only.
+
+                            If this field is set to true, the volume will be mounted as read-only in
+                            the instance.  This field is optional and defaults to false and is only
+                            applicable when using an existing volume.
+                    quota_policy:
+                        example: static
+                        type: string
+                        description: Quota policy for the volume.
+                    filesystem:
+                        example: ext4
+                        type: string
+                        description: |-
+                            Filesystem type to format or configure.
+                            Without custom configuration, this is either `ext4` or `virtiofs`.
+                    tags:
+                        type: array
+                        items:
+                            type: string
+                        description: Tags to assign to the new volume.
+                    uid:
+                        type: integer
+                        description: Guest UID for managed volumes (host_path mode only).
+                        format: uint32
+                    gid:
+                        type: integer
+                        description: Guest GID for managed volumes (host_path mode only).
+                        format: uint32
+                    args:
+                        example: {"arg1": "value1", "arg2": "value2"}
+                        type: object
+                        additionalProperties:
+                            type: string
+                        description: Script arguments passed to volume initialization scripts.
+                - oneOf:
+                    - title: size_mb
+                      type: object
+                      properties:
+                        size_mb:
+                            example: 32
+                            type: integer
+                            description: |-
+                                The size of the volume when creating a new volume.
+
+                                When creating a new volume as part of the instance create request,
+                                specify the size of the volume in MiB.
+                            format: uint64
+                    - title: host_path
+                      type: object
+                      properties:
+                        host_path:
+                            example: /srv/data/my-volume
+                            type: string
+                            description: A host path to create a managed volume from.
             description: A volume defines a storage volume that can be attached to the instance.
         CreateInstanceResponse:
             type: object
@@ -3763,17 +3762,13 @@ components:
             description: The request message for creating a new service group.
         CreateServiceGroupRequestAutokill:
             type: object
-            allOf:
-                - oneOf:
-                    - title: time_ms
-                      type: object
-                      properties:
-                        time_ms:
-                            type: integer
-                            description: |-
-                                Time in milliseconds after the service group becomes empty before it is
-                                deleted. A value of 0 disables autokill.
-                            format: uint64
+            properties:
+                time_ms:
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the service group becomes empty before it is
+                        deleted. A value of 0 disables autokill.
+                    format: uint64
             description: Automatic delete-on-idle configuration for service groups.
         CreateServiceGroupRequestDomain:
             required:
@@ -3947,39 +3942,33 @@ components:
             description: The request message for creating one or more template volumes.
         CreateTemplateVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/CreateTemplateVolumesResponseData'
-                        description: The response data for this request
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/CreateTemplateVolumesResponseData'
+                    description: The response data for this request
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for creating one or more template volumes.
         CreateTemplateVolumesResponseData:
             type: object
@@ -4034,104 +4023,110 @@ components:
                     format: int32
         CreateVolumeRequest:
             type: object
-            properties:
-                name:
-                    example: funky-vol-t7qumh5j
-                    type: string
-                    description: |-
-                        The name of the volume.
-
-                        This is a human-readable name that can be used to identify the volume.
-                        The name must be unique within the context of your account.  If no name is
-                        specified, a random name of the form `vol-X` is generated for you, where
-                        `X` is a 5 character long random alphanumeric suffix..  The name can also
-                        be used to identify the volume in API calls.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro to route the request to.
-                size_mb:
-                    example: 64
-                    type: integer
-                    description: The size of the volume in megabytes.
-                    format: uint64
-                host_path:
-                    example: /srv/data/my-volume
-                    type: string
-                    description: A host path to create a managed volume from.
-                template:
-                    allOf:
-                        - $ref: '#/components/schemas/NameOrUUID'
-                    description: Source template volume to clone from.
-                quota_policy:
-                    example: static
-                    enum:
-                        - "static"
-                        - "dynamic"
-                    type: string
-                    description: Quota policy for the volume.
-                    format: enum
-                filesystem:
-                    example: ext4
-                    type: string
-                    description: |-
-                        Filesystem type to format or configure.
-                        Without custom configuration, this is either `ext4` or `virtiofs`.
-                tags:
-                    type: array
-                    items:
-                        type: string
-                    description: Tags to assign to the new volume.
-                uid:
-                    type: integer
-                    description: Guest UID for managed volumes (host_path mode only).
-                    format: uint32
-                gid:
-                    type: integer
-                    description: Guest GID for managed volumes (host_path mode only).
-                    format: uint32
-                args:
-                    example: {"arg1": "value1", "arg2": "value2"}
-                    type: object
-                    additionalProperties:
-                        type: string
-                    description: Script arguments passed to volume initialization scripts.
-            description: The request message for creating a volume.
-        CreateVolumeResponse:
-            type: object
             allOf:
                 - type: object
                   properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        $ref: '#/components/schemas/CreateVolumeResponseData'
-                    errors:
+                    name:
+                        example: funky-vol-t7qumh5j
+                        type: string
+                        description: |-
+                            The name of the volume.
+
+                            This is a human-readable name that can be used to identify the volume.
+                            The name must be unique within the context of your account.  If no name is
+                            specified, a random name of the form `vol-X` is generated for you, where
+                            `X` is a 5 character long random alphanumeric suffix..  The name can also
+                            be used to identify the volume in API calls.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
+                    quota_policy:
+                        example: static
+                        enum:
+                            - "static"
+                            - "dynamic"
+                        type: string
+                        description: Quota policy for the volume.
+                        format: enum
+                    filesystem:
+                        example: ext4
+                        type: string
+                        description: |-
+                            Filesystem type to format or configure.
+                            Without custom configuration, this is either `ext4` or `virtiofs`.
+                    tags:
                         type: array
                         items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
+                            type: string
+                        description: Tags to assign to the new volume.
+                    uid:
                         type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
+                        description: Guest UID for managed volumes (host_path mode only).
+                        format: uint32
+                    gid:
+                        type: integer
+                        description: Guest GID for managed volumes (host_path mode only).
+                        format: uint32
+                    args:
+                        example: {"arg1": "value1", "arg2": "value2"}
+                        type: object
+                        additionalProperties:
+                            type: string
+                        description: Script arguments passed to volume initialization scripts.
                 - oneOf:
-                    - title: message
+                    - title: size_mb
                       type: object
                       properties:
-                        message:
-                            example: Failed to perform all operations
+                        size_mb:
+                            example: 64
+                            type: integer
+                            description: The size of the volume in megabytes.
+                            format: uint64
+                    - title: host_path
+                      type: object
+                      properties:
+                        host_path:
+                            example: /srv/data/my-volume
                             type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+                            description: A host path to create a managed volume from.
+                    - title: template
+                      type: object
+                      properties:
+                        template:
+                            allOf:
+                                - $ref: '#/components/schemas/NameOrUUID'
+                            description: Source template volume to clone from.
+            description: The request message for creating a volume.
+        CreateVolumeResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    $ref: '#/components/schemas/CreateVolumeResponseData'
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for creating of a volume.
         CreateVolumeResponseData:
             type: object
@@ -4200,39 +4195,33 @@ components:
                     type: boolean
         DeleteAutoscaleConfigurationPolicyResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 54
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 54
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         DeleteAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -4273,39 +4262,33 @@ components:
                     format: int32
         DeleteAutoscaleConfigurationsResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 60
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 60
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         DeleteAutoscaleConfigurationsResponseData:
             type: object
             properties:
@@ -4668,39 +4651,33 @@ components:
                     format: int32
         DeleteTemplateVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/DeleteTemplateVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DeleteTemplateVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for deleting one or more template volumes.
         DeleteTemplateVolumesResponseData:
             type: object
@@ -4741,39 +4718,33 @@ components:
                     format: int32
         DeleteVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/DeleteVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DeleteVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         DeleteVolumesResponseData:
             type: object
             properties:
@@ -4860,39 +4831,33 @@ components:
             description: A single request of detaching a volume.
         DetachVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/DetachVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/DetachVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         DetachVolumesResponseData:
             type: object
             properties:
@@ -4938,26 +4903,20 @@ components:
                     format: int32
         Domain:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    fqdn:
-                        example: example.com.
-                        type: string
-                        description: |-
-                            Publicly accessible domain name.  If this name ends in a period `.` it must
-                            be a valid Full Qualified Domain Name (FQDN), otherwise it will become a
-                            subdomain of the target metro.
-                - oneOf:
-                    - title: certificate
-                      type: object
-                      properties:
-                        certificate:
-                            allOf:
-                                - $ref: '#/components/schemas/Certificate'
-                            description: |-
-                                Use an existing certificate for the domain.  If this field is
-                                specified, the domain must be associated with a valid certificate.
+            properties:
+                fqdn:
+                    example: example.com.
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.  If this name ends in a period `.` it must
+                        be a valid Full Qualified Domain Name (FQDN), otherwise it will become a
+                        subdomain of the target metro.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/Certificate'
+                    description: |-
+                        Use an existing certificate for the domain.  If this field is
+                        specified, the domain must be associated with a valid certificate.
             description: |-
                 A domain name.
 
@@ -4979,39 +4938,33 @@ components:
             description: The request message to get an autoscale configuration policy by name.
         GetAutoscaleConfigurationPolicyResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 12
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 12
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
         GetAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -5052,43 +5005,37 @@ components:
                     format: int32
         GetAutoscaleConfigurationsResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        enum:
-                            - "success"
-                            - "error"
-                            - "unconfigured"
-                        type: string
-                        description: The status of the response.
-                        format: enum
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/GetAutoscaleConfigurationsResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 50
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    enum:
+                        - "success"
+                        - "error"
+                        - "unconfigured"
+                    type: string
+                    description: The status of the response.
+                    format: enum
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetAutoscaleConfigurationsResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 50
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for a GetAutoscaleConfigurationsRequest.
         GetAutoscaleConfigurationsResponseData:
             type: object
@@ -5268,32 +5215,41 @@ components:
                     format: int64
         GetInstancesLogsRequestItem:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of the instance to retrieve logs for.  Mutually exclusive with
-                        name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: |-
-                        The name of the instance to retrieve logs for.  Mutually exclusive with
-                        UUID.
-                offset:
-                    example: 450
-                    type: integer
-                    description: |-
-                        The byte offset of the log output to receive.  A negative sign makes the
-                        offset relative to the end of the log.
-                    format: int64
-                limit:
-                    example: 3000
-                    type: integer
-                    description: The amount of bytes to return at most.
-                    format: int64
+            allOf:
+                - type: object
+                  properties:
+                    offset:
+                        example: 450
+                        type: integer
+                        description: |-
+                            The byte offset of the log output to receive.  A negative sign makes the
+                            offset relative to the end of the log.
+                        format: int64
+                    limit:
+                        example: 3000
+                        type: integer
+                        description: The amount of bytes to return at most.
+                        format: int64
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: |-
+                                The UUID of the instance to retrieve logs for.  Mutually exclusive with
+                                name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: |-
+                                The name of the instance to retrieve logs for.  Mutually exclusive with
+                                UUID.
             description: A single item in the request.
         GetInstancesLogsResponse:
             type: object
@@ -5685,39 +5641,33 @@ components:
                     description: List of template instances that were retrieved during the operation.
         GetTemplateVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/GetTemplateVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Partial success
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Partial success
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetTemplateVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for getting one or more template volumes.
         GetTemplateVolumesResponseData:
             type: object
@@ -5729,39 +5679,33 @@ components:
                     description: The template volume(s) which were retrieved by the request.
         GetVolumesResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/GetVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GetVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: |-
                 The response message for getting one or more volume(s) given their
                 UUID(s) or name(s).
@@ -6346,54 +6290,42 @@ components:
             description: An instance network interface.
         InstanceRestartAttempt:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    attempt:
-                        example: 1
-                        type: integer
-                        description: |-
-                            Current restart attempt number. This is incremented each time the instance
-                            is restarted automatically by the platform.
-                        format: uint32
-                - oneOf:
-                    - title: next_at
-                      type: object
-                      properties:
-                        next_at:
-                            example: 2023-10-05T14:48:00Z
-                            type: string
-                            description: Timestamp of the next scheduled restart attempt.
-                            format: date-time
+            properties:
+                attempt:
+                    example: 1
+                    type: integer
+                    description: |-
+                        Current restart attempt number. This is incremented each time the instance
+                        is restarted automatically by the platform.
+                    format: uint32
+                next_at:
+                    example: 2023-10-05T14:48:00Z
+                    type: string
+                    description: Timestamp of the next scheduled restart attempt.
+                    format: date-time
             description: Records the current restart attempt of an instance.
         InstanceRom:
             required:
                 - image
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    name:
-                        example: funky-rom
-                        type: string
-                        description: The name of the ROM to use for the instance configuration.
-                    image:
-                        example: nginx:latest
-                        type: string
-                        description: The image of the ROM to use for the instance configuration.
-                - oneOf:
-                    - title: at
-                      type: object
-                      properties:
-                        at:
-                            example: /rom0
-                            type: string
-                            description: |-
-                                (Optional).  The path at which the ROM should be automatically mounted
-                                inside the instance.  When set, the platform mounts the ROM device at
-                                the specified path so the guest does not need to mount it manually.
-                                When omitted, the ROM is exposed as a raw block device and the guest is
-                                responsible for mounting it.
+            properties:
+                name:
+                    example: funky-rom
+                    type: string
+                    description: The name of the ROM to use for the instance configuration.
+                image:
+                    example: nginx:latest
+                    type: string
+                    description: The image of the ROM to use for the instance configuration.
+                at:
+                    example: /rom0
+                    type: string
+                    description: |-
+                        (Optional).  The path at which the ROM should be automatically mounted
+                        inside the instance.  When set, the platform mounts the ROM device at
+                        the specified path so the guest does not need to mount it manually.
+                        When omitted, the ROM is exposed as a raw block device and the guest is
+                        responsible for mounting it.
             description: Read-Only Memory (ROM) blob to attach to the instance.
         InstanceScaleToZero:
             type: object
@@ -6444,44 +6376,38 @@ components:
                 i.e. "stateful".
         InstanceServiceGroup:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: 123e4567-e89b-12d3-a456-426614174000
-                        type: string
-                        description: |-
-                            The UUID of the service group.
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        The UUID of the service group.
 
-                            This is a unique identifier for the service group that is generated when
-                            the service is created.  The UUID is used to reference the service group
-                            in API calls and can be used to identify the service in all API calls
-                            that require an service identifier.
-                        format: uuid
-                    name:
-                        example: funky-service-g756b5d
-                        type: string
-                        description: |-
-                            The name of the service group.
+                        This is a unique identifier for the service group that is generated when
+                        the service is created.  The UUID is used to reference the service group
+                        in API calls and can be used to identify the service in all API calls
+                        that require an service identifier.
+                    format: uuid
+                name:
+                    example: funky-service-g756b5d
+                    type: string
+                    description: |-
+                        The name of the service group.
 
-                            This is a human-readable name that can be used to identify the service
-                            group.  The name is unique within the context of your account.  The name
-                            can also be used to identify the service group in API calls.
-                    domains:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ServiceGroupInstanceDomain'
-                        description: The domain configuration for the service group.
-                - oneOf:
-                    - title: metro
-                      type: object
-                      properties:
-                        metro:
-                            example: fra
-                            type: string
-                            description: |-
-                                (Only applies when using global control plane).
-                                Where the service group is located.
+                        This is a human-readable name that can be used to identify the service
+                        group.  The name is unique within the context of your account.  The name
+                        can also be used to identify the service group in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the service group is located.
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ServiceGroupInstanceDomain'
+                    description: The domain configuration for the service group.
             description: |-
                 The service group configuration for the instance.
 
@@ -6498,89 +6424,89 @@ components:
             description: The snapshot UUID of the instance.
         InstanceTemplateAutokill:
             type: object
-            allOf:
-                - oneOf:
-                    - title: time_ms
-                      type: object
-                      properties:
-                        time_ms:
-                            type: integer
-                            description: |-
-                                Time in milliseconds after the template was last used for cloning before
-                                it is deleted. A value of 0 disables template autokill.
-                            format: uint64
+            properties:
+                time_ms:
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the template was last used for cloning before
+                        it is deleted. A value of 0 disables template autokill.
+                    format: uint64
             description: Automatic delete-on-idle configuration for template instances.
         InstanceVolume:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: 123e4567-e89b-12d3-a456-426614174000
-                        type: string
-                        description: |-
-                            The UUID of the volume.
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: |-
+                        The UUID of the volume.
 
-                            This is a unique identifier for the volume that is generated when the
-                            volume is created.  The UUID is used to reference the volume in API calls
-                            and can be used to identify the volume in all API calls that require a
-                            volume identifier.
-                        format: uuid
-                    name:
-                        example: funky-volume-g756b5d
-                        type: string
-                        description: |-
-                            The name of the volume.
+                        This is a unique identifier for the volume that is generated when the
+                        volume is created.  The UUID is used to reference the volume in API calls
+                        and can be used to identify the volume in all API calls that require a
+                        volume identifier.
+                    format: uuid
+                name:
+                    example: funky-volume-g756b5d
+                    type: string
+                    description: |-
+                        The name of the volume.
 
-                            This is a human-readable name that can be used to identify the volume.
-                            The name must be unique within the context of your account.  The name can
-                            also be used to identify the volume in API calls.
-                    at:
-                        example: /mnt/funky-volume
-                        type: string
-                        description: |-
-                            The mount point of the volume in the instance.  This is the directory in
-                            the instance where the volume will be mounted.
-                    readonly:
-                        example: true
-                        type: boolean
-                        description: Whether the volume is read-only or not.
-                - oneOf:
-                    - title: metro
-                      type: object
-                      properties:
-                        metro:
-                            example: fra
-                            type: string
-                            description: |-
-                                (Only applies when using global control plane).
-                                Where the volume is located.
+                        This is a human-readable name that can be used to identify the volume.
+                        The name must be unique within the context of your account.  The name can
+                        also be used to identify the volume in API calls.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the volume is located.
+                at:
+                    example: /mnt/funky-volume
+                    type: string
+                    description: |-
+                        The mount point of the volume in the instance.  This is the directory in
+                        the instance where the volume will be mounted.
+                readonly:
+                    example: true
+                    type: boolean
+                    description: Whether the volume is read-only or not.
             description: |-
                 A volume defines a storage which can be attached to the instance.
 
                 Volumes can be used to store persistent data which should remain available
                 even if the instance is stopped or restarted.
         NameOrUUID:
-            required:
-                - uuid
-                - name
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro of the resource.
+            allOf:
+                - type: object
+                  properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro of the resource.
+                - oneOf:
+                    - title: uuid
+                      required:
+                        - uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      required:
+                        - name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: Mutually exclusive with UUID.
             description: An identifier for a resource.  Either a name or a UUID.
         Quotas:
             type: object
@@ -6668,39 +6594,33 @@ components:
                     format: int64
         QuotasResponse:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/QuotasResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
-                        description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
-                - oneOf:
-                    - title: message
-                      type: object
-                      properties:
-                        message:
-                            example: Failed to perform all operations
-                            type: string
-                            description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/QuotasResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for getting the quota of a user given their UUID.
         QuotasResponseData:
             type: object
@@ -7026,17 +6946,13 @@ components:
                 domains like www.example.com and wildcard domains like *.example.com.
         ServiceGroupAutokill:
             type: object
-            allOf:
-                - oneOf:
-                    - title: time_ms
-                      type: object
-                      properties:
-                        time_ms:
-                            type: integer
-                            description: |-
-                                Time in milliseconds after the service group becomes empty before it is
-                                deleted. A value of 0 disables autokill.
-                            format: uint64
+            properties:
+                time_ms:
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the service group becomes empty before it is
+                        deleted. A value of 0 disables autokill.
+                    format: uint64
             description: Automatic delete-on-idle configuration for service groups.
         ServiceGroupInstance:
             type: object
@@ -7060,32 +6976,26 @@ components:
                         you.  The name can also be used to identify the instance in API calls.
         ServiceGroupInstanceDomain:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    fqdn:
-                        example: funky-town-g756b5d.fra0.unikraft.app.
-                        type: string
-                        description: |-
-                            Publicly accessible domain name.
+            properties:
+                fqdn:
+                    example: funky-town-g756b5d.fra0.unikraft.app.
+                    type: string
+                    description: |-
+                        Publicly accessible domain name.
 
-                            If this name ends in a period `.` it must be a valid Full Qualified
-                            Domain Name (FQDN), otherwise it will become a subdomain of the target
-                            metro.
-                - oneOf:
-                    - title: certificate
-                      type: object
-                      properties:
-                        certificate:
-                            allOf:
-                                - $ref: '#/components/schemas/NameOrUUID'
-                            description: |-
-                                The certificate associated with the domain.
+                        If this name ends in a period `.` it must be a valid Full Qualified
+                        Domain Name (FQDN), otherwise it will become a subdomain of the target
+                        metro.
+                certificate:
+                    allOf:
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        The certificate associated with the domain.
 
-                                The certificate is used to secure the domain with TLS/SSL.  If no
-                                certificate is specified, Unikraft Cloud will automatically generate a
-                                new certificate for the domain based on Let's Encrypt and seek to
-                                accomplish a DNS-01 challenge.
+                        The certificate is used to secure the domain with TLS/SSL.  If no
+                        certificate is specified, Unikraft Cloud will automatically generate a
+                        new certificate for the domain based on Let's Encrypt and seek to
+                        accomplish a DNS-01 challenge.
             description: |-
                 The domain configuration for the service group.
 
@@ -7131,40 +7041,49 @@ components:
             description: Parameters for starting the instance.
         StartInstancesRequestItem:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the instance to start.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the instance to start.  Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro to route the request to.
-                wait_timeout_ms:
-                    example: 2000
-                    type: integer
-                    description: |-
-                        Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to
-                        wait for the instance to reach running state.  If `timeout_s` is
-                        not set, this value is converted by rounding up to the next full
-                        second.  No wait performed for a value of 0.
-                    format: int64
-                timeout_s:
-                    example: 2
-                    type: integer
-                    description: |-
-                        Timeout in seconds to wait for the instance to reach running
-                        state.  If you start your instance, you can wait for it to
-                        finish starting with a blocking API call if you specify a wait
-                        timeout greater than zero.  No wait performed for a value of 0.
-                    format: int64
+            allOf:
+                - type: object
+                  properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
+                    wait_timeout_ms:
+                        example: 2000
+                        type: integer
+                        description: |-
+                            Deprecated: Use `timeout_s` instead.  Timeout in milliseconds to
+                            wait for the instance to reach running state.  If `timeout_s` is
+                            not set, this value is converted by rounding up to the next full
+                            second.  No wait performed for a value of 0.
+                        format: int64
+                    timeout_s:
+                        example: 2
+                        type: integer
+                        description: |-
+                            Timeout in seconds to wait for the instance to reach running
+                            state.  If you start your instance, you can wait for it to
+                            finish starting with a blocking API call if you specify a wait
+                            timeout greater than zero.  No wait performed for a value of 0.
+                        format: int64
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the instance to start.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the instance to start.  Mutually exclusive with UUID.
             description: A single request item to start an instance.
         StartInstancesResponse:
             type: object
@@ -7287,48 +7206,57 @@ components:
             description: Parameters for stopping the instance.
         StopInstancesRequestItem:
             type: object
-            properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the instance to stop.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the instance to stop.  Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro to route the request to.
-                force:
-                    example: false
-                    type: boolean
-                    description: Whether to immediately force stop the instance.
-                drain_timeout_ms:
-                    example: 250
-                    type: integer
-                    description: |-
-                        Timeout for draining connections in milliseconds.  The instance does not
-                        receive new connections in the draining phase.  The instance is stopped
-                        when the last connection has been closed or the timeout expired.  The
-                        maximum timeout may vary.  Use -1 for the largest possible value.
+            allOf:
+                - type: object
+                  properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
+                    force:
+                        example: false
+                        type: boolean
+                        description: Whether to immediately force stop the instance.
+                    drain_timeout_ms:
+                        example: 250
+                        type: integer
+                        description: |-
+                            Timeout for draining connections in milliseconds.  The instance does not
+                            receive new connections in the draining phase.  The instance is stopped
+                            when the last connection has been closed or the timeout expired.  The
+                            maximum timeout may vary.  Use -1 for the largest possible value.
 
-                        Note: This endpoint does not block.  Use the wait endpoint for the
-                        instance to reach the stopped state.
-                    format: uint64
-                quick:
-                    example: false
-                    type: boolean
-                    description: |-
-                        Whether to perform a quick shutdown.  This flag is
-                        overridden by force.
-                ifstate:
-                    example: running
-                    type: string
-                    description: Only stop the instance if it is in this state.
+                            Note: This endpoint does not block.  Use the wait endpoint for the
+                            instance to reach the stopped state.
+                        format: uint64
+                    quick:
+                        example: false
+                        type: boolean
+                        description: |-
+                            Whether to perform a quick shutdown.  This flag is
+                            overridden by force.
+                    ifstate:
+                        example: running
+                        type: string
+                        description: Only stop the instance if it is in this state.
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the instance to stop.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the instance to stop.  Mutually exclusive with UUID.
             description: A single request item to stop an instance.
         StopInstancesResponse:
             type: object
@@ -7602,69 +7530,78 @@ components:
                 - prop
                 - op
             type: object
-            properties:
-                id:
-                    example: op-1
-                    type: string
-                    description: |-
-                        (Optional).  A client-provided identifier for tracking this operation in
-                        the response.
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the instance to update. Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the instance to update. Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro to route the request to.
-                prop:
-                    example: memory_mb
-                    enum:
-                        - "image"
-                        - "args"
-                        - "env"
-                        - "memory_mb"
-                        - "vcpus"
-                        - "scale_to_zero"
-                        - "tags"
-                        - "delete_lock"
-                        - "schedules"
-                        - "autokill"
-                    type: string
-                    description: The property to modify.
-                    format: enum
-                op:
-                    example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
-                    description: The operation to perform on the property.
-                    format: enum
-                value:
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
-                    description: |-
-                        The value for the update operation. The type depends on the property and operation:
-                        - For "image": string
-                        - For "args": string or array of strings
-                        - For "env": object (for SET/ADD) or string/array of strings (for DEL)
-                        - For "memory_mb": integer
-                        - For "vcpus": integer
-                        - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
-                        - For "tags": array of strings
-                        - For "delete_lock": boolean
-                        - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
-                          Use action "exec" together with args to execute a command at the scheduled time.
-                        - For "autokill": object with time_ms and num_requests fields
+            allOf:
+                - type: object
+                  properties:
+                    id:
+                        example: op-1
+                        type: string
+                        description: |-
+                            (Optional).  A client-provided identifier for tracking this operation in
+                            the response.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
+                    prop:
+                        example: memory_mb
+                        enum:
+                            - "image"
+                            - "args"
+                            - "env"
+                            - "memory_mb"
+                            - "vcpus"
+                            - "scale_to_zero"
+                            - "tags"
+                            - "delete_lock"
+                            - "schedules"
+                            - "autokill"
+                        type: string
+                        description: The property to modify.
+                        format: enum
+                    op:
+                        example: set
+                        enum:
+                            - "set"
+                            - "add"
+                            - "del"
+                        type: string
+                        description: The operation to perform on the property.
+                        format: enum
+                    value:
+                        allOf:
+                            - $ref: '#/components/schemas/GoogleProtobufValue'
+                        description: |-
+                            The value for the update operation. The type depends on the property and operation:
+                            - For "image": string
+                            - For "args": string or array of strings
+                            - For "env": object (for SET/ADD) or string/array of strings (for DEL)
+                            - For "memory_mb": integer
+                            - For "vcpus": integer
+                            - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
+                            - For "tags": array of strings
+                            - For "delete_lock": boolean
+                            - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
+                              Use action "exec" together with args to execute a command at the scheduled time.
+                            - For "autokill": object with time_ms and num_requests fields
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the instance to update. Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the instance to update. Mutually exclusive with UUID.
             description: A single update operation to be applied to an instance.
         UpdateInstancesResponse:
             type: object
@@ -7788,50 +7725,59 @@ components:
                 - prop
                 - op
             type: object
-            properties:
-                id:
-                    example: op-1
-                    type: string
-                    description: (Optional).  A client-provided identifier for tracking this operation in the response.
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the service group to update.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the service group to update.  Mutually exclusive with UUID.
-                prop:
-                    example: services
-                    enum:
-                        - "services"
-                        - "domains"
-                        - "soft_limit"
-                        - "hard_limit"
-                        - "autokill"
-                    type: string
-                    description: The property to modify.
-                    format: enum
-                op:
-                    example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
-                    description: The operation to perform.
-                    format: enum
-                value:
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
-                    description: |-
-                        The value for the update operation:
-                        - For "services": array of Service objects (same as for creation)
-                        - For "domains": array of Domain objects (same as for creation)
-                        - For "soft_limit": integer (1–65535), must be <= "hard_limit"
-                        - For "hard_limit": integer (1–65535), must be >= "soft_limit"
-                        - For "autokill": object with time_ms field
+            allOf:
+                - type: object
+                  properties:
+                    id:
+                        example: op-1
+                        type: string
+                        description: (Optional).  A client-provided identifier for tracking this operation in the response.
+                    prop:
+                        example: services
+                        enum:
+                            - "services"
+                            - "domains"
+                            - "soft_limit"
+                            - "hard_limit"
+                            - "autokill"
+                        type: string
+                        description: The property to modify.
+                        format: enum
+                    op:
+                        example: set
+                        enum:
+                            - "set"
+                            - "add"
+                            - "del"
+                        type: string
+                        description: The operation to perform.
+                        format: enum
+                    value:
+                        allOf:
+                            - $ref: '#/components/schemas/GoogleProtobufValue'
+                        description: |-
+                            The value for the update operation:
+                            - For "services": array of Service objects (same as for creation)
+                            - For "domains": array of Domain objects (same as for creation)
+                            - For "soft_limit": integer (1–65535), must be <= "hard_limit"
+                            - For "hard_limit": integer (1–65535), must be >= "soft_limit"
+                            - For "autokill": object with time_ms field
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the service group to update.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the service group to update.  Mutually exclusive with UUID.
             description: A single update operation to be applied to a service group
         UpdateServiceGroupsResponse:
             type: object
@@ -7955,54 +7901,63 @@ components:
                 - prop
                 - op
             type: object
-            properties:
-                id:
-                    example: op-1
-                    type: string
-                    description: |-
-                        (Optional).  A client-provided identifier for tracking this operation in
-                        the response.
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the template instance to update. Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the template instance to update. Mutually exclusive with UUID.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        The metro of the template instance.
-                prop:
-                    example: tags
-                    enum:
-                        - "tags"
-                        - "delete_lock"
-                        - "autokill"
-                    type: string
-                    description: The property to modify.
-                    format: enum
-                op:
-                    example: add
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
-                    description: The operation to perform on the property.
-                    format: enum
-                value:
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
-                    description: |-
-                        The value for the update operation. The type depends on the property and operation:
-                        - For "tags": array of strings
-                        - For "delete_lock": boolean
-                        - For "autokill": object with time_ms field
+            allOf:
+                - type: object
+                  properties:
+                    id:
+                        example: op-1
+                        type: string
+                        description: |-
+                            (Optional).  A client-provided identifier for tracking this operation in
+                            the response.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro of the template instance.
+                    prop:
+                        example: tags
+                        enum:
+                            - "tags"
+                            - "delete_lock"
+                            - "autokill"
+                        type: string
+                        description: The property to modify.
+                        format: enum
+                    op:
+                        example: add
+                        enum:
+                            - "set"
+                            - "add"
+                            - "del"
+                        type: string
+                        description: The operation to perform on the property.
+                        format: enum
+                    value:
+                        allOf:
+                            - $ref: '#/components/schemas/GoogleProtobufValue'
+                        description: |-
+                            The value for the update operation. The type depends on the property and operation:
+                            - For "tags": array of strings
+                            - For "delete_lock": boolean
+                            - For "autokill": object with time_ms field
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the template instance to update. Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the template instance to update. Mutually exclusive with UUID.
             description: A single update operation to be applied to a template instance.
         UpdateTemplateInstancesResponse:
             type: object
@@ -8122,86 +8077,89 @@ components:
                 - prop
                 - op
             type: object
-            properties:
-                id:
-                    example: op-1
-                    type: string
-                    description: |-
-                        (Optional).  A client-provided identifier for tracking this operation in
-                        the response.
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: |-
-                        The UUID of the template volume to update.  Mutually exclusive with
-                        name.
-                    format: uuid
-                name:
-                    example: funky-vol-g7gum5cj
-                    type: string
-                    description: |-
-                        The name of the template volume to update.  Mutually exclusive with
-                        UUID.
-                prop:
-                    example: tags
-                    enum:
-                        - "tags"
-                        - "delete_lock"
-                    type: string
-                    description: The property to modify.
-                    format: enum
-                op:
-                    example: add
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
-                    description: The operation to perform.
-                    format: enum
-                value:
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
-                    description: |-
-                        The value for the update operation. The type depends on the property and operation:
-                        - For "tags": array of Strings
-                        - For "delete_lock": boolean
-            description: A single update operation to be applied to a template volume.
-        UpdateTemplateVolumesResponse:
-            type: object
             allOf:
                 - type: object
                   properties:
-                    status:
-                        allOf:
-                            - $ref: '#/components/schemas/ResponseStatus'
-                        description: The status of the response.
-                    data:
-                        allOf:
-                            - $ref: '#/components/schemas/UpdateTemplateVolumesResponseData'
-                        description: The response data for this request.
-                    errors:
-                        type: array
-                        items:
-                            $ref: '#/components/schemas/ResponseError'
-                        description: A list of errors which may have occurred during the request.
-                    op_time_us:
-                        example: 46
-                        type: integer
+                    id:
+                        example: op-1
+                        type: string
                         description: |-
-                            The operation time in microseconds.  This is the time it took to process
-                            the request and generate the response.
-                        format: uint64
+                            (Optional).  A client-provided identifier for tracking this operation in
+                            the response.
+                    prop:
+                        example: tags
+                        enum:
+                            - "tags"
+                            - "delete_lock"
+                        type: string
+                        description: The property to modify.
+                        format: enum
+                    op:
+                        example: add
+                        enum:
+                            - "set"
+                            - "add"
+                            - "del"
+                        type: string
+                        description: The operation to perform.
+                        format: enum
+                    value:
+                        allOf:
+                            - $ref: '#/components/schemas/GoogleProtobufValue'
+                        description: |-
+                            The value for the update operation. The type depends on the property and operation:
+                            - For "tags": array of Strings
+                            - For "delete_lock": boolean
                 - oneOf:
-                    - title: message
+                    - title: uuid
                       type: object
                       properties:
-                        message:
-                            example: Failed to perform all operations
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
                             type: string
                             description: |-
-                                An optional message providing additional information about the status.
-                                This field is useful when the status is not `success`.
+                                The UUID of the template volume to update.  Mutually exclusive with
+                                name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-vol-g7gum5cj
+                            type: string
+                            description: |-
+                                The name of the template volume to update.  Mutually exclusive with
+                                UUID.
+            description: A single update operation to be applied to a template volume.
+        UpdateTemplateVolumesResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/UpdateTemplateVolumesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 46
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
             description: The response message for updating one or more template volumes.
         UpdateTemplateVolumesResponseData:
             type: object
@@ -8287,48 +8245,57 @@ components:
                 - prop
                 - op
             type: object
-            properties:
-                id:
-                    example: op-1
-                    type: string
-                    description: (Optional).  A client-provided identifier for tracking this operation in the response.
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the volume to update.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the volume to update.  Mutually exclusive with UUID.
-                prop:
-                    example: size_mb
-                    enum:
-                        - "size_mb"
-                        - "tags"
-                        - "quota_policy"
-                        - "delete_lock"
-                    type: string
-                    description: The property to modify.
-                    format: enum
-                op:
-                    example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
-                    description: The operation to perform.
-                    format: enum
-                value:
-                    allOf:
-                        - $ref: '#/components/schemas/GoogleProtobufValue'
-                    description: |-
-                        The value for the update operation. The type depends on the property and operation:
-                        - For "size_mb": unsigned integer
-                        - For "quota_policy": "static" or "dynamic"
-                        - For "tags": array of Strings
-                        - For "delete_lock": boolean
+            allOf:
+                - type: object
+                  properties:
+                    id:
+                        example: op-1
+                        type: string
+                        description: (Optional).  A client-provided identifier for tracking this operation in the response.
+                    prop:
+                        example: size_mb
+                        enum:
+                            - "size_mb"
+                            - "tags"
+                            - "quota_policy"
+                            - "delete_lock"
+                        type: string
+                        description: The property to modify.
+                        format: enum
+                    op:
+                        example: set
+                        enum:
+                            - "set"
+                            - "add"
+                            - "del"
+                        type: string
+                        description: The operation to perform.
+                        format: enum
+                    value:
+                        allOf:
+                            - $ref: '#/components/schemas/GoogleProtobufValue'
+                        description: |-
+                            The value for the update operation. The type depends on the property and operation:
+                            - For "size_mb": unsigned integer
+                            - For "quota_policy": "static" or "dynamic"
+                            - For "tags": array of Strings
+                            - For "delete_lock": boolean
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the volume to update.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the volume to update.  Mutually exclusive with UUID.
             description: A single request item for updating a volume.
         UpdateVolumesResponse:
             type: object
@@ -8546,22 +8513,16 @@ components:
             description: A volume represents a storage device that can be attached to an instance.
         VolumeInstanceID:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    uuid:
-                        example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                        type: string
-                        description: The UUID of the instance that the volume is attached to.
-                        format: uuid
-                - oneOf:
-                    - title: name
-                      type: object
-                      properties:
-                        name:
-                            example: funky-town-g7gum5cj
-                            type: string
-                            description: The name of the instance that the volume is attached to.
+            properties:
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the instance that the volume is attached to.
+                    format: uuid
+                name:
+                    example: funky-town-g7gum5cj
+                    type: string
+                    description: The name of the instance that the volume is attached to.
             description: Reference to the instance to attach the volume to.
         VolumeInstanceMount:
             type: object
@@ -8581,47 +8542,7 @@ components:
                     description: Whether the volume is mounted read-only or read-write.
         WaitInstanceByUUIDRequestBody:
             type: object
-            allOf:
-                - type: object
-                  properties:
-                    state:
-                        enum:
-                            - "stopped"
-                            - "starting"
-                            - "running"
-                            - "draining"
-                            - "stopping"
-                            - "template"
-                            - "standby"
-                        type: string
-                        description: The desired state to wait for.  Default is `running`.
-                        format: enum
-                - oneOf:
-                    - title: timeout_ms
-                      type: object
-                      properties:
-                        timeout_ms:
-                            example: 450
-                            type: integer
-                            description: |-
-                                Timeout in milliseconds to wait for the instance to reach the desired
-                                state.  If the timeout is reached, the request will fail with an error.
-                                A value of -1 means to wait indefinitely until the instance reaches the
-                                desired state.
-                            format: int64
-            description: Wait parameters.
-        WaitInstancesRequestItem:
-            type: object
             properties:
-                uuid:
-                    example: 123e4567-e89b-12d3-a456-426614174000
-                    type: string
-                    description: The UUID of the instance to wait for.  Mutually exclusive with name.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the instance to wait for.  Mutually exclusive with UUID.
                 state:
                     enum:
                         - "stopped"
@@ -8643,6 +8564,49 @@ components:
                         A value of -1 means to wait indefinitely until the instance reaches the
                         desired state.
                     format: int64
+            description: Wait parameters.
+        WaitInstancesRequestItem:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    state:
+                        enum:
+                            - "stopped"
+                            - "starting"
+                            - "running"
+                            - "draining"
+                            - "stopping"
+                            - "template"
+                            - "standby"
+                        type: string
+                        description: The desired state to wait for.  Default is `running`.
+                        format: enum
+                    timeout_ms:
+                        example: 450
+                        type: integer
+                        description: |-
+                            Timeout in milliseconds to wait for the instance to reach the desired
+                            state.  If the timeout is reached, the request will fail with an error.
+                            A value of -1 means to wait indefinitely until the instance reaches the
+                            desired state.
+                        format: int64
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the instance to wait for.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the instance to wait for.  Mutually exclusive with UUID.
             description: A single wait operation to be applied to an instance.
         WaitInstancesResponse:
             type: object

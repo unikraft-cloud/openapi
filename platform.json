@@ -834,7 +834,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTemplateInstancesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
               }
             }
           },
@@ -4478,13 +4481,21 @@
             "type": "boolean",
             "description": "(Optional).  Whether the instance needs to run in order to reach template state"
           },
-          "nameOrUUID": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrUUID"
-              }
-            ],
-            "description": "(Optional).  The UUID of a template instance to create the instance from."
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "(Optional).  The UUID of a template instance to create the instance from.\nMutually exclusive with name.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-template",
+            "type": "string",
+            "description": "(Optional).  The name of a template instance to create the instance from.\nMutually exclusive with UUID."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the volume is located."
           },
           "create_args": {
             "allOf": [
@@ -4815,22 +4826,6 @@
             "description": "The service group which was created by this request.\n\nNote: only one service group can be specified in the request, so this\nwill always contain a single entry."
           }
         }
-      },
-      "CreateTemplateInstancesRequest": {
-        "required": [
-          "ids"
-        ],
-        "type": "object",
-        "properties": {
-          "ids": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NameOrUUID"
-            },
-            "description": "The list of IDs of the instances to convert to templates."
-          }
-        },
-        "description": "The request message for converting one or more instances to templates."
       },
       "CreateTemplateInstancesResponse": {
         "type": "object",
@@ -7113,7 +7108,7 @@
           "instances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Instance"
+              "$ref": "#/components/schemas/InstanceTemplate"
             },
             "description": "List of template instances that were retrieved during the operation."
           }
@@ -7812,6 +7807,133 @@
           }
         },
         "description": "The snapshot UUID of the instance."
+      },
+      "InstanceTemplate": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the template instance.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the template instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the template instance is located."
+          },
+          "created_at": {
+            "example": "2023-10-01T12:00:00Z",
+            "type": "string",
+            "description": "The time the template instance was created.",
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "stopped",
+              "starting",
+              "running",
+              "draining",
+              "stopping",
+              "template",
+              "standby"
+            ],
+            "type": "string",
+            "description": "The state of the template instance.",
+            "format": "enum"
+          },
+          "image": {
+            "example": "nginx:latest",
+            "type": "string",
+            "description": "The image used to create the template instance."
+          },
+          "memory_mb": {
+            "example": 1024,
+            "type": "integer",
+            "description": "The amount of memory in megabytes allocated for the template instance.",
+            "format": "uint64"
+          },
+          "vcpus": {
+            "example": 1,
+            "type": "integer",
+            "description": "The number of vCPUs allocated for the template instance.",
+            "format": "uint32"
+          },
+          "args": {
+            "example": "--port=8080 --debug",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The arguments passed to the template instance when it was created."
+          },
+          "env": {
+            "example": {
+              "ENV_VAR": "value"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Environment variables set for the template instance."
+          },
+          "restart_policy": {
+            "enum": [
+              "never",
+              "always",
+              "on-failure"
+            ],
+            "type": "string",
+            "description": "The restart policy for instances created from this template.",
+            "format": "enum"
+          },
+          "scale_to_zero": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceScaleToZero"
+              }
+            ],
+            "description": "The scale-to-zero configuration for instances created from this template."
+          },
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceVolume"
+            },
+            "description": "The list of volumes attached to the template instance."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags associated with the template instance."
+          },
+          "delete_lock": {
+            "type": "boolean",
+            "description": "If set to true, the template instance cannot be deleted until the lock is removed."
+          },
+          "schedules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Schedule"
+            },
+            "description": "Scheduled operations for instances created from this template."
+          },
+          "template_autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceTemplateAutokill"
+              }
+            ],
+            "description": "Template-specific automatic delete-on-idle configuration."
+          }
+        },
+        "description": "An instance template describes the settable configuration for a template\ninstance, excluding runtime-only fields."
       },
       "InstanceTemplateAutokill": {
         "type": "object",

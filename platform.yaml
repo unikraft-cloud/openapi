@@ -524,6 +524,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StopInstancesResponse'
+    /v1/instances/suspend:
+        put:
+            tags:
+                - Instances
+            summary: Suspend Instances
+            description: |-
+                Suspend one or more running instances by ID(s) (name or UUID) or do
+                nothing if the instances are already suspended.
+            operationId: SuspendInstances
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/SuspendInstancesRequestItem'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SuspendInstancesResponse'
     /v1/instances/templates:
         get:
             tags:
@@ -992,6 +1016,36 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StopInstancesResponse'
+    /v1/instances/{uuid}/suspend:
+        put:
+            tags:
+                - Instances
+            summary: Suspend Instance by UUID
+            description: |-
+                Suspend a running instance by its UUID or do nothing if the instance is
+                already suspended.
+            operationId: SuspendInstanceByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the instance to suspend.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SuspendInstanceByUUIDRequestBody'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SuspendInstancesResponse'
     /v1/instances/{uuid}/wait:
         get:
             tags:
@@ -7480,6 +7534,151 @@ components:
                         - "standby"
                     type: string
                     description: The previous state of the instance before the stop operation was invoked.
+                    format: enum
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: No instance with name 'funky-town-g756b5d'
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                error:
+                    example: 8
+                    type: integer
+                    description: |-
+                        An optional error code providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                    format: int32
+        SuspendInstanceByUUIDRequestBody:
+            type: object
+            properties:
+                drain_timeout_ms:
+                    example: 550
+                    type: integer
+                    description: |-
+                        Timeout for draining connections in milliseconds.  No draining
+                        will occur if set to 0.  Use -1 for the largest possible value.
+                    format: uint64
+            description: Parameters for suspending the instance.
+        SuspendInstancesRequestItem:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
+                    drain_timeout_ms:
+                        example: 250
+                        type: integer
+                        description: |-
+                            Timeout for draining connections in milliseconds.  No draining
+                            will occur if set to 0.  Use -1 for the largest possible value.
+                        format: uint64
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the instance to suspend.  Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the instance to suspend.  Mutually exclusive with UUID.
+            description: A single request item to suspend an instance.
+        SuspendInstancesResponse:
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    example: Failed to perform all operations
+                    type: string
+                    description: |-
+                        An optional message providing additional information about the status.
+                        This field is useful when the status is not `success`.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/SuspendInstancesResponseData'
+                    description: The response data for this request.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 23
+                    type: integer
+                    description: |-
+                        The operation time in microseconds.  This is the time it took to process
+                        the request and generate the response.
+                    format: uint64
+            description: |-
+                The response message for suspending one or more instance(s) given their UUID(s)
+                or name(s).
+        SuspendInstancesResponseData:
+            type: object
+            properties:
+                instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SuspendInstancesResponseSuspendedInstance'
+                    description: The instance(s) which were suspended by the request.
+        SuspendInstancesResponseSuspendedInstance:
+            type: object
+            properties:
+                uuid:
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                    type: string
+                    description: The UUID of the instance.
+                    format: uuid
+                name:
+                    example: funky-town-g756b5d
+                    type: string
+                    description: The name of the instance.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
+                state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "template"
+                        - "standby"
+                    type: string
+                    description: The current state of the instance.
+                    format: enum
+                previous_state:
+                    enum:
+                        - "stopped"
+                        - "starting"
+                        - "running"
+                        - "draining"
+                        - "stopping"
+                        - "template"
+                        - "standby"
+                    type: string
+                    description: The previous state of the instance before the suspend operation was invoked.
                     format: enum
                 status:
                     allOf:

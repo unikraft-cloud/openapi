@@ -5724,7 +5724,7 @@ components:
                 instances:
                     type: array
                     items:
-                        $ref: '#/components/schemas/InstanceTemplate'
+                        $ref: '#/components/schemas/Instance'
                     description: List of template instances that were retrieved during the operation.
         GetTemplateVolumesResponse:
             type: object
@@ -6509,103 +6509,6 @@ components:
                     description: The UUID of the snapshot.
                     format: uuid
             description: The snapshot UUID of the instance.
-        InstanceTemplate:
-            type: object
-            properties:
-                uuid:
-                    type: string
-                    description: The UUID of the template instance.
-                    format: uuid
-                name:
-                    example: funky-town-g756b5d
-                    type: string
-                    description: The name of the template instance.
-                metro:
-                    example: fra
-                    type: string
-                    description: |-
-                        (Only applies when using global control plane).
-                        Where the template instance is located.
-                created_at:
-                    example: 2023-10-01T12:00:00Z
-                    type: string
-                    description: The time the template instance was created.
-                    format: date-time
-                state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
-                    description: The state of the template instance.
-                    format: enum
-                image:
-                    example: nginx:latest
-                    type: string
-                    description: The image used to create the template instance.
-                memory_mb:
-                    example: 1024
-                    type: integer
-                    description: The amount of memory in megabytes allocated for the template instance.
-                    format: uint64
-                vcpus:
-                    example: 1
-                    type: integer
-                    description: The number of vCPUs allocated for the template instance.
-                    format: uint32
-                args:
-                    example: --port=8080 --debug
-                    type: array
-                    items:
-                        type: string
-                    description: The arguments passed to the template instance when it was created.
-                env:
-                    example: {"ENV_VAR": "value"}
-                    type: object
-                    additionalProperties:
-                        type: string
-                    description: Environment variables set for the template instance.
-                restart_policy:
-                    enum:
-                        - "never"
-                        - "always"
-                        - "on-failure"
-                    type: string
-                    description: The restart policy for instances created from this template.
-                    format: enum
-                scale_to_zero:
-                    allOf:
-                        - $ref: '#/components/schemas/InstanceScaleToZero'
-                    description: The scale-to-zero configuration for instances created from this template.
-                volumes:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/InstanceVolume'
-                    description: The list of volumes attached to the template instance.
-                tags:
-                    type: array
-                    items:
-                        type: string
-                    description: The tags associated with the template instance.
-                delete_lock:
-                    type: boolean
-                    description: If set to true, the template instance cannot be deleted until the lock is removed.
-                schedules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Schedule'
-                    description: Scheduled operations for instances created from this template.
-                template_autokill:
-                    allOf:
-                        - $ref: '#/components/schemas/InstanceTemplateAutokill'
-                    description: Template-specific automatic delete-on-idle configuration.
-            description: |-
-                An instance template describes the settable configuration for a template
-                instance, excluding runtime-only fields.
         InstanceTemplateAutokill:
             type: object
             properties:

@@ -1998,7 +1998,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateTemplateVolumesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/NameOrUUID'
                 required: true
             responses:
                 default:
@@ -3975,19 +3977,6 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        CreateTemplateVolumesRequest:
-            required:
-                - ids
-            type: object
-            properties:
-                ids:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/NameOrUUID'
-                    description: |-
-                        The list of IDs of the volumes that will be converted into templates.
-                        Each ID can be either a UUID or a name.
-            description: The request message for creating one or more template volumes.
         CreateTemplateVolumesResponse:
             type: object
             properties:

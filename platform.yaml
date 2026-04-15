@@ -3431,6 +3431,15 @@ components:
                     description: |-
                         (Optional).  Automatic delete-on-idle/request-limit configuration.
                         Not used for template instances.
+                hostname:
+                    example: my-instance
+                    type: string
+                    description: |-
+                        (Optional).  The hostname of the instance.
+
+                        If not provided, the hostname will be set to the instance name.  The
+                        hostname must be a valid DNS label (e.g., "my-instance") and is used for
+                        internal DNS resolution within the Unikraft Cloud network.
             description: The request message for creating a new instance.
         CreateInstanceRequestAutokill:
             type: object
@@ -7729,6 +7738,7 @@ components:
                         - "delete_lock"
                         - "schedules"
                         - "autokill"
+                        - "hostname"
                     type: string
                     description: The property to modify.
                     format: enum
@@ -7757,6 +7767,7 @@ components:
                         - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
                           Use action "exec" together with args to execute a command at the scheduled time.
                         - For "autokill": object with time_ms and num_requests fields
+                        - For "hostname": string (valid DNS label)
         UpdateInstancesRequestItem:
             required:
                 - prop
@@ -7790,6 +7801,7 @@ components:
                             - "delete_lock"
                             - "schedules"
                             - "autokill"
+                            - "hostname"
                         type: string
                         description: The property to modify.
                         format: enum
@@ -7818,6 +7830,7 @@ components:
                             - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
                               Use action "exec" together with args to execute a command at the scheduled time.
                             - For "autokill": object with time_ms and num_requests fields
+                            - For "hostname": string (valid DNS label)
                 - oneOf:
                     - title: uuid
                       type: object

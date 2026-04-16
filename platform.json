@@ -4970,8 +4970,11 @@
         "type": "object",
         "properties": {
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular template instance creation operation."
           },
           "uuid": {
@@ -5948,8 +5951,11 @@
             "description": "The name of the template instance that was deleted."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular template instance deletion operation."
           },
           "message": {
@@ -6032,8 +6038,11 @@
             "description": "The name of the template volume that was deleted."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular template volume deletion operation."
           },
           "message": {
@@ -9367,8 +9376,11 @@
             "description": "The name of the instance that was updated."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular instance update operation."
           },
           "metro": {
@@ -9591,8 +9603,11 @@
             "description": "(Only applies when using global control plane).\nThe metro of the service group."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular service group update operation."
           },
           "id": {
@@ -9811,8 +9826,11 @@
             "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular template instance update operation."
           },
           "id": {
@@ -10019,8 +10037,11 @@
             "description": "The name of the template volume that was updated."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular volume update operation."
           },
           "id": {
@@ -10236,8 +10257,11 @@
             "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
-            "example": "success",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
             "description": "The status of this particular volume update operation."
           },
           "id": {

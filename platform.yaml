@@ -3943,8 +3943,8 @@ components:
             type: object
             properties:
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular template instance creation operation.
                 uuid:
                     example: 123e4567-e89b-12d3-a456-426614174000
@@ -4729,8 +4729,8 @@ components:
                     type: string
                     description: The name of the template instance that was deleted.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular template instance deletion operation.
                 message:
                     example: No template instance with name 'funky-town-g756b5d'
@@ -4796,8 +4796,8 @@ components:
                     type: string
                     description: The name of the template volume that was deleted.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular template volume deletion operation.
                 message:
                     example: No volume with name 'funky-town-g756b5d'
@@ -7899,8 +7899,8 @@ components:
                     type: string
                     description: The name of the instance that was updated.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular instance update operation.
                 metro:
                     example: fra
@@ -8081,8 +8081,8 @@ components:
                         (Only applies when using global control plane).
                         The metro of the service group.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular service group update operation.
                 id:
                     example: op-1
@@ -8261,8 +8261,8 @@ components:
                         (Only applies when using global control plane).
                         The metro of the template instance.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular template instance update operation.
                 id:
                     example: op-1
@@ -8427,8 +8427,8 @@ components:
                     type: string
                     description: The name of the template volume that was updated.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular volume update operation.
                 id:
                     example: op-1
@@ -8599,8 +8599,8 @@ components:
                         (Only applies when using global control plane).
                         The metro of the volume.
                 status:
-                    example: success
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of this particular volume update operation.
                 id:
                     example: op-1

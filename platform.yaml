@@ -3440,6 +3440,16 @@ components:
                         If not provided, the hostname will be set to the instance name.  The
                         hostname must be a valid DNS label (e.g., "my-instance") and is used for
                         internal DNS resolution within the Unikraft Cloud network.
+                dependencies:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        (Optional).  Dependencies of the instance.
+
+                        A list of instance identifiers (name or UUID) that this instance depends
+                        on.  Dependencies define startup ordering and can be used to ensure that
+                        prerequisite instances are running before this instance starts.
             description: The request message for creating a new instance.
         CreateInstanceRequestAutokill:
             type: object
@@ -7739,6 +7749,9 @@ components:
                         - "schedules"
                         - "autokill"
                         - "hostname"
+                        - "roms"
+                        - "dependencies"
+                        - "sched_priority"
                     type: string
                     description: The property to modify.
                     format: enum
@@ -7768,6 +7781,9 @@ components:
                           Use action "exec" together with args to execute a command at the scheduled time.
                         - For "autokill": object with time_ms and num_requests fields
                         - For "hostname": string (valid DNS label)
+                        - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
+                        - For "dependencies": array of instance identifiers (name or UUID)
+                        - For "sched_priority": integer (scheduling priority value)
         UpdateInstancesRequestItem:
             required:
                 - prop
@@ -7802,6 +7818,9 @@ components:
                             - "schedules"
                             - "autokill"
                             - "hostname"
+                            - "roms"
+                            - "dependencies"
+                            - "sched_priority"
                         type: string
                         description: The property to modify.
                         format: enum
@@ -7831,6 +7850,9 @@ components:
                               Use action "exec" together with args to execute a command at the scheduled time.
                             - For "autokill": object with time_ms and num_requests fields
                             - For "hostname": string (valid DNS label)
+                            - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
+                            - For "dependencies": array of instance identifiers (name or UUID)
+                            - For "sched_priority": integer (scheduling priority value)
                 - oneOf:
                     - title: uuid
                       type: object

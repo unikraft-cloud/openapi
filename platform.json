@@ -4431,6 +4431,13 @@
             "example": "my-instance",
             "type": "string",
             "description": "(Optional).  The hostname of the instance.\n\nIf not provided, the hostname will be set to the instance name.  The\nhostname must be a valid DNS label (e.g., \"my-instance\") and is used for\ninternal DNS resolution within the Unikraft Cloud network."
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NameOrUUID"
+            },
+            "description": "(Optional).  Dependencies of the instance.\n\nA list of instance identifiers (name or UUID) that this instance depends\non.  Dependencies define startup ordering and can be used to ensure that\nprerequisite instances are running before this instance starts."
           }
         },
         "description": "The request message for creating a new instance."
@@ -9192,7 +9199,10 @@
               "delete_lock",
               "schedules",
               "autokill",
-              "hostname"
+              "hostname",
+              "roms",
+              "dependencies",
+              "sched_priority"
             ],
             "type": "string",
             "description": "The property to modify.",
@@ -9215,7 +9225,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": integer (scheduling priority value)"
           }
         }
       },
@@ -9252,7 +9262,10 @@
                   "delete_lock",
                   "schedules",
                   "autokill",
-                  "hostname"
+                  "hostname",
+                  "roms",
+                  "dependencies",
+                  "sched_priority"
                 ],
                 "type": "string",
                 "description": "The property to modify.",
@@ -9275,7 +9288,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": integer (scheduling priority value)"
               }
             }
           },

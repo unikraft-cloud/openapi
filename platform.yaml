@@ -250,7 +250,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/HealthzResponse'
-    /v1/images/list:
+    /v1/images:
         get:
             tags:
                 - Images
@@ -261,20 +261,23 @@ paths:
                 - name: metro
                   in: query
                   description: |-
-                    (Optional, only applies when using global control plane).
-                    The metro to route the request to.
+                    (Only applies when using global control plane).
+                    The metro of the image.
                   schema:
                     type: string
-                - name: namespace
+                - name: digest
                   in: query
-                  description: Optional namespace to filter images by.
+                  schema:
+                    type: string
+                - name: tag
+                  in: query
                   schema:
                     type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/TagOrDigest'
+                            $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
             responses:
                 default:
                     description: default
@@ -5269,6 +5272,26 @@ components:
                     items:
                         $ref: '#/components/schemas/Certificate'
                     description: The certificate(s) which were retrieved by the request.
+        GetImagesRequestTagOrDigest:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: digest
+                      required:
+                        - digest
+                      type: object
+                      properties:
+                        digest:
+                            example: sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+                            type: string
+                    - title: tag
+                      required:
+                        - tag
+                      type: object
+                      properties:
+                        tag:
+                            example: my-image:latest
+                            type: string
         GetImagesResponse:
             type: object
             properties:
@@ -5864,26 +5887,21 @@ components:
         Image:
             type: object
             properties:
-                digest:
-                    example: 256
+                url:
+                    example: my-image:latest
                     type: string
-                    description: |-
-                        The digest of the image is a unique identifier of the image manifest which
-                        is a string representation including the hashing algorithm and the hash
-                        value separated by a colon.
                 metro:
                     example: fra
                     type: string
                     description: |-
                         (Only applies when using global control plane).
                         The metro of the image.
-                tags:
-                    example: ['my-image:latest']
-                    type: array
-                    items:
-                        type: string
-                    description: The canonical name of the image is known as the "tag".
-                initrd:
+                created_at:
+                    example: 2021-01-01T00:00:00Z
+                    type: string
+                    description: The time the volume was created.
+                    format: date-time
+                initrd_or_rom:
                     example: true
                     type: boolean
                 size_in_bytes:
@@ -5891,20 +5909,24 @@ components:
                     type: integer
                     format: int64
                 args:
-                    example: --verbose
-                    type: string
-                kernel_args:
-                    example: console=ttyS0
-                    type: string
-                users:
-                    example: [root, admin]
+                    example: [--verbose]
                     type: array
                     items:
                         type: string
-                labels:
-                    example: {env: production, version: 1.0}
+                env:
+                    example: {production: on}
                     type: object
                     additionalProperties:
+                        type: string
+                tags:
+                    example: [latest]
+                    type: array
+                    items:
+                        type: string
+                users:
+                    example: [root]
+                    type: array
+                    items:
                         type: string
         Instance:
             type: object
@@ -7608,26 +7630,6 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
-        TagOrDigest:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: digest
-                      required:
-                        - digest
-                      type: object
-                      properties:
-                        digest:
-                            example: sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
-                            type: string
-                    - title: tag
-                      required:
-                        - tag
-                      type: object
-                      properties:
-                        tag:
-                            example: my-image:latest
-                            type: string
         UpdateCertificateByUUIDRequest:
             required:
                 - chain

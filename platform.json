@@ -343,7 +343,7 @@
         }
       }
     },
-    "/v1/images/list": {
+    "/v1/images": {
       "get": {
         "tags": [
           "Images"
@@ -355,15 +355,21 @@
           {
             "name": "metro",
             "in": "query",
-            "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to.",
+            "description": "(Only applies when using global control plane).\nThe metro of the image.",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "namespace",
+            "name": "digest",
             "in": "query",
-            "description": "Optional namespace to filter images by.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -373,7 +379,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TagOrDigest"
+                "$ref": "#/components/schemas/GetImagesRequestTagOrDigest"
               }
             }
           }
@@ -6623,6 +6629,41 @@
           }
         }
       },
+      "GetImagesRequestTagOrDigest": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "digest",
+                "required": [
+                  "digest"
+                ],
+                "type": "object",
+                "properties": {
+                  "digest": {
+                    "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "title": "tag",
+                "required": [
+                  "tag"
+                ],
+                "type": "object",
+                "properties": {
+                  "tag": {
+                    "example": "my-image:latest",
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
       "GetImagesResponse": {
         "type": "object",
         "properties": {
@@ -7363,27 +7404,22 @@
       "Image": {
         "type": "object",
         "properties": {
-          "digest": {
-            "example": 256,
-            "type": "string",
-            "description": "The digest of the image is a unique identifier of the image manifest which\nis a string representation including the hashing algorithm and the hash\nvalue separated by a colon."
+          "url": {
+            "example": "my-image:latest",
+            "type": "string"
           },
           "metro": {
             "example": "fra",
             "type": "string",
             "description": "(Only applies when using global control plane).\nThe metro of the image."
           },
-          "tags": {
-            "example": [
-              "my-image:latest"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The canonical name of the image is known as the \"tag\"."
+          "created_at": {
+            "example": "2021-01-01T00:00:00Z",
+            "type": "string",
+            "description": "The time the volume was created.",
+            "format": "date-time"
           },
-          "initrd": {
+          "initrd_or_rom": {
             "example": true,
             "type": "boolean"
           },
@@ -7393,30 +7429,38 @@
             "format": "int64"
           },
           "args": {
-            "example": "--verbose",
-            "type": "string"
-          },
-          "kernel_args": {
-            "example": "console=ttyS0",
-            "type": "string"
-          },
-          "users": {
             "example": [
-              "root",
-              "admin"
+              "--verbose"
             ],
             "type": "array",
             "items": {
               "type": "string"
             }
           },
-          "labels": {
+          "env": {
             "example": {
-              "env": "production",
-              "version": 1
+              "production": "on"
             },
             "type": "object",
             "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "example": [
+              "latest"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "users": {
+            "example": [
+              "root"
+            ],
+            "type": "array",
+            "items": {
               "type": "string"
             }
           }
@@ -9032,41 +9076,6 @@
             "format": "int32"
           }
         }
-      },
-      "TagOrDigest": {
-        "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "digest",
-                "required": [
-                  "digest"
-                ],
-                "type": "object",
-                "properties": {
-                  "digest": {
-                    "example": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-                    "type": "string"
-                  }
-                }
-              },
-              {
-                "title": "tag",
-                "required": [
-                  "tag"
-                ],
-                "type": "object",
-                "properties": {
-                  "tag": {
-                    "example": "my-image:latest",
-                    "type": "string"
-                  }
-                }
-              }
-            ]
-          }
-        ]
       },
       "UpdateCertificateByUUIDRequest": {
         "required": [

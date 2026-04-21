@@ -277,7 +277,10 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
+                required: true
             responses:
                 default:
                     description: default

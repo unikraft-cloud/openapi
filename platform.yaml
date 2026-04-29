@@ -250,6 +250,44 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/HealthzResponse'
+    /v1/image-store:
+        get:
+            tags:
+                - Images
+            summary: Get Images in Store
+            description: Retrieve all images.
+            operationId: GetImageStore
+            parameters:
+                - name: metro
+                  in: query
+                  description: |-
+                    (Only applies when using global control plane).
+                    The metro of the image.
+                  schema:
+                    type: string
+                - name: digest
+                  in: query
+                  schema:
+                    type: string
+                - name: tag
+                  in: query
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetImagesResponse'
     /v1/images:
         get:
             tags:
@@ -3510,8 +3548,6 @@ components:
                 certificate for the domain based on Let's Encrypt and seek to accomplish a
                 DNS-01 challenge.
         CreateInstanceRequestRom:
-            required:
-                - image
             type: object
             properties:
                 name:
@@ -3521,7 +3557,17 @@ components:
                 image:
                     example: nginx:latest
                     type: string
-                    description: The image of the ROM to use for the instance configuration.
+                    description: |-
+                        (Optional).  The image of the ROM to use for the instance configuration.
+                        Mutually exclusive with `files`.
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InlineFile'
+                    description: |-
+                        (Optional).  Inline files to use as the ROM content.  When specified,
+                        the platform creates an EROFS image from the provided files.
+                        Mutually exclusive with `image`.
             description: Read-Only Memory (ROM) blob to attach to the instance.
         CreateInstanceRequestServiceGroup:
             type: object
@@ -5931,6 +5977,26 @@ components:
                     type: array
                     items:
                         type: string
+        InlineFile:
+            required:
+                - path
+                - data
+            type: object
+            properties:
+                path:
+                    type: string
+                    description: The file path within the image.
+                encoding:
+                    enum:
+                        - "text"
+                        - "base64"
+                    type: string
+                    description: (Optional).  The encoding of the data field.  Defaults to "text".
+                    format: enum
+                data:
+                    type: string
+                    description: The file data, encoded according to the encoding field.
+            description: An inline file entry represents a single file within an image.
         Instance:
             type: object
             properties:
@@ -6367,8 +6433,6 @@ components:
                 Automatic delete-on-idle/request-limit configuration for non-template instances.
                 Not used for template instances.
         InstanceCreateArgsInstanceCreateRequestRoms:
-            required:
-                - image
             type: object
             properties:
                 name:
@@ -6376,7 +6440,17 @@ components:
                     description: The name of the ROM to use for the autoscale configuration.
                 image:
                     type: string
-                    description: The image of the ROM to use for the autoscale configuration.
+                    description: |-
+                        (Optional).  The image of the ROM to use for the autoscale configuration.
+                        Mutually exclusive with `files`.
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InlineFile'
+                    description: |-
+                        (Optional).  Inline files to use as the ROM content.  When specified,
+                        the platform creates an EROFS image from the provided files.
+                        Mutually exclusive with `image`.
         InstanceNetworkInterface:
             type: object
             properties:
@@ -6436,8 +6510,6 @@ components:
                     format: date-time
             description: Records the current restart attempt of an instance.
         InstanceRom:
-            required:
-                - image
             type: object
             properties:
                 name:
@@ -6447,7 +6519,9 @@ components:
                 image:
                     example: nginx:latest
                     type: string
-                    description: The image of the ROM to use for the instance configuration.
+                    description: |-
+                        (Optional).  The image of the ROM to use for the instance configuration.
+                        Mutually exclusive with `files`.
                 at:
                     example: /rom0
                     type: string
@@ -6457,6 +6531,14 @@ components:
                         the specified path so the guest does not need to mount it manually.
                         When omitted, the ROM is exposed as a raw block device and the guest is
                         responsible for mounting it.
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InlineFile'
+                    description: |-
+                        (Optional).  Inline files to use as the ROM content.  When specified,
+                        the platform creates an EROFS image from the provided files.
+                        Mutually exclusive with `image`.
             description: Read-Only Memory (ROM) blob to attach to the instance.
         InstanceScaleToZero:
             type: object

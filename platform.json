@@ -343,6 +343,65 @@
         }
       }
     },
+    "/v1/image-store": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Get Images in Store",
+        "description": "Retrieve all images.",
+        "operationId": "GetImageStore",
+        "parameters": [
+          {
+            "name": "metro",
+            "in": "query",
+            "description": "(Only applies when using global control plane).\nThe metro of the image.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "digest",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetImagesRequestTagOrDigest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetImagesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/images": {
       "get": {
         "tags": [
@@ -4491,9 +4550,6 @@
         "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge."
       },
       "CreateInstanceRequestRom": {
-        "required": [
-          "image"
-        ],
         "type": "object",
         "properties": {
           "name": {
@@ -4504,7 +4560,14 @@
           "image": {
             "example": "nginx:latest",
             "type": "string",
-            "description": "The image of the ROM to use for the instance configuration."
+            "description": "(Optional).  The image of the ROM to use for the instance configuration.\nMutually exclusive with `files`."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InlineFile"
+            },
+            "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
         },
         "description": "Read-Only Memory (ROM) blob to attach to the instance."
@@ -7470,6 +7533,33 @@
           }
         }
       },
+      "InlineFile": {
+        "required": [
+          "path",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The file path within the image."
+          },
+          "encoding": {
+            "enum": [
+              "text",
+              "base64"
+            ],
+            "type": "string",
+            "description": "(Optional).  The encoding of the data field.  Defaults to \"text\".",
+            "format": "enum"
+          },
+          "data": {
+            "type": "string",
+            "description": "The file data, encoded according to the encoding field."
+          }
+        },
+        "description": "An inline file entry represents a single file within an image."
+      },
       "Instance": {
         "type": "object",
         "properties": {
@@ -7762,9 +7852,6 @@
         "description": "Automatic delete-on-idle/request-limit configuration for non-template instances.\nNot used for template instances."
       },
       "InstanceCreateArgsInstanceCreateRequestRoms": {
-        "required": [
-          "image"
-        ],
         "type": "object",
         "properties": {
           "name": {
@@ -7773,7 +7860,14 @@
           },
           "image": {
             "type": "string",
-            "description": "The image of the ROM to use for the autoscale configuration."
+            "description": "(Optional).  The image of the ROM to use for the autoscale configuration.\nMutually exclusive with `files`."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InlineFile"
+            },
+            "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
         }
       },
@@ -7842,9 +7936,6 @@
         "description": "Records the current restart attempt of an instance."
       },
       "InstanceRom": {
-        "required": [
-          "image"
-        ],
         "type": "object",
         "properties": {
           "name": {
@@ -7855,12 +7946,19 @@
           "image": {
             "example": "nginx:latest",
             "type": "string",
-            "description": "The image of the ROM to use for the instance configuration."
+            "description": "(Optional).  The image of the ROM to use for the instance configuration.\nMutually exclusive with `files`."
           },
           "at": {
             "example": "/rom0",
             "type": "string",
             "description": "(Optional).  The path at which the ROM should be automatically mounted\ninside the instance.  When set, the platform mounts the ROM device at\nthe specified path so the guest does not need to mount it manually.\nWhen omitted, the ROM is exposed as a raw block device and the guest is\nresponsible for mounting it."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InlineFile"
+            },
+            "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
         },
         "description": "Read-Only Memory (ROM) blob to attach to the instance."

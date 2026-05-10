@@ -65,11 +65,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -78,10 +74,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -97,6 +90,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetCertificatesResponse'
+            x-package: certificates
         post:
             tags:
                 - Certificates
@@ -116,6 +110,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateCertificateResponse'
+            x-package: certificates
         delete:
             tags:
                 - Certificates
@@ -139,6 +134,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteCertificatesResponse'
+            x-package: certificates
         patch:
             tags:
                 - Certificates
@@ -162,6 +158,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateCertificateResponse'
+            x-package: certificates
     /v1/certificates/{uuid}:
         get:
             tags:
@@ -184,6 +181,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetCertificatesResponse'
+            x-package: certificates
         delete:
             tags:
                 - Certificates
@@ -207,6 +205,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteCertificatesResponse'
+            x-package: certificates
         patch:
             tags:
                 - Certificates
@@ -236,6 +235,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateCertificateResponse'
+            x-package: certificates
     /v1/healthz:
         get:
             tags:
@@ -250,6 +250,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/HealthzResponse'
+            x-package: node
     /v1/image-store:
         get:
             tags:
@@ -288,6 +289,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetImagesResponse'
+            x-package: images
     /v1/images:
         get:
             tags:
@@ -326,6 +328,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetImagesResponse'
+            x-package: images
     /v1/instances:
         get:
             tags:
@@ -378,11 +381,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -391,10 +390,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -410,6 +406,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesResponse'
+            x-package: instances
         post:
             tags:
                 - Instances
@@ -429,6 +426,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateInstanceResponse'
+            x-package: instances
         delete:
             tags:
                 - Instances
@@ -453,6 +451,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
+            x-package: instances
         patch:
             tags:
                 - Instances
@@ -476,6 +475,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateInstancesResponse'
+            x-package: instances
     /v1/instances/log:
         get:
             tags:
@@ -498,6 +498,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesLogsResponse'
+            x-package: instances
     /v1/instances/metrics:
         get:
             tags:
@@ -520,6 +521,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesMetricsResponse'
+            x-package: instances
     /v1/instances/start:
         put:
             tags:
@@ -544,6 +546,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StartInstancesResponse'
+            x-package: instances
     /v1/instances/stop:
         put:
             tags:
@@ -568,6 +571,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StopInstancesResponse'
+            x-package: instances
     /v1/instances/suspend:
         put:
             tags:
@@ -592,6 +596,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/SuspendInstancesResponse'
+            x-package: instances
     /v1/instances/templates:
         get:
             tags:
@@ -642,11 +647,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -655,10 +656,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -674,6 +672,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetTemplateInstancesResponse'
+            x-package: instances
         post:
             tags:
                 - Instances
@@ -700,6 +699,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateTemplateInstancesResponse'
+            x-package: instances
         delete:
             tags:
                 - Instances
@@ -723,6 +723,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteTemplateInstancesResponse'
+            x-package: instances
         patch:
             tags:
                 - Instances
@@ -744,6 +745,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateTemplateInstancesResponse'
+            x-package: instances
     /v1/instances/templates/{uuid}:
         get:
             tags:
@@ -776,6 +778,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetTemplateInstancesResponse'
+            x-package: instances
         delete:
             tags:
                 - Instances
@@ -800,6 +803,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteTemplateInstancesResponse'
+            x-package: instances
         patch:
             tags:
                 - Instances
@@ -828,6 +832,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateTemplateInstancesResponse'
+            x-package: instances
     /v1/instances/wait:
         get:
             tags:
@@ -859,6 +864,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/WaitInstancesResponse'
+            x-package: instances
     /v1/instances/{uuid}:
         get:
             tags:
@@ -890,6 +896,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesResponse'
+            x-package: instances
         delete:
             tags:
                 - Instances
@@ -919,6 +926,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteInstancesResponse'
+            x-package: instances
         patch:
             tags:
                 - Instances
@@ -949,6 +957,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateInstancesResponse'
+            x-package: instances
     /v1/instances/{uuid}/log:
         get:
             tags:
@@ -978,6 +987,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesLogsResponse'
+            x-package: instances
     /v1/instances/{uuid}/metrics:
         get:
             tags:
@@ -1000,6 +1010,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetInstancesMetricsResponse'
+            x-package: instances
     /v1/instances/{uuid}/start:
         put:
             tags:
@@ -1030,6 +1041,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StartInstancesResponse'
+            x-package: instances
     /v1/instances/{uuid}/stop:
         put:
             tags:
@@ -1060,6 +1072,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/StopInstancesResponse'
+            x-package: instances
     /v1/instances/{uuid}/suspend:
         put:
             tags:
@@ -1090,6 +1103,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/SuspendInstancesResponse'
+            x-package: instances
     /v1/instances/{uuid}/wait:
         get:
             tags:
@@ -1127,6 +1141,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/WaitInstancesResponse'
+            x-package: instances
     /v1/services:
         get:
             tags:
@@ -1174,11 +1189,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -1187,10 +1198,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -1206,6 +1214,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetServiceGroupsResponse'
+            x-package: services
         post:
             tags:
                 - ServiceGroups
@@ -1231,6 +1240,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateServiceGroupResponse'
+            x-package: services
         delete:
             tags:
                 - ServiceGroups
@@ -1254,6 +1264,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteServiceGroupsResponse'
+            x-package: services
         patch:
             tags:
                 - ServiceGroups
@@ -1275,6 +1286,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateServiceGroupsResponse'
+            x-package: services
     /v1/services/autoscale:
         get:
             tags:
@@ -1299,6 +1311,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
+            x-package: autoscale
         post:
             tags:
                 - Autoscale
@@ -1322,6 +1335,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponse'
+            x-package: autoscale
         delete:
             tags:
                 - Autoscale
@@ -1345,6 +1359,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
+            x-package: autoscale
     /v1/services/{uuid}:
         get:
             tags:
@@ -1378,6 +1393,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetServiceGroupsResponse'
+            x-package: services
         delete:
             tags:
                 - ServiceGroups
@@ -1402,6 +1418,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteServiceGroupsResponse'
+            x-package: services
         patch:
             tags:
                 - ServiceGroups
@@ -1430,6 +1447,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateServiceGroupsResponse'
+            x-package: services
     /v1/services/{uuid}/autoscale:
         get:
             tags:
@@ -1454,6 +1472,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetAutoscaleConfigurationsResponse'
+            x-package: autoscale
         post:
             tags:
                 - Autoscale
@@ -1485,6 +1504,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponse'
+            x-package: autoscale
         delete:
             tags:
                 - Autoscale
@@ -1514,6 +1534,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponse'
+            x-package: autoscale
     /v1/services/{uuid}/autoscale/policies:
         get:
             tags:
@@ -1540,6 +1561,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
+            x-package: autoscale
         post:
             tags:
                 - Autoscale
@@ -1567,6 +1589,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponse'
+            x-package: autoscale
         delete:
             tags:
                 - Autoscale
@@ -1592,6 +1615,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
+            x-package: autoscale
     /v1/services/{uuid}/autoscale/policies/{name}:
         get:
             tags:
@@ -1622,6 +1646,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponse'
+            x-package: autoscale
         delete:
             tags:
                 - Autoscale
@@ -1649,6 +1674,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponse'
+            x-package: autoscale
     /v1/users:
         post:
             tags:
@@ -1658,6 +1684,12 @@ paths:
                 Create new user accounts. This will return 409 Conflict when any of the
                 requested users already existed on the target.
             operationId: AddUsers
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddUsersRequest'
+                required: true
             responses:
                 default:
                     description: default
@@ -1665,6 +1697,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/AddUsersResponse'
+            x-package: users
     /v1/users/quotas:
         get:
             tags:
@@ -1681,6 +1714,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/QuotasResponse'
+            x-package: users
     /v1/users/{uuid}/quotas:
         get:
             tags:
@@ -1705,6 +1739,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/QuotasResponse'
+            x-package: users
     /v1/volumes:
         get:
             tags:
@@ -1759,11 +1794,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -1772,10 +1803,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -1791,6 +1819,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetVolumesResponse'
+            x-package: volumes
         post:
             tags:
                 - Volumes
@@ -1815,6 +1844,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateVolumeResponse'
+            x-package: volumes
         delete:
             tags:
                 - Volumes
@@ -1839,6 +1869,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteVolumesResponse'
+            x-package: volumes
         patch:
             tags:
                 - Volumes
@@ -1860,6 +1891,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateVolumesResponse'
+            x-package: volumes
     /v1/volumes/attach:
         put:
             tags:
@@ -1885,6 +1917,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/AttachVolumesResponse'
+            x-package: volumes
     /v1/volumes/clone:
         post:
             tags:
@@ -1911,6 +1944,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CloneVolumesResponse'
+            x-package: volumes
     /v1/volumes/detach:
         put:
             tags:
@@ -1940,6 +1974,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DetachVolumesResponse'
+            x-package: volumes
     /v1/volumes/templates:
         get:
             tags:
@@ -1994,11 +2029,7 @@ paths:
                     `PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to
                     `PAGINATION_ORDER_ASC`.
                   schema:
-                    enum:
-                        - "asc"
-                        - "desc"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationOrder'
                 - name: sortby
                   in: query
                   description: |-
@@ -2007,10 +2038,7 @@ paths:
                     Currently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to
                     `PAGINATION_SORT_BY_CREATE_TIME`.
                   schema:
-                    enum:
-                        - "create_time"
-                    type: string
-                    format: enum
+                    $ref: '#/components/schemas/PaginationSortBy'
             requestBody:
                 content:
                     application/json:
@@ -2026,6 +2054,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetTemplateVolumesResponse'
+            x-package: volumes
         post:
             tags:
                 - Volumes
@@ -2053,6 +2082,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateTemplateVolumesResponse'
+            x-package: volumes
         delete:
             tags:
                 - Volumes
@@ -2076,6 +2106,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteTemplateVolumesResponse'
+            x-package: volumes
         patch:
             tags:
                 - Volumes
@@ -2097,6 +2128,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateTemplateVolumesResponse'
+            x-package: volumes
     /v1/volumes/templates/{uuid}:
         get:
             tags:
@@ -2132,6 +2164,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetTemplateVolumesResponse'
+            x-package: volumes
         delete:
             tags:
                 - Volumes
@@ -2156,6 +2189,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteTemplateVolumesResponse'
+            x-package: volumes
         patch:
             tags:
                 - Volumes
@@ -2184,6 +2218,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateTemplateVolumesResponse'
+            x-package: volumes
     /v1/volumes/{uuid}:
         get:
             tags:
@@ -2219,6 +2254,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetVolumesResponse'
+            x-package: volumes
         delete:
             tags:
                 - Volumes
@@ -2244,6 +2280,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteVolumesResponse'
+            x-package: volumes
         patch:
             tags:
                 - Volumes
@@ -2272,6 +2309,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateVolumesResponse'
+            x-package: volumes
     /v1/volumes/{uuid}/attach:
         put:
             tags:
@@ -2304,6 +2342,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/AttachVolumesResponse'
+            x-package: volumes
     /v1/volumes/{uuid}/clone:
         post:
             tags:
@@ -2337,6 +2376,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CloneVolumesResponse'
+            x-package: volumes
     /v1/volumes/{uuid}/detach:
         put:
             tags:
@@ -2372,9 +2412,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DetachVolumesResponse'
+            x-package: volumes
 components:
     schemas:
+        AddUsersRequest:
+            required:
+                - users
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User'
+                    format: users
+            x-package: users
         AddUsersResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -2403,6 +2459,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: users
         AddUsersResponseData:
             type: object
             properties:
@@ -2411,6 +2468,18 @@ components:
                     items:
                         $ref: '#/components/schemas/DataResult'
                     description: The status of the operation for each user in the request.
+            x-package: users
+        AdjustmentType:
+            enum:
+                - "change"
+                - "exact"
+                - "percentage"
+            type: string
+            description: |-
+                AdjustmentType defines the type of adjustment to be made in an autoscaling
+                step policy.
+            format: enum
+            x-package: autoscale
         AttachVolumeByUUIDRequestBody:
             required:
                 - attach_to
@@ -2419,7 +2488,7 @@ components:
             properties:
                 attach_to:
                     allOf:
-                        - $ref: '#/components/schemas/BodyInstanceID'
+                        - $ref: '#/components/schemas/NameOrUUID'
                     description: UUID or name of the instance to attach the volume to.
                 at:
                     example: /mnt/my-volume
@@ -2436,6 +2505,7 @@ components:
                     example: false
                     type: boolean
                     description: Whether the volume should be mounted read-only.
+            x-package: volumes
         AttachVolumesRequestItem:
             required:
                 - attach_to
@@ -2488,7 +2558,12 @@ components:
                                 The name of the volume to attach. Mutually exclusive with UUID.
                                 Exactly one of uuid or name must be provided.
             description: A single request item for attaching a volume to an instance.
+            x-package: volumes
         AttachVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -2520,7 +2595,12 @@ components:
             description: |-
                 The response message for attaching one or more volume(s) given their
                 UUID(s) or name(s).
+            x-package: volumes
         AttachVolumesResponseAttachedVolume:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -2555,6 +2635,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         AttachVolumesResponseData:
             type: object
             properties:
@@ -2563,7 +2644,10 @@ components:
                     items:
                         $ref: '#/components/schemas/AttachVolumesResponseAttachedVolume'
                     description: The volume(s) which were attached by the request.
+            x-package: volumes
         AutoscalePolicy:
+            required:
+                - name
             type: object
             properties:
                 name:
@@ -2581,19 +2665,13 @@ components:
                     type: boolean
                     description: If the policy is enabled.
                 metric:
-                    enum:
-                        - "cpu"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/StepPolicyMetric'
                     description: Metric to use for the step policy.
-                    format: enum
                 adjustment_type:
-                    enum:
-                        - "change"
-                        - "exact"
-                        - "percentage"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/AdjustmentType'
                     description: The type of adjustment to be made in the step policy.
-                    format: enum
                 steps:
                     type: array
                     items:
@@ -2606,7 +2684,10 @@ components:
                 Right now it contains fields from both the `ondemand` and `step` policies.
                 They are marked both as optional, so only one of them should be set at a
                 time. This is a current limitation of the API design.
+            x-package: autoscale
         AutoscalePolicyStep:
+            required:
+                - adjustment
             type: object
             properties:
                 adjustment:
@@ -2624,20 +2705,14 @@ components:
                     type: integer
                     description: Upper bound for the step.
                     format: int64
-        BodyInstanceID:
-            type: object
-            properties:
-                uuid:
-                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
-                    type: string
-                    description: The UUID of the instance that the volume is detached from.
-                    format: uuid
-                name:
-                    example: funky-town-g7gum5cj
-                    type: string
-                    description: The name of the instance that the volume is detached from.
-            description: Reference to the instance to detach the volume from.
+            x-package: autoscale
         Certificate:
+            required:
+                - uuid
+                - name
+                - created_at
+                - common_name
+                - state
             type: object
             properties:
                 uuid:
@@ -2688,6 +2763,7 @@ components:
                         This contains the full subject information from the certificate, including
                         the common name, organization, organizational unit, locality, state, and
                         country. The subject identifies the entity that the certificate is issued to.
+                        Only present when the certificate has been issued.
                 issuer:
                     example: CN=R10,O=Let's Encrypt,C=US
                     type: string
@@ -2697,6 +2773,7 @@ components:
                         This identifies the Certificate Authority (CA) that issued the certificate.
                         It contains information about the CA including its common name, organization,
                         and country.
+                        Only present when the certificate has been issued.
                 serial_number:
                     example: 123456789ABCDEF123456789ABCDEF123456
                     type: string
@@ -2706,6 +2783,7 @@ components:
                         This is a unique identifier within the scope of the issuing CA that can be
                         used to identify and track the certificate. Serial numbers are typically
                         represented as hexadecimal strings.
+                        Only present when the certificate has been issued.
                 not_before:
                     example: 2023-10-01T12:00:00Z
                     type: string
@@ -2714,6 +2792,7 @@ components:
 
                         The certificate should not be trusted before this date. This timestamp
                         marks the beginning of the certificate's validity period.
+                        Only present when the certificate has been issued.
                     format: date-time
                 not_after:
                     example: 2023-10-01T12:00:00Z
@@ -2724,20 +2803,17 @@ components:
                         The certificate should not be trusted after this date. This timestamp
                         marks the end of the certificate's validity period. Certificates should
                         be renewed before this date to maintain service availability.
+                        Only present when the certificate has been issued.
                     format: date-time
                 state:
-                    enum:
-                        - "pending"
-                        - "valid"
-                        - "error"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/CertificateState'
                     description: |-
                         The current state of the certificate.
 
                         This indicates whether the certificate is pending issuance, valid and
                         ready for use, or in an error state. See CertificateState enum for
                         detailed state descriptions.
-                    format: enum
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -2759,6 +2835,25 @@ components:
                         This field is only set when this message object is used as a response
                         message, and is useful when the status is not `success`.
                     format: int32
+            x-package: certificates
+        CertificateState:
+            enum:
+                - "pending"
+                - "valid"
+                - "error"
+            type: string
+            description: |-
+                The current state of a certificate.
+
+                The certificate can be in one of the following states:
+
+                | State     | Description |
+                |-----------|-------------|
+                | `pending` | The certificate request is pending while the certificate is being requested from the certification authority. During this phase any service using this certificate is not available if this is not a renewal. |
+                | `valid`   | The certificate is valid and can be used by your services. |
+                | `error`   | The certificate request failed after multiple attempts. This can happen, for example, if your DNS configuration is not correct, you run into Let’s Encrypt™ quota limits, or the domain validation process failed for some other reason. There won’t be any further automatic attempts. |
+            format: enum
+            x-package: certificates
         CloneVolumeByUUIDRequestBody:
             type: object
             properties:
@@ -2771,19 +2866,17 @@ components:
                         long random alphanumeric suffix.
                 quota_policy:
                     example: static
-                    enum:
-                        - "static"
-                        - "dynamic"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeQuotaPolicy'
                     description: |-
                         The quota policy for the new cloned volume.  If not provided, the quota
                         policy of the source volume is used.
-                    format: enum
                 tags:
                     type: array
                     items:
                         type: string
                     description: A list of tags to assign to the new cloned volume.
+            x-package: volumes
         CloneVolumesRequestItem:
             type: object
             allOf:
@@ -2798,14 +2891,11 @@ components:
                             long random alphanumeric suffix.
                     quota_policy:
                         example: static
-                        enum:
-                            - "static"
-                            - "dynamic"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/VolumeQuotaPolicy'
                         description: |-
                             The quota policy for the new cloned volume.  If not provided, the quota
                             policy of the source volume is used.
-                        format: enum
                     tags:
                         type: array
                         items:
@@ -2828,7 +2918,12 @@ components:
                             type: string
                             description: The name of the volume to clone.  Mutually exclusive with UUID.
             description: A single request item describing the volume to clone.
+            x-package: volumes
         CloneVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -2858,6 +2953,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for cloning one or more volume(s).
+            x-package: volumes
         CloneVolumesResponseData:
             type: object
             properties:
@@ -2866,7 +2962,13 @@ components:
                     items:
                         $ref: '#/components/schemas/CloneVolumesResponseVolume'
                     description: The volume(s) which were cloned by the request.
+            x-package: volumes
         CloneVolumesResponseVolume:
+            required:
+                - status
+                - uuid
+                - name
+                - state
             type: object
             properties:
                 status:
@@ -2889,18 +2991,9 @@ components:
                         (Only applies when using global control plane).
                         The metro of the volume.
                 state:
-                    enum:
-                        - "uninitialized"
-                        - "initializing"
-                        - "available"
-                        - "idle"
-                        - "mounted"
-                        - "busy"
-                        - "error"
-                        - "template"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeState'
                     description: The state of the volume.
-                    format: enum
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -2914,6 +3007,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         ConfigurationInstanceCreateArgs:
             type: object
             allOf:
@@ -2932,7 +3026,40 @@ components:
                             allOf:
                                 - $ref: '#/components/schemas/NameOrUUID'
                             description: The template to use for the autoscale configuration.
+            x-package: autoscale
+        ConnectionHandler:
+            enum:
+                - "tls"
+                - "http"
+                - "redirect"
+            type: string
+            description: |-
+                Connection handlers to use for the service.  Handlers define how the service
+                will handle incoming connections and forward traffic from the Internet to
+                your application.  For example, a service can be configured to terminate TLS
+                connections, redirect HTTP traffic, or enable HTTP mode for load balancing.
+                You configure the handlers for every published service port individually.
+
+                There are currently 3 supported handlers:
+
+                | Handler    | Description |
+                |------------|-------------|
+                | `tls`      | Terminate the TLS connection at the Unikraft Cloud gateway using our wildcard certificate issued for the kraft.cloud domain. The gateway forwards the unencrypted traffic to your application. |
+                | `http`     | Enable HTTP mode on the load balancer to load balance on the level of individual HTTP requests. In this mode, only HTTP connections are accepted. If this option is not set the load balancer works in TCP mode and distributes TCP connections. |
+                | `redirect` | Redirect traffic from the source port to the destination port. |
+
+                Note that there is a set of constraints when publishing ports:
+                - Port 80: MUST have "http" and MUST not have "tls" set;
+                - Port 443: MUST have http and tls set;
+                - The `redirect` handler can only be set on port 80 (HTTP) to redirect to
+                  port 443 (HTTPS);
+                - All other ports MUST have tls and MUST not have http set.
+            format: enum
+            x-package: services
         CreateAutoscaleConfigurationByServiceGroupUUIDRequest:
+            required:
+                - uuid
+                - create_args
             type: object
             properties:
                 uuid:
@@ -2969,6 +3096,7 @@ components:
             description: |-
                 The request message to create an autoscale configuration for a service group
                 based on its UUID.
+            x-package: autoscale
         CreateAutoscaleConfigurationByServiceGroupUUIDRequestInstanceCreateArgs:
             type: object
             allOf:
@@ -2987,6 +3115,7 @@ components:
                             allOf:
                                 - $ref: '#/components/schemas/NameOrUUID'
                             description: The template to use for the autoscale configuration.
+            x-package: autoscale
         CreateAutoscaleConfigurationPolicyRequest:
             required:
                 - name
@@ -3004,7 +3133,12 @@ components:
             description: |-
                 The request message to create an autoscale configuration policy for a
                 service.
+            x-package: autoscale
         CreateAutoscaleConfigurationPolicyResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3033,6 +3167,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: autoscale
         CreateAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -3041,7 +3176,12 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateAutoscaleConfigurationPolicyResponsePolicy'
                     description: The policies which were added by the request.
+            x-package: autoscale
         CreateAutoscaleConfigurationPolicyResponsePolicy:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -3076,7 +3216,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         CreateAutoscaleConfigurationsRequestConfiguration:
+            required:
+                - create_args
             type: object
             allOf:
                 - type: object
@@ -3136,7 +3279,12 @@ components:
                             description: |-
                                 The name of the service to create a configuration for.
                                 Mutually exclusive with UUID.
+            x-package: autoscale
         CreateAutoscaleConfigurationsResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3166,7 +3314,12 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response to a CreateAutoscaleConfigurationRequest.
+            x-package: autoscale
         CreateAutoscaleConfigurationsResponseConfigurationsResponse:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -3201,6 +3354,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         CreateAutoscaleConfigurationsResponseData:
             type: object
             properties:
@@ -3209,6 +3363,7 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateAutoscaleConfigurationsResponseConfigurationsResponse'
                     description: The configuration(s) which were created by the request.
+            x-package: autoscale
         CreateCertificateRequest:
             required:
                 - chain
@@ -3255,7 +3410,11 @@ components:
                     type: string
                     description: The private key of the certificate.
             description: The request message for creating/uploading a new certificate.
+            x-package: certificates
         CreateCertificateResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3285,6 +3444,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating of a certificate.
+            x-package: certificates
         CreateCertificateResponseData:
             type: object
             properties:
@@ -3297,6 +3457,7 @@ components:
 
                         Note: only one certificate can be specified in the request, so this
                         will always contain a single entry.
+            x-package: certificates
         CreateInstanceRequest:
             type: object
             properties:
@@ -3310,7 +3471,10 @@ components:
                 image:
                     example: nginx:latest
                     type: string
-                    description: The image to use for the instance.
+                    description: |-
+                        (Optional).  The image to use for the instance.
+
+                        Either an image or a template must be specified.
                 metro:
                     example: fra
                     type: string
@@ -3373,16 +3537,12 @@ components:
                         number of instances created is `replicas + 1`.  Defaults to 0.
                     format: int64
                 restart_policy:
-                    enum:
-                        - "never"
-                        - "always"
-                        - "on-failure"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceRestartPolicy'
                     description: |-
                         Restart policy for the instance.  This defines how the instance
                         should behave when it stops or crashes.  Cannot be combined with
                         the `delete-on-stop` feature.
-                    format: enum
                 scale_to_zero:
                     allOf:
                         - $ref: '#/components/schemas/CreateInstanceScaleToZero'
@@ -3410,10 +3570,7 @@ components:
                 features:
                     type: array
                     items:
-                        enum:
-                            - "delete-on-stop"
-                        type: string
-                        format: enum
+                        $ref: '#/components/schemas/InstanceFeature'
                     description: |-
                         Features to enable for the instance.  Features are specific
                         configurations or capabilities that can be enabled for the
@@ -3495,6 +3652,7 @@ components:
                         on.  Dependencies define startup ordering and can be used to ensure that
                         prerequisite instances are running before this instance starts.
             description: The request message for creating a new instance.
+            x-package: instances
         CreateInstanceRequestAutokill:
             type: object
             properties:
@@ -3513,6 +3671,7 @@ components:
             description: |-
                 Automatic delete-on-idle/request-limit configuration for non-template
                 instances.
+            x-package: instances
         CreateInstanceRequestDomain:
             required:
                 - name
@@ -3547,7 +3706,10 @@ components:
                 and a FQDN is provided, Unikraft Cloud will automatically generate a new
                 certificate for the domain based on Let's Encrypt and seek to accomplish a
                 DNS-01 challenge.
+            x-package: instances
         CreateInstanceRequestRom:
+            required:
+                - name
             type: object
             properties:
                 name:
@@ -3569,6 +3731,7 @@ components:
                         the platform creates an EROFS image from the provided files.
                         Mutually exclusive with `image`.
             description: Read-Only Memory (ROM) blob to attach to the instance.
+            x-package: instances
         CreateInstanceRequestServiceGroup:
             type: object
             allOf:
@@ -3638,6 +3801,7 @@ components:
                 exposed port by the instance.  A service is a combination of a public port,
                 an internal port, and a set of handlers that define how the service will
                 handle incoming connections.
+            x-package: instances
         CreateInstanceRequestTemplate:
             type: object
             properties:
@@ -3669,6 +3833,7 @@ components:
                         - $ref: '#/components/schemas/Instance'
                     description: (Optional). Configuration parameters to apply when building the new instance from the source template.
             description: Defines the source template used to build a new instance.
+            x-package: instances
         CreateInstanceRequestVolume:
             required:
                 - at
@@ -3759,7 +3924,11 @@ components:
                             type: string
                             description: A host path to create a managed volume from.
             description: A volume defines a storage volume that can be attached to the instance.
+            x-package: instances
         CreateInstanceResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3789,6 +3958,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating a new instance.
+            x-package: instances
         CreateInstanceResponseData:
             type: object
             properties:
@@ -3797,17 +3967,14 @@ components:
                     items:
                         $ref: '#/components/schemas/Instance'
                     description: The instance that was created in this request.
+            x-package: instances
         CreateInstanceScaleToZero:
             type: object
             properties:
                 policy:
-                    enum:
-                        - "off"
-                        - "on"
-                        - "idle"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceScaleToZeroPolicy'
                     description: The specific policy to use for scaling the instance to zero.
-                    format: enum
                 stateful:
                     example: true
                     type: boolean
@@ -3834,7 +4001,10 @@ components:
                         zero. This allows the instance to perform any necessary cleanup or state
                         saving before being scaled down.
                     format: int32
+            x-package: instances
         CreateServiceGroupRequest:
+            required:
+                - services
             type: object
             properties:
                 name:
@@ -3892,6 +4062,7 @@ components:
                         - $ref: '#/components/schemas/CreateServiceGroupRequestAutokill'
                     description: Automatic delete-on-idle configuration.
             description: The request message for creating a new service group.
+            x-package: services
         CreateServiceGroupRequestAutokill:
             type: object
             properties:
@@ -3902,6 +4073,7 @@ components:
                         deleted. A value of 0 disables autokill.
                     format: uint64
             description: Automatic delete-on-idle configuration for service groups.
+            x-package: services
         CreateServiceGroupRequestDomain:
             required:
                 - name
@@ -3921,7 +4093,11 @@ components:
                         Use an existing certificate for the domain.  If this field is
                         specified, the domain must be associated with a valid certificate.
             description: A domain name
+            x-package: services
         CreateServiceGroupResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3951,6 +4127,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating of a service group.
+            x-package: services
         CreateServiceGroupResponseData:
             type: object
             properties:
@@ -3963,7 +4140,11 @@ components:
 
                         Note: only one service group can be specified in the request, so this
                         will always contain a single entry.
+            x-package: services
         CreateTemplateInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -3993,6 +4174,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating one or more template instances.
+            x-package: instances
         CreateTemplateInstancesResponseData:
             type: object
             properties:
@@ -4001,7 +4183,13 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateTemplateInstancesResponseTemplateInstance'
                     description: List of template instances that were created during the operation.
+            x-package: instances
         CreateTemplateInstancesResponseTemplateInstance:
+            required:
+                - status
+                - uuid
+                - name
+                - state
             type: object
             properties:
                 status:
@@ -4024,17 +4212,9 @@ components:
                         (Only applies when using global control plane).
                         The metro of the template instance.
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The current state of the instance.
-                    format: enum
                 message:
                     example: No instance with name 'funky-town-g756b5d'
                     type: string
@@ -4048,7 +4228,12 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         CreateTemplateVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4078,6 +4263,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating one or more template volumes.
+            x-package: volumes
         CreateTemplateVolumesResponseData:
             type: object
             properties:
@@ -4086,7 +4272,13 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateTemplateVolumesResponseTemplateVolume'
                     description: The template volume(s) which were created by the request.
+            x-package: volumes
         CreateTemplateVolumesResponseTemplateVolume:
+            required:
+                - status
+                - uuid
+                - name
+                - state
             type: object
             properties:
                 status:
@@ -4104,18 +4296,9 @@ components:
                     description: The name of the volume converted into a template.
                 state:
                     example: available
-                    enum:
-                        - "uninitialized"
-                        - "initializing"
-                        - "available"
-                        - "idle"
-                        - "mounted"
-                        - "busy"
-                        - "error"
-                        - "template"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeState'
                     description: The state of the volume.
-                    format: enum
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -4129,6 +4312,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         CreateVolumeRequest:
             type: object
             allOf:
@@ -4153,12 +4337,9 @@ components:
                             The metro to route the request to.
                     quota_policy:
                         example: static
-                        enum:
-                            - "static"
-                            - "dynamic"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/VolumeQuotaPolicy'
                         description: Quota policy for the volume.
-                        format: enum
                     filesystem:
                         example: ext4
                         type: string
@@ -4208,7 +4389,12 @@ components:
                                 - $ref: '#/components/schemas/NameOrUUID'
                             description: Source template volume to clone from.
             description: The request message for creating a volume.
+            x-package: volumes
         CreateVolumeResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4236,6 +4422,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for creating of a volume.
+            x-package: volumes
         CreateVolumeResponseData:
             type: object
             properties:
@@ -4244,7 +4431,13 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateVolumeResponseVolume'
                     description: The volume(s) which were created by the request.
+            x-package: volumes
         CreateVolumeResponseVolume:
+            required:
+                - status
+                - uuid
+                - name
+                - state
             type: object
             properties:
                 status:
@@ -4267,18 +4460,9 @@ components:
                         (Only applies when using global control plane).
                         The metro of the volume.
                 state:
-                    enum:
-                        - "uninitialized"
-                        - "initializing"
-                        - "available"
-                        - "idle"
-                        - "mounted"
-                        - "busy"
-                        - "error"
-                        - "template"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeState'
                     description: The state of the volume.
-                    format: enum
                 message:
                     example: No volume with name 'funky-town-g756b5d'
                     type: string
@@ -4292,7 +4476,11 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         DataResult:
+            required:
+                - uuid
+                - added
             type: object
             properties:
                 uuid:
@@ -4301,7 +4489,12 @@ components:
                 added:
                     example: true
                     type: boolean
+            x-package: users
         DeleteAutoscaleConfigurationPolicyResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4330,6 +4523,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: autoscale
         DeleteAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -4338,7 +4532,11 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteAutoscaleConfigurationPolicyResponsePoliciesResponse'
                     description: The policies which were deleted by the request.
+            x-package: autoscale
         DeleteAutoscaleConfigurationPolicyResponsePoliciesResponse:
+            required:
+                - status
+                - name
             type: object
             properties:
                 status:
@@ -4368,7 +4566,12 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         DeleteAutoscaleConfigurationsResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4397,6 +4600,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: autoscale
         DeleteAutoscaleConfigurationsResponseData:
             type: object
             properties:
@@ -4405,7 +4609,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteAutoscaleConfigurationsResponseServiceGroup'
                     description: The configuration(s) which were deleted by the request.
+            x-package: autoscale
         DeleteAutoscaleConfigurationsResponseServiceGroup:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -4440,7 +4649,11 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         DeleteCertificatesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4472,6 +4685,7 @@ components:
             description: |-
                 The response message for deleting of one or more certificate(s) given their
                 UUID(s) or name(s).
+            x-package: certificates
         DeleteCertificatesResponseData:
             type: object
             properties:
@@ -4480,7 +4694,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteCertificatesResponseDeletedCertificate'
                     description: The certificate(s) which were deleted by the request.
+            x-package: certificates
         DeleteCertificatesResponseDeletedCertificate:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -4518,6 +4737,7 @@ components:
                         This field is useful when the status is not `success`.
                     format: int32
             description: Details of the certificate which was deleted by this request.
+            x-package: certificates
         DeleteInstanceByUUIDRequestBody:
             type: object
             properties:
@@ -4529,6 +4749,7 @@ components:
                         performed for a value of 0.
                     format: int64
             description: Parameters for deleting the instance by UUID.
+            x-package: instances
         DeleteInstanceRequestItem:
             type: object
             allOf:
@@ -4568,7 +4789,11 @@ components:
                             type: string
                             description: Mutually exclusive with UUID.
             description: The request item for deleting an instance by its UUID or name.
+            x-package: instances
         DeleteInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4600,6 +4825,7 @@ components:
             description: |-
                 The response message for deleting one or more instance(s) given their UUID(s)
                 or name(s).
+            x-package: instances
         DeleteInstancesResponseData:
             type: object
             properties:
@@ -4608,7 +4834,13 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteInstancesResponseInstance'
                     description: The instance(s) which were deleted by the request.
+            x-package: instances
         DeleteInstancesResponseInstance:
+            required:
+                - status
+                - uuid
+                - name
+                - previous_state
             type: object
             properties:
                 status:
@@ -4650,6 +4882,7 @@ components:
                         This field is useful when the status is not `success`.
                     format: int32
             description: Details of the instance which was deleted by this request.
+            x-package: instances
         DeletePolicyRequest:
             required:
                 - name
@@ -4660,7 +4893,11 @@ components:
                     type: string
                     description: The Name of the policy to delete.
             description: The request message to delete an autoscale configuration policy by name.
+            x-package: autoscale
         DeleteServiceGroupsResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4692,6 +4929,7 @@ components:
             description: |-
                 The response message for deleting of one or more service group(s) given their
                 UUID(s) or name(s).
+            x-package: services
         DeleteServiceGroupsResponseData:
             type: object
             properties:
@@ -4700,7 +4938,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteServiceGroupsResponseDeletedServiceGroup'
                     description: The service group(s) which were deleted by the request.
+            x-package: services
         DeleteServiceGroupsResponseDeletedServiceGroup:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -4740,7 +4983,11 @@ components:
                         message, and is useful when the status is not `success`.
                     format: int32
             description: Details of the service group which was deleted by this request.
+            x-package: services
         DeleteTemplateInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4770,6 +5017,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for deleting one or more template instances.
+            x-package: instances
         DeleteTemplateInstancesResponseData:
             type: object
             properties:
@@ -4778,7 +5026,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteTemplateInstancesResponseTemplateInstance'
                     description: List of template instances that were processed during the delete operation.
+            x-package: instances
         DeleteTemplateInstancesResponseTemplateInstance:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -4807,7 +5060,12 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         DeleteTemplateVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4837,6 +5095,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for deleting one or more template volumes.
+            x-package: volumes
         DeleteTemplateVolumesResponseData:
             type: object
             properties:
@@ -4845,7 +5104,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteTemplateVolumesResponseTemplateVolume'
                     description: The template volume(s) which were deleted by the request.
+            x-package: volumes
         DeleteTemplateVolumesResponseTemplateVolume:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -4874,7 +5138,12 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         DeleteVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -4903,6 +5172,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: volumes
         DeleteVolumesResponseData:
             type: object
             properties:
@@ -4911,7 +5181,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteVolumesResponseDeletedVolume'
                     description: The volume(s) which were deleted by the request.
+            x-package: volumes
         DeleteVolumesResponseDeletedVolume:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -4946,13 +5221,17 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         DetachVolumeByUUIDRequestBody:
             type: object
             properties:
                 from:
                     allOf:
-                        - $ref: '#/components/schemas/BodyInstanceID'
-                    description: UUID or name of the instance to detach the volume from.
+                        - $ref: '#/components/schemas/NameOrUUID'
+                    description: |-
+                        (Optional).  UUID or name of the instance to detach the volume from.
+                        If not specified, the volume is detached from all instances.
+            x-package: volumes
         DetachVolumesRequestItem:
             type: object
             allOf:
@@ -4961,7 +5240,9 @@ components:
                     from:
                         allOf:
                             - $ref: '#/components/schemas/NameOrUUID'
-                        description: UUID or name of the instance to detach the volume from.
+                        description: |-
+                            (Optional).  UUID or name of the instance to detach the volume from.
+                            If not specified, the volume is detached from all instances.
                 - oneOf:
                     - title: uuid
                       required:
@@ -4987,7 +5268,12 @@ components:
                                 The name of the volume to detach. Mutually exclusive with UUID.
                                 Exactly one of uuid or name must be provided.
             description: A single request of detaching a volume.
+            x-package: volumes
         DetachVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5016,6 +5302,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: volumes
         DetachVolumesResponseData:
             type: object
             properties:
@@ -5024,7 +5311,12 @@ components:
                     items:
                         $ref: '#/components/schemas/DetachVolumesResponseDetachedVolume'
                     description: The volume(s) which were detached by the request.
+            x-package: volumes
         DetachVolumesResponseDetachedVolume:
+            required:
+                - status
+                - uuid
+                - name
             type: object
             properties:
                 status:
@@ -5059,7 +5351,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         Domain:
+            required:
+                - fqdn
             type: object
             properties:
                 fqdn:
@@ -5084,6 +5379,7 @@ components:
                 is specified and a FQDN is provided, Unikraft Cloud will automatically
                 generate a new certificate for the domain based on Let's Encrypt and seek to
                 accomplish a DNS-01 challenge.
+            x-package: services
         GetAutoscaleConfigurationPolicyRequest:
             required:
                 - name
@@ -5094,7 +5390,12 @@ components:
                     type: string
                     description: The Name of the policy to get.
             description: The request message to get an autoscale configuration policy by name.
+            x-package: autoscale
         GetAutoscaleConfigurationPolicyResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5123,6 +5424,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: autoscale
         GetAutoscaleConfigurationPolicyResponseData:
             type: object
             properties:
@@ -5131,7 +5433,11 @@ components:
                     items:
                         $ref: '#/components/schemas/GetAutoscaleConfigurationPolicyResponsePolicyResponse'
                     description: The policy which was retrieved by the request.
+            x-package: autoscale
         GetAutoscaleConfigurationPolicyResponsePolicyResponse:
+            required:
+                - status
+                - policy
             type: object
             properties:
                 status:
@@ -5161,7 +5467,12 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         GetAutoscaleConfigurationsResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5195,6 +5506,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for a GetAutoscaleConfigurationsRequest.
+            x-package: autoscale
         GetAutoscaleConfigurationsResponseData:
             type: object
             properties:
@@ -5203,7 +5515,13 @@ components:
                     items:
                         $ref: '#/components/schemas/GetAutoscaleConfigurationsResponseServiceGroup'
                     description: The configuration(s) which were retrieved by the request.
+            x-package: autoscale
         GetAutoscaleConfigurationsResponseServiceGroup:
+            required:
+                - status
+                - uuid
+                - name
+                - enabled
             type: object
             properties:
                 status:
@@ -5281,7 +5599,11 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: autoscale
         GetCertificatesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5313,6 +5635,7 @@ components:
             description: |-
                 The response message for getting one or more certificate(s) given their
                 UUID(s) or name(s).
+            x-package: certificates
         GetCertificatesResponseData:
             type: object
             properties:
@@ -5321,6 +5644,7 @@ components:
                     items:
                         $ref: '#/components/schemas/Certificate'
                     description: The certificate(s) which were retrieved by the request.
+            x-package: certificates
         GetImagesRequestTagOrDigest:
             type: object
             allOf:
@@ -5341,7 +5665,11 @@ components:
                         tag:
                             example: my-image:latest
                             type: string
+            x-package: images
         GetImagesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5368,6 +5696,7 @@ components:
                         The operation time in microseconds.  This is the time it took to process
                         the request and generate the response.
                     format: uint64
+            x-package: images
         GetImagesResponseData:
             type: object
             properties:
@@ -5376,6 +5705,7 @@ components:
                     items:
                         $ref: '#/components/schemas/Image'
                     description: The list of images.
+            x-package: images
         GetInstanceLogsByUUIDRequestBody:
             type: object
             properties:
@@ -5391,6 +5721,7 @@ components:
                     type: integer
                     description: The amount of bytes to return at most.
                     format: int64
+            x-package: instances
         GetInstancesLogsRequestItem:
             type: object
             allOf:
@@ -5429,7 +5760,11 @@ components:
                                 The name of the instance to retrieve logs for.  Mutually exclusive with
                                 UUID.
             description: A single item in the request.
+            x-package: instances
         GetInstancesLogsResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5461,7 +5796,11 @@ components:
             description: |-
                 The response message for getting the logs of one or more instance(s) by
                 their UUID(s) or name(s).
+            x-package: instances
         GetInstancesLogsResponseAvailable:
+            required:
+                - start
+                - end
             type: object
             properties:
                 start:
@@ -5474,6 +5813,7 @@ components:
                     type: integer
                     description: The last byte offset that can be retrieved.
                     format: int64
+            x-package: instances
         GetInstancesLogsResponseData:
             type: object
             properties:
@@ -5486,7 +5826,15 @@ components:
 
                         Note: only one instance can be specified in the request, so this will
                         always contain a single entry.
+            x-package: instances
         GetInstancesLogsResponseLoggedInstance:
+            required:
+                - uuid
+                - name
+                - output
+                - available
+                - range
+                - state
             type: object
             properties:
                 uuid:
@@ -5513,17 +5861,9 @@ components:
                         Description of the range that was returned.  Useful for requests with
                         offset relative to end.
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: State of the instance when the logs were retrieved.
-                    format: enum
                 message:
                     example: No instance with name 'funky-town-g756b5d'
                     type: string
@@ -5541,7 +5881,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
+            x-package: instances
         GetInstancesLogsResponseRange:
+            required:
+                - start
+                - end
             type: object
             properties:
                 start:
@@ -5554,7 +5898,11 @@ components:
                     type: integer
                     description: The last retrieved byte.
                     format: int64
+            x-package: instances
         GetInstancesMetricsResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5586,6 +5934,7 @@ components:
             description: |-
                 The response message for getting the metrics of one or more instance(s)
                 given their UUID(s) or name(s).
+            x-package: instances
         GetInstancesMetricsResponseData:
             type: object
             properties:
@@ -5597,7 +5946,21 @@ components:
                         The instance which this requested metrics for.  Note: only one instance
                         can be specified in the request, so this will always contain a single
                         entry.
+            x-package: instances
         GetInstancesMetricsResponseInstanceMetrics:
+            required:
+                - rss_bytes
+                - cpu_time_ms
+                - boot_time_us
+                - net_time_us
+                - rx_bytes
+                - rx_packets
+                - tx_bytes
+                - tx_packets
+                - nconns
+                - nreqs
+                - nqueued
+                - ntotal
             type: object
             properties:
                 rss_bytes:
@@ -5701,7 +6064,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
+            x-package: instances
         GetInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5731,6 +6098,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response after retrieving an instance by its name or UUID.
+            x-package: instances
         GetInstancesResponseData:
             type: object
             properties:
@@ -5739,7 +6107,11 @@ components:
                     items:
                         $ref: '#/components/schemas/Instance'
                     description: The instance(s) that were retrieved by the request.
+            x-package: instances
         GetServiceGroupsResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5771,6 +6143,7 @@ components:
             description: |-
                 The response message for getting one or more service group(s) given their
                 UUID(s) or name(s).
+            x-package: services
         GetServiceGroupsResponseData:
             type: object
             properties:
@@ -5779,7 +6152,11 @@ components:
                     items:
                         $ref: '#/components/schemas/ServiceGroup'
                     description: The service group(s) which were retrieved by the request.
+            x-package: services
         GetTemplateInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5809,6 +6186,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for getting one or more template instances.
+            x-package: instances
         GetTemplateInstancesResponseData:
             type: object
             properties:
@@ -5817,7 +6195,12 @@ components:
                     items:
                         $ref: '#/components/schemas/Instance'
                     description: List of template instances that were retrieved during the operation.
+            x-package: instances
         GetTemplateVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5847,6 +6230,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for getting one or more template volumes.
+            x-package: volumes
         GetTemplateVolumesResponseData:
             type: object
             properties:
@@ -5855,7 +6239,12 @@ components:
                     items:
                         $ref: '#/components/schemas/Volume'
                     description: The template volume(s) which were retrieved by the request.
+            x-package: volumes
         GetVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5887,6 +6276,7 @@ components:
             description: |-
                 The response message for getting one or more volume(s) given their
                 UUID(s) or name(s).
+            x-package: volumes
         GetVolumesResponseData:
             type: object
             properties:
@@ -5895,9 +6285,13 @@ components:
                     items:
                         $ref: '#/components/schemas/Volume'
                     description: The volume(s) which were retrieved by the request.
+            x-package: volumes
         GoogleProtobufValue:
             description: Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values.
         HealthzResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -5925,6 +6319,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for a health check of the platform.
+            x-package: node
         HealthzResponseData:
             type: object
             properties:
@@ -5933,7 +6328,13 @@ components:
                     additionalProperties:
                         type: string
             description: For now, no additional data is returned by the health check.
+            x-package: node
         Image:
+            required:
+                - url
+                - created_at
+                - initrd_or_rom
+                - size_in_bytes
             type: object
             properties:
                 url:
@@ -5977,6 +6378,15 @@ components:
                     type: array
                     items:
                         type: string
+            x-package: images
+        InlineDataEncoding:
+            enum:
+                - "text"
+                - "base64"
+            type: string
+            description: Encoding type for inline file data.
+            format: enum
+            x-package: common
         InlineFile:
             required:
                 - path
@@ -5987,17 +6397,24 @@ components:
                     type: string
                     description: The file path within the image.
                 encoding:
-                    enum:
-                        - "text"
-                        - "base64"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InlineDataEncoding'
                     description: (Optional).  The encoding of the data field.  Defaults to "text".
-                    format: enum
                 data:
                     type: string
                     description: The file data, encoded according to the encoding field.
             description: An inline file entry represents a single file within an image.
+            x-package: common
         Instance:
+            required:
+                - uuid
+                - name
+                - created_at
+                - state
+                - image
+                - memory_mb
+                - vcpus
+                - restart_policy
             type: object
             properties:
                 uuid:
@@ -6031,19 +6448,11 @@ components:
                     description: The time the instance was created.
                     format: date-time
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: |-
                         The state of the instance.  This indicates the current state of the
                         instance, such as whether it is running, stopped, or in an error state.
-                    format: enum
                 private_fqdn:
                     example: funky-town-g756b5d.internal
                     type: string
@@ -6269,11 +6678,8 @@ components:
                         Not used for template instances.
                     format: uint32
                 restart_policy:
-                    enum:
-                        - "never"
-                        - "always"
-                        - "on-failure"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceRestartPolicy'
                     description: |-
                         The restart configuration for the instance.
 
@@ -6302,7 +6708,6 @@ components:
 
                         A manual start or stop of the instance aborts the restart sequence and
                         resets the back-off delay.
-                    format: enum
                 scale_to_zero:
                     allOf:
                         - $ref: '#/components/schemas/InstanceScaleToZero'
@@ -6414,6 +6819,7 @@ components:
                         Template-specific automatic delete-on-idle configuration.
                         Not used for non-template instances.
             description: An instance is a unikernel virtual machine running an application.
+            x-package: instances
         InstanceAutokill:
             type: object
             properties:
@@ -6432,7 +6838,10 @@ components:
             description: |-
                 Automatic delete-on-idle/request-limit configuration for non-template instances.
                 Not used for template instances.
+            x-package: instances
         InstanceCreateArgsInstanceCreateRequestRoms:
+            required:
+                - name
             type: object
             properties:
                 name:
@@ -6451,7 +6860,31 @@ components:
                         (Optional).  Inline files to use as the ROM content.  When specified,
                         the platform creates an EROFS image from the provided files.
                         Mutually exclusive with `image`.
+            x-package: autoscale
+        InstanceFeature:
+            enum:
+                - "delete-on-stop"
+            type: string
+            description: |-
+                Features are specific configurations or capabilities that can be enabled for
+                the instance.
+
+                The list of available features to enable for the instance:
+
+                | Feature          | Description |
+                |------------------|-------------|
+                | `delete_on_stop` | The instance will be deleted when it is stopped. This is useful for instances that are not needed after they are stopped, such as temporary or ephemeral instances. |
+            format: enum
+            x-package: instances
         InstanceNetworkInterface:
+            required:
+                - uuid
+                - private_ip
+                - mac
+                - rx_bytes
+                - rx_packets
+                - tx_bytes
+                - tx_packets
             type: object
             properties:
                 uuid:
@@ -6493,7 +6926,10 @@ components:
                     description: Count of packets sent to interface
                     format: uint64
             description: An instance network interface.
+            x-package: instances
         InstanceRestartAttempt:
+            required:
+                - attempt
             type: object
             properties:
                 attempt:
@@ -6509,7 +6945,46 @@ components:
                     description: Timestamp of the next scheduled restart attempt.
                     format: date-time
             description: Records the current restart attempt of an instance.
+            x-package: instances
+        InstanceRestartPolicy:
+            enum:
+                - "never"
+                - "always"
+                - "on-failure"
+            type: string
+            description: |-
+                The restart policy of an instance.
+
+                When an instance stops either because the application exits or the instance
+                crashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are
+                performed according to the restart policy configured for a particular
+                instance.
+
+                The policy can have the following values:
+
+                | Policy       | Description |
+                |--------------|-------------|
+                | `never`      | Never restart the instance (default). |
+                | `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |
+                | `on-failure` | Only restart the instance if it crashes. |
+
+                When an instance stops, the stop reason and the configured restart policy are
+                evaluated to decide if a restart should be performed.  Unikraft Cloud uses an
+                exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m) to slow
+                down restarts in tight crash loops. If an instance runs without problems for
+                10s the back-off delay is reset and the restart sequence ends.
+
+                The `restart.attempt` attribute reported in counts the number of restarts
+                performed in the current sequence.  The `restart.next_at` field indicates
+                when the next restart will take place if a back-off delay is in effect.
+
+                A manual start or stop of the instance aborts the restart sequence and resets
+                the back-off delay.
+            format: enum
+            x-package: instances
         InstanceRom:
+            required:
+                - name
             type: object
             properties:
                 name:
@@ -6540,6 +7015,7 @@ components:
                         the platform creates an EROFS image from the provided files.
                         Mutually exclusive with `image`.
             description: Read-Only Memory (ROM) blob to attach to the instance.
+            x-package: instances
         InstanceScaleToZero:
             type: object
             properties:
@@ -6548,13 +7024,9 @@ components:
                     type: boolean
                     description: Indicates whether scale-to-zero is enabled for the instance.
                 policy:
-                    enum:
-                        - "off"
-                        - "on"
-                        - "idle"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceScaleToZeroPolicy'
                     description: The specific policy to use for scaling the instance to zero.
-                    format: enum
                 stateful:
                     example: true
                     type: boolean
@@ -6587,7 +7059,29 @@ components:
                 shutdown) or paused wherein the state of the instance is preserved (e.g., RAM
                 contents) and the instance can be resumed later without losing its state,
                 i.e. "stateful".
+            x-package: instances
+        InstanceScaleToZeroPolicy:
+            enum:
+                - "off"
+                - "on"
+                - "idle"
+            type: string
+            description: |-
+                Scale-to-zero policy types to use when creating an instance.
+
+                The policy can be one of the following values:
+
+                | Policy | Description |
+                |--------|-------------|
+                | `on`   | The instance should be scaled-to-zero (when possible). |
+                | `off`  | The instance should never be scaled-to-zero. |
+                | `idle` | The instance should be scaled-to-zero even with established but idle TCP connections. |
+            format: enum
+            x-package: instances
         InstanceServiceGroup:
+            required:
+                - uuid
+                - name
             type: object
             properties:
                 uuid:
@@ -6627,7 +7121,10 @@ components:
                 This is a reference to the service group that the instance is part of.  The
                 service group defines the services (e.g. ports, connection handling) that
                 the instance exposes and how they are configured.
+            x-package: instances
         InstanceSnapshot:
+            required:
+                - uuid
             type: object
             properties:
                 uuid:
@@ -6635,6 +7132,20 @@ components:
                     description: The UUID of the snapshot.
                     format: uuid
             description: The snapshot UUID of the instance.
+            x-package: instances
+        InstanceState:
+            enum:
+                - "stopped"
+                - "starting"
+                - "running"
+                - "draining"
+                - "stopping"
+                - "template"
+                - "standby"
+            type: string
+            description: The current state of an instance.
+            format: enum
+            x-package: instances
         InstanceTemplateAutokill:
             type: object
             properties:
@@ -6645,7 +7156,13 @@ components:
                         it is deleted. A value of 0 disables template autokill.
                     format: uint64
             description: Automatic delete-on-idle configuration for template instances.
+            x-package: instances
         InstanceVolume:
+            required:
+                - uuid
+                - name
+                - at
+                - readonly
             type: object
             properties:
                 uuid:
@@ -6689,6 +7206,110 @@ components:
 
                 Volumes can be used to store persistent data which should remain available
                 even if the instance is stopped or restarted.
+            x-package: instances
+        MutableInstanceOperation:
+            enum:
+                - "set"
+                - "add"
+                - "del"
+            type: string
+            description: The operations available on an instance's properties.
+            format: enum
+            x-package: instances
+        MutableInstanceProperty:
+            enum:
+                - "image"
+                - "args"
+                - "env"
+                - "memory_mb"
+                - "vcpus"
+                - "scale_to_zero"
+                - "tags"
+                - "delete_lock"
+                - "schedules"
+                - "autokill"
+                - "hostname"
+                - "roms"
+                - "dependencies"
+                - "sched_priority"
+            type: string
+            description: The mutable properties of an instance that can be updated.
+            format: enum
+            x-package: instances
+        MutableServiceGroupOperation:
+            enum:
+                - "set"
+                - "add"
+                - "del"
+            type: string
+            description: The mutable operations available on a service group's properties.
+            format: enum
+            x-package: services
+        MutableServiceGroupProperty:
+            enum:
+                - "services"
+                - "domains"
+                - "soft_limit"
+                - "hard_limit"
+                - "autokill"
+            type: string
+            description: The mutable properties of a service group.
+            format: enum
+            x-package: services
+        MutableTemplateInstanceOperation:
+            enum:
+                - "set"
+                - "add"
+                - "del"
+            type: string
+            description: The operations available on a template instance's properties.
+            format: enum
+            x-package: instances
+        MutableTemplateInstanceProperty:
+            enum:
+                - "tags"
+                - "delete_lock"
+                - "autokill"
+            type: string
+            description: The mutable properties of a template instance that can be updated.
+            format: enum
+            x-package: instances
+        MutableTemplateVolumeOperation:
+            enum:
+                - "set"
+                - "add"
+                - "del"
+            type: string
+            description: The operations available on a template volume's properties.
+            format: enum
+            x-package: volumes
+        MutableTemplateVolumeProperty:
+            enum:
+                - "tags"
+                - "delete_lock"
+            type: string
+            description: The mutable properties of a template volume.
+            format: enum
+            x-package: volumes
+        MutableVolumeOperation:
+            enum:
+                - "set"
+                - "add"
+                - "del"
+            type: string
+            description: The operations available on a volume's properties.
+            format: enum
+            x-package: volumes
+        MutableVolumeProperty:
+            enum:
+                - "size_mb"
+                - "tags"
+                - "quota_policy"
+                - "delete_lock"
+            type: string
+            description: The mutable properties of a volume.
+            format: enum
+            x-package: volumes
         NameOrUUID:
             type: object
             allOf:
@@ -6721,7 +7342,28 @@ components:
                             type: string
                             description: Mutually exclusive with UUID.
             description: An identifier for a resource.  Either a name or a UUID.
+            x-package: common
+        PaginationOrder:
+            enum:
+                - "asc"
+                - "desc"
+            type: string
+            description: The sort order used by list endpoints.
+            format: enum
+            x-package: common
+        PaginationSortBy:
+            enum:
+                - "create_time"
+            type: string
+            description: The sort field used by list endpoints.
+            format: enum
+            x-package: common
         Quotas:
+            required:
+                - uuid
+                - used
+                - hard
+                - limits
             type: object
             properties:
                 uuid:
@@ -6762,7 +7404,17 @@ components:
                         This field is only set when this message object is used as a response
                         message, and is useful when the status is not `success`.
                     format: int32
+            x-package: users
         QuotasLimits:
+            required:
+                - min_memory_mb
+                - max_memory_mb
+                - min_volume_mb
+                - max_volume_mb
+                - min_autoscale_size
+                - max_autoscale_size
+                - min_vcpus
+                - max_vcpus
             type: object
             properties:
                 min_memory_mb:
@@ -6805,7 +7457,12 @@ components:
                     type: integer
                     description: Maximum number of vCPUs
                     format: int64
+            x-package: users
         QuotasResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -6835,6 +7492,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for getting the quota of a user given their UUID.
+            x-package: users
         QuotasResponseData:
             type: object
             properties:
@@ -6843,7 +7501,17 @@ components:
                     items:
                         $ref: '#/components/schemas/Quotas'
                     description: The quota(s) which were retrieved by the request.
+            x-package: users
         QuotasStats:
+            required:
+                - instances
+                - live_instances
+                - live_vcpus
+                - live_memory_mb
+                - service_groups
+                - services
+                - volumes
+                - total_volume_mb
             type: object
             properties:
                 instances:
@@ -6888,7 +7556,10 @@ components:
                     type: integer
                     description: Total size of all volumes in megabytes
                     format: int64
+            x-package: users
         ResponseError:
+            required:
+                - status
             type: object
             properties:
                 status:
@@ -6897,6 +7568,7 @@ components:
                     description: The HTTP status code of the error.
                     format: uint64
             description: The error response message for an API request.
+            x-package: common
         ResponseStatus:
             enum:
                 - "success"
@@ -6904,11 +7576,13 @@ components:
             type: string
             description: The response status of an API request.
             format: enum
+            x-package: common
         Schedule:
             required:
                 - name
                 - when
                 - action
+                - next_at
             type: object
             properties:
                 name:
@@ -6928,14 +7602,9 @@ components:
                         See https://www.man7.org/linux/man-pages/man7/systemd.time.7.html
                 action:
                     example: stop
-                    enum:
-                        - "start"
-                        - "stop"
-                        - "delete"
-                        - "exec"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ScheduleAction'
                     description: The action to perform at the scheduled time.
-                    format: enum
                 next_at:
                     readOnly: true
                     example: 1696512000
@@ -6973,9 +7642,21 @@ components:
 
                 Example: `*-*-* 09:00:00` - Every day at 09:00 UTC
                 Example: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC
+            x-package: instances
+        ScheduleAction:
+            enum:
+                - "start"
+                - "stop"
+                - "delete"
+                - "exec"
+            type: string
+            description: The action to perform on a scheduled operation.
+            format: enum
+            x-package: instances
         Service:
             required:
                 - port
+                - destination_port
             type: object
             properties:
                 port:
@@ -6995,12 +7676,7 @@ components:
                 handlers:
                     type: array
                     items:
-                        enum:
-                            - "tls"
-                            - "http"
-                            - "redirect"
-                        type: string
-                        format: enum
+                        $ref: '#/components/schemas/ConnectionHandler'
                     description: |-
                         Connection handlers to use for the service.  Handlers define how the
                         service will handle incoming connections and forward traffic from the
@@ -7015,7 +7691,16 @@ components:
                 incoming connections and forward traffic from the Internet to your
                 application.  For example, a service can be configured to terminate TLS
                 connections, redirect HTTP traffic, or enable HTTP mode for load balancing.
+            x-package: services
         ServiceGroup:
+            required:
+                - uuid
+                - name
+                - created_at
+                - persistent
+                - autoscale
+                - soft_limit
+                - hard_limit
             type: object
             properties:
                 uuid:
@@ -7157,6 +7842,7 @@ components:
                 indicate that the application exposes some ports, Unikraft Cloud will
                 generates a random DNS name for you.  Unikraft Cloud also supports custom
                 domains like www.example.com and wildcard domains like *.example.com.
+            x-package: services
         ServiceGroupAutokill:
             type: object
             properties:
@@ -7167,7 +7853,11 @@ components:
                         deleted. A value of 0 disables autokill.
                     format: uint64
             description: Automatic delete-on-idle configuration for service groups.
+            x-package: services
         ServiceGroupInstance:
+            required:
+                - uuid
+                - name
             type: object
             properties:
                 uuid:
@@ -7187,7 +7877,10 @@ components:
                         to identify the instance.  The name must be unique within the context of
                         your account.  If no name is specified, a random name is generated for
                         you.  The name can also be used to identify the instance in API calls.
+            x-package: services
         ServiceGroupInstanceDomain:
+            required:
+                - fqdn
             type: object
             properties:
                 fqdn:
@@ -7218,7 +7911,11 @@ components:
                 certificate is specified and a FQDN is provided, Unikraft Cloud will
                 automatically generate a new certificate for the domain based on Let's
                 Encrypt and seek to accomplish a DNS-01 challenge.
+            x-package: instances
         ServiceGroupTemplate:
+            required:
+                - name
+                - uuid
             type: object
             properties:
                 name:
@@ -7230,6 +7927,7 @@ components:
                     type: string
                     description: The UUID of the template used for the autoscale configuration.
                     format: uuid
+            x-package: autoscale
         StartInstanceByUUIDRequestBody:
             type: object
             properties:
@@ -7252,6 +7950,7 @@ components:
                         timeout greater than zero.  No wait performed for a value of 0.
                     format: int64
             description: Parameters for starting the instance.
+            x-package: instances
         StartInstancesRequestItem:
             type: object
             allOf:
@@ -7298,7 +7997,11 @@ components:
                             type: string
                             description: The name of the instance to start.  Mutually exclusive with UUID.
             description: A single request item to start an instance.
+            x-package: instances
         StartInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -7330,6 +8033,7 @@ components:
             description: |-
                 The response message for starting one or more instance(s) given their UUID(s)
                 or name(s).
+            x-package: instances
         StartInstancesResponseData:
             type: object
             properties:
@@ -7338,7 +8042,14 @@ components:
                     items:
                         $ref: '#/components/schemas/StartInstancesResponseStartedInstance'
                     description: The instance(s) which were started by the request.
+            x-package: instances
         StartInstancesResponseStartedInstance:
+            required:
+                - status
+                - uuid
+                - name
+                - state
+                - previous_state
             type: object
             properties:
                 status:
@@ -7383,6 +8094,17 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
+        StepPolicyMetric:
+            enum:
+                - "cpu"
+            type: string
+            description: |-
+                The step policy is a type of autoscaling policy that scales the number of
+                instances in a service by a fixed number of instances at each step.
+                It uses a metric to determine when to scale up or down.
+            format: enum
+            x-package: autoscale
         StopInstanceByUUIDRequestBody:
             type: object
             properties:
@@ -7417,6 +8139,7 @@ components:
                     type: string
                     description: Only stop the instance if it is in this state.
             description: Parameters for stopping the instance.
+            x-package: instances
         StopInstancesRequestItem:
             type: object
             allOf:
@@ -7471,7 +8194,11 @@ components:
                             type: string
                             description: The name of the instance to stop.  Mutually exclusive with UUID.
             description: A single request item to stop an instance.
+            x-package: instances
         StopInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -7503,6 +8230,7 @@ components:
             description: |-
                 The response message for stopping one or more instance(s) given their UUID(s)
                 or name(s).
+            x-package: instances
         StopInstancesResponseData:
             type: object
             properties:
@@ -7511,7 +8239,13 @@ components:
                     items:
                         $ref: '#/components/schemas/StopInstancesResponseStoppedInstance'
                     description: The instance(s) which were stopped by the request.
+            x-package: instances
         StopInstancesResponseStoppedInstance:
+            required:
+                - uuid
+                - name
+                - state
+                - previous_state
             type: object
             properties:
                 uuid:
@@ -7530,29 +8264,13 @@ components:
                         (Only applies when using global control plane).
                         The metro of the instance.
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The current state of the instance.
-                    format: enum
                 previous_state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The previous state of the instance before the stop operation was invoked.
-                    format: enum
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -7570,6 +8288,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         SuspendInstanceByUUIDRequestBody:
             type: object
             properties:
@@ -7581,6 +8300,7 @@ components:
                         will occur if set to 0.  Use -1 for the largest possible value.
                     format: uint64
             description: Parameters for suspending the instance.
+            x-package: instances
         SuspendInstancesRequestItem:
             type: object
             allOf:
@@ -7616,7 +8336,11 @@ components:
                             type: string
                             description: The name of the instance to suspend.  Mutually exclusive with UUID.
             description: A single request item to suspend an instance.
+            x-package: instances
         SuspendInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -7648,6 +8372,7 @@ components:
             description: |-
                 The response message for suspending one or more instance(s) given their UUID(s)
                 or name(s).
+            x-package: instances
         SuspendInstancesResponseData:
             type: object
             properties:
@@ -7656,7 +8381,13 @@ components:
                     items:
                         $ref: '#/components/schemas/SuspendInstancesResponseSuspendedInstance'
                     description: The instance(s) which were suspended by the request.
+            x-package: instances
         SuspendInstancesResponseSuspendedInstance:
+            required:
+                - uuid
+                - name
+                - state
+                - previous_state
             type: object
             properties:
                 uuid:
@@ -7675,29 +8406,13 @@ components:
                         (Only applies when using global control plane).
                         The metro of the instance.
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The current state of the instance.
-                    format: enum
                 previous_state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The previous state of the instance before the suspend operation was invoked.
-                    format: enum
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -7715,8 +8430,10 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         UpdateCertificateByUUIDRequest:
             required:
+                - uuid
                 - chain
                 - pkey
             type: object
@@ -7742,6 +8459,7 @@ components:
                         This is the private key of the certificate in PEM format. The private
                         key must match the public key in the certificate chain.
             description: The request message for updating a certificate by its UUID.
+            x-package: certificates
         UpdateCertificateRequest:
             required:
                 - id
@@ -7772,7 +8490,11 @@ components:
             description: |-
                 The request message for updating one or more certificate(s) by their
                 UUID(s) or name(s).
+            x-package: certificates
         UpdateCertificateResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -7802,6 +8524,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating one or more certificate(s).
+            x-package: certificates
         UpdateCertificateResponseData:
             type: object
             properties:
@@ -7810,6 +8533,7 @@ components:
                     items:
                         $ref: '#/components/schemas/Certificate'
                     description: The certificate(s) which were updated by the request.
+            x-package: certificates
         UpdateInstanceByUUIDRequestBody:
             required:
                 - prop
@@ -7824,33 +8548,14 @@ components:
                         the response.
                 prop:
                     example: memory_mb
-                    enum:
-                        - "image"
-                        - "args"
-                        - "env"
-                        - "memory_mb"
-                        - "vcpus"
-                        - "scale_to_zero"
-                        - "tags"
-                        - "delete_lock"
-                        - "schedules"
-                        - "autokill"
-                        - "hostname"
-                        - "roms"
-                        - "dependencies"
-                        - "sched_priority"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableInstanceProperty'
                     description: The property to modify.
-                    format: enum
                 op:
                     example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableInstanceOperation'
                     description: The operation to perform on the property.
-                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -7871,6 +8576,7 @@ components:
                         - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
                         - For "dependencies": array of instance identifiers (name or UUID)
                         - For "sched_priority": integer (scheduling priority value)
+            x-package: instances
         UpdateInstancesRequestItem:
             required:
                 - prop
@@ -7893,33 +8599,14 @@ components:
                             The metro to route the request to.
                     prop:
                         example: memory_mb
-                        enum:
-                            - "image"
-                            - "args"
-                            - "env"
-                            - "memory_mb"
-                            - "vcpus"
-                            - "scale_to_zero"
-                            - "tags"
-                            - "delete_lock"
-                            - "schedules"
-                            - "autokill"
-                            - "hostname"
-                            - "roms"
-                            - "dependencies"
-                            - "sched_priority"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableInstanceProperty'
                         description: The property to modify.
-                        format: enum
                     op:
                         example: set
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableInstanceOperation'
                         description: The operation to perform on the property.
-                        format: enum
                     value:
                         allOf:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -7957,7 +8644,11 @@ components:
                             type: string
                             description: The name of the instance to update. Mutually exclusive with UUID.
             description: A single update operation to be applied to an instance.
+            x-package: instances
         UpdateInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -7987,6 +8678,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating one or more instances.
+            x-package: instances
         UpdateInstancesResponseData:
             type: object
             properties:
@@ -7995,7 +8687,12 @@ components:
                     items:
                         $ref: '#/components/schemas/UpdateInstancesResponseUpdatedInstance'
                     description: List of instances that were processed during the update operation.
+            x-package: instances
         UpdateInstancesResponseUpdatedInstance:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -8034,6 +8731,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         UpdateServiceGroupByUUIDRequestBody:
             required:
                 - prop
@@ -8046,24 +8744,14 @@ components:
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 prop:
                     example: services
-                    enum:
-                        - "services"
-                        - "domains"
-                        - "soft_limit"
-                        - "hard_limit"
-                        - "autokill"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableServiceGroupProperty'
                     description: The property to modify.
-                    format: enum
                 op:
                     example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableServiceGroupOperation'
                     description: The operation to perform.
-                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8074,6 +8762,7 @@ components:
                         - For "soft_limit": integer (1–65535), must be <= "hard_limit"
                         - For "hard_limit": integer (1–65535), must be >= "soft_limit"
                         - For "autokill": object with time_ms field
+            x-package: services
         UpdateServiceGroupsRequestItem:
             required:
                 - prop
@@ -8088,24 +8777,14 @@ components:
                         description: (Optional).  A client-provided identifier for tracking this operation in the response.
                     prop:
                         example: services
-                        enum:
-                            - "services"
-                            - "domains"
-                            - "soft_limit"
-                            - "hard_limit"
-                            - "autokill"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableServiceGroupProperty'
                         description: The property to modify.
-                        format: enum
                     op:
                         example: set
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableServiceGroupOperation'
                         description: The operation to perform.
-                        format: enum
                     value:
                         allOf:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8133,7 +8812,11 @@ components:
                             type: string
                             description: The name of the service group to update.  Mutually exclusive with UUID.
             description: A single update operation to be applied to a service group
+            x-package: services
         UpdateServiceGroupsResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -8163,6 +8846,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating one or more service groups.
+            x-package: services
         UpdateServiceGroupsResponseData:
             type: object
             properties:
@@ -8171,7 +8855,12 @@ components:
                     items:
                         $ref: '#/components/schemas/UpdateServiceGroupsResponseUpdatedServiceGroup'
                     description: List of service groups that were processed during the update operation.
+            x-package: services
         UpdateServiceGroupsResponseUpdatedServiceGroup:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -8212,6 +8901,7 @@ components:
                         This field is only set when this message object is used as a response
                         message, and is useful when the status is not `success`.
                     format: int32
+            x-package: services
         UpdateTemplateInstanceByUUIDRequestBody:
             required:
                 - prop
@@ -8226,22 +8916,14 @@ components:
                         the response.
                 prop:
                     example: tags
-                    enum:
-                        - "tags"
-                        - "delete_lock"
-                        - "autokill"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableTemplateInstanceProperty'
                     description: The property to modify.
-                    format: enum
                 op:
                     example: add
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableTemplateInstanceOperation'
                     description: The operation to perform on the property.
-                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8250,6 +8932,7 @@ components:
                         - For "tags": array of strings
                         - For "delete_lock": boolean
                         - For "autokill": object with time_ms field
+            x-package: instances
         UpdateTemplateInstancesRequestItem:
             required:
                 - prop
@@ -8272,22 +8955,14 @@ components:
                             The metro of the template instance.
                     prop:
                         example: tags
-                        enum:
-                            - "tags"
-                            - "delete_lock"
-                            - "autokill"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableTemplateInstanceProperty'
                         description: The property to modify.
-                        format: enum
                     op:
                         example: add
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableTemplateInstanceOperation'
                         description: The operation to perform on the property.
-                        format: enum
                     value:
                         allOf:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8313,7 +8988,11 @@ components:
                             type: string
                             description: The name of the template instance to update. Mutually exclusive with UUID.
             description: A single update operation to be applied to a template instance.
+            x-package: instances
         UpdateTemplateInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -8343,6 +9022,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating a template instance by its UUID.
+            x-package: instances
         UpdateTemplateInstancesResponseData:
             type: object
             properties:
@@ -8351,7 +9031,12 @@ components:
                     items:
                         $ref: '#/components/schemas/UpdateTemplateInstancesResponseTemplateInstance'
                     description: List of template instances that were processed during the update operation.
+            x-package: instances
         UpdateTemplateInstancesResponseTemplateInstance:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -8390,6 +9075,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
         UpdateTemplateVolumeByUUIDRequestBody:
             required:
                 - prop
@@ -8404,21 +9090,14 @@ components:
                         the response.
                 prop:
                     example: tags
-                    enum:
-                        - "tags"
-                        - "delete_lock"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableTemplateVolumeProperty'
                     description: The property to modify.
-                    format: enum
                 op:
                     example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableTemplateVolumeOperation'
                     description: The operation to perform.
-                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8426,6 +9105,7 @@ components:
                         The value for the update operation. The type depends on the property and operation:
                         - For "tags": array of Strings
                         - For "delete_lock": boolean
+            x-package: volumes
         UpdateTemplateVolumesRequestItem:
             required:
                 - prop
@@ -8442,21 +9122,14 @@ components:
                             the response.
                     prop:
                         example: tags
-                        enum:
-                            - "tags"
-                            - "delete_lock"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableTemplateVolumeProperty'
                         description: The property to modify.
-                        format: enum
                     op:
                         example: add
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableTemplateVolumeOperation'
                         description: The operation to perform.
-                        format: enum
                     value:
                         allOf:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8485,7 +9158,12 @@ components:
                                 The name of the template volume to update.  Mutually exclusive with
                                 UUID.
             description: A single update operation to be applied to a template volume.
+            x-package: volumes
         UpdateTemplateVolumesResponse:
+            required:
+                - status
+                - data
+                - op_time_us
             type: object
             properties:
                 status:
@@ -8515,6 +9193,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating one or more template volumes.
+            x-package: volumes
         UpdateTemplateVolumesResponseData:
             type: object
             properties:
@@ -8523,7 +9202,12 @@ components:
                     items:
                         $ref: '#/components/schemas/UpdateTemplateVolumesResponseTemplateVolume'
                     description: The template volume(s) which were updated by the request.
+            x-package: volumes
         UpdateTemplateVolumesResponseTemplateVolume:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -8556,6 +9240,7 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
         UpdateVolumeByUUIDRequestBody:
             required:
                 - prop
@@ -8568,23 +9253,14 @@ components:
                     description: (Optional).  A client-provided identifier for tracking this operation in the response.
                 prop:
                     example: size_mb
-                    enum:
-                        - "size_mb"
-                        - "tags"
-                        - "quota_policy"
-                        - "delete_lock"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableVolumeProperty'
                     description: The property to modify.
-                    format: enum
                 op:
                     example: set
-                    enum:
-                        - "set"
-                        - "add"
-                        - "del"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/MutableVolumeOperation'
                     description: The operation to perform.
-                    format: enum
                 value:
                     allOf:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8594,6 +9270,7 @@ components:
                         - For "quota_policy": "static" or "dynamic"
                         - For "tags": array of Strings
                         - For "delete_lock": boolean
+            x-package: volumes
         UpdateVolumesRequestItem:
             required:
                 - prop
@@ -8608,23 +9285,14 @@ components:
                         description: (Optional).  A client-provided identifier for tracking this operation in the response.
                     prop:
                         example: size_mb
-                        enum:
-                            - "size_mb"
-                            - "tags"
-                            - "quota_policy"
-                            - "delete_lock"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableVolumeProperty'
                         description: The property to modify.
-                        format: enum
                     op:
                         example: set
-                        enum:
-                            - "set"
-                            - "add"
-                            - "del"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/MutableVolumeOperation'
                         description: The operation to perform.
-                        format: enum
                     value:
                         allOf:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
@@ -8651,7 +9319,11 @@ components:
                             type: string
                             description: The name of the volume to update.  Mutually exclusive with UUID.
             description: A single request item for updating a volume.
+            x-package: volumes
         UpdateVolumesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -8681,6 +9353,7 @@ components:
                         the request and generate the response.
                     format: uint64
             description: The response message for updating one or more volume(s).
+            x-package: volumes
         UpdateVolumesResponseData:
             type: object
             properties:
@@ -8689,7 +9362,12 @@ components:
                     items:
                         $ref: '#/components/schemas/UpdateVolumesResponseUpdatedVolume'
                     description: List of volumes that were processed during the update operation.
+            x-package: volumes
         UpdateVolumesResponseUpdatedVolume:
+            required:
+                - uuid
+                - name
+                - status
             type: object
             properties:
                 uuid:
@@ -8728,7 +9406,202 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: volumes
+        User:
+            required:
+                - uuid
+                - name
+                - auth_token
+            type: object
+            properties:
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: The UUID of the user.
+                    format: uuid
+                name:
+                    example: example
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: The name of the user.
+                auth_token:
+                    example: ZXhhbXBsZS10b2tlbg==
+                    type: array
+                    items:
+                        type: string
+                    description: Authentication token(s) associated with the user.
+                permissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UserPermission'
+                    description: The permission level of the user.
+                uid:
+                    example: 1000
+                    type: integer
+                    description: The user ID (UID) on the host system.
+                    format: uint32
+                disabled:
+                    example: false
+                    type: boolean
+                    description: Whether the user account is disabled.
+                vmdb:
+                    allOf:
+                        - $ref: '#/components/schemas/UserVmdb'
+                    description: Per-VM Configuration limits for the user.
+                net:
+                    allOf:
+                        - $ref: '#/components/schemas/UserNet'
+                    description: Network configuration limits for the user.
+                vmm:
+                    allOf:
+                        - $ref: '#/components/schemas/UserVmm'
+                    description: Global VM configuration limits for the user.
+                stor:
+                    allOf:
+                        - $ref: '#/components/schemas/UserStor'
+                    description: Storage configuration limits for the user.
+                autoscale:
+                    allOf:
+                        - $ref: '#/components/schemas/UserAutoscale'
+                    description: Autoscale configuration limits for the user.
+            x-package: users
+        UserAutoscale:
+            type: object
+            properties:
+                min_size:
+                    example: 1
+                    type: integer
+                    description: Minimum size of an autoscale group.
+                    format: int32
+                max_size:
+                    example: 16
+                    minimum: !!float 1
+                    type: integer
+                    description: Maximum size of an autoscale group.
+                    format: int32
+            x-package: users
+        UserNet:
+            type: object
+            properties:
+                max_service_groups:
+                    example: 16
+                    type: integer
+                    description: Maximum number of service groups the user can have at one moment.
+                    format: int32
+                max_services:
+                    example: 32
+                    type: integer
+                    description: |-
+                        Maximum number of services across all service groups the user can have
+                        at one moment.
+                    format: int32
+                max_certificates:
+                    example: 16
+                    type: integer
+                    description: Maximum number of TLS certificates the user can have at one moment.
+                    format: int32
+            x-package: users
+        UserPermission:
+            enum:
+                - "root"
+                - "override_edns_blacklist"
+                - "developer"
+                - "volume_manager"
+                - "override_vm_priority"
+            type: string
+            format: enum
+            x-package: users
+        UserStor:
+            type: object
+            properties:
+                max_volumes:
+                    example: 8
+                    type: integer
+                    description: Maximum number of volumes the user can have at one moment.
+                    format: int32
+                min_volume_mb:
+                    example: 1
+                    minimum: !!float 1
+                    type: integer
+                    description: Minimum size of a volume in MB.
+                    format: int32
+                max_volume_mb:
+                    example: 1024
+                    minimum: !!float 1
+                    type: integer
+                    description: Maximum size of a volume in MB.
+                    format: int32
+                max_total_volume_mb:
+                    example: 2048
+                    type: integer
+                    description: Maximum total size of all volumes in MB.
+                    format: int32
+            x-package: users
+        UserVmdb:
+            type: object
+            properties:
+                max_instances:
+                    example: 16
+                    type: integer
+                    description: Maximum number of VM instances the user can have at one moment.
+                    format: int32
+                min_memory_mb:
+                    example: 16
+                    minimum: !!float 1
+                    type: integer
+                    description: Minimum amount of memory assigned to a VM in MB.
+                    format: int32
+                def_memory_mb:
+                    example: 512
+                    minimum: !!float 1
+                    type: integer
+                    description: Default amount of memory assigned to a VM in MB.
+                    format: int32
+                max_memory_mb:
+                    example: 2048
+                    minimum: !!float 1
+                    type: integer
+                    description: Maximum amount of memory assigned to a VM in MB.
+                    format: int32
+                min_vcpus:
+                    example: 1
+                    minimum: !!float 1
+                    type: integer
+                    description: Minimum number of vCPUs assigned to a VM.
+                    format: int32
+                max_vcpus:
+                    example: 4
+                    minimum: !!float 1
+                    type: integer
+                    description: Maximum number of vCPUs assigned to a VM.
+                    format: int32
+            x-package: users
+        UserVmm:
+            type: object
+            properties:
+                max_vcpus:
+                    example: 4
+                    type: integer
+                    description: Maximum number of vCPUs the user can have assigned to live instances.
+                    format: int32
+                max_memory_mb:
+                    example: 2048
+                    type: integer
+                    description: |-
+                        Maximum amount of memory in MB the user can have assigned to live
+                        instances.
+                    format: int32
+            x-package: users
         Volume:
+            required:
+                - uuid
+                - name
+                - created_at
+                - state
+                - size_mb
+                - persistent
+                - quota_policy
             type: object
             properties:
                 uuid:
@@ -8763,18 +9636,9 @@ components:
                     description: The time the volume was created.
                     format: date-time
                 state:
-                    enum:
-                        - "uninitialized"
-                        - "initializing"
-                        - "available"
-                        - "idle"
-                        - "mounted"
-                        - "busy"
-                        - "error"
-                        - "template"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeState'
                     description: Current state of the volume.
-                    format: enum
                 size_mb:
                     example: 64
                     type: integer
@@ -8828,12 +9692,9 @@ components:
                     format: int32
                 quota_policy:
                     example: static
-                    enum:
-                        - "static"
-                        - "dynamic"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeQuotaPolicy'
                     description: Either static or dynamic reservation.
-                    format: enum
                 delete_lock:
                     example: false
                     type: boolean
@@ -8865,7 +9726,10 @@ components:
                         Optional script arguments that were applied to the custom volume filesystem
                         initialization scripts.
             description: A volume represents a storage device that can be attached to an instance.
+            x-package: volumes
         VolumeInstanceID:
+            required:
+                - uuid
             type: object
             properties:
                 uuid:
@@ -8878,7 +9742,12 @@ components:
                     type: string
                     description: The name of the instance that the volume is attached to.
             description: Reference to the instance to attach the volume to.
+            x-package: volumes
         VolumeInstanceMount:
+            required:
+                - uuid
+                - name
+                - readonly
             type: object
             properties:
                 uuid:
@@ -8894,21 +9763,38 @@ components:
                     example: true
                     type: boolean
                     description: Whether the volume is mounted read-only or read-write.
+            x-package: volumes
+        VolumeQuotaPolicy:
+            enum:
+                - "static"
+                - "dynamic"
+            type: string
+            description: VolumeQuotaPolicy defines the quota policy of a volume.
+            format: enum
+            x-package: volumes
+        VolumeState:
+            enum:
+                - "uninitialized"
+                - "initializing"
+                - "available"
+                - "idle"
+                - "mounted"
+                - "busy"
+                - "error"
+                - "template"
+            type: string
+            description: VolumeState defines the state of a volume at a given moment.
+            format: enum
+            x-package: volumes
         WaitInstanceByUUIDRequestBody:
+            required:
+                - state
             type: object
             properties:
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The desired state to wait for.  Default is `running`.
-                    format: enum
                 timeout_ms:
                     example: 450
                     type: integer
@@ -8919,23 +9805,16 @@ components:
                         desired state.
                     format: int64
             description: Wait parameters.
+            x-package: instances
         WaitInstancesRequestItem:
             type: object
             allOf:
                 - type: object
                   properties:
                     state:
-                        enum:
-                            - "stopped"
-                            - "starting"
-                            - "running"
-                            - "draining"
-                            - "stopping"
-                            - "template"
-                            - "standby"
-                        type: string
+                        allOf:
+                            - $ref: '#/components/schemas/InstanceState'
                         description: The desired state to wait for.  Default is `running`.
-                        format: enum
                     timeout_ms:
                         example: 450
                         type: integer
@@ -8962,7 +9841,11 @@ components:
                             type: string
                             description: The name of the instance to wait for.  Mutually exclusive with UUID.
             description: A single wait operation to be applied to an instance.
+            x-package: instances
         WaitInstancesResponse:
+            required:
+                - status
+                - op_time_us
             type: object
             properties:
                 status:
@@ -8994,6 +9877,7 @@ components:
             description: |-
                 The response message for waiting for one or more instance(s) to reach a
                 certain state given their UUID(s) or name(s).
+            x-package: instances
         WaitInstancesResponseData:
             type: object
             properties:
@@ -9002,7 +9886,12 @@ components:
                     items:
                         $ref: '#/components/schemas/WaitInstancesResponseWaitedInstance'
                     description: The instance(s) which this requested waited on.
+            x-package: instances
         WaitInstancesResponseWaitedInstance:
+            required:
+                - uuid
+                - name
+                - state
             type: object
             properties:
                 uuid:
@@ -9015,17 +9904,9 @@ components:
                     type: string
                     description: The name of the instance.
                 state:
-                    enum:
-                        - "stopped"
-                        - "starting"
-                        - "running"
-                        - "draining"
-                        - "stopping"
-                        - "template"
-                        - "standby"
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceState'
                     description: The current state of the instance.
-                    format: enum
                 message:
                     example: No instance with name 'funky-town-g756b5d'
                     type: string
@@ -9043,6 +9924,7 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
+            x-package: instances
     securitySchemes:
         bearerToken:
             type: http

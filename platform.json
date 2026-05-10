@@ -72,12 +72,7 @@
             "in": "query",
             "description": "The sort order for the returned certificates.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -85,11 +80,7 @@
             "in": "query",
             "description": "The field to sort the certificates by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -117,7 +108,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "post": {
         "tags": [
@@ -147,7 +139,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "delete": {
         "tags": [
@@ -180,7 +173,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "patch": {
         "tags": [
@@ -210,7 +204,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       }
     },
     "/v1/certificates/{uuid}": {
@@ -244,7 +239,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "delete": {
         "tags": [
@@ -276,7 +272,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "patch": {
         "tags": [
@@ -318,7 +315,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "certificates"
       }
     },
     "/v1/healthz": {
@@ -340,7 +338,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "node"
       }
     },
     "/v1/image-store": {
@@ -399,7 +398,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "images"
       }
     },
     "/v1/images": {
@@ -458,7 +458,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "images"
       }
     },
     "/v1/instances": {
@@ -511,12 +512,7 @@
             "in": "query",
             "description": "The sort order for the returned instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -524,11 +520,7 @@
             "in": "query",
             "description": "The field to sort the instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -556,7 +548,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "post": {
         "tags": [
@@ -586,7 +579,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "delete": {
         "tags": [
@@ -619,7 +613,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "patch": {
         "tags": [
@@ -652,7 +647,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/log": {
@@ -687,7 +683,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/metrics": {
@@ -722,7 +719,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/start": {
@@ -757,7 +755,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/stop": {
@@ -792,7 +791,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/suspend": {
@@ -827,7 +827,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/templates": {
@@ -880,12 +881,7 @@
             "in": "query",
             "description": "The sort order for the returned template instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -893,11 +889,7 @@
             "in": "query",
             "description": "The field to sort the template instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -925,7 +917,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "post": {
         "tags": [
@@ -958,7 +951,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "delete": {
         "tags": [
@@ -991,7 +985,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "patch": {
         "tags": [
@@ -1024,7 +1019,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/templates/{uuid}": {
@@ -1067,7 +1063,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "delete": {
         "tags": [
@@ -1100,7 +1097,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "patch": {
         "tags": [
@@ -1143,7 +1141,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/wait": {
@@ -1178,7 +1177,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}": {
@@ -1220,7 +1220,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "delete": {
         "tags": [
@@ -1261,7 +1262,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       },
       "patch": {
         "tags": [
@@ -1304,7 +1306,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/log": {
@@ -1349,7 +1352,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/metrics": {
@@ -1383,7 +1387,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/start": {
@@ -1427,7 +1432,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/stop": {
@@ -1471,7 +1477,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/suspend": {
@@ -1515,7 +1522,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/instances/{uuid}/wait": {
@@ -1560,7 +1568,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "/v1/services": {
@@ -1602,12 +1611,7 @@
             "in": "query",
             "description": "The sort order for the returned service groups.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -1615,11 +1619,7 @@
             "in": "query",
             "description": "The field to sort the service groups by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -1647,7 +1647,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       },
       "post": {
         "tags": [
@@ -1677,7 +1678,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       },
       "delete": {
         "tags": [
@@ -1710,7 +1712,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       },
       "patch": {
         "tags": [
@@ -1743,7 +1746,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       }
     },
     "/v1/services/autoscale": {
@@ -1778,7 +1782,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "post": {
         "tags": [
@@ -1811,7 +1816,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "delete": {
         "tags": [
@@ -1844,7 +1850,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       }
     },
     "/v1/services/{uuid}": {
@@ -1887,7 +1894,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       },
       "delete": {
         "tags": [
@@ -1920,7 +1928,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       },
       "patch": {
         "tags": [
@@ -1963,7 +1972,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "services"
       }
     },
     "/v1/services/{uuid}/autoscale": {
@@ -1997,7 +2007,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "post": {
         "tags": [
@@ -2039,7 +2050,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "delete": {
         "tags": [
@@ -2071,7 +2083,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       }
     },
     "/v1/services/{uuid}/autoscale/policies": {
@@ -2113,7 +2126,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "post": {
         "tags": [
@@ -2153,7 +2167,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "delete": {
         "tags": [
@@ -2193,7 +2208,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       }
     },
     "/v1/services/{uuid}/autoscale/policies/{name}": {
@@ -2236,7 +2252,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "delete": {
         "tags": [
@@ -2277,7 +2294,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "autoscale"
       }
     },
     "/v1/users": {
@@ -2288,6 +2306,16 @@
         "summary": "Add Users",
         "description": "Create new user accounts. This will return 409 Conflict when any of the\nrequested users already existed on the target.",
         "operationId": "AddUsers",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUsersRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "default": {
             "description": "default",
@@ -2299,7 +2327,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "users"
       }
     },
     "/v1/users/quotas": {
@@ -2321,7 +2350,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "users"
       }
     },
     "/v1/users/{uuid}/quotas": {
@@ -2355,7 +2385,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "users"
       }
     },
     "/v1/volumes": {
@@ -2408,12 +2439,7 @@
             "in": "query",
             "description": "The sort order for the returned volumes.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -2421,11 +2447,7 @@
             "in": "query",
             "description": "The field to sort the volumes by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -2453,7 +2475,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "post": {
         "tags": [
@@ -2483,7 +2506,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "delete": {
         "tags": [
@@ -2516,7 +2540,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "patch": {
         "tags": [
@@ -2549,7 +2574,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/attach": {
@@ -2584,7 +2610,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/clone": {
@@ -2619,7 +2646,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/detach": {
@@ -2654,7 +2682,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/templates": {
@@ -2707,12 +2736,7 @@
             "in": "query",
             "description": "The sort order for the returned template volumes.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
             "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationOrder"
             }
           },
           {
@@ -2720,11 +2744,7 @@
             "in": "query",
             "description": "The field to sort the template volumes by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
             "schema": {
-              "enum": [
-                "create_time"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/PaginationSortBy"
             }
           }
         ],
@@ -2752,7 +2772,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "post": {
         "tags": [
@@ -2785,7 +2806,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "delete": {
         "tags": [
@@ -2818,7 +2840,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "patch": {
         "tags": [
@@ -2851,7 +2874,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/templates/{uuid}": {
@@ -2894,7 +2918,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "delete": {
         "tags": [
@@ -2927,7 +2952,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "patch": {
         "tags": [
@@ -2970,7 +2996,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/{uuid}": {
@@ -3013,7 +3040,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "delete": {
         "tags": [
@@ -3046,7 +3074,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "patch": {
         "tags": [
@@ -3089,7 +3118,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/{uuid}/attach": {
@@ -3134,7 +3164,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/{uuid}/clone": {
@@ -3179,7 +3210,8 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     },
     "/v1/volumes/{uuid}/detach": {
@@ -3224,13 +3256,35 @@
               }
             }
           }
-        }
+        },
+        "x-package": "volumes"
       }
     }
   },
   "components": {
     "schemas": {
+      "AddUsersRequest": {
+        "required": [
+          "users"
+        ],
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "format": "users"
+          }
+        },
+        "x-package": "users"
+      },
       "AddUsersResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -3267,7 +3321,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "users"
       },
       "AddUsersResponseData": {
         "type": "object",
@@ -3279,7 +3334,19 @@
             },
             "description": "The status of the operation for each user in the request."
           }
-        }
+        },
+        "x-package": "users"
+      },
+      "AdjustmentType": {
+        "enum": [
+          "change",
+          "exact",
+          "percentage"
+        ],
+        "type": "string",
+        "description": "AdjustmentType defines the type of adjustment to be made in an autoscaling\nstep policy.",
+        "format": "enum",
+        "x-package": "autoscale"
       },
       "AttachVolumeByUUIDRequestBody": {
         "required": [
@@ -3291,7 +3358,7 @@
           "attach_to": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/BodyInstanceID"
+                "$ref": "#/components/schemas/NameOrUUID"
               }
             ],
             "description": "UUID or name of the instance to attach the volume to."
@@ -3308,7 +3375,8 @@
             "type": "boolean",
             "description": "Whether the volume should be mounted read-only."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "AttachVolumesRequestItem": {
         "required": [
@@ -3376,9 +3444,15 @@
             ]
           }
         ],
-        "description": "A single request item for attaching a volume to an instance."
+        "description": "A single request item for attaching a volume to an instance.",
+        "x-package": "volumes"
       },
       "AttachVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -3416,9 +3490,15 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for attaching one or more volume(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for attaching one or more volume(s) given their\nUUID(s) or name(s).",
+        "x-package": "volumes"
       },
       "AttachVolumesResponseAttachedVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -3456,7 +3536,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "AttachVolumesResponseData": {
         "type": "object",
@@ -3468,9 +3549,13 @@
             },
             "description": "The volume(s) which were attached by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "AutoscalePolicy": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -3489,22 +3574,20 @@
             "description": "If the policy is enabled."
           },
           "metric": {
-            "enum": [
-              "cpu"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StepPolicyMetric"
+              }
             ],
-            "type": "string",
-            "description": "Metric to use for the step policy.",
-            "format": "enum"
+            "description": "Metric to use for the step policy."
           },
           "adjustment_type": {
-            "enum": [
-              "change",
-              "exact",
-              "percentage"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdjustmentType"
+              }
             ],
-            "type": "string",
-            "description": "The type of adjustment to be made in the step policy.",
-            "format": "enum"
+            "description": "The type of adjustment to be made in the step policy."
           },
           "steps": {
             "type": "array",
@@ -3514,9 +3597,13 @@
             "description": "The steps for the step policy.\nEach step defines an adjustment value and optional bounds."
           }
         },
-        "description": "AutoscalePolicy defines the autoscale policy for a service.\nRight now it contains fields from both the `ondemand` and `step` policies.\nThey are marked both as optional, so only one of them should be set at a\ntime. This is a current limitation of the API design."
+        "description": "AutoscalePolicy defines the autoscale policy for a service.\nRight now it contains fields from both the `ondemand` and `step` policies.\nThey are marked both as optional, so only one of them should be set at a\ntime. This is a current limitation of the API design.",
+        "x-package": "autoscale"
       },
       "AutoscalePolicyStep": {
+        "required": [
+          "adjustment"
+        ],
         "type": "object",
         "properties": {
           "adjustment": {
@@ -3537,26 +3624,17 @@
             "description": "Upper bound for the step.",
             "format": "int64"
           }
-        }
-      },
-      "BodyInstanceID": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-            "type": "string",
-            "description": "The UUID of the instance that the volume is detached from.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "funky-town-g7gum5cj",
-            "type": "string",
-            "description": "The name of the instance that the volume is detached from."
-          }
         },
-        "description": "Reference to the instance to detach the volume from."
+        "x-package": "autoscale"
       },
       "Certificate": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at",
+          "common_name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -3589,39 +3667,37 @@
           "subject": {
             "example": "example.com",
             "type": "string",
-            "description": "The complete subject distinguished name (DN) of the certificate.\n\nThis contains the full subject information from the certificate, including\nthe common name, organization, organizational unit, locality, state, and\ncountry. The subject identifies the entity that the certificate is issued to."
+            "description": "The complete subject distinguished name (DN) of the certificate.\n\nThis contains the full subject information from the certificate, including\nthe common name, organization, organizational unit, locality, state, and\ncountry. The subject identifies the entity that the certificate is issued to.\nOnly present when the certificate has been issued."
           },
           "issuer": {
             "example": "CN=R10,O=Let's Encrypt,C=US",
             "type": "string",
-            "description": "The complete issuer distinguished name (DN) of the certificate.\n\nThis identifies the Certificate Authority (CA) that issued the certificate.\nIt contains information about the CA including its common name, organization,\nand country."
+            "description": "The complete issuer distinguished name (DN) of the certificate.\n\nThis identifies the Certificate Authority (CA) that issued the certificate.\nIt contains information about the CA including its common name, organization,\nand country.\nOnly present when the certificate has been issued."
           },
           "serial_number": {
             "example": "123456789ABCDEF123456789ABCDEF123456",
             "type": "string",
-            "description": "The unique serial number assigned to the certificate by the issuing CA.\n\nThis is a unique identifier within the scope of the issuing CA that can be\nused to identify and track the certificate. Serial numbers are typically\nrepresented as hexadecimal strings."
+            "description": "The unique serial number assigned to the certificate by the issuing CA.\n\nThis is a unique identifier within the scope of the issuing CA that can be\nused to identify and track the certificate. Serial numbers are typically\nrepresented as hexadecimal strings.\nOnly present when the certificate has been issued."
           },
           "not_before": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
-            "description": "The date and time when the certificate becomes valid.\n\nThe certificate should not be trusted before this date. This timestamp\nmarks the beginning of the certificate's validity period.",
+            "description": "The date and time when the certificate becomes valid.\n\nThe certificate should not be trusted before this date. This timestamp\nmarks the beginning of the certificate's validity period.\nOnly present when the certificate has been issued.",
             "format": "date-time"
           },
           "not_after": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
-            "description": "The date and time when the certificate expires.\n\nThe certificate should not be trusted after this date. This timestamp\nmarks the end of the certificate's validity period. Certificates should\nbe renewed before this date to maintain service availability.",
+            "description": "The date and time when the certificate expires.\n\nThe certificate should not be trusted after this date. This timestamp\nmarks the end of the certificate's validity period. Certificates should\nbe renewed before this date to maintain service availability.\nOnly present when the certificate has been issued.",
             "format": "date-time"
           },
           "state": {
-            "enum": [
-              "pending",
-              "valid",
-              "error"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateState"
+              }
             ],
-            "type": "string",
-            "description": "The current state of the certificate.\n\nThis indicates whether the certificate is pending issuance, valid and\nready for use, or in an error state. See CertificateState enum for\ndetailed state descriptions.",
-            "format": "enum"
+            "description": "The current state of the certificate.\n\nThis indicates whether the certificate is pending issuance, valid and\nready for use, or in an error state. See CertificateState enum for\ndetailed state descriptions."
           },
           "status": {
             "allOf": [
@@ -3642,7 +3718,19 @@
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "certificates"
+      },
+      "CertificateState": {
+        "enum": [
+          "pending",
+          "valid",
+          "error"
+        ],
+        "type": "string",
+        "description": "The current state of a certificate.\n\nThe certificate can be in one of the following states:\n\n| State     | Description |\n|-----------|-------------|\n| `pending` | The certificate request is pending while the certificate is being requested from the certification authority. During this phase any service using this certificate is not available if this is not a renewal. |\n| `valid`   | The certificate is valid and can be used by your services. |\n| `error`   | The certificate request failed after multiple attempts. This can happen, for example, if your DNS configuration is not correct, you run into Let’s Encrypt™ quota limits, or the domain validation process failed for some other reason. There won’t be any further automatic attempts. |",
+        "format": "enum",
+        "x-package": "certificates"
       },
       "CloneVolumeByUUIDRequestBody": {
         "type": "object",
@@ -3654,13 +3742,12 @@
           },
           "quota_policy": {
             "example": "static",
-            "enum": [
-              "static",
-              "dynamic"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeQuotaPolicy"
+              }
             ],
-            "type": "string",
-            "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used.",
-            "format": "enum"
+            "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used."
           },
           "tags": {
             "type": "array",
@@ -3669,7 +3756,8 @@
             },
             "description": "A list of tags to assign to the new cloned volume."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "CloneVolumesRequestItem": {
         "type": "object",
@@ -3684,13 +3772,12 @@
               },
               "quota_policy": {
                 "example": "static",
-                "enum": [
-                  "static",
-                  "dynamic"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/VolumeQuotaPolicy"
+                  }
                 ],
-                "type": "string",
-                "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used.",
-                "format": "enum"
+                "description": "The quota policy for the new cloned volume.  If not provided, the quota\npolicy of the source volume is used."
               },
               "tags": {
                 "type": "array",
@@ -3729,9 +3816,15 @@
             ]
           }
         ],
-        "description": "A single request item describing the volume to clone."
+        "description": "A single request item describing the volume to clone.",
+        "x-package": "volumes"
       },
       "CloneVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -3769,7 +3862,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for cloning one or more volume(s)."
+        "description": "The response message for cloning one or more volume(s).",
+        "x-package": "volumes"
       },
       "CloneVolumesResponseData": {
         "type": "object",
@@ -3781,9 +3875,16 @@
             },
             "description": "The volume(s) which were cloned by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "CloneVolumesResponseVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -3811,19 +3912,12 @@
             "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "state": {
-            "enum": [
-              "uninitialized",
-              "initializing",
-              "available",
-              "idle",
-              "mounted",
-              "busy",
-              "error",
-              "template"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeState"
+              }
             ],
-            "type": "string",
-            "description": "The state of the volume.",
-            "format": "enum"
+            "description": "The state of the volume."
           },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
@@ -3836,7 +3930,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "ConfigurationInstanceCreateArgs": {
         "type": "object",
@@ -3873,9 +3968,25 @@
               }
             ]
           }
-        ]
+        ],
+        "x-package": "autoscale"
+      },
+      "ConnectionHandler": {
+        "enum": [
+          "tls",
+          "http",
+          "redirect"
+        ],
+        "type": "string",
+        "description": "Connection handlers to use for the service.  Handlers define how the service\nwill handle incoming connections and forward traffic from the Internet to\nyour application.  For example, a service can be configured to terminate TLS\nconnections, redirect HTTP traffic, or enable HTTP mode for load balancing.\nYou configure the handlers for every published service port individually.\n\nThere are currently 3 supported handlers:\n\n| Handler    | Description |\n|------------|-------------|\n| `tls`      | Terminate the TLS connection at the Unikraft Cloud gateway using our wildcard certificate issued for the kraft.cloud domain. The gateway forwards the unencrypted traffic to your application. |\n| `http`     | Enable HTTP mode on the load balancer to load balance on the level of individual HTTP requests. In this mode, only HTTP connections are accepted. If this option is not set the load balancer works in TCP mode and distributes TCP connections. |\n| `redirect` | Redirect traffic from the source port to the destination port. |\n\nNote that there is a set of constraints when publishing ports:\n- Port 80: MUST have \"http\" and MUST not have \"tls\" set;\n- Port 443: MUST have http and tls set;\n- The `redirect` handler can only be set on port 80 (HTTP) to redirect to\n  port 443 (HTTPS);\n- All other ports MUST have tls and MUST not have http set.",
+        "format": "enum",
+        "x-package": "services"
       },
       "CreateAutoscaleConfigurationByServiceGroupUUIDRequest": {
+        "required": [
+          "uuid",
+          "create_args"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -3919,7 +4030,8 @@
             "description": "The policies to apply to the autoscale configuration."
           }
         },
-        "description": "The request message to create an autoscale configuration for a service group\nbased on its UUID."
+        "description": "The request message to create an autoscale configuration for a service group\nbased on its UUID.",
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationByServiceGroupUUIDRequestInstanceCreateArgs": {
         "type": "object",
@@ -3956,7 +4068,8 @@
               }
             ]
           }
-        ]
+        ],
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationPolicyRequest": {
         "required": [
@@ -3979,9 +4092,15 @@
             "description": "The policy type to add to the autoscale configuration."
           }
         },
-        "description": "The request message to create an autoscale configuration policy for a\nservice."
+        "description": "The request message to create an autoscale configuration policy for a\nservice.",
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationPolicyResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4018,7 +4137,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -4030,9 +4150,15 @@
             },
             "description": "The policies which were added by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationPolicyResponsePolicy": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4070,9 +4196,13 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationsRequestConfiguration": {
+        "required": [
+          "create_args"
+        ],
         "type": "object",
         "allOf": [
           {
@@ -4151,9 +4281,15 @@
               }
             ]
           }
-        ]
+        ],
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationsResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4191,9 +4327,15 @@
             "format": "uint64"
           }
         },
-        "description": "The response to a CreateAutoscaleConfigurationRequest."
+        "description": "The response to a CreateAutoscaleConfigurationRequest.",
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationsResponseConfigurationsResponse": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4231,7 +4373,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "CreateAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -4243,7 +4386,8 @@
             },
             "description": "The configuration(s) which were created by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "CreateCertificateRequest": {
         "required": [
@@ -4283,9 +4427,14 @@
             "description": "The private key of the certificate."
           }
         },
-        "description": "The request message for creating/uploading a new certificate."
+        "description": "The request message for creating/uploading a new certificate.",
+        "x-package": "certificates"
       },
       "CreateCertificateResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4323,7 +4472,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating of a certificate."
+        "description": "The response message for creating of a certificate.",
+        "x-package": "certificates"
       },
       "CreateCertificateResponseData": {
         "type": "object",
@@ -4335,7 +4485,8 @@
             },
             "description": "The certificate which was created by this request.\n\nNote: only one certificate can be specified in the request, so this\nwill always contain a single entry."
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "CreateInstanceRequest": {
         "type": "object",
@@ -4348,7 +4499,7 @@
           "image": {
             "example": "nginx:latest",
             "type": "string",
-            "description": "The image to use for the instance."
+            "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
           },
           "metro": {
             "example": "fra",
@@ -4407,14 +4558,12 @@
             "format": "int64"
           },
           "restart_policy": {
-            "enum": [
-              "never",
-              "always",
-              "on-failure"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceRestartPolicy"
+              }
             ],
-            "type": "string",
-            "description": "Restart policy for the instance.  This defines how the instance\nshould behave when it stops or crashes.  Cannot be combined with\nthe `delete-on-stop` feature.",
-            "format": "enum"
+            "description": "Restart policy for the instance.  This defines how the instance\nshould behave when it stops or crashes.  Cannot be combined with\nthe `delete-on-stop` feature."
           },
           "scale_to_zero": {
             "allOf": [
@@ -4439,11 +4588,7 @@
           "features": {
             "type": "array",
             "items": {
-              "enum": [
-                "delete-on-stop"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/InstanceFeature"
             },
             "description": "Features to enable for the instance.  Features are specific\nconfigurations or capabilities that can be enabled for the\ninstance.  The `scale-to-zero` and `delete-on-stop` features are\nmutually exclusive."
           },
@@ -4509,7 +4654,8 @@
             "description": "(Optional).  Dependencies of the instance.\n\nA list of instance identifiers (name or UUID) that this instance depends\non.  Dependencies define startup ordering and can be used to ensure that\nprerequisite instances are running before this instance starts."
           }
         },
-        "description": "The request message for creating a new instance."
+        "description": "The request message for creating a new instance.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestAutokill": {
         "type": "object",
@@ -4525,7 +4671,8 @@
             "format": "uint32"
           }
         },
-        "description": "Automatic delete-on-idle/request-limit configuration for non-template\ninstances."
+        "description": "Automatic delete-on-idle/request-limit configuration for non-template\ninstances.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestDomain": {
         "required": [
@@ -4547,9 +4694,13 @@
             "description": "A reference to an existing certificate which can be used for the\nspecified domain.  If unspecified, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
           }
         },
-        "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge."
+        "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestRom": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -4570,7 +4721,8 @@
             "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
         },
-        "description": "Read-Only Memory (ROM) blob to attach to the instance."
+        "description": "Read-Only Memory (ROM) blob to attach to the instance.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestServiceGroup": {
         "type": "object",
@@ -4638,7 +4790,8 @@
             ]
           }
         ],
-        "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections."
+        "description": "The service group configuration when creating an instance.\n\nIf no existing (persistent) service group is specified via its identifier,\na new (ephemeral) service group can be created by specifying the services\nit should expose.  A service defines the configuration settings of an\nexposed port by the instance.  A service is a combination of a public port,\nan internal port, and a set of handlers that define how the service will\nhandle incoming connections.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestTemplate": {
         "type": "object",
@@ -4673,7 +4826,8 @@
             "description": "(Optional). Configuration parameters to apply when building the new instance from the source template."
           }
         },
-        "description": "Defines the source template used to build a new instance."
+        "description": "Defines the source template used to build a new instance.",
+        "x-package": "instances"
       },
       "CreateInstanceRequestVolume": {
         "required": [
@@ -4773,9 +4927,14 @@
             ]
           }
         ],
-        "description": "A volume defines a storage volume that can be attached to the instance."
+        "description": "A volume defines a storage volume that can be attached to the instance.",
+        "x-package": "instances"
       },
       "CreateInstanceResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4813,7 +4972,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating a new instance."
+        "description": "The response message for creating a new instance.",
+        "x-package": "instances"
       },
       "CreateInstanceResponseData": {
         "type": "object",
@@ -4825,20 +4985,19 @@
             },
             "description": "The instance that was created in this request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "CreateInstanceScaleToZero": {
         "type": "object",
         "properties": {
           "policy": {
-            "enum": [
-              "off",
-              "on",
-              "idle"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceScaleToZeroPolicy"
+              }
             ],
-            "type": "string",
-            "description": "The specific policy to use for scaling the instance to zero.",
-            "format": "enum"
+            "description": "The specific policy to use for scaling the instance to zero."
           },
           "stateful": {
             "example": true,
@@ -4857,9 +5016,13 @@
             "description": "The notification time in milliseconds before the instance is scaled to\nzero. This allows the instance to perform any necessary cleanup or state\nsaving before being scaled down.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "CreateServiceGroupRequest": {
+        "required": [
+          "services"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -4907,7 +5070,8 @@
             "description": "Automatic delete-on-idle configuration."
           }
         },
-        "description": "The request message for creating a new service group."
+        "description": "The request message for creating a new service group.",
+        "x-package": "services"
       },
       "CreateServiceGroupRequestAutokill": {
         "type": "object",
@@ -4918,7 +5082,8 @@
             "format": "uint64"
           }
         },
-        "description": "Automatic delete-on-idle configuration for service groups."
+        "description": "Automatic delete-on-idle configuration for service groups.",
+        "x-package": "services"
       },
       "CreateServiceGroupRequestDomain": {
         "required": [
@@ -4940,9 +5105,14 @@
             "description": "Use an existing certificate for the domain.  If this field is\nspecified, the domain must be associated with a valid certificate."
           }
         },
-        "description": "A domain name"
+        "description": "A domain name",
+        "x-package": "services"
       },
       "CreateServiceGroupResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -4980,7 +5150,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating of a service group."
+        "description": "The response message for creating of a service group.",
+        "x-package": "services"
       },
       "CreateServiceGroupResponseData": {
         "type": "object",
@@ -4992,9 +5163,14 @@
             },
             "description": "The service group which was created by this request.\n\nNote: only one service group can be specified in the request, so this\nwill always contain a single entry."
           }
-        }
+        },
+        "x-package": "services"
       },
       "CreateTemplateInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5032,7 +5208,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating one or more template instances."
+        "description": "The response message for creating one or more template instances.",
+        "x-package": "instances"
       },
       "CreateTemplateInstancesResponseData": {
         "type": "object",
@@ -5044,9 +5221,16 @@
             },
             "description": "List of template instances that were created during the operation."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "CreateTemplateInstancesResponseTemplateInstance": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5074,18 +5258,12 @@
             "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The current state of the instance.",
-            "format": "enum"
+            "description": "The current state of the instance."
           },
           "message": {
             "example": "No instance with name 'funky-town-g756b5d'",
@@ -5098,9 +5276,15 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "CreateTemplateVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5138,7 +5322,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating one or more template volumes."
+        "description": "The response message for creating one or more template volumes.",
+        "x-package": "volumes"
       },
       "CreateTemplateVolumesResponseData": {
         "type": "object",
@@ -5150,9 +5335,16 @@
             },
             "description": "The template volume(s) which were created by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "CreateTemplateVolumesResponseTemplateVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5176,19 +5368,12 @@
           },
           "state": {
             "example": "available",
-            "enum": [
-              "uninitialized",
-              "initializing",
-              "available",
-              "idle",
-              "mounted",
-              "busy",
-              "error",
-              "template"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeState"
+              }
             ],
-            "type": "string",
-            "description": "The state of the volume.",
-            "format": "enum"
+            "description": "The state of the volume."
           },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
@@ -5201,7 +5386,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "CreateVolumeRequest": {
         "type": "object",
@@ -5221,13 +5407,12 @@
               },
               "quota_policy": {
                 "example": "static",
-                "enum": [
-                  "static",
-                  "dynamic"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/VolumeQuotaPolicy"
+                  }
                 ],
-                "type": "string",
-                "description": "Quota policy for the volume.",
-                "format": "enum"
+                "description": "Quota policy for the volume."
               },
               "filesystem": {
                 "example": "ext4",
@@ -5306,9 +5491,15 @@
             ]
           }
         ],
-        "description": "The request message for creating a volume."
+        "description": "The request message for creating a volume.",
+        "x-package": "volumes"
       },
       "CreateVolumeResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5341,7 +5532,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for creating of a volume."
+        "description": "The response message for creating of a volume.",
+        "x-package": "volumes"
       },
       "CreateVolumeResponseData": {
         "type": "object",
@@ -5353,9 +5545,16 @@
             },
             "description": "The volume(s) which were created by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "CreateVolumeResponseVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5383,19 +5582,12 @@
             "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "state": {
-            "enum": [
-              "uninitialized",
-              "initializing",
-              "available",
-              "idle",
-              "mounted",
-              "busy",
-              "error",
-              "template"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeState"
+              }
             ],
-            "type": "string",
-            "description": "The state of the volume.",
-            "format": "enum"
+            "description": "The state of the volume."
           },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
@@ -5408,9 +5600,14 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DataResult": {
+        "required": [
+          "uuid",
+          "added"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -5421,9 +5618,15 @@
             "example": true,
             "type": "boolean"
           }
-        }
+        },
+        "x-package": "users"
       },
       "DeleteAutoscaleConfigurationPolicyResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5460,7 +5663,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -5472,9 +5676,14 @@
             },
             "description": "The policies which were deleted by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteAutoscaleConfigurationPolicyResponsePoliciesResponse": {
+        "required": [
+          "status",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5506,9 +5715,15 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteAutoscaleConfigurationsResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5545,7 +5760,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -5557,9 +5773,15 @@
             },
             "description": "The configuration(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteAutoscaleConfigurationsResponseServiceGroup": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5597,9 +5819,14 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "DeleteCertificatesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5637,7 +5864,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting of one or more certificate(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for deleting of one or more certificate(s) given their\nUUID(s) or name(s).",
+        "x-package": "certificates"
       },
       "DeleteCertificatesResponseData": {
         "type": "object",
@@ -5649,9 +5877,15 @@
             },
             "description": "The certificate(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "DeleteCertificatesResponseDeletedCertificate": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5690,7 +5924,8 @@
             "format": "int32"
           }
         },
-        "description": "Details of the certificate which was deleted by this request."
+        "description": "Details of the certificate which was deleted by this request.",
+        "x-package": "certificates"
       },
       "DeleteInstanceByUUIDRequestBody": {
         "type": "object",
@@ -5702,7 +5937,8 @@
             "format": "int64"
           }
         },
-        "description": "Parameters for deleting the instance by UUID."
+        "description": "Parameters for deleting the instance by UUID.",
+        "x-package": "instances"
       },
       "DeleteInstanceRequestItem": {
         "type": "object",
@@ -5757,9 +5993,14 @@
             ]
           }
         ],
-        "description": "The request item for deleting an instance by its UUID or name."
+        "description": "The request item for deleting an instance by its UUID or name.",
+        "x-package": "instances"
       },
       "DeleteInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5797,7 +6038,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting one or more instance(s) given their UUID(s)\nor name(s)."
+        "description": "The response message for deleting one or more instance(s) given their UUID(s)\nor name(s).",
+        "x-package": "instances"
       },
       "DeleteInstancesResponseData": {
         "type": "object",
@@ -5809,9 +6051,16 @@
             },
             "description": "The instance(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "DeleteInstancesResponseInstance": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "previous_state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5855,7 +6104,8 @@
             "format": "int32"
           }
         },
-        "description": "Details of the instance which was deleted by this request."
+        "description": "Details of the instance which was deleted by this request.",
+        "x-package": "instances"
       },
       "DeletePolicyRequest": {
         "required": [
@@ -5869,9 +6119,14 @@
             "description": "The Name of the policy to delete."
           }
         },
-        "description": "The request message to delete an autoscale configuration policy by name."
+        "description": "The request message to delete an autoscale configuration policy by name.",
+        "x-package": "autoscale"
       },
       "DeleteServiceGroupsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5909,7 +6164,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting of one or more service group(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for deleting of one or more service group(s) given their\nUUID(s) or name(s).",
+        "x-package": "services"
       },
       "DeleteServiceGroupsResponseData": {
         "type": "object",
@@ -5921,9 +6177,15 @@
             },
             "description": "The service group(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "services"
       },
       "DeleteServiceGroupsResponseDeletedServiceGroup": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -5962,9 +6224,14 @@
             "format": "int32"
           }
         },
-        "description": "Details of the service group which was deleted by this request."
+        "description": "Details of the service group which was deleted by this request.",
+        "x-package": "services"
       },
       "DeleteTemplateInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6002,7 +6269,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting one or more template instances."
+        "description": "The response message for deleting one or more template instances.",
+        "x-package": "instances"
       },
       "DeleteTemplateInstancesResponseData": {
         "type": "object",
@@ -6014,9 +6282,15 @@
             },
             "description": "List of template instances that were processed during the delete operation."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "DeleteTemplateInstancesResponseTemplateInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -6049,9 +6323,15 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "DeleteTemplateVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6089,7 +6369,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for deleting one or more template volumes."
+        "description": "The response message for deleting one or more template volumes.",
+        "x-package": "volumes"
       },
       "DeleteTemplateVolumesResponseData": {
         "type": "object",
@@ -6101,9 +6382,15 @@
             },
             "description": "The template volume(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DeleteTemplateVolumesResponseTemplateVolume": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -6136,9 +6423,15 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DeleteVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6175,7 +6468,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DeleteVolumesResponseData": {
         "type": "object",
@@ -6187,9 +6481,15 @@
             },
             "description": "The volume(s) which were deleted by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DeleteVolumesResponseDeletedVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6227,7 +6527,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DetachVolumeByUUIDRequestBody": {
         "type": "object",
@@ -6235,12 +6536,13 @@
           "from": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/BodyInstanceID"
+                "$ref": "#/components/schemas/NameOrUUID"
               }
             ],
-            "description": "UUID or name of the instance to detach the volume from."
+            "description": "(Optional).  UUID or name of the instance to detach the volume from.\nIf not specified, the volume is detached from all instances."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DetachVolumesRequestItem": {
         "type": "object",
@@ -6254,7 +6556,7 @@
                     "$ref": "#/components/schemas/NameOrUUID"
                   }
                 ],
-                "description": "UUID or name of the instance to detach the volume from."
+                "description": "(Optional).  UUID or name of the instance to detach the volume from.\nIf not specified, the volume is detached from all instances."
               }
             }
           },
@@ -6292,9 +6594,15 @@
             ]
           }
         ],
-        "description": "A single request of detaching a volume."
+        "description": "A single request of detaching a volume.",
+        "x-package": "volumes"
       },
       "DetachVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6331,7 +6639,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DetachVolumesResponseData": {
         "type": "object",
@@ -6343,9 +6652,15 @@
             },
             "description": "The volume(s) which were detached by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "DetachVolumesResponseDetachedVolume": {
+        "required": [
+          "status",
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6383,9 +6698,13 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "Domain": {
+        "required": [
+          "fqdn"
+        ],
         "type": "object",
         "properties": {
           "fqdn": {
@@ -6402,7 +6721,8 @@
             "description": "Use an existing certificate for the domain.  If this field is\nspecified, the domain must be associated with a valid certificate."
           }
         },
-        "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a FQDN is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
+        "description": "A domain name.\n\nDomain names are completely specified with all labels in the hierarchy of the\nDNS, having no parts omitted.  The domain can be associated with an existing\ncertificate by specifying the certificate's name or UUID.  If no certificate\nis specified and a FQDN is provided, Unikraft Cloud will automatically\ngenerate a new certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge.",
+        "x-package": "services"
       },
       "GetAutoscaleConfigurationPolicyRequest": {
         "required": [
@@ -6416,9 +6736,15 @@
             "description": "The Name of the policy to get."
           }
         },
-        "description": "The request message to get an autoscale configuration policy by name."
+        "description": "The request message to get an autoscale configuration policy by name.",
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationPolicyResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6455,7 +6781,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationPolicyResponseData": {
         "type": "object",
@@ -6467,9 +6794,14 @@
             },
             "description": "The policy which was retrieved by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationPolicyResponsePolicyResponse": {
+        "required": [
+          "status",
+          "policy"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6504,9 +6836,15 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationsResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6546,7 +6884,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for a GetAutoscaleConfigurationsRequest."
+        "description": "The response message for a GetAutoscaleConfigurationsRequest.",
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationsResponseData": {
         "type": "object",
@@ -6558,9 +6897,16 @@
             },
             "description": "The configuration(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "GetAutoscaleConfigurationsResponseServiceGroup": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "enabled"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6642,9 +6988,14 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "GetCertificatesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6682,7 +7033,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more certificate(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for getting one or more certificate(s) given their\nUUID(s) or name(s).",
+        "x-package": "certificates"
       },
       "GetCertificatesResponseData": {
         "type": "object",
@@ -6694,7 +7046,8 @@
             },
             "description": "The certificate(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "GetImagesRequestTagOrDigest": {
         "type": "object",
@@ -6729,9 +7082,14 @@
               }
             ]
           }
-        ]
+        ],
+        "x-package": "images"
       },
       "GetImagesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6768,7 +7126,8 @@
             "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
             "format": "uint64"
           }
-        }
+        },
+        "x-package": "images"
       },
       "GetImagesResponseData": {
         "type": "object",
@@ -6780,7 +7139,8 @@
             },
             "description": "The list of images."
           }
-        }
+        },
+        "x-package": "images"
       },
       "GetInstanceLogsByUUIDRequestBody": {
         "type": "object",
@@ -6797,7 +7157,8 @@
             "description": "The amount of bytes to return at most.",
             "format": "int64"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesLogsRequestItem": {
         "type": "object",
@@ -6847,9 +7208,14 @@
             ]
           }
         ],
-        "description": "A single item in the request."
+        "description": "A single item in the request.",
+        "x-package": "instances"
       },
       "GetInstancesLogsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -6887,9 +7253,14 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the logs of one or more instance(s) by\ntheir UUID(s) or name(s)."
+        "description": "The response message for getting the logs of one or more instance(s) by\ntheir UUID(s) or name(s).",
+        "x-package": "instances"
       },
       "GetInstancesLogsResponseAvailable": {
+        "required": [
+          "start",
+          "end"
+        ],
         "type": "object",
         "properties": {
           "start": {
@@ -6904,7 +7275,8 @@
             "description": "The last byte offset that can be retrieved.",
             "format": "int64"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesLogsResponseData": {
         "type": "object",
@@ -6916,9 +7288,18 @@
             },
             "description": "The instance which this requested waited on.\n\nNote: only one instance can be specified in the request, so this will\nalways contain a single entry."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesLogsResponseLoggedInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "output",
+          "available",
+          "range",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -6954,18 +7335,12 @@
             "description": "Description of the range that was returned.  Useful for requests with\noffset relative to end."
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "State of the instance when the logs were retrieved.",
-            "format": "enum"
+            "description": "State of the instance when the logs were retrieved."
           },
           "message": {
             "example": "No instance with name 'funky-town-g756b5d'",
@@ -6986,9 +7361,14 @@
             ],
             "description": "The status of the response."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesLogsResponseRange": {
+        "required": [
+          "start",
+          "end"
+        ],
         "type": "object",
         "properties": {
           "start": {
@@ -7003,9 +7383,14 @@
             "description": "The last retrieved byte.",
             "format": "int64"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesMetricsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7043,7 +7428,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the metrics of one or more instance(s)\ngiven their UUID(s) or name(s)."
+        "description": "The response message for getting the metrics of one or more instance(s)\ngiven their UUID(s) or name(s).",
+        "x-package": "instances"
       },
       "GetInstancesMetricsResponseData": {
         "type": "object",
@@ -7055,9 +7441,24 @@
             },
             "description": "The instance which this requested metrics for.  Note: only one instance\ncan be specified in the request, so this will always contain a single\nentry."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesMetricsResponseInstanceMetrics": {
+        "required": [
+          "rss_bytes",
+          "cpu_time_ms",
+          "boot_time_us",
+          "net_time_us",
+          "rx_bytes",
+          "rx_packets",
+          "tx_bytes",
+          "tx_packets",
+          "nconns",
+          "nreqs",
+          "nqueued",
+          "ntotal"
+        ],
         "type": "object",
         "properties": {
           "rss_bytes": {
@@ -7151,9 +7552,14 @@
             ],
             "description": "The status of the response."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7191,7 +7597,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response after retrieving an instance by its name or UUID."
+        "description": "The response after retrieving an instance by its name or UUID.",
+        "x-package": "instances"
       },
       "GetInstancesResponseData": {
         "type": "object",
@@ -7203,9 +7610,14 @@
             },
             "description": "The instance(s) that were retrieved by the request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetServiceGroupsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7243,7 +7655,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more service group(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for getting one or more service group(s) given their\nUUID(s) or name(s).",
+        "x-package": "services"
       },
       "GetServiceGroupsResponseData": {
         "type": "object",
@@ -7255,9 +7668,14 @@
             },
             "description": "The service group(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "services"
       },
       "GetTemplateInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7295,7 +7713,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more template instances."
+        "description": "The response message for getting one or more template instances.",
+        "x-package": "instances"
       },
       "GetTemplateInstancesResponseData": {
         "type": "object",
@@ -7307,9 +7726,15 @@
             },
             "description": "List of template instances that were retrieved during the operation."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "GetTemplateVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7347,7 +7772,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more template volumes."
+        "description": "The response message for getting one or more template volumes.",
+        "x-package": "volumes"
       },
       "GetTemplateVolumesResponseData": {
         "type": "object",
@@ -7359,9 +7785,15 @@
             },
             "description": "The template volume(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "GetVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7399,7 +7831,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting one or more volume(s) given their\nUUID(s) or name(s)."
+        "description": "The response message for getting one or more volume(s) given their\nUUID(s) or name(s).",
+        "x-package": "volumes"
       },
       "GetVolumesResponseData": {
         "type": "object",
@@ -7411,12 +7844,17 @@
             },
             "description": "The volume(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "GoogleProtobufValue": {
         "description": "Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values."
       },
       "HealthzResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -7454,7 +7892,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for a health check of the platform."
+        "description": "The response message for a health check of the platform.",
+        "x-package": "node"
       },
       "HealthzResponseData": {
         "type": "object",
@@ -7466,9 +7905,16 @@
             }
           }
         },
-        "description": "For now, no additional data is returned by the health check."
+        "description": "For now, no additional data is returned by the health check.",
+        "x-package": "node"
       },
       "Image": {
+        "required": [
+          "url",
+          "created_at",
+          "initrd_or_rom",
+          "size_in_bytes"
+        ],
         "type": "object",
         "properties": {
           "url": {
@@ -7531,7 +7977,18 @@
               "type": "string"
             }
           }
-        }
+        },
+        "x-package": "images"
+      },
+      "InlineDataEncoding": {
+        "enum": [
+          "text",
+          "base64"
+        ],
+        "type": "string",
+        "description": "Encoding type for inline file data.",
+        "format": "enum",
+        "x-package": "common"
       },
       "InlineFile": {
         "required": [
@@ -7545,22 +8002,32 @@
             "description": "The file path within the image."
           },
           "encoding": {
-            "enum": [
-              "text",
-              "base64"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InlineDataEncoding"
+              }
             ],
-            "type": "string",
-            "description": "(Optional).  The encoding of the data field.  Defaults to \"text\".",
-            "format": "enum"
+            "description": "(Optional).  The encoding of the data field.  Defaults to \"text\"."
           },
           "data": {
             "type": "string",
             "description": "The file data, encoded according to the encoding field."
           }
         },
-        "description": "An inline file entry represents a single file within an image."
+        "description": "An inline file entry represents a single file within an image.",
+        "x-package": "common"
       },
       "Instance": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at",
+          "state",
+          "image",
+          "memory_mb",
+          "vcpus",
+          "restart_policy"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -7585,18 +8052,12 @@
             "format": "date-time"
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The state of the instance.  This indicates the current state of the\ninstance, such as whether it is running, stopped, or in an error state.",
-            "format": "enum"
+            "description": "The state of the instance.  This indicates the current state of the\ninstance, such as whether it is running, stopped, or in an error state."
           },
           "private_fqdn": {
             "example": "funky-town-g756b5d.internal",
@@ -7717,14 +8178,12 @@
             "format": "uint32"
           },
           "restart_policy": {
-            "enum": [
-              "never",
-              "always",
-              "on-failure"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceRestartPolicy"
+              }
             ],
-            "type": "string",
-            "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops.  If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay.",
-            "format": "enum"
+            "description": "The restart configuration for the instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy\nare evaluated to decide if a restart should be performed.  Unikraft Cloud\nuses an exponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m)\nto slow down restarts in tight crash loops.  If an instance runs without\nproblems for 10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and\nresets the back-off delay."
           },
           "scale_to_zero": {
             "allOf": [
@@ -7833,7 +8292,8 @@
             "description": "Template-specific automatic delete-on-idle configuration.\nNot used for non-template instances."
           }
         },
-        "description": "An instance is a unikernel virtual machine running an application."
+        "description": "An instance is a unikernel virtual machine running an application.",
+        "x-package": "instances"
       },
       "InstanceAutokill": {
         "type": "object",
@@ -7849,9 +8309,13 @@
             "format": "uint32"
           }
         },
-        "description": "Automatic delete-on-idle/request-limit configuration for non-template instances.\nNot used for template instances."
+        "description": "Automatic delete-on-idle/request-limit configuration for non-template instances.\nNot used for template instances.",
+        "x-package": "instances"
       },
       "InstanceCreateArgsInstanceCreateRequestRoms": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -7869,9 +8333,28 @@
             },
             "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
-        }
+        },
+        "x-package": "autoscale"
+      },
+      "InstanceFeature": {
+        "enum": [
+          "delete-on-stop"
+        ],
+        "type": "string",
+        "description": "Features are specific configurations or capabilities that can be enabled for\nthe instance.\n\nThe list of available features to enable for the instance:\n\n| Feature          | Description |\n|------------------|-------------|\n| `delete_on_stop` | The instance will be deleted when it is stopped. This is useful for instances that are not needed after they are stopped, such as temporary or ephemeral instances. |",
+        "format": "enum",
+        "x-package": "instances"
       },
       "InstanceNetworkInterface": {
+        "required": [
+          "uuid",
+          "private_ip",
+          "mac",
+          "rx_bytes",
+          "rx_packets",
+          "tx_bytes",
+          "tx_packets"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -7915,9 +8398,13 @@
             "format": "uint64"
           }
         },
-        "description": "An instance network interface."
+        "description": "An instance network interface.",
+        "x-package": "instances"
       },
       "InstanceRestartAttempt": {
+        "required": [
+          "attempt"
+        ],
         "type": "object",
         "properties": {
           "attempt": {
@@ -7933,9 +8420,24 @@
             "format": "date-time"
           }
         },
-        "description": "Records the current restart attempt of an instance."
+        "description": "Records the current restart attempt of an instance.",
+        "x-package": "instances"
+      },
+      "InstanceRestartPolicy": {
+        "enum": [
+          "never",
+          "always",
+          "on-failure"
+        ],
+        "type": "string",
+        "description": "The restart policy of an instance.\n\nWhen an instance stops either because the application exits or the instance\ncrashes, Unikraft Cloud can auto-restart your instance.  Auto-restarts are\nperformed according to the restart policy configured for a particular\ninstance.\n\nThe policy can have the following values:\n\n| Policy       | Description |\n|--------------|-------------|\n| `never`      | Never restart the instance (default). |\n| `always`     | Always restart the instance when the stop is initiated from within the instance (i.e., the application exits or the instance crashes). |\n| `on-failure` | Only restart the instance if it crashes. |\n\nWhen an instance stops, the stop reason and the configured restart policy are\nevaluated to decide if a restart should be performed.  Unikraft Cloud uses an\nexponential back-off delay (immediate, 5s, 10s, 20s, 40s, ..., 5m) to slow\ndown restarts in tight crash loops. If an instance runs without problems for\n10s the back-off delay is reset and the restart sequence ends.\n\nThe `restart.attempt` attribute reported in counts the number of restarts\nperformed in the current sequence.  The `restart.next_at` field indicates\nwhen the next restart will take place if a back-off delay is in effect.\n\nA manual start or stop of the instance aborts the restart sequence and resets\nthe back-off delay.",
+        "format": "enum",
+        "x-package": "instances"
       },
       "InstanceRom": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -7961,7 +8463,8 @@
             "description": "(Optional).  Inline files to use as the ROM content.  When specified,\nthe platform creates an EROFS image from the provided files.\nMutually exclusive with `image`."
           }
         },
-        "description": "Read-Only Memory (ROM) blob to attach to the instance."
+        "description": "Read-Only Memory (ROM) blob to attach to the instance.",
+        "x-package": "instances"
       },
       "InstanceScaleToZero": {
         "type": "object",
@@ -7972,14 +8475,12 @@
             "description": "Indicates whether scale-to-zero is enabled for the instance."
           },
           "policy": {
-            "enum": [
-              "off",
-              "on",
-              "idle"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceScaleToZeroPolicy"
+              }
             ],
-            "type": "string",
-            "description": "The specific policy to use for scaling the instance to zero.",
-            "format": "enum"
+            "description": "The specific policy to use for scaling the instance to zero."
           },
           "stateful": {
             "example": true,
@@ -7999,9 +8500,25 @@
             "format": "int32"
           }
         },
-        "description": "Scale-to-zero defines the configuration for scaling the instance to zero.\nWhen an instance is scaled-to-zero it can be either stopped (and fully\nshutdown) or paused wherein the state of the instance is preserved (e.g., RAM\ncontents) and the instance can be resumed later without losing its state,\ni.e. \"stateful\"."
+        "description": "Scale-to-zero defines the configuration for scaling the instance to zero.\nWhen an instance is scaled-to-zero it can be either stopped (and fully\nshutdown) or paused wherein the state of the instance is preserved (e.g., RAM\ncontents) and the instance can be resumed later without losing its state,\ni.e. \"stateful\".",
+        "x-package": "instances"
+      },
+      "InstanceScaleToZeroPolicy": {
+        "enum": [
+          "off",
+          "on",
+          "idle"
+        ],
+        "type": "string",
+        "description": "Scale-to-zero policy types to use when creating an instance.\n\nThe policy can be one of the following values:\n\n| Policy | Description |\n|--------|-------------|\n| `on`   | The instance should be scaled-to-zero (when possible). |\n| `off`  | The instance should never be scaled-to-zero. |\n| `idle` | The instance should be scaled-to-zero even with established but idle TCP connections. |",
+        "format": "enum",
+        "x-package": "instances"
       },
       "InstanceServiceGroup": {
+        "required": [
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8028,9 +8545,13 @@
             "description": "The domain configuration for the service group."
           }
         },
-        "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured."
+        "description": "The service group configuration for the instance.\n\nThis is a reference to the service group that the instance is part of.  The\nservice group defines the services (e.g. ports, connection handling) that\nthe instance exposes and how they are configured.",
+        "x-package": "instances"
       },
       "InstanceSnapshot": {
+        "required": [
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8039,7 +8560,23 @@
             "format": "uuid"
           }
         },
-        "description": "The snapshot UUID of the instance."
+        "description": "The snapshot UUID of the instance.",
+        "x-package": "instances"
+      },
+      "InstanceState": {
+        "enum": [
+          "stopped",
+          "starting",
+          "running",
+          "draining",
+          "stopping",
+          "template",
+          "standby"
+        ],
+        "type": "string",
+        "description": "The current state of an instance.",
+        "format": "enum",
+        "x-package": "instances"
       },
       "InstanceTemplateAutokill": {
         "type": "object",
@@ -8050,9 +8587,16 @@
             "format": "uint64"
           }
         },
-        "description": "Automatic delete-on-idle configuration for template instances."
+        "description": "Automatic delete-on-idle configuration for template instances.",
+        "x-package": "instances"
       },
       "InstanceVolume": {
+        "required": [
+          "uuid",
+          "name",
+          "at",
+          "readonly"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8082,7 +8626,131 @@
             "description": "Whether the volume is read-only or not."
           }
         },
-        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted."
+        "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted.",
+        "x-package": "instances"
+      },
+      "MutableInstanceOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on an instance's properties.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableInstanceProperty": {
+        "enum": [
+          "image",
+          "args",
+          "env",
+          "memory_mb",
+          "vcpus",
+          "scale_to_zero",
+          "tags",
+          "delete_lock",
+          "schedules",
+          "autokill",
+          "hostname",
+          "roms",
+          "dependencies",
+          "sched_priority"
+        ],
+        "type": "string",
+        "description": "The mutable properties of an instance that can be updated.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableServiceGroupOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The mutable operations available on a service group's properties.",
+        "format": "enum",
+        "x-package": "services"
+      },
+      "MutableServiceGroupProperty": {
+        "enum": [
+          "services",
+          "domains",
+          "soft_limit",
+          "hard_limit",
+          "autokill"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a service group.",
+        "format": "enum",
+        "x-package": "services"
+      },
+      "MutableTemplateInstanceOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on a template instance's properties.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableTemplateInstanceProperty": {
+        "enum": [
+          "tags",
+          "delete_lock",
+          "autokill"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a template instance that can be updated.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableTemplateVolumeOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on a template volume's properties.",
+        "format": "enum",
+        "x-package": "volumes"
+      },
+      "MutableTemplateVolumeProperty": {
+        "enum": [
+          "tags",
+          "delete_lock"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a template volume.",
+        "format": "enum",
+        "x-package": "volumes"
+      },
+      "MutableVolumeOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on a volume's properties.",
+        "format": "enum",
+        "x-package": "volumes"
+      },
+      "MutableVolumeProperty": {
+        "enum": [
+          "size_mb",
+          "tags",
+          "quota_policy",
+          "delete_lock"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a volume.",
+        "format": "enum",
+        "x-package": "volumes"
       },
       "NameOrUUID": {
         "type": "object",
@@ -8131,9 +8799,35 @@
             ]
           }
         ],
-        "description": "An identifier for a resource.  Either a name or a UUID."
+        "description": "An identifier for a resource.  Either a name or a UUID.",
+        "x-package": "common"
+      },
+      "PaginationOrder": {
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "type": "string",
+        "description": "The sort order used by list endpoints.",
+        "format": "enum",
+        "x-package": "common"
+      },
+      "PaginationSortBy": {
+        "enum": [
+          "create_time"
+        ],
+        "type": "string",
+        "description": "The sort field used by list endpoints.",
+        "format": "enum",
+        "x-package": "common"
       },
       "Quotas": {
+        "required": [
+          "uuid",
+          "used",
+          "hard",
+          "limits"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8185,9 +8879,20 @@
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "users"
       },
       "QuotasLimits": {
+        "required": [
+          "min_memory_mb",
+          "max_memory_mb",
+          "min_volume_mb",
+          "max_volume_mb",
+          "min_autoscale_size",
+          "max_autoscale_size",
+          "min_vcpus",
+          "max_vcpus"
+        ],
         "type": "object",
         "properties": {
           "min_memory_mb": {
@@ -8238,9 +8943,15 @@
             "description": "Maximum number of vCPUs",
             "format": "int64"
           }
-        }
+        },
+        "x-package": "users"
       },
       "QuotasResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -8278,7 +8989,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for getting the quota of a user given their UUID."
+        "description": "The response message for getting the quota of a user given their UUID.",
+        "x-package": "users"
       },
       "QuotasResponseData": {
         "type": "object",
@@ -8290,9 +9002,20 @@
             },
             "description": "The quota(s) which were retrieved by the request."
           }
-        }
+        },
+        "x-package": "users"
       },
       "QuotasStats": {
+        "required": [
+          "instances",
+          "live_instances",
+          "live_vcpus",
+          "live_memory_mb",
+          "service_groups",
+          "services",
+          "volumes",
+          "total_volume_mb"
+        ],
         "type": "object",
         "properties": {
           "instances": {
@@ -8343,9 +9066,13 @@
             "description": "Total size of all volumes in megabytes",
             "format": "int64"
           }
-        }
+        },
+        "x-package": "users"
       },
       "ResponseError": {
+        "required": [
+          "status"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -8355,7 +9082,8 @@
             "format": "uint64"
           }
         },
-        "description": "The error response message for an API request."
+        "description": "The error response message for an API request.",
+        "x-package": "common"
       },
       "ResponseStatus": {
         "enum": [
@@ -8364,13 +9092,15 @@
         ],
         "type": "string",
         "description": "The response status of an API request.",
-        "format": "enum"
+        "format": "enum",
+        "x-package": "common"
       },
       "Schedule": {
         "required": [
           "name",
           "when",
-          "action"
+          "action",
+          "next_at"
         ],
         "type": "object",
         "properties": {
@@ -8386,15 +9116,12 @@
           },
           "action": {
             "example": "stop",
-            "enum": [
-              "start",
-              "stop",
-              "delete",
-              "exec"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScheduleAction"
+              }
             ],
-            "type": "string",
-            "description": "The action to perform at the scheduled time.",
-            "format": "enum"
+            "description": "The action to perform at the scheduled time."
           },
           "next_at": {
             "readOnly": true,
@@ -8416,11 +9143,25 @@
             "description": "The command to execute when the action is `exec`.\n\nRequired when `action` is `SCHEDULE_ACTION_EXEC`, ignored otherwise.\nEach element is a separate argument; the first element is the executable."
           }
         },
-        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, delete, or exec).\n\nCalendar expressions format: [weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC"
+        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, delete, or exec).\n\nCalendar expressions format: [weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC",
+        "x-package": "instances"
+      },
+      "ScheduleAction": {
+        "enum": [
+          "start",
+          "stop",
+          "delete",
+          "exec"
+        ],
+        "type": "string",
+        "description": "The action to perform on a scheduled operation.",
+        "format": "enum",
+        "x-package": "instances"
       },
       "Service": {
         "required": [
-          "port"
+          "port",
+          "destination_port"
         ],
         "type": "object",
         "properties": {
@@ -8439,20 +9180,24 @@
           "handlers": {
             "type": "array",
             "items": {
-              "enum": [
-                "tls",
-                "http",
-                "redirect"
-              ],
-              "type": "string",
-              "format": "enum"
+              "$ref": "#/components/schemas/ConnectionHandler"
             },
             "description": "Connection handlers to use for the service.  Handlers define how the\nservice will handle incoming connections and forward traffic from the\nInternet to your application.  For example, a service can be configured\nto terminate TLS connections, redirect HTTP traffic, or enable HTTP mode\nfor load balancing.  You configure the handlers for every published\nservice port individually."
           }
         },
-        "description": "A service connects a public-facing port to an internal destination port on\nwhich an application instance listens on.  Additional handlers can be defined\nfor each published port in order to define how the service will handle\nincoming connections and forward traffic from the Internet to your\napplication.  For example, a service can be configured to terminate TLS\nconnections, redirect HTTP traffic, or enable HTTP mode for load balancing."
+        "description": "A service connects a public-facing port to an internal destination port on\nwhich an application instance listens on.  Additional handlers can be defined\nfor each published port in order to define how the service will handle\nincoming connections and forward traffic from the Internet to your\napplication.  For example, a service can be configured to terminate TLS\nconnections, redirect HTTP traffic, or enable HTTP mode for load balancing.",
+        "x-package": "services"
       },
       "ServiceGroup": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at",
+          "persistent",
+          "autoscale",
+          "soft_limit",
+          "hard_limit"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8548,7 +9293,8 @@
             "description": "Automatic delete-on-idle configuration."
           }
         },
-        "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com."
+        "description": "A service group on Unikraft Cloud is used to describe how your application\nexposes its functionality to the outside world.  Once defined, assigning an\ninstance to the service will make it accessible from the Internet.\n\nAn application, running as an instance, may expose one or more ports, e.g. it\nlistens on port 80 because your application exposes a HTTP web service. This,\nalong with a set of additional metadata defines how the \"service\" is\nconfigured and accessed.  For example, a service may be configured to use\nTLS, or be bound to a specific domain name.\n\nWhen an instance is assigned to a service group, it immediately becomes\naccessible over the Internet on the exposed public port, using the set DNS\nname, and is routed to the set destination port.\n\nNote: If you do not specify a DNS name when you create a service and you\nindicate that the application exposes some ports, Unikraft Cloud will\ngenerates a random DNS name for you.  Unikraft Cloud also supports custom\ndomains like www.example.com and wildcard domains like *.example.com.",
+        "x-package": "services"
       },
       "ServiceGroupAutokill": {
         "type": "object",
@@ -8559,9 +9305,14 @@
             "format": "uint64"
           }
         },
-        "description": "Automatic delete-on-idle configuration for service groups."
+        "description": "Automatic delete-on-idle configuration for service groups.",
+        "x-package": "services"
       },
       "ServiceGroupInstance": {
+        "required": [
+          "uuid",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8575,9 +9326,13 @@
             "type": "string",
             "description": "The name of the instance.  This is a human-readable name that can be used\nto identify the instance.  The name must be unique within the context of\nyour account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the instance in API calls."
           }
-        }
+        },
+        "x-package": "services"
       },
       "ServiceGroupInstanceDomain": {
+        "required": [
+          "fqdn"
+        ],
         "type": "object",
         "properties": {
           "fqdn": {
@@ -8594,9 +9349,14 @@
             "description": "The certificate associated with the domain.\n\nThe certificate is used to secure the domain with TLS/SSL.  If no\ncertificate is specified, Unikraft Cloud will automatically generate a\nnew certificate for the domain based on Let's Encrypt and seek to\naccomplish a DNS-01 challenge."
           }
         },
-        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge."
+        "description": "The domain configuration for the service group.\n\nDomain names are completely specified with all labels in the hierarchy of\nthe DNS, having no parts omitted.  The domain can be associated with an\nexisting certificate by specifying the certificate's name or UUID.  If no\ncertificate is specified and a FQDN is provided, Unikraft Cloud will\nautomatically generate a new certificate for the domain based on Let's\nEncrypt and seek to accomplish a DNS-01 challenge.",
+        "x-package": "instances"
       },
       "ServiceGroupTemplate": {
+        "required": [
+          "name",
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -8610,7 +9370,8 @@
             "description": "The UUID of the template used for the autoscale configuration.",
             "format": "uuid"
           }
-        }
+        },
+        "x-package": "autoscale"
       },
       "StartInstanceByUUIDRequestBody": {
         "type": "object",
@@ -8628,7 +9389,8 @@
             "format": "int64"
           }
         },
-        "description": "Parameters for starting the instance."
+        "description": "Parameters for starting the instance.",
+        "x-package": "instances"
       },
       "StartInstancesRequestItem": {
         "type": "object",
@@ -8683,9 +9445,14 @@
             ]
           }
         ],
-        "description": "A single request item to start an instance."
+        "description": "A single request item to start an instance.",
+        "x-package": "instances"
       },
       "StartInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -8723,7 +9490,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for starting one or more instance(s) given their UUID(s)\nor name(s)."
+        "description": "The response message for starting one or more instance(s) given their UUID(s)\nor name(s).",
+        "x-package": "instances"
       },
       "StartInstancesResponseData": {
         "type": "object",
@@ -8735,9 +9503,17 @@
             },
             "description": "The instance(s) which were started by the request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "StartInstancesResponseStartedInstance": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state",
+          "previous_state"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -8785,7 +9561,17 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
+      },
+      "StepPolicyMetric": {
+        "enum": [
+          "cpu"
+        ],
+        "type": "string",
+        "description": "The step policy is a type of autoscaling policy that scales the number of\ninstances in a service by a fixed number of instances at each step.\nIt uses a metric to determine when to scale up or down.",
+        "format": "enum",
+        "x-package": "autoscale"
       },
       "StopInstanceByUUIDRequestBody": {
         "type": "object",
@@ -8812,7 +9598,8 @@
             "description": "Only stop the instance if it is in this state."
           }
         },
-        "description": "Parameters for stopping the instance."
+        "description": "Parameters for stopping the instance.",
+        "x-package": "instances"
       },
       "StopInstancesRequestItem": {
         "type": "object",
@@ -8876,9 +9663,14 @@
             ]
           }
         ],
-        "description": "A single request item to stop an instance."
+        "description": "A single request item to stop an instance.",
+        "x-package": "instances"
       },
       "StopInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -8916,7 +9708,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for stopping one or more instance(s) given their UUID(s)\nor name(s)."
+        "description": "The response message for stopping one or more instance(s) given their UUID(s)\nor name(s).",
+        "x-package": "instances"
       },
       "StopInstancesResponseData": {
         "type": "object",
@@ -8928,9 +9721,16 @@
             },
             "description": "The instance(s) which were stopped by the request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "StopInstancesResponseStoppedInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "state",
+          "previous_state"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8950,32 +9750,20 @@
             "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The current state of the instance.",
-            "format": "enum"
+            "description": "The current state of the instance."
           },
           "previous_state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The previous state of the instance before the stop operation was invoked.",
-            "format": "enum"
+            "description": "The previous state of the instance before the stop operation was invoked."
           },
           "status": {
             "allOf": [
@@ -8996,7 +9784,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "SuspendInstanceByUUIDRequestBody": {
         "type": "object",
@@ -9008,7 +9797,8 @@
             "format": "uint64"
           }
         },
-        "description": "Parameters for suspending the instance."
+        "description": "Parameters for suspending the instance.",
+        "x-package": "instances"
       },
       "SuspendInstancesRequestItem": {
         "type": "object",
@@ -9057,9 +9847,14 @@
             ]
           }
         ],
-        "description": "A single request item to suspend an instance."
+        "description": "A single request item to suspend an instance.",
+        "x-package": "instances"
       },
       "SuspendInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -9097,7 +9892,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for suspending one or more instance(s) given their UUID(s)\nor name(s)."
+        "description": "The response message for suspending one or more instance(s) given their UUID(s)\nor name(s).",
+        "x-package": "instances"
       },
       "SuspendInstancesResponseData": {
         "type": "object",
@@ -9109,9 +9905,16 @@
             },
             "description": "The instance(s) which were suspended by the request."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "SuspendInstancesResponseSuspendedInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "state",
+          "previous_state"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -9131,32 +9934,20 @@
             "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The current state of the instance.",
-            "format": "enum"
+            "description": "The current state of the instance."
           },
           "previous_state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The previous state of the instance before the suspend operation was invoked.",
-            "format": "enum"
+            "description": "The previous state of the instance before the suspend operation was invoked."
           },
           "status": {
             "allOf": [
@@ -9177,10 +9968,12 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateCertificateByUUIDRequest": {
         "required": [
+          "uuid",
           "chain",
           "pkey"
         ],
@@ -9202,7 +9995,8 @@
             "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
           }
         },
-        "description": "The request message for updating a certificate by its UUID."
+        "description": "The request message for updating a certificate by its UUID.",
+        "x-package": "certificates"
       },
       "UpdateCertificateRequest": {
         "required": [
@@ -9231,9 +10025,14 @@
             "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
           }
         },
-        "description": "The request message for updating one or more certificate(s) by their\nUUID(s) or name(s)."
+        "description": "The request message for updating one or more certificate(s) by their\nUUID(s) or name(s).",
+        "x-package": "certificates"
       },
       "UpdateCertificateResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -9271,7 +10070,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating one or more certificate(s)."
+        "description": "The response message for updating one or more certificate(s).",
+        "x-package": "certificates"
       },
       "UpdateCertificateResponseData": {
         "type": "object",
@@ -9283,7 +10083,8 @@
             },
             "description": "The certificate(s) which were updated by the request."
           }
-        }
+        },
+        "x-package": "certificates"
       },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [
@@ -9299,36 +10100,21 @@
           },
           "prop": {
             "example": "memory_mb",
-            "enum": [
-              "image",
-              "args",
-              "env",
-              "memory_mb",
-              "vcpus",
-              "scale_to_zero",
-              "tags",
-              "delete_lock",
-              "schedules",
-              "autokill",
-              "hostname",
-              "roms",
-              "dependencies",
-              "sched_priority"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableInstanceProperty"
+              }
             ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
+            "description": "The property to modify."
           },
           "op": {
             "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableInstanceOperation"
+              }
             ],
-            "type": "string",
-            "description": "The operation to perform on the property.",
-            "format": "enum"
+            "description": "The operation to perform on the property."
           },
           "value": {
             "allOf": [
@@ -9338,7 +10124,8 @@
             ],
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": integer (scheduling priority value)"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateInstancesRequestItem": {
         "required": [
@@ -9362,36 +10149,21 @@
               },
               "prop": {
                 "example": "memory_mb",
-                "enum": [
-                  "image",
-                  "args",
-                  "env",
-                  "memory_mb",
-                  "vcpus",
-                  "scale_to_zero",
-                  "tags",
-                  "delete_lock",
-                  "schedules",
-                  "autokill",
-                  "hostname",
-                  "roms",
-                  "dependencies",
-                  "sched_priority"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableInstanceProperty"
+                  }
                 ],
-                "type": "string",
-                "description": "The property to modify.",
-                "format": "enum"
+                "description": "The property to modify."
               },
               "op": {
                 "example": "set",
-                "enum": [
-                  "set",
-                  "add",
-                  "del"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableInstanceOperation"
+                  }
                 ],
-                "type": "string",
-                "description": "The operation to perform on the property.",
-                "format": "enum"
+                "description": "The operation to perform on the property."
               },
               "value": {
                 "allOf": [
@@ -9431,9 +10203,14 @@
             ]
           }
         ],
-        "description": "A single update operation to be applied to an instance."
+        "description": "A single update operation to be applied to an instance.",
+        "x-package": "instances"
       },
       "UpdateInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -9471,7 +10248,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating one or more instances."
+        "description": "The response message for updating one or more instances.",
+        "x-package": "instances"
       },
       "UpdateInstancesResponseData": {
         "type": "object",
@@ -9483,9 +10261,15 @@
             },
             "description": "List of instances that were processed during the update operation."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateInstancesResponseUpdatedInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -9528,7 +10312,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateServiceGroupByUUIDRequestBody": {
         "required": [
@@ -9544,27 +10329,21 @@
           },
           "prop": {
             "example": "services",
-            "enum": [
-              "services",
-              "domains",
-              "soft_limit",
-              "hard_limit",
-              "autokill"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableServiceGroupProperty"
+              }
             ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
+            "description": "The property to modify."
           },
           "op": {
             "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableServiceGroupOperation"
+              }
             ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
+            "description": "The operation to perform."
           },
           "value": {
             "allOf": [
@@ -9574,7 +10353,8 @@
             ],
             "description": "The value for the update operation:\n- For \"services\": array of Service objects (same as for creation)\n- For \"domains\": array of Domain objects (same as for creation)\n- For \"soft_limit\": integer (1–65535), must be <= \"hard_limit\"\n- For \"hard_limit\": integer (1–65535), must be >= \"soft_limit\"\n- For \"autokill\": object with time_ms field"
           }
-        }
+        },
+        "x-package": "services"
       },
       "UpdateServiceGroupsRequestItem": {
         "required": [
@@ -9593,27 +10373,21 @@
               },
               "prop": {
                 "example": "services",
-                "enum": [
-                  "services",
-                  "domains",
-                  "soft_limit",
-                  "hard_limit",
-                  "autokill"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableServiceGroupProperty"
+                  }
                 ],
-                "type": "string",
-                "description": "The property to modify.",
-                "format": "enum"
+                "description": "The property to modify."
               },
               "op": {
                 "example": "set",
-                "enum": [
-                  "set",
-                  "add",
-                  "del"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableServiceGroupOperation"
+                  }
                 ],
-                "type": "string",
-                "description": "The operation to perform.",
-                "format": "enum"
+                "description": "The operation to perform."
               },
               "value": {
                 "allOf": [
@@ -9653,9 +10427,14 @@
             ]
           }
         ],
-        "description": "A single update operation to be applied to a service group"
+        "description": "A single update operation to be applied to a service group",
+        "x-package": "services"
       },
       "UpdateServiceGroupsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -9693,7 +10472,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating one or more service groups."
+        "description": "The response message for updating one or more service groups.",
+        "x-package": "services"
       },
       "UpdateServiceGroupsResponseData": {
         "type": "object",
@@ -9705,9 +10485,15 @@
             },
             "description": "List of service groups that were processed during the update operation."
           }
-        }
+        },
+        "x-package": "services"
       },
       "UpdateServiceGroupsResponseUpdatedServiceGroup": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -9750,7 +10536,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "services"
       },
       "UpdateTemplateInstanceByUUIDRequestBody": {
         "required": [
@@ -9766,25 +10553,21 @@
           },
           "prop": {
             "example": "tags",
-            "enum": [
-              "tags",
-              "delete_lock",
-              "autokill"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableTemplateInstanceProperty"
+              }
             ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
+            "description": "The property to modify."
           },
           "op": {
             "example": "add",
-            "enum": [
-              "set",
-              "add",
-              "del"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableTemplateInstanceOperation"
+              }
             ],
-            "type": "string",
-            "description": "The operation to perform on the property.",
-            "format": "enum"
+            "description": "The operation to perform on the property."
           },
           "value": {
             "allOf": [
@@ -9794,7 +10577,8 @@
             ],
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateTemplateInstancesRequestItem": {
         "required": [
@@ -9818,25 +10602,21 @@
               },
               "prop": {
                 "example": "tags",
-                "enum": [
-                  "tags",
-                  "delete_lock",
-                  "autokill"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableTemplateInstanceProperty"
+                  }
                 ],
-                "type": "string",
-                "description": "The property to modify.",
-                "format": "enum"
+                "description": "The property to modify."
               },
               "op": {
                 "example": "add",
-                "enum": [
-                  "set",
-                  "add",
-                  "del"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableTemplateInstanceOperation"
+                  }
                 ],
-                "type": "string",
-                "description": "The operation to perform on the property.",
-                "format": "enum"
+                "description": "The operation to perform on the property."
               },
               "value": {
                 "allOf": [
@@ -9876,9 +10656,14 @@
             ]
           }
         ],
-        "description": "A single update operation to be applied to a template instance."
+        "description": "A single update operation to be applied to a template instance.",
+        "x-package": "instances"
       },
       "UpdateTemplateInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -9916,7 +10701,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating a template instance by its UUID."
+        "description": "The response message for updating a template instance by its UUID.",
+        "x-package": "instances"
       },
       "UpdateTemplateInstancesResponseData": {
         "type": "object",
@@ -9928,9 +10714,15 @@
             },
             "description": "List of template instances that were processed during the update operation."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateTemplateInstancesResponseTemplateInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -9973,7 +10765,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "instances"
       },
       "UpdateTemplateVolumeByUUIDRequestBody": {
         "required": [
@@ -9989,24 +10782,21 @@
           },
           "prop": {
             "example": "tags",
-            "enum": [
-              "tags",
-              "delete_lock"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableTemplateVolumeProperty"
+              }
             ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
+            "description": "The property to modify."
           },
           "op": {
             "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableTemplateVolumeOperation"
+              }
             ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
+            "description": "The operation to perform."
           },
           "value": {
             "allOf": [
@@ -10016,7 +10806,8 @@
             ],
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "UpdateTemplateVolumesRequestItem": {
         "required": [
@@ -10035,24 +10826,21 @@
               },
               "prop": {
                 "example": "tags",
-                "enum": [
-                  "tags",
-                  "delete_lock"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableTemplateVolumeProperty"
+                  }
                 ],
-                "type": "string",
-                "description": "The property to modify.",
-                "format": "enum"
+                "description": "The property to modify."
               },
               "op": {
                 "example": "add",
-                "enum": [
-                  "set",
-                  "add",
-                  "del"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableTemplateVolumeOperation"
+                  }
                 ],
-                "type": "string",
-                "description": "The operation to perform.",
-                "format": "enum"
+                "description": "The operation to perform."
               },
               "value": {
                 "allOf": [
@@ -10092,9 +10880,15 @@
             ]
           }
         ],
-        "description": "A single update operation to be applied to a template volume."
+        "description": "A single update operation to be applied to a template volume.",
+        "x-package": "volumes"
       },
       "UpdateTemplateVolumesResponse": {
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -10132,7 +10926,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating one or more template volumes."
+        "description": "The response message for updating one or more template volumes.",
+        "x-package": "volumes"
       },
       "UpdateTemplateVolumesResponseData": {
         "type": "object",
@@ -10144,9 +10939,15 @@
             },
             "description": "The template volume(s) which were updated by the request."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "UpdateTemplateVolumesResponseTemplateVolume": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10184,7 +10985,8 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "UpdateVolumeByUUIDRequestBody": {
         "required": [
@@ -10200,26 +11002,21 @@
           },
           "prop": {
             "example": "size_mb",
-            "enum": [
-              "size_mb",
-              "tags",
-              "quota_policy",
-              "delete_lock"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableVolumeProperty"
+              }
             ],
-            "type": "string",
-            "description": "The property to modify.",
-            "format": "enum"
+            "description": "The property to modify."
           },
           "op": {
             "example": "set",
-            "enum": [
-              "set",
-              "add",
-              "del"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableVolumeOperation"
+              }
             ],
-            "type": "string",
-            "description": "The operation to perform.",
-            "format": "enum"
+            "description": "The operation to perform."
           },
           "value": {
             "allOf": [
@@ -10229,7 +11026,8 @@
             ],
             "description": "The value for the update operation. The type depends on the property and operation:\n- For \"size_mb\": unsigned integer\n- For \"quota_policy\": \"static\" or \"dynamic\"\n- For \"tags\": array of Strings\n- For \"delete_lock\": boolean"
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "UpdateVolumesRequestItem": {
         "required": [
@@ -10248,26 +11046,21 @@
               },
               "prop": {
                 "example": "size_mb",
-                "enum": [
-                  "size_mb",
-                  "tags",
-                  "quota_policy",
-                  "delete_lock"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableVolumeProperty"
+                  }
                 ],
-                "type": "string",
-                "description": "The property to modify.",
-                "format": "enum"
+                "description": "The property to modify."
               },
               "op": {
                 "example": "set",
-                "enum": [
-                  "set",
-                  "add",
-                  "del"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableVolumeOperation"
+                  }
                 ],
-                "type": "string",
-                "description": "The operation to perform.",
-                "format": "enum"
+                "description": "The operation to perform."
               },
               "value": {
                 "allOf": [
@@ -10307,9 +11100,14 @@
             ]
           }
         ],
-        "description": "A single request item for updating a volume."
+        "description": "A single request item for updating a volume.",
+        "x-package": "volumes"
       },
       "UpdateVolumesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -10347,7 +11145,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for updating one or more volume(s)."
+        "description": "The response message for updating one or more volume(s).",
+        "x-package": "volumes"
       },
       "UpdateVolumesResponseData": {
         "type": "object",
@@ -10359,9 +11158,15 @@
             },
             "description": "List of volumes that were processed during the update operation."
           }
-        }
+        },
+        "x-package": "volumes"
       },
       "UpdateVolumesResponseUpdatedVolume": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10404,9 +11209,261 @@
             "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
             "format": "int32"
           }
-        }
+        },
+        "x-package": "volumes"
+      },
+      "User": {
+        "required": [
+          "uuid",
+          "name",
+          "auth_token"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "The UUID of the user.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "example",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the user."
+          },
+          "auth_token": {
+            "example": "ZXhhbXBsZS10b2tlbg==",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Authentication token(s) associated with the user."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPermission"
+            },
+            "description": "The permission level of the user."
+          },
+          "uid": {
+            "example": 1000,
+            "type": "integer",
+            "description": "The user ID (UID) on the host system.",
+            "format": "uint32"
+          },
+          "disabled": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether the user account is disabled."
+          },
+          "vmdb": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserVmdb"
+              }
+            ],
+            "description": "Per-VM Configuration limits for the user."
+          },
+          "net": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserNet"
+              }
+            ],
+            "description": "Network configuration limits for the user."
+          },
+          "vmm": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserVmm"
+              }
+            ],
+            "description": "Global VM configuration limits for the user."
+          },
+          "stor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserStor"
+              }
+            ],
+            "description": "Storage configuration limits for the user."
+          },
+          "autoscale": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserAutoscale"
+              }
+            ],
+            "description": "Autoscale configuration limits for the user."
+          }
+        },
+        "x-package": "users"
+      },
+      "UserAutoscale": {
+        "type": "object",
+        "properties": {
+          "min_size": {
+            "example": 1,
+            "type": "integer",
+            "description": "Minimum size of an autoscale group.",
+            "format": "int32"
+          },
+          "max_size": {
+            "example": 16,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum size of an autoscale group.",
+            "format": "int32"
+          }
+        },
+        "x-package": "users"
+      },
+      "UserNet": {
+        "type": "object",
+        "properties": {
+          "max_service_groups": {
+            "example": 16,
+            "type": "integer",
+            "description": "Maximum number of service groups the user can have at one moment.",
+            "format": "int32"
+          },
+          "max_services": {
+            "example": 32,
+            "type": "integer",
+            "description": "Maximum number of services across all service groups the user can have\nat one moment.",
+            "format": "int32"
+          },
+          "max_certificates": {
+            "example": 16,
+            "type": "integer",
+            "description": "Maximum number of TLS certificates the user can have at one moment.",
+            "format": "int32"
+          }
+        },
+        "x-package": "users"
+      },
+      "UserPermission": {
+        "enum": [
+          "root",
+          "override_edns_blacklist",
+          "developer",
+          "volume_manager",
+          "override_vm_priority"
+        ],
+        "type": "string",
+        "format": "enum",
+        "x-package": "users"
+      },
+      "UserStor": {
+        "type": "object",
+        "properties": {
+          "max_volumes": {
+            "example": 8,
+            "type": "integer",
+            "description": "Maximum number of volumes the user can have at one moment.",
+            "format": "int32"
+          },
+          "min_volume_mb": {
+            "example": 1,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Minimum size of a volume in MB.",
+            "format": "int32"
+          },
+          "max_volume_mb": {
+            "example": 1024,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum size of a volume in MB.",
+            "format": "int32"
+          },
+          "max_total_volume_mb": {
+            "example": 2048,
+            "type": "integer",
+            "description": "Maximum total size of all volumes in MB.",
+            "format": "int32"
+          }
+        },
+        "x-package": "users"
+      },
+      "UserVmdb": {
+        "type": "object",
+        "properties": {
+          "max_instances": {
+            "example": 16,
+            "type": "integer",
+            "description": "Maximum number of VM instances the user can have at one moment.",
+            "format": "int32"
+          },
+          "min_memory_mb": {
+            "example": 16,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Minimum amount of memory assigned to a VM in MB.",
+            "format": "int32"
+          },
+          "def_memory_mb": {
+            "example": 512,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Default amount of memory assigned to a VM in MB.",
+            "format": "int32"
+          },
+          "max_memory_mb": {
+            "example": 2048,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum amount of memory assigned to a VM in MB.",
+            "format": "int32"
+          },
+          "min_vcpus": {
+            "example": 1,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Minimum number of vCPUs assigned to a VM.",
+            "format": "int32"
+          },
+          "max_vcpus": {
+            "example": 4,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum number of vCPUs assigned to a VM.",
+            "format": "int32"
+          }
+        },
+        "x-package": "users"
+      },
+      "UserVmm": {
+        "type": "object",
+        "properties": {
+          "max_vcpus": {
+            "example": 4,
+            "type": "integer",
+            "description": "Maximum number of vCPUs the user can have assigned to live instances.",
+            "format": "int32"
+          },
+          "max_memory_mb": {
+            "example": 2048,
+            "type": "integer",
+            "description": "Maximum amount of memory in MB the user can have assigned to live\ninstances.",
+            "format": "int32"
+          }
+        },
+        "x-package": "users"
       },
       "Volume": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at",
+          "state",
+          "size_mb",
+          "persistent",
+          "quota_policy"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10432,19 +11489,12 @@
             "format": "date-time"
           },
           "state": {
-            "enum": [
-              "uninitialized",
-              "initializing",
-              "available",
-              "idle",
-              "mounted",
-              "busy",
-              "error",
-              "template"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeState"
+              }
             ],
-            "type": "string",
-            "description": "Current state of the volume.",
-            "format": "enum"
+            "description": "Current state of the volume."
           },
           "size_mb": {
             "example": 64,
@@ -10499,13 +11549,12 @@
           },
           "quota_policy": {
             "example": "static",
-            "enum": [
-              "static",
-              "dynamic"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VolumeQuotaPolicy"
+              }
             ],
-            "type": "string",
-            "description": "Either static or dynamic reservation.",
-            "format": "enum"
+            "description": "Either static or dynamic reservation."
           },
           "delete_lock": {
             "example": false,
@@ -10540,9 +11589,13 @@
             "description": "Optional script arguments that were applied to the custom volume filesystem\ninitialization scripts."
           }
         },
-        "description": "A volume represents a storage device that can be attached to an instance."
+        "description": "A volume represents a storage device that can be attached to an instance.",
+        "x-package": "volumes"
       },
       "VolumeInstanceID": {
+        "required": [
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10557,9 +11610,15 @@
             "description": "The name of the instance that the volume is attached to."
           }
         },
-        "description": "Reference to the instance to attach the volume to."
+        "description": "Reference to the instance to attach the volume to.",
+        "x-package": "volumes"
       },
       "VolumeInstanceMount": {
+        "required": [
+          "uuid",
+          "name",
+          "readonly"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10578,24 +11637,48 @@
             "type": "boolean",
             "description": "Whether the volume is mounted read-only or read-write."
           }
-        }
+        },
+        "x-package": "volumes"
+      },
+      "VolumeQuotaPolicy": {
+        "enum": [
+          "static",
+          "dynamic"
+        ],
+        "type": "string",
+        "description": "VolumeQuotaPolicy defines the quota policy of a volume.",
+        "format": "enum",
+        "x-package": "volumes"
+      },
+      "VolumeState": {
+        "enum": [
+          "uninitialized",
+          "initializing",
+          "available",
+          "idle",
+          "mounted",
+          "busy",
+          "error",
+          "template"
+        ],
+        "type": "string",
+        "description": "VolumeState defines the state of a volume at a given moment.",
+        "format": "enum",
+        "x-package": "volumes"
       },
       "WaitInstanceByUUIDRequestBody": {
+        "required": [
+          "state"
+        ],
         "type": "object",
         "properties": {
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The desired state to wait for.  Default is `running`.",
-            "format": "enum"
+            "description": "The desired state to wait for.  Default is `running`."
           },
           "timeout_ms": {
             "example": 450,
@@ -10604,7 +11687,8 @@
             "format": "int64"
           }
         },
-        "description": "Wait parameters."
+        "description": "Wait parameters.",
+        "x-package": "instances"
       },
       "WaitInstancesRequestItem": {
         "type": "object",
@@ -10613,18 +11697,12 @@
             "type": "object",
             "properties": {
               "state": {
-                "enum": [
-                  "stopped",
-                  "starting",
-                  "running",
-                  "draining",
-                  "stopping",
-                  "template",
-                  "standby"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/InstanceState"
+                  }
                 ],
-                "type": "string",
-                "description": "The desired state to wait for.  Default is `running`.",
-                "format": "enum"
+                "description": "The desired state to wait for.  Default is `running`."
               },
               "timeout_ms": {
                 "example": 450,
@@ -10662,9 +11740,14 @@
             ]
           }
         ],
-        "description": "A single wait operation to be applied to an instance."
+        "description": "A single wait operation to be applied to an instance.",
+        "x-package": "instances"
       },
       "WaitInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
         "type": "object",
         "properties": {
           "status": {
@@ -10702,7 +11785,8 @@
             "format": "uint64"
           }
         },
-        "description": "The response message for waiting for one or more instance(s) to reach a\ncertain state given their UUID(s) or name(s)."
+        "description": "The response message for waiting for one or more instance(s) to reach a\ncertain state given their UUID(s) or name(s).",
+        "x-package": "instances"
       },
       "WaitInstancesResponseData": {
         "type": "object",
@@ -10714,9 +11798,15 @@
             },
             "description": "The instance(s) which this requested waited on."
           }
-        }
+        },
+        "x-package": "instances"
       },
       "WaitInstancesResponseWaitedInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "state"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -10731,18 +11821,12 @@
             "description": "The name of the instance."
           },
           "state": {
-            "enum": [
-              "stopped",
-              "starting",
-              "running",
-              "draining",
-              "stopping",
-              "template",
-              "standby"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
             ],
-            "type": "string",
-            "description": "The current state of the instance.",
-            "format": "enum"
+            "description": "The current state of the instance."
           },
           "message": {
             "example": "No instance with name 'funky-town-g756b5d'",
@@ -10763,7 +11847,8 @@
             ],
             "description": "The status of the response."
           }
-        }
+        },
+        "x-package": "instances"
       }
     },
     "securitySchemes": {

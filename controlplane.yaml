@@ -525,12 +525,6 @@ components:
                 - dedicated_host
             type: object
             properties:
-                availability_zone:
-                    example: us-east-1a
-                    type: string
-                    description: |-
-                        The AWS availability zone (e.g., "us-east-1a"). If not specified, AWS
-                        will select an availability zone within the region.
                 vpc_id:
                     example: vpc-0123456789abcdef0
                     type: string

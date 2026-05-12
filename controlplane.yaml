@@ -128,11 +128,11 @@ paths:
                 provided, all nodes are returned.
             operationId: ListNodes
             parameters:
-                - name: provider
+                - name: cloudprovider
                   in: query
-                  description: Optional filter by provider.
+                  description: Optional filter by cloud provider.
                   schema:
-                    $ref: '#/components/schemas/NodeProvider'
+                    $ref: '#/components/schemas/CloudProvider'
                 - name: state
                   in: query
                   description: Optional filter by state.
@@ -277,7 +277,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/NodeActivateResponse'
             x-package: controlplane
-    /v1/nodes/provider/{provider}/regions:
+    /v1/nodes/provider/{cloudprovider}/regions:
         get:
             tags:
                 - NodeService
@@ -289,12 +289,12 @@ paths:
                 provider, including availability zone information.
             operationId: ListRegions
             parameters:
-                - name: provider
+                - name: cloudprovider
                   in: path
-                  description: The provider to list regions for.
+                  description: The cloud provider to list regions for.
                   required: true
                   schema:
-                    $ref: '#/components/schemas/NodeProvider'
+                    $ref: '#/components/schemas/CloudProvider'
             responses:
                 default:
                     description: default
@@ -303,7 +303,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ListRegionsResponse'
             x-package: controlplane
-    /v1/nodes/provider/{provider}/types:
+    /v1/nodes/provider/{cloudprovider}/types:
         get:
             tags:
                 - NodeService
@@ -315,12 +315,12 @@ paths:
                 on the specified cloud provider.
             operationId: ListMachineTypes
             parameters:
-                - name: provider
+                - name: cloudprovider
                   in: path
-                  description: The provider to list machine types for.
+                  description: The cloud provider to list machine types for.
                   required: true
                   schema:
-                    $ref: '#/components/schemas/NodeProvider'
+                    $ref: '#/components/schemas/CloudProvider'
                 - name: region
                   in: query
                   description: Optional region filter. Some providers have region-specific availability.
@@ -679,6 +679,32 @@ components:
                 organization_display_name:
                     type: string
                     description: The display name of the organization the token is associated with.
+            x-package: controlplane
+        CloudProvider:
+            enum:
+                - "unspecified"
+                - "aws"
+            type: string
+            description: |-
+                CloudProvider identifies the cloud infrastructure provider where nodes are
+                provisioned.
+            format: enum
+            x-package: controlplane
+        CloudProviderConfig:
+            type: object
+            allOf:
+                - oneOf:
+                    - title: aws
+                      type: object
+                      properties:
+                        aws:
+                            allOf:
+                                - $ref: '#/components/schemas/AWSConfig'
+                            description: AWS-specific configuration.
+            description: |-
+                CloudProviderConfig contains provider-specific configuration for node
+                provisioning.  Use this for advanced customization beyond the common
+                machine_type and region fields.
             x-package: controlplane
         DestroyNodeResponse:
             required:
@@ -1135,7 +1161,7 @@ components:
                 - name
                 - created_at
                 - state
-                - provider
+                - cloudprovider
                 - region
                 - machine_type
                 - vcpus
@@ -1183,9 +1209,9 @@ components:
                     description: |-
                         An optional message providing additional information about the current
                         state, particularly useful for error states.
-                provider:
+                cloudprovider:
                     allOf:
-                        - $ref: '#/components/schemas/NodeProvider'
+                        - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where this machine is provisioned.
                 region:
                     example: us-east-1
@@ -1242,7 +1268,7 @@ components:
                     description: The provider-specific instance ID or resource identifier.
                 provider_config:
                     allOf:
-                        - $ref: '#/components/schemas/NodeProviderConfig'
+                        - $ref: '#/components/schemas/CloudProviderConfig'
                     description: Provider-specific configuration that was used to provision this node.
                 tags:
                     example: {"environment": "production", "team": "platform"}
@@ -1324,32 +1350,6 @@ components:
                     type: string
                     description: The issued license certificate in base64 URL encoded PEM format.
             x-package: controlplane
-        NodeProvider:
-            enum:
-                - "unspecified"
-                - "aws"
-            type: string
-            description: |-
-                NodeProvider identifies the cloud infrastructure provider where nodes are
-                provisioned.
-            format: enum
-            x-package: controlplane
-        NodeProviderConfig:
-            type: object
-            allOf:
-                - oneOf:
-                    - title: aws
-                      type: object
-                      properties:
-                        aws:
-                            allOf:
-                                - $ref: '#/components/schemas/AWSConfig'
-                            description: AWS-specific configuration.
-            description: |-
-                NodeProviderConfig contains provider-specific configuration for node
-                provisioning.  Use this for advanced customization beyond the common
-                machine_type and region fields.
-            x-package: controlplane
         NodeRenewRequest:
             required:
                 - csr
@@ -1425,7 +1425,7 @@ components:
             x-package: controlplane
         ProvisionNodeRequest:
             required:
-                - provider
+                - cloudprovider
                 - region
                 - machine_type
                 - ssh_keys
@@ -1437,9 +1437,9 @@ components:
                     description: |-
                         Optional name for the node. If not provided, a name will be
                         auto-generated.
-                provider:
+                cloudprovider:
                     allOf:
-                        - $ref: '#/components/schemas/NodeProvider'
+                        - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where the machine should be provisioned.
                 region:
                     example: us-east-1
@@ -1460,9 +1460,9 @@ components:
                     additionalProperties:
                         type: string
                     description: Optional user-defined tags.
-                provider_config:
+                cloudprovider_config:
                     allOf:
-                        - $ref: '#/components/schemas/NodeProviderConfig'
+                        - $ref: '#/components/schemas/CloudProviderConfig'
                     description: Optional provider-specific configuration for advanced customization.
                 metro:
                     example: fra
@@ -1531,36 +1531,17 @@ components:
         Region:
             required:
                 - name
-                - available
+                - iata
             type: object
             properties:
                 name:
                     example: us-east-1
                     type: string
                     description: The region identifier (e.g., "us-east-1", "us-central1").
-                display_name:
-                    example: US East (N. Virginia)
+                iata:
+                    example: SFO
                     type: string
-                    description: Human-readable display name.
-                country:
-                    example: us
-                    type: string
-                    description: The country code where this region is located.
-                latitude:
-                    type: number
-                    description: Geographic coordinates of the region.
-                    format: double
-                longitude:
-                    type: number
-                    format: double
-                availability_zones:
-                    type: array
-                    items:
-                        type: string
-                    description: Availability zones within this region.
-                available:
-                    type: boolean
-                    description: Whether this region is currently available for provisioning.
+                    description: The IATA code for the region.
             description: Information about an available region.
             x-package: controlplane
         RequestSigninRequest:

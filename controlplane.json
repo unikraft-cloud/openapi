@@ -183,11 +183,11 @@
         "operationId": "ListNodes",
         "parameters": [
           {
-            "name": "provider",
+            "name": "cloudprovider",
             "in": "query",
-            "description": "Optional filter by provider.",
+            "description": "Optional filter by cloud provider.",
             "schema": {
-              "$ref": "#/components/schemas/NodeProvider"
+              "$ref": "#/components/schemas/CloudProvider"
             }
           },
           {
@@ -402,7 +402,7 @@
         "x-package": "controlplane"
       }
     },
-    "/v1/nodes/provider/{provider}/regions": {
+    "/v1/nodes/provider/{cloudprovider}/regions": {
       "get": {
         "tags": [
           "NodeService"
@@ -412,12 +412,12 @@
         "operationId": "ListRegions",
         "parameters": [
           {
-            "name": "provider",
+            "name": "cloudprovider",
             "in": "path",
-            "description": "The provider to list regions for.",
+            "description": "The cloud provider to list regions for.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NodeProvider"
+              "$ref": "#/components/schemas/CloudProvider"
             }
           }
         ],
@@ -436,7 +436,7 @@
         "x-package": "controlplane"
       }
     },
-    "/v1/nodes/provider/{provider}/types": {
+    "/v1/nodes/provider/{cloudprovider}/types": {
       "get": {
         "tags": [
           "NodeService"
@@ -446,12 +446,12 @@
         "operationId": "ListMachineTypes",
         "parameters": [
           {
-            "name": "provider",
+            "name": "cloudprovider",
             "in": "path",
-            "description": "The provider to list machine types for.",
+            "description": "The cloud provider to list machine types for.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NodeProvider"
+              "$ref": "#/components/schemas/CloudProvider"
             }
           },
           {
@@ -931,6 +931,41 @@
             "description": "The display name of the organization the token is associated with."
           }
         },
+        "x-package": "controlplane"
+      },
+      "CloudProvider": {
+        "enum": [
+          "unspecified",
+          "aws"
+        ],
+        "type": "string",
+        "description": "CloudProvider identifies the cloud infrastructure provider where nodes are\nprovisioned.",
+        "format": "enum",
+        "x-package": "controlplane"
+      },
+      "CloudProviderConfig": {
+        "type": "object",
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "title": "aws",
+                "type": "object",
+                "properties": {
+                  "aws": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/AWSConfig"
+                      }
+                    ],
+                    "description": "AWS-specific configuration."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "CloudProviderConfig contains provider-specific configuration for node\nprovisioning.  Use this for advanced customization beyond the common\nmachine_type and region fields.",
         "x-package": "controlplane"
       },
       "DestroyNodeResponse": {
@@ -1574,7 +1609,7 @@
           "name",
           "created_at",
           "state",
-          "provider",
+          "cloudprovider",
           "region",
           "machine_type",
           "vcpus",
@@ -1619,10 +1654,10 @@
             "type": "string",
             "description": "An optional message providing additional information about the current\nstate, particularly useful for error states."
           },
-          "provider": {
+          "cloudprovider": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NodeProvider"
+                "$ref": "#/components/schemas/CloudProvider"
               }
             ],
             "description": "The cloud provider where this machine is provisioned."
@@ -1687,7 +1722,7 @@
           "provider_config": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NodeProviderConfig"
+                "$ref": "#/components/schemas/CloudProviderConfig"
               }
             ],
             "description": "Provider-specific configuration that was used to provision this node."
@@ -1795,41 +1830,6 @@
         },
         "x-package": "controlplane"
       },
-      "NodeProvider": {
-        "enum": [
-          "unspecified",
-          "aws"
-        ],
-        "type": "string",
-        "description": "NodeProvider identifies the cloud infrastructure provider where nodes are\nprovisioned.",
-        "format": "enum",
-        "x-package": "controlplane"
-      },
-      "NodeProviderConfig": {
-        "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "aws",
-                "type": "object",
-                "properties": {
-                  "aws": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/AWSConfig"
-                      }
-                    ],
-                    "description": "AWS-specific configuration."
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "description": "NodeProviderConfig contains provider-specific configuration for node\nprovisioning.  Use this for advanced customization beyond the common\nmachine_type and region fields.",
-        "x-package": "controlplane"
-      },
       "NodeRenewRequest": {
         "required": [
           "csr",
@@ -1927,7 +1927,7 @@
       },
       "ProvisionNodeRequest": {
         "required": [
-          "provider",
+          "cloudprovider",
           "region",
           "machine_type",
           "ssh_keys"
@@ -1939,10 +1939,10 @@
             "type": "string",
             "description": "Optional name for the node. If not provided, a name will be\nauto-generated."
           },
-          "provider": {
+          "cloudprovider": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NodeProvider"
+                "$ref": "#/components/schemas/CloudProvider"
               }
             ],
             "description": "The cloud provider where the machine should be provisioned."
@@ -1974,10 +1974,10 @@
             },
             "description": "Optional user-defined tags."
           },
-          "provider_config": {
+          "cloudprovider_config": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NodeProviderConfig"
+                "$ref": "#/components/schemas/CloudProviderConfig"
               }
             ],
             "description": "Optional provider-specific configuration for advanced customization."
@@ -2082,7 +2082,7 @@
       "Region": {
         "required": [
           "name",
-          "available"
+          "iata"
         ],
         "type": "object",
         "properties": {
@@ -2091,35 +2091,10 @@
             "type": "string",
             "description": "The region identifier (e.g., \"us-east-1\", \"us-central1\")."
           },
-          "display_name": {
-            "example": "US East (N. Virginia)",
+          "iata": {
+            "example": "SFO",
             "type": "string",
-            "description": "Human-readable display name."
-          },
-          "country": {
-            "example": "us",
-            "type": "string",
-            "description": "The country code where this region is located."
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Geographic coordinates of the region.",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "availability_zones": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Availability zones within this region."
-          },
-          "available": {
-            "type": "boolean",
-            "description": "Whether this region is currently available for provisioning."
+            "description": "The IATA code for the region."
           }
         },
         "description": "Information about an available region.",

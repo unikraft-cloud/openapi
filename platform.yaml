@@ -7656,7 +7656,6 @@ components:
         Service:
             required:
                 - port
-                - destination_port
             type: object
             properties:
                 port:

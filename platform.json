@@ -9160,8 +9160,7 @@
       },
       "Service": {
         "required": [
-          "port",
-          "destination_port"
+          "port"
         ],
         "type": "object",
         "properties": {

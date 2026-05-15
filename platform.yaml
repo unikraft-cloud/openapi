@@ -6818,6 +6818,11 @@ components:
                     description: |-
                         Template-specific automatic delete-on-idle configuration.
                         Not used for non-template instances.
+                updates:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstancePendingUpdate'
+                    description: Queued property changes awaiting application.
             description: An instance is a unikernel virtual machine running an application.
             x-package: instances
         InstanceAutokill:
@@ -6926,6 +6931,40 @@ components:
                     description: Count of packets sent to interface
                     format: uint64
             description: An instance network interface.
+            x-package: instances
+        InstancePendingUpdate:
+            required:
+                - prop
+                - op
+                - value
+                - status
+            type: object
+            properties:
+                prop:
+                    allOf:
+                        - $ref: '#/components/schemas/MutableInstanceProperty'
+                    description: The property being updated.
+                op:
+                    allOf:
+                        - $ref: '#/components/schemas/MutableInstanceOperation'
+                    description: The patch operation type.
+                value:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        The new value for the property.  Type depends on the property being
+                        updated.
+                status:
+                    enum:
+                        - "pending"
+                        - "failed"
+                    type: string
+                    description: The status of this update.
+                    format: enum
+                error:
+                    type: string
+                    description: Error message.  Only present when status is "failed".
+            description: A queued property change awaiting application (typically on next restart).
             x-package: instances
         InstanceRestartAttempt:
             required:

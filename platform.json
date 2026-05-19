@@ -8633,7 +8633,8 @@
           "draining",
           "stopping",
           "template",
-          "standby"
+          "standby",
+          "deleted"
         ],
         "type": "string",
         "description": "The current state of an instance.",

@@ -7190,6 +7190,7 @@ components:
                 - "stopping"
                 - "template"
                 - "standby"
+                - "deleted"
             type: string
             description: The current state of an instance.
             format: enum

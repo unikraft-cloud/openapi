@@ -4374,6 +4374,13 @@ components:
                         additionalProperties:
                             type: string
                         description: Script arguments passed to volume initialization scripts.
+                    access_mode:
+                        example: rwo
+                        allOf:
+                            - $ref: '#/components/schemas/VolumeAccessMode'
+                        description: |-
+                            The access mode of the volume, controlling volume sharing behavior.
+                            Defaults to `rwo` if not specified.
                 - oneOf:
                     - title: size_mb
                       type: object
@@ -9650,6 +9657,7 @@ components:
                 - size_mb
                 - persistent
                 - quota_policy
+                - access_mode
             type: object
             properties:
                 uuid:
@@ -9773,7 +9781,25 @@ components:
                     description: |-
                         Optional script arguments that were applied to the custom volume filesystem
                         initialization scripts.
+                access_mode:
+                    example: rwo
+                    allOf:
+                        - $ref: '#/components/schemas/VolumeAccessMode'
+                    description: |-
+                        The access mode of the volume, controlling volume sharing behavior.
+                        Defaults to `rwo` if not specified.
             description: A volume represents a storage device that can be attached to an instance.
+            x-package: volumes
+        VolumeAccessMode:
+            enum:
+                - "rwo"
+                - "rox"
+                - "rwx"
+            type: string
+            description: |-
+                VolumeAccessMode defines the access mode of a volume, which controls sharing
+                behavior and caching strategy.
+            format: enum
             x-package: volumes
         VolumeInstanceID:
             required:

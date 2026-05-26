@@ -277,6 +277,26 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/NodeActivateResponse'
             x-package: controlplane
+    /v1/nodes/heartbeat:
+        post:
+            tags:
+                - NodeActivationService
+            description: Sends a heartbeat from a node to report its platform status.
+            operationId: NodeHeartbeat
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/NodeHeartbeatRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NodeHeartbeatResponse'
+            x-package: controlplane
     /v1/nodes/provider/{cloudprovider}/regions:
         get:
             tags:
@@ -1350,6 +1370,35 @@ components:
                     type: string
                     description: The issued license certificate in base64 URL encoded PEM format.
             x-package: controlplane
+        NodeHeartbeatRequest:
+            required:
+                - machine_id
+                - platform_status
+            type: object
+            properties:
+                machine_id:
+                    type: string
+                    description: The unique machine identifier of the node sending the heartbeat.
+                platform_status:
+                    allOf:
+                        - $ref: '#/components/schemas/PlatformStatus'
+                    description: The current platform status of the node.
+            description: The request message for a node heartbeat.
+            x-package: controlplane
+        NodeHeartbeatResponse:
+            required:
+                - status
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+            description: The response message for a node heartbeat.
+            x-package: controlplane
         NodeRenewRequest:
             required:
                 - csr
@@ -1421,6 +1470,14 @@ components:
             description: |-
                 NodeState defines the provisioning lifecycle state of a machine which will
                 run the Unikraft Cloud Platform.
+            format: enum
+            x-package: controlplane
+        PlatformStatus:
+            enum:
+                - "healthy"
+                - "degraded"
+                - "unavailable"
+            type: string
             format: enum
             x-package: controlplane
         ProvisionNodeRequest:

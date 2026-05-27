@@ -7912,14 +7912,20 @@
       "HealthzResponseData": {
         "type": "object",
         "properties": {
-          "services": {
+          "checks": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "versions": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             }
           }
         },
-        "description": "For now, no additional data is returned by the health check.",
+        "description": "Additional data returned by the health check.",
         "x-package": "node"
       },
       "Image": {

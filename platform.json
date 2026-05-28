@@ -927,6 +927,17 @@
         "summary": "Create template instances from Instances",
         "description": "Convert one or more existing instances by their UUID(s) or name(s) into\ntemplate instances that can be used to create new instances.\n\nThe existing instances must be in the `stopped` state and not have existing\nsnapshots.",
         "operationId": "CreateTemplateInstances",
+        "parameters": [
+          {
+            "name": "timeout_s",
+            "in": "query",
+            "description": "Timeout in seconds to wait for the template instances to be created.\nA value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -11781,7 +11792,13 @@
           "timeout_ms": {
             "example": 450,
             "type": "integer",
-            "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
+            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state.  If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+            "format": "int64"
+          },
+          "timeout_s": {
+            "example": 2,
+            "type": "integer",
+            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state.  No wait performed for a value of 0.",
             "format": "int64"
           }
         },
@@ -11805,7 +11822,13 @@
               "timeout_ms": {
                 "example": 450,
                 "type": "integer",
-                "description": "Timeout in milliseconds to wait for the instance to reach the desired\nstate.  If the timeout is reached, the request will fail with an error.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state.",
+                "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+                "format": "int64"
+              },
+              "timeout_s": {
+                "example": 2,
+                "type": "integer",
+                "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
                 "format": "int64"
               }
             }

@@ -684,6 +684,16 @@ paths:
                 The existing instances must be in the `stopped` state and not have existing
                 snapshots.
             operationId: CreateTemplateInstances
+            parameters:
+                - name: timeout_s
+                  in: query
+                  description: |-
+                    Timeout in seconds to wait for the template instances to be created.
+                    A value of -1 means to wait indefinitely until the instance
+                    reaches the desired state. No wait performed for a value of 0.
+                  schema:
+                    type: integer
+                    format: int64
             requestBody:
                 content:
                     application/json:
@@ -9877,10 +9887,19 @@ components:
                     example: 450
                     type: integer
                     description: |-
-                        Timeout in milliseconds to wait for the instance to reach the desired
-                        state.  If the timeout is reached, the request will fail with an error.
-                        A value of -1 means to wait indefinitely until the instance reaches the
-                        desired state.
+                        Deprecated: Use `timeout_s` instead. Timeout in milliseconds to
+                        wait for the instance to reach the desired state.  If `timeout_s` is
+                        not set, this value is converted by rounding up to the next full
+                        second. A value of -1 means to wait indefinitely.
+                    format: int64
+                timeout_s:
+                    example: 2
+                    type: integer
+                    description: |-
+                        Timeout in seconds to wait for the instance to reach the desired
+                        state. If the timeout is reached, the request will fail with an
+                        error. A value of -1 means to wait indefinitely until the instance
+                        reaches the desired state.  No wait performed for a value of 0.
                     format: int64
             description: Wait parameters.
             x-package: instances
@@ -9897,10 +9916,19 @@ components:
                         example: 450
                         type: integer
                         description: |-
-                            Timeout in milliseconds to wait for the instance to reach the desired
-                            state.  If the timeout is reached, the request will fail with an error.
-                            A value of -1 means to wait indefinitely until the instance reaches the
-                            desired state.
+                            Deprecated: Use `timeout_s` instead. Timeout in milliseconds to
+                            wait for the instance to reach the desired state. If `timeout_s` is
+                            not set, this value is converted by rounding up to the next full
+                            second. A value of -1 means to wait indefinitely.
+                        format: int64
+                    timeout_s:
+                        example: 2
+                        type: integer
+                        description: |-
+                            Timeout in seconds to wait for the instance to reach the desired
+                            state. If the timeout is reached, the request will fail with an
+                            error. A value of -1 means to wait indefinitely until the instance
+                            reaches the desired state. No wait performed for a value of 0.
                         format: int64
                 - oneOf:
                     - title: uuid

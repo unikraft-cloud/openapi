@@ -4632,10 +4632,13 @@
             "description": "Template instances.\nAn existing instance can be saved as a template. This template is then\nused to create new instances that inherit the exact configuration and\nstate the original instance had when the template was created."
           },
           "sched_priority": {
-            "example": 10,
-            "type": "integer",
-            "description": "(Optional).  The scheduling priority for the instance.  Higher values\nindicate higher priority.",
-            "format": "int32"
+            "example": "high",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SchedPriority"
+              }
+            ],
+            "description": "The scheduling priority for the instance. Only settable by\nusers with scheduling priority override permissions."
           },
           "schedules": {
             "type": "array",
@@ -8328,6 +8331,15 @@
               "$ref": "#/components/schemas/InstancePendingUpdate"
             },
             "description": "Queued property changes awaiting application."
+          },
+          "sched_priority": {
+            "example": "high",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SchedPriority"
+              }
+            ],
+            "description": "The scheduling priority for the instance. Only present for\nusers with scheduling priority override permissions."
           }
         },
         "description": "An instance is a unikernel virtual machine running an application.",
@@ -9181,6 +9193,18 @@
         ],
         "type": "string",
         "description": "The response status of an API request.",
+        "format": "enum",
+        "x-package": "common"
+      },
+      "SchedPriority": {
+        "enum": [
+          "normal",
+          "medium",
+          "high",
+          "admin"
+        ],
+        "type": "string",
+        "description": "SchedPriority defines the scheduling priority for an instance.\nUser requires the `override_vm_priority` permission to change it.\n\nThe list of available scheduling priorities:\n\n| Priority | Description |\n|----------|-------------|\n| `normal` | Default scheduling priority. |\n| `medium` | Medium scheduling priority. |\n| `high`   | High scheduling priority. |\n| `admin`  | Admin scheduling priority. |",
         "format": "enum",
         "x-package": "common"
       },
@@ -10210,7 +10234,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": integer (scheduling priority value)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
           }
         },
         "x-package": "instances"
@@ -10259,7 +10283,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": integer (scheduling priority value)"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
               }
             }
           },

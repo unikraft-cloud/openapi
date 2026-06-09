@@ -946,7 +946,8 @@
         "required": [
           "token",
           "organization_name",
-          "organization_display_name"
+          "organization_display_name",
+          "registry"
         ],
         "type": "object",
         "properties": {
@@ -961,6 +962,10 @@
           "organization_display_name": {
             "type": "string",
             "description": "The display name of the organization the token is associated with."
+          },
+          "registry": {
+            "type": "string",
+            "description": "The global image registry."
           }
         },
         "x-package": "controlplane"
@@ -1104,7 +1109,8 @@
       "GetAuthorizationResponseData": {
         "required": [
           "organization_name",
-          "organization_display_name"
+          "organization_display_name",
+          "registry"
         ],
         "type": "object",
         "properties": {
@@ -1115,6 +1121,10 @@
           "organization_display_name": {
             "type": "string",
             "description": "The display name of the organization the token is associated with."
+          },
+          "registry": {
+            "type": "string",
+            "description": "The global image registry."
           }
         },
         "x-package": "controlplane"

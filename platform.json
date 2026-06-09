@@ -4765,16 +4765,16 @@
               },
               "soft_limit": {
                 "example": 100,
-                "maximum": 65535,
-                "minimum": 1,
+                "maximum": 65535.0,
+                "minimum": 1.0,
                 "type": "integer",
                 "description": "The soft limit for the number of services that can be created in this\nservice group.",
                 "format": "uint32"
               },
               "hard_limit": {
                 "example": 200,
-                "maximum": 65535,
-                "minimum": 1,
+                "maximum": 65535.0,
+                "minimum": 1.0,
                 "type": "integer",
                 "description": "The hard limit for the number of services that can be created in this\nservice group.",
                 "format": "uint32"
@@ -11425,7 +11425,7 @@
           },
           "max_size": {
             "example": 16,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum size of an autoscale group.",
             "format": "int32"
@@ -11480,14 +11480,14 @@
           },
           "min_volume_mb": {
             "example": 1,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum size of a volume in MB.",
             "format": "int32"
           },
           "max_volume_mb": {
             "example": 1024,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum size of a volume in MB.",
             "format": "int32"
@@ -11512,35 +11512,35 @@
           },
           "min_memory_mb": {
             "example": 16,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "def_memory_mb": {
             "example": 512,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Default amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "max_memory_mb": {
             "example": 2048,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "min_vcpus": {
             "example": 1,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum number of vCPUs assigned to a VM.",
             "format": "int32"
           },
           "max_vcpus": {
             "example": 4,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum number of vCPUs assigned to a VM.",
             "format": "int32"

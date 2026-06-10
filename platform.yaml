@@ -9699,7 +9699,6 @@ components:
                 - size_mb
                 - persistent
                 - quota_policy
-                - access_mode
             type: object
             properties:
                 uuid:

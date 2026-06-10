@@ -11574,8 +11574,7 @@
           "state",
           "size_mb",
           "persistent",
-          "quota_policy",
-          "access_mode"
+          "quota_policy"
         ],
         "type": "object",
         "properties": {

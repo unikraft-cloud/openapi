@@ -543,6 +543,8 @@ components:
         AWSConfig:
             required:
                 - dedicated_host
+                - region
+                - machine_type
             type: object
             properties:
                 vpc_id:
@@ -591,6 +593,17 @@ components:
                     description: |-
                         Placement group name for the instance. Placement groups influence how
                         instances are placed on underlying hardware.
+                region:
+                    example: us-east-1
+                    type: string
+                    description: The AWS region where the machine is located.
+                machine_type:
+                    example: c8i.large
+                    type: string
+                    description: |-
+                        The AWS machine type. This determines the compute resources
+                        (CPU, memory, etc.) available on the machine. The valid values depend
+                        on the chosen provider.
             description: AWSConfig contains AWS-specific configuration for node provisioning.
             x-package: controlplane
         AWSEBSConfig:

@@ -773,7 +773,9 @@
     "schemas": {
       "AWSConfig": {
         "required": [
-          "dedicated_host"
+          "dedicated_host",
+          "region",
+          "machine_type"
         ],
         "type": "object",
         "properties": {
@@ -825,6 +827,16 @@
             "example": "my-cluster-placement-group",
             "type": "string",
             "description": "Placement group name for the instance. Placement groups influence how\ninstances are placed on underlying hardware."
+          },
+          "region": {
+            "example": "us-east-1",
+            "type": "string",
+            "description": "The AWS region where the machine is located."
+          },
+          "machine_type": {
+            "example": "c8i.large",
+            "type": "string",
+            "description": "The AWS machine type. This determines the compute resources\n(CPU, memory, etc.) available on the machine. The valid values depend\non the chosen provider."
           }
         },
         "description": "AWSConfig contains AWS-specific configuration for node provisioning.",

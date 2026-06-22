@@ -984,7 +984,7 @@
       },
       "CloudProvider": {
         "enum": [
-          "unspecified",
+          "manual",
           "aws"
         ],
         "type": "string",
@@ -1663,7 +1663,6 @@
           "name",
           "created_at",
           "state",
-          "cloudprovider",
           "region",
           "machine_type",
           "vcpus",

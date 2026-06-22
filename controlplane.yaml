@@ -719,7 +719,7 @@ components:
             x-package: controlplane
         CloudProvider:
             enum:
-                - "unspecified"
+                - "manual"
                 - "aws"
             type: string
             description: |-
@@ -1202,7 +1202,6 @@ components:
                 - name
                 - created_at
                 - state
-                - cloudprovider
                 - region
                 - machine_type
                 - vcpus

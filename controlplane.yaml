@@ -1502,7 +1502,6 @@ components:
             x-package: controlplane
         ProvisionNodeRequest:
             required:
-                - cloudprovider
                 - region
                 - machine_type
                 - ssh_keys

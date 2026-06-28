@@ -5631,6 +5631,32 @@
         },
         "x-package": "volumes"
       },
+      "DataLicense": {
+        "required": [
+          "serial",
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "serial": {
+            "type": "string",
+            "description": "The serial number of the license certificate, hex-encoded."
+          },
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the license is currently valid."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of enabled features."
+          }
+        },
+        "description": "License information (admin only).",
+        "x-package": "node"
+      },
       "DataResult": {
         "required": [
           "uuid",
@@ -7937,6 +7963,9 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "license": {
+            "$ref": "#/components/schemas/DataLicense"
           }
         },
         "description": "Additional data returned by the health check.",

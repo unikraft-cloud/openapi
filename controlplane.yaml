@@ -1326,19 +1326,31 @@ components:
             required:
                 - csr
             type: object
-            properties:
-                csr:
-                    example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==
-                    type: string
-                    description: |-
-                        The certificate signing request (CSR) for the license which is base64
-                        encoded.
-                secret:
-                    type: string
-                    description: |-
-                        An opaque secret for first-time activation. On renewal (where the node's
-                        public key is already known), this field is omitted and the CSR
-                        self-signature is used as proof of key possession.
+            allOf:
+                - type: object
+                  properties:
+                    csr:
+                        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==
+                        type: string
+                        description: |-
+                            The certificate signing request (CSR) for the license which is base64
+                            encoded.
+                - oneOf:
+                    - title: secret
+                      type: object
+                      properties:
+                        secret:
+                            type: string
+                            description: |-
+                                An opaque secret for first-time activation. On renewal (where the node's
+                                public key is already known), this field is omitted and the CSR
+                                self-signature is used as proof of key possession.
+                    - title: serial
+                      type: object
+                      properties:
+                        serial:
+                            type: string
+                            description: The serial number of the last issued certificate.
             description: The request message for certificate activation.
             x-package: controlplane
         NodeActivateResponse:

@@ -3418,6 +3418,11 @@
                 "example": false,
                 "type": "boolean",
                 "description": "Whether the volume should be mounted read-only."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               }
             }
           },
@@ -3776,6 +3781,11 @@
           {
             "type": "object",
             "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "vol_name": {
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
@@ -5385,6 +5395,11 @@
             "type": "string",
             "description": "The name of the volume converted into a template."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "state": {
             "example": "available",
             "allOf": [
@@ -5667,6 +5682,11 @@
           "uuid": {
             "type": "string",
             "format": "uuid"
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the user."
           },
           "added": {
             "example": true,
@@ -6358,6 +6378,11 @@
             "type": "string",
             "description": "The name of the template instance that was deleted."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
+          },
           "status": {
             "allOf": [
               {
@@ -6457,6 +6482,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template volume that was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -6604,6 +6634,11 @@
           {
             "type": "object",
             "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "from": {
                 "allOf": [
                   {
@@ -7367,6 +7402,11 @@
             "type": "string",
             "description": "The name of the instance."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
+          },
           "output": {
             "example": "d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==",
             "type": "string",
@@ -7605,6 +7645,11 @@
               }
             ],
             "description": "The status of the response."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           }
         },
         "x-package": "instances"
@@ -7930,6 +7975,11 @@
               "$ref": "#/components/schemas/ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the node is located."
           },
           "data": {
             "allOf": [
@@ -9008,6 +9058,11 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the user."
           }
         },
         "x-package": "users"
@@ -10965,6 +11020,11 @@
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
               },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "prop": {
                 "example": "tags",
                 "allOf": [
@@ -11102,6 +11162,11 @@
             "type": "string",
             "description": "The name of the template volume that was updated."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "status": {
             "allOf": [
               {
@@ -11184,6 +11249,11 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "size_mb",
@@ -11992,6 +12062,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
             "allOf": [

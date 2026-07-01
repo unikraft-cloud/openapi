@@ -111,6 +111,37 @@
         },
         "x-package": "certificates"
       },
+      "put": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Update Certificate",
+        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
+        "operationId": "UpdateCertificate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "certificates"
+      },
       "post": {
         "tags": [
           "Certificates"
@@ -175,37 +206,6 @@
           }
         },
         "x-package": "certificates"
-      },
-      "patch": {
-        "tags": [
-          "Certificates"
-        ],
-        "summary": "Update Certificate",
-        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
-        "operationId": "UpdateCertificate",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCertificateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateCertificateResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "certificates"
       }
     },
     "/v1/certificates/{uuid}": {
@@ -242,40 +242,7 @@
         },
         "x-package": "certificates"
       },
-      "delete": {
-        "tags": [
-          "Certificates"
-        ],
-        "summary": "Delete Certificate by UUID",
-        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
-        "operationId": "DeleteCertificateByUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the certificate to delete.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "certificates"
-      },
-      "patch": {
+      "put": {
         "tags": [
           "Certificates"
         ],
@@ -311,6 +278,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateCertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "certificates"
+      },
+      "delete": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Delete Certificate by UUID",
+        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
+        "operationId": "DeleteCertificateByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the certificate to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
                 }
               }
             }

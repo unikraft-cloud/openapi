@@ -111,6 +111,37 @@
         },
         "x-package": "certificates"
       },
+      "put": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Update Certificate",
+        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
+        "operationId": "UpdateCertificate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "certificates"
+      },
       "post": {
         "tags": [
           "Certificates"
@@ -175,37 +206,6 @@
           }
         },
         "x-package": "certificates"
-      },
-      "patch": {
-        "tags": [
-          "Certificates"
-        ],
-        "summary": "Update Certificate",
-        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
-        "operationId": "UpdateCertificate",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCertificateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateCertificateResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "certificates"
       }
     },
     "/v1/certificates/{uuid}": {
@@ -242,40 +242,7 @@
         },
         "x-package": "certificates"
       },
-      "delete": {
-        "tags": [
-          "Certificates"
-        ],
-        "summary": "Delete Certificate by UUID",
-        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
-        "operationId": "DeleteCertificateByUUID",
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "The UUID of the certificate to delete.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "certificates"
-      },
-      "patch": {
+      "put": {
         "tags": [
           "Certificates"
         ],
@@ -311,6 +278,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateCertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "certificates"
+      },
+      "delete": {
+        "tags": [
+          "Certificates"
+        ],
+        "summary": "Delete Certificate by UUID",
+        "description": "Delete a specified certificate by its UUID.  After this call the UUID of\nthe certificate are no longer valid.",
+        "operationId": "DeleteCertificateByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the certificate to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCertificatesResponse"
                 }
               }
             }
@@ -935,6 +935,15 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "autokill.time_ms",
+            "in": "query",
+            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
+            "schema": {
+              "type": "integer",
+              "format": "uint64"
             }
           }
         ],
@@ -3418,6 +3427,11 @@
                 "example": false,
                 "type": "boolean",
                 "description": "Whether the volume should be mounted read-only."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               }
             }
           },
@@ -3776,6 +3790,11 @@
           {
             "type": "object",
             "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "vol_name": {
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
@@ -4508,8 +4527,11 @@
             "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated.  The name must be unique."
           },
           "image": {
-            "example": "nginx:latest",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ImageSpec"
+              }
+            ],
             "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
           },
           "metro": {
@@ -4765,16 +4787,16 @@
               },
               "soft_limit": {
                 "example": 100,
-                "maximum": 65535,
-                "minimum": 1,
+                "maximum": 65535.0,
+                "minimum": 1.0,
                 "type": "integer",
                 "description": "The soft limit for the number of services that can be created in this\nservice group.",
                 "format": "uint32"
               },
               "hard_limit": {
                 "example": 200,
-                "maximum": 65535,
-                "minimum": 1,
+                "maximum": 65535.0,
+                "minimum": 1.0,
                 "type": "integer",
                 "description": "The hard limit for the number of services that can be created in this\nservice group.",
                 "format": "uint32"
@@ -4843,6 +4865,20 @@
               }
             ],
             "description": "(Optional). Configuration parameters to apply when building the new instance from the source template."
+          },
+          "prepare_timeout_s": {
+            "example": 30,
+            "type": "integer",
+            "description": "(Optional). Timeout in seconds for preparing the template before the\npreparation is aborted. Only applies when `prepare` is set. A value of\n0 means no timeout.",
+            "format": "int64"
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TemplateAutokill"
+              }
+            ],
+            "description": "(Optional). Automatic delete-on-idle configuration for the template.\nOnly applies when `prepare` is set."
           }
         },
         "description": "Defines the source template used to build a new instance.",
@@ -4915,6 +4951,15 @@
                   "type": "string"
                 },
                 "description": "Script arguments passed to volume initialization scripts."
+              },
+              "access_mode": {
+                "example": "rwo",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/VolumeAccessMode"
+                  }
+                ],
+                "description": "Access mode of the volume, controlling sharing behavior.\nDefaults to read-write by a single instance (RWO)."
               }
             }
           },
@@ -5385,6 +5430,11 @@
             "type": "string",
             "description": "The name of the volume converted into a template."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "state": {
             "example": "available",
             "allOf": [
@@ -5631,6 +5681,32 @@
         },
         "x-package": "volumes"
       },
+      "DataLicense": {
+        "required": [
+          "serial",
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "serial": {
+            "type": "string",
+            "description": "The serial number of the license certificate, hex-encoded."
+          },
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the license is currently valid."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of enabled features."
+          }
+        },
+        "description": "License information (admin only).",
+        "x-package": "node"
+      },
       "DataResult": {
         "required": [
           "uuid",
@@ -5641,6 +5717,11 @@
           "uuid": {
             "type": "string",
             "format": "uuid"
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the user."
           },
           "added": {
             "example": true,
@@ -5963,6 +6044,11 @@
             "type": "integer",
             "description": "Timeout in seconds to wait for the instance to be deleted.  No wait\nperformed for a value of 0.",
             "format": "int64"
+          },
+          "dont_retain": {
+            "example": false,
+            "type": "boolean",
+            "description": "Delete immediately without retention.  If the instance is already\nbeing retained, this will force its deletion.  Ignored if retention\nfor instances is not configured."
           }
         },
         "description": "Parameters for deleting the instance by UUID.",
@@ -5984,6 +6070,11 @@
                 "type": "integer",
                 "description": "Timeout in seconds to wait for the instance to be deleted.  No wait\nperformed for a value of 0.",
                 "format": "int64"
+              },
+              "dont_retain": {
+                "example": false,
+                "type": "boolean",
+                "description": "Delete immediately without retention.  If the instance is already\nbeing retained, this will force its deletion.  Ignored if retention\nfor instances is not configured."
               }
             }
           },
@@ -6332,6 +6423,11 @@
             "type": "string",
             "description": "The name of the template instance that was deleted."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
+          },
           "status": {
             "allOf": [
               {
@@ -6431,6 +6527,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template volume that was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -6578,6 +6679,11 @@
           {
             "type": "object",
             "properties": {
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "from": {
                 "allOf": [
                   {
@@ -7341,6 +7447,11 @@
             "type": "string",
             "description": "The name of the instance."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
+          },
           "output": {
             "example": "d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==",
             "type": "string",
@@ -7579,6 +7690,11 @@
               }
             ],
             "description": "The status of the response."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           }
         },
         "x-package": "instances"
@@ -7905,6 +8021,11 @@
             },
             "description": "A list of errors which may have occurred during the request."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nWhere the node is located."
+          },
           "data": {
             "allOf": [
               {
@@ -7937,6 +8058,9 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "license": {
+            "$ref": "#/components/schemas/DataLicense"
           }
         },
         "description": "Additional data returned by the health check.",
@@ -8013,6 +8137,44 @@
           }
         },
         "x-package": "images"
+      },
+      "ImageSpec": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "example": "index.docker.io/library/nginx:latest",
+            "type": "string",
+            "description": "The image URL"
+          },
+          "credentials": {
+            "example": "dXNlcjpwYXNzd29yZA==",
+            "type": "string",
+            "description": "Optional credentials for authenticating to an OCI registry.\nOnly valid for OCI registry URLs; the platform rejects this\nfield for non-OCI schemes."
+          },
+          "headers": {
+            "example": {
+              "Authorization": "Bearer token123"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional HTTP headers to send when fetching the image."
+          },
+          "pull_policy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PullPolicy"
+              }
+            ],
+            "description": "Controls when the image is pulled relative to what is already cached on\nthe node."
+          }
+        },
+        "description": "ImageSpec describes an image to use for an instance.",
+        "x-package": "instances"
       },
       "InlineDataEncoding": {
         "enum": [
@@ -8922,6 +9084,17 @@
         "format": "enum",
         "x-package": "common"
       },
+      "PullPolicy": {
+        "enum": [
+          "always",
+          "if_not_present",
+          "never"
+        ],
+        "type": "string",
+        "description": "PullPolicy defines when an image should be pulled.",
+        "format": "enum",
+        "x-package": "instances"
+      },
       "Quotas": {
         "required": [
           "uuid",
@@ -8979,6 +9152,11 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the user."
           }
         },
         "x-package": "users"
@@ -9708,6 +9886,11 @@
             "example": "running",
             "type": "string",
             "description": "Only stop the instance if it is in this state."
+          },
+          "dump": {
+            "example": false,
+            "type": "boolean",
+            "description": "If set, forces the VMM to shutdown immediately and generate a coredump.\nCan only be used in conjunction with force."
           }
         },
         "description": "Parameters for stopping the instance.",
@@ -9744,6 +9927,11 @@
                 "example": "running",
                 "type": "string",
                 "description": "Only stop the instance if it is in this state."
+              },
+              "dump": {
+                "example": false,
+                "type": "boolean",
+                "description": "If set, forces the VMM to shutdown immediately and generate a coredump.\nCan only be used in conjunction with force."
               }
             }
           },
@@ -10083,6 +10271,19 @@
         },
         "x-package": "instances"
       },
+      "TemplateAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
+            "format": "uint64"
+          }
+        },
+        "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
+        "x-package": "instances"
+      },
       "UpdateCertificateByUUIDRequest": {
         "required": [
           "uuid",
@@ -10234,7 +10435,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
           }
         },
         "x-package": "instances"
@@ -10283,7 +10484,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
               }
             }
           },
@@ -10936,6 +11137,11 @@
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
               },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+              },
               "prop": {
                 "example": "tags",
                 "allOf": [
@@ -11073,6 +11279,11 @@
             "type": "string",
             "description": "The name of the template volume that was updated."
           },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the volume."
+          },
           "status": {
             "allOf": [
               {
@@ -11155,6 +11366,11 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "size_mb",
@@ -11425,7 +11641,7 @@
           },
           "max_size": {
             "example": 16,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum size of an autoscale group.",
             "format": "int32"
@@ -11480,14 +11696,14 @@
           },
           "min_volume_mb": {
             "example": 1,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum size of a volume in MB.",
             "format": "int32"
           },
           "max_volume_mb": {
             "example": 1024,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum size of a volume in MB.",
             "format": "int32"
@@ -11512,35 +11728,35 @@
           },
           "min_memory_mb": {
             "example": 16,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "def_memory_mb": {
             "example": 512,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Default amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "max_memory_mb": {
             "example": 2048,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum amount of memory assigned to a VM in MB.",
             "format": "int32"
           },
           "min_vcpus": {
             "example": 1,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Minimum number of vCPUs assigned to a VM.",
             "format": "int32"
           },
           "max_vcpus": {
             "example": 4,
-            "minimum": 1,
+            "minimum": 1.0,
             "type": "integer",
             "description": "Maximum number of vCPUs assigned to a VM.",
             "format": "int32"
@@ -11574,8 +11790,7 @@
           "state",
           "size_mb",
           "persistent",
-          "quota_policy",
-          "access_mode"
+          "quota_policy"
         ],
         "type": "object",
         "properties": {
@@ -11964,6 +12179,11 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
             "allOf": [

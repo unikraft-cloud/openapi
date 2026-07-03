@@ -261,7 +261,10 @@ paths:
         post:
             tags:
                 - NodeActivationService
-            description: Activates a new node.
+            description: |-
+                Activates a new node, or renews an existing node's license. For first-time
+                activation, a secret must be provided. For renewal, the CSR self-signature
+                is used as proof of key possession and the secret is omitted.
             operationId: NodeActivate
             requestBody:
                 content:
@@ -353,26 +356,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ListMachineTypesResponse'
-            x-package: controlplane
-    /v1/nodes/renew:
-        post:
-            tags:
-                - NodeActivationService
-            description: Renews a node's license.
-            operationId: NodeRenew
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/NodeRenewRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/NodeRenewResponse'
             x-package: controlplane
     /v1/nodes/wait:
         get:
@@ -543,6 +526,8 @@ components:
         AWSConfig:
             required:
                 - dedicated_host
+                - region
+                - machine_type
             type: object
             properties:
                 vpc_id:
@@ -591,6 +576,17 @@ components:
                     description: |-
                         Placement group name for the instance. Placement groups influence how
                         instances are placed on underlying hardware.
+                region:
+                    example: us-east-1
+                    type: string
+                    description: The AWS region where the machine is located.
+                machine_type:
+                    example: c8i.large
+                    type: string
+                    description: |-
+                        The AWS machine type. This determines the compute resources
+                        (CPU, memory, etc.) available on the machine. The valid values depend
+                        on the chosen provider.
             description: AWSConfig contains AWS-specific configuration for node provisioning.
             x-package: controlplane
         AWSEBSConfig:
@@ -688,6 +684,7 @@ components:
                 - token
                 - organization_name
                 - organization_display_name
+                - registry
             type: object
             properties:
                 token:
@@ -699,10 +696,13 @@ components:
                 organization_display_name:
                     type: string
                     description: The display name of the organization the token is associated with.
+                registry:
+                    type: string
+                    description: The global image registry.
             x-package: controlplane
         CloudProvider:
             enum:
-                - "unspecified"
+                - "manual"
                 - "aws"
             type: string
             description: |-
@@ -799,6 +799,7 @@ components:
             required:
                 - organization_name
                 - organization_display_name
+                - registry
             type: object
             properties:
                 organization_name:
@@ -807,6 +808,9 @@ components:
                 organization_display_name:
                     type: string
                     description: The display name of the organization the token is associated with.
+                registry:
+                    type: string
+                    description: The global image registry.
             x-package: controlplane
         Image:
             required:
@@ -1181,7 +1185,6 @@ components:
                 - name
                 - created_at
                 - state
-                - cloudprovider
                 - region
                 - machine_type
                 - vcpus
@@ -1323,13 +1326,31 @@ components:
             required:
                 - csr
             type: object
-            properties:
-                csr:
-                    example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==
-                    type: string
-                    description: |-
-                        The certificate signing request (CSR) for the license which is base64
-                        encoded.
+            allOf:
+                - type: object
+                  properties:
+                    csr:
+                        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==
+                        type: string
+                        description: |-
+                            The certificate signing request (CSR) for the license which is base64
+                            encoded.
+                - oneOf:
+                    - title: secret
+                      type: object
+                      properties:
+                        secret:
+                            type: string
+                            description: |-
+                                An opaque secret for first-time activation. On renewal (where the node's
+                                public key is already known), this field is omitted and the CSR
+                                self-signature is used as proof of key possession.
+                    - title: serial
+                      type: object
+                      properties:
+                        serial:
+                            type: string
+                            description: The serial number of the last issued certificate.
             description: The request message for certificate activation.
             x-package: controlplane
         NodeActivateResponse:
@@ -1399,62 +1420,6 @@ components:
                     description: An optional message providing additional information about the response.
             description: The response message for a node heartbeat.
             x-package: controlplane
-        NodeRenewRequest:
-            required:
-                - csr
-                - previous_serial
-            type: object
-            properties:
-                csr:
-                    example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==
-                    type: string
-                    description: |-
-                        The certificate signing request (CSR) for the license which is base64
-                        encoded.
-                previous_serial:
-                    example: 18EBA06C81FF245EF54F0F6D0701B856
-                    type: string
-                    description: The serial number of the certificate that ought to be renewed.
-            description: The request message for certificate renewal.
-            x-package: controlplane
-        NodeRenewResponse:
-            required:
-                - status
-                - op_time_us
-            type: object
-            properties:
-                status:
-                    allOf:
-                        - $ref: '#/components/schemas/ResponseStatus'
-                    description: The status of the response.
-                message:
-                    type: string
-                    description: An optional message providing additional information about the response.
-                data:
-                    allOf:
-                        - $ref: '#/components/schemas/NodeRenewResponseData'
-                    description: The response data for this request.
-                errors:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ResponseError'
-                    description: A list of errors which may have occurred during the request.
-                op_time_us:
-                    example: 189
-                    type: integer
-                    description: The operation time in microseconds.
-                    format: uint64
-            description: The response message for certificate renewal.
-            x-package: controlplane
-        NodeRenewResponseData:
-            required:
-                - license
-            type: object
-            properties:
-                license:
-                    type: string
-                    description: The renewed license certificate in base64 URL encoded PEM format.
-            x-package: controlplane
         NodeState:
             enum:
                 - "unspecified"
@@ -1482,7 +1447,6 @@ components:
             x-package: controlplane
         ProvisionNodeRequest:
             required:
-                - cloudprovider
                 - region
                 - machine_type
                 - ssh_keys

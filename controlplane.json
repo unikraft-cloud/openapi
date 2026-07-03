@@ -375,7 +375,7 @@
         "tags": [
           "NodeActivationService"
         ],
-        "description": "Activates a new node.",
+        "description": "Activates a new node, or renews an existing node's license. For first-time\nactivation, a secret must be provided. For renewal, the CSR self-signature\nis used as proof of key possession and the secret is omitted.",
         "operationId": "NodeActivate",
         "requestBody": {
           "content": {
@@ -502,38 +502,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListMachineTypesResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "controlplane"
-      }
-    },
-    "/v1/nodes/renew": {
-      "post": {
-        "tags": [
-          "NodeActivationService"
-        ],
-        "description": "Renews a node's license.",
-        "operationId": "NodeRenew",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NodeRenewRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NodeRenewResponse"
                 }
               }
             }
@@ -773,7 +741,9 @@
     "schemas": {
       "AWSConfig": {
         "required": [
-          "dedicated_host"
+          "dedicated_host",
+          "region",
+          "machine_type"
         ],
         "type": "object",
         "properties": {
@@ -825,6 +795,16 @@
             "example": "my-cluster-placement-group",
             "type": "string",
             "description": "Placement group name for the instance. Placement groups influence how\ninstances are placed on underlying hardware."
+          },
+          "region": {
+            "example": "us-east-1",
+            "type": "string",
+            "description": "The AWS region where the machine is located."
+          },
+          "machine_type": {
+            "example": "c8i.large",
+            "type": "string",
+            "description": "The AWS machine type. This determines the compute resources\n(CPU, memory, etc.) available on the machine. The valid values depend\non the chosen provider."
           }
         },
         "description": "AWSConfig contains AWS-specific configuration for node provisioning.",
@@ -946,7 +926,8 @@
         "required": [
           "token",
           "organization_name",
-          "organization_display_name"
+          "organization_display_name",
+          "registry"
         ],
         "type": "object",
         "properties": {
@@ -961,13 +942,17 @@
           "organization_display_name": {
             "type": "string",
             "description": "The display name of the organization the token is associated with."
+          },
+          "registry": {
+            "type": "string",
+            "description": "The global image registry."
           }
         },
         "x-package": "controlplane"
       },
       "CloudProvider": {
         "enum": [
-          "unspecified",
+          "manual",
           "aws"
         ],
         "type": "string",
@@ -1104,7 +1089,8 @@
       "GetAuthorizationResponseData": {
         "required": [
           "organization_name",
-          "organization_display_name"
+          "organization_display_name",
+          "registry"
         ],
         "type": "object",
         "properties": {
@@ -1115,6 +1101,10 @@
           "organization_display_name": {
             "type": "string",
             "description": "The display name of the organization the token is associated with."
+          },
+          "registry": {
+            "type": "string",
+            "description": "The global image registry."
           }
         },
         "x-package": "controlplane"
@@ -1641,7 +1631,6 @@
           "name",
           "created_at",
           "state",
-          "cloudprovider",
           "region",
           "machine_type",
           "vcpus",
@@ -1795,13 +1784,42 @@
           "csr"
         ],
         "type": "object",
-        "properties": {
-          "csr": {
-            "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
-            "type": "string",
-            "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "csr": {
+                "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
+                "type": "string",
+                "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "secret",
+                "type": "object",
+                "properties": {
+                  "secret": {
+                    "type": "string",
+                    "description": "An opaque secret for first-time activation. On renewal (where the node's\npublic key is already known), this field is omitted and the CSR\nself-signature is used as proof of key possession."
+                  }
+                }
+              },
+              {
+                "title": "serial",
+                "type": "object",
+                "properties": {
+                  "serial": {
+                    "type": "string",
+                    "description": "The serial number of the last issued certificate."
+                  }
+                }
+              }
+            ]
           }
-        },
+        ],
         "description": "The request message for certificate activation.",
         "x-package": "controlplane"
       },
@@ -1907,84 +1925,6 @@
         "description": "The response message for a node heartbeat.",
         "x-package": "controlplane"
       },
-      "NodeRenewRequest": {
-        "required": [
-          "csr",
-          "previous_serial"
-        ],
-        "type": "object",
-        "properties": {
-          "csr": {
-            "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
-            "type": "string",
-            "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
-          },
-          "previous_serial": {
-            "example": "18EBA06C81FF245EF54F0F6D0701B856",
-            "type": "string",
-            "description": "The serial number of the certificate that ought to be renewed."
-          }
-        },
-        "description": "The request message for certificate renewal.",
-        "x-package": "controlplane"
-      },
-      "NodeRenewResponse": {
-        "required": [
-          "status",
-          "op_time_us"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NodeRenewResponseData"
-              }
-            ],
-            "description": "The response data for this request."
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ResponseError"
-            },
-            "description": "A list of errors which may have occurred during the request."
-          },
-          "op_time_us": {
-            "example": 189,
-            "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
-          }
-        },
-        "description": "The response message for certificate renewal.",
-        "x-package": "controlplane"
-      },
-      "NodeRenewResponseData": {
-        "required": [
-          "license"
-        ],
-        "type": "object",
-        "properties": {
-          "license": {
-            "type": "string",
-            "description": "The renewed license certificate in base64 URL encoded PEM format."
-          }
-        },
-        "x-package": "controlplane"
-      },
       "NodeState": {
         "enum": [
           "unspecified",
@@ -2014,7 +1954,6 @@
       },
       "ProvisionNodeRequest": {
         "required": [
-          "cloudprovider",
           "region",
           "machine_type",
           "ssh_keys"

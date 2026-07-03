@@ -91,6 +91,30 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GetCertificatesResponse'
             x-package: certificates
+        put:
+            tags:
+                - Certificates
+            summary: Update Certificate
+            description: |-
+                Update the specified certificate with a new certificate chain and private
+                key. Only user-uploaded certificates can be updated; system-managed
+                certificates cannot be modified. The new certificate must have the same
+                common name (CN) as the existing certificate.
+            operationId: UpdateCertificate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCertificateRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateCertificateResponse'
+            x-package: certificates
         post:
             tags:
                 - Certificates
@@ -135,30 +159,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DeleteCertificatesResponse'
             x-package: certificates
-        patch:
-            tags:
-                - Certificates
-            summary: Update Certificate
-            description: |-
-                Update the specified certificate with a new certificate chain and private
-                key. Only user-uploaded certificates can be updated; system-managed
-                certificates cannot be modified. The new certificate must have the same
-                common name (CN) as the existing certificate.
-            operationId: UpdateCertificate
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateCertificateRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UpdateCertificateResponse'
-            x-package: certificates
     /v1/certificates/{uuid}:
         get:
             tags:
@@ -182,31 +182,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GetCertificatesResponse'
             x-package: certificates
-        delete:
-            tags:
-                - Certificates
-            summary: Delete Certificate by UUID
-            description: |-
-                Delete a specified certificate by its UUID.  After this call the UUID of
-                the certificate are no longer valid.
-            operationId: DeleteCertificateByUUID
-            parameters:
-                - name: uuid
-                  in: path
-                  description: The UUID of the certificate to delete.
-                  required: true
-                  schema:
-                    type: string
-                    format: uuid
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteCertificatesResponse'
-            x-package: certificates
-        patch:
+        put:
             tags:
                 - Certificates
             summary: Update Certificate by UUID
@@ -235,6 +211,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateCertificateResponse'
+            x-package: certificates
+        delete:
+            tags:
+                - Certificates
+            summary: Delete Certificate by UUID
+            description: |-
+                Delete a specified certificate by its UUID.  After this call the UUID of
+                the certificate are no longer valid.
+            operationId: DeleteCertificateByUUID
+            parameters:
+                - name: uuid
+                  in: path
+                  description: The UUID of the certificate to delete.
+                  required: true
+                  schema:
+                    type: string
+                    format: uuid
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteCertificatesResponse'
             x-package: certificates
     /v1/healthz:
         get:
@@ -694,6 +694,14 @@ paths:
                   schema:
                     type: integer
                     format: int64
+                - name: autokill.time_ms
+                  in: query
+                  description: |-
+                    Time in milliseconds after the template was last used for cloning
+                    before it is deleted. A value of 0 disables template autokill.
+                  schema:
+                    type: integer
+                    format: uint64
             requestBody:
                 content:
                     application/json:
@@ -2543,6 +2551,12 @@ components:
                         example: false
                         type: boolean
                         description: Whether the volume should be mounted read-only.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
                 - oneOf:
                     - title: uuid
                       required:
@@ -2892,6 +2906,12 @@ components:
             allOf:
                 - type: object
                   properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
                     vol_name:
                         example: funky-vol-t7qumh5j
                         type: string
@@ -3479,8 +3499,8 @@ components:
 
                         If not provided, a random name will be generated.  The name must be unique.
                 image:
-                    example: nginx:latest
-                    type: string
+                    allOf:
+                        - $ref: '#/components/schemas/ImageSpec'
                     description: |-
                         (Optional).  The image to use for the instance.
 
@@ -3851,6 +3871,20 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/Instance'
                     description: (Optional). Configuration parameters to apply when building the new instance from the source template.
+                prepare_timeout_s:
+                    example: 30
+                    type: integer
+                    description: |-
+                        (Optional). Timeout in seconds for preparing the template before the
+                        preparation is aborted. Only applies when `prepare` is set. A value of
+                        0 means no timeout.
+                    format: int64
+                autokill:
+                    allOf:
+                        - $ref: '#/components/schemas/TemplateAutokill'
+                    description: |-
+                        (Optional). Automatic delete-on-idle configuration for the template.
+                        Only applies when `prepare` is set.
             description: Defines the source template used to build a new instance.
             x-package: instances
         CreateInstanceRequestVolume:
@@ -3922,6 +3956,13 @@ components:
                         additionalProperties:
                             type: string
                         description: Script arguments passed to volume initialization scripts.
+                    access_mode:
+                        example: "rwo"
+                        allOf:
+                            - $ref: '#/components/schemas/VolumeAccessMode'
+                        description: |-
+                            Access mode of the volume, controlling sharing behavior.
+                            Defaults to read-write by a single instance (RWO).
                 - oneOf:
                     - title: size_mb
                       type: object
@@ -4313,6 +4354,12 @@ components:
                     example: funky-vol-g7gum5cj
                     type: string
                     description: The name of the volume converted into a template.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 state:
                     example: available
                     allOf:
@@ -4503,6 +4550,25 @@ components:
                         This field is useful when the status is not `success`.
                     format: int32
             x-package: volumes
+        DataLicense:
+            required:
+                - serial
+                - valid
+            type: object
+            properties:
+                serial:
+                    type: string
+                    description: The serial number of the license certificate, hex-encoded.
+                valid:
+                    type: boolean
+                    description: Whether the license is currently valid.
+                features:
+                    type: array
+                    items:
+                        type: string
+                    description: List of enabled features.
+            description: License information (admin only).
+            x-package: node
         DataResult:
             required:
                 - uuid
@@ -4512,6 +4578,12 @@ components:
                 uuid:
                     type: string
                     format: uuid
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the user.
                 added:
                     example: true
                     type: boolean
@@ -4774,6 +4846,13 @@ components:
                         Timeout in seconds to wait for the instance to be deleted.  No wait
                         performed for a value of 0.
                     format: int64
+                dont_retain:
+                    example: false
+                    type: boolean
+                    description: |-
+                        Delete immediately without retention.  If the instance is already
+                        being retained, this will force its deletion.  Ignored if retention
+                        for instances is not configured.
             description: Parameters for deleting the instance by UUID.
             x-package: instances
         DeleteInstanceRequestItem:
@@ -4794,6 +4873,13 @@ components:
                             Timeout in seconds to wait for the instance to be deleted.  No wait
                             performed for a value of 0.
                         format: int64
+                    dont_retain:
+                        example: false
+                        type: boolean
+                        description: |-
+                            Delete immediately without retention.  If the instance is already
+                            being retained, this will force its deletion.  Ignored if retention
+                            for instances is not configured.
                 - oneOf:
                     - title: uuid
                       required:
@@ -5069,6 +5155,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template instance that was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the template instance.
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -5147,6 +5239,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template volume that was deleted.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -5263,6 +5361,12 @@ components:
             allOf:
                 - type: object
                   properties:
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
                     from:
                         allOf:
                             - $ref: '#/components/schemas/NameOrUUID'
@@ -5872,6 +5976,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 output:
                     example: d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==
                     type: string
@@ -6090,6 +6200,12 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
                     description: The status of the response.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
             x-package: instances
         GetInstancesResponse:
             required:
@@ -6333,6 +6449,12 @@ components:
                     items:
                         $ref: '#/components/schemas/ResponseError'
                     description: A list of errors which may have occurred during the request.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        Where the node is located.
                 data:
                     allOf:
                         - $ref: '#/components/schemas/HealthzResponseData'
@@ -6357,6 +6479,8 @@ components:
                     type: object
                     additionalProperties:
                         type: string
+                license:
+                    $ref: '#/components/schemas/DataLicense'
             description: Additional data returned by the health check.
             x-package: node
         Image:
@@ -6409,6 +6533,36 @@ components:
                     items:
                         type: string
             x-package: images
+        ImageSpec:
+            required:
+                - url
+            type: object
+            properties:
+                url:
+                    example: index.docker.io/library/nginx:latest
+                    type: string
+                    description: The image URL
+                credentials:
+                    example: dXNlcjpwYXNzd29yZA==
+                    type: string
+                    description: |-
+                        Optional credentials for authenticating to an OCI registry.
+                        Only valid for OCI registry URLs; the platform rejects this
+                        field for non-OCI schemes.
+                headers:
+                    example: {"Authorization": "Bearer token123"}
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Optional HTTP headers to send when fetching the image.
+                pull_policy:
+                    allOf:
+                        - $ref: '#/components/schemas/PullPolicy'
+                    description: |-
+                        Controls when the image is pulled relative to what is already cached on
+                        the node.
+            description: ImageSpec describes an image to use for an instance.
+            x-package: instances
         InlineDataEncoding:
             enum:
                 - "text"
@@ -7435,6 +7589,15 @@ components:
             description: The sort field used by list endpoints.
             format: enum
             x-package: common
+        PullPolicy:
+            enum:
+                - "always"
+                - "if_not_present"
+                - "never"
+            type: string
+            description: PullPolicy defines when an image should be pulled.
+            format: enum
+            x-package: instances
         Quotas:
             required:
                 - uuid
@@ -7481,6 +7644,12 @@ components:
                         This field is only set when this message object is used as a response
                         message, and is useful when the status is not `success`.
                     format: int32
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the user.
             x-package: users
         QuotasLimits:
             required:
@@ -8235,6 +8404,12 @@ components:
                     example: running
                     type: string
                     description: Only stop the instance if it is in this state.
+                dump:
+                    example: false
+                    type: boolean
+                    description: |-
+                        If set, forces the VMM to shutdown immediately and generate a coredump.
+                        Can only be used in conjunction with force.
             description: Parameters for stopping the instance.
             x-package: instances
         StopInstancesRequestItem:
@@ -8274,6 +8449,12 @@ components:
                         example: running
                         type: string
                         description: Only stop the instance if it is in this state.
+                    dump:
+                        example: false
+                        type: boolean
+                        description: |-
+                            If set, forces the VMM to shutdown immediately and generate a coredump.
+                            Can only be used in conjunction with force.
                 - oneOf:
                     - title: uuid
                       type: object
@@ -8528,6 +8709,20 @@ components:
                         This field is useful when the status is not `success`.
                     format: int32
             x-package: instances
+        TemplateAutokill:
+            type: object
+            properties:
+                time_ms:
+                    example: 60000
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the template was last used for cloning
+                        before it is deleted. A value of 0 disables template autokill.
+                    format: uint64
+            description: |-
+                (Optional). Automatic delete-on-idle configuration for the template
+                instance. Only applies when `prepare` is set.
+            x-package: instances
         UpdateCertificateByUUIDRequest:
             required:
                 - uuid
@@ -8658,7 +8853,7 @@ components:
                         - $ref: '#/components/schemas/GoogleProtobufValue'
                     description: |-
                         The value for the update operation. The type depends on the property and operation:
-                        - For "image": string
+                        - For "image": object with image url, credentials, headers and pull policy
                         - For "args": string or array of strings
                         - For "env": object (for SET/ADD) or string/array of strings (for DEL)
                         - For "memory_mb": integer
@@ -8709,7 +8904,7 @@ components:
                             - $ref: '#/components/schemas/GoogleProtobufValue'
                         description: |-
                             The value for the update operation. The type depends on the property and operation:
-                            - For "image": string
+                            - For "image": object with image url, credentials, headers and pull policy
                             - For "args": string or array of strings
                             - For "env": object (for SET/ADD) or string/array of strings (for DEL)
                             - For "memory_mb": integer
@@ -9217,6 +9412,12 @@ components:
                         description: |-
                             (Optional).  A client-provided identifier for tracking this operation in
                             the response.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
                     prop:
                         example: tags
                         allOf:
@@ -9316,6 +9517,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the template volume that was updated.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the volume.
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -9380,6 +9587,12 @@ components:
                         example: op-1
                         type: string
                         description: (Optional).  A client-provided identifier for tracking this operation in the response.
+                    metro:
+                        example: fra
+                        type: string
+                        description: |-
+                            (Only applies when using global control plane).
+                            The metro to route the request to.
                     prop:
                         example: size_mb
                         allOf:
@@ -9699,7 +9912,6 @@ components:
                 - size_mb
                 - persistent
                 - quota_policy
-                - access_mode
             type: object
             properties:
                 uuid:
@@ -10037,6 +10249,12 @@ components:
                     example: funky-town-g756b5d
                     type: string
                     description: The name of the instance.
+                metro:
+                    example: fra
+                    type: string
+                    description: |-
+                        (Only applies when using global control plane).
+                        The metro of the instance.
                 state:
                     allOf:
                         - $ref: '#/components/schemas/InstanceState'

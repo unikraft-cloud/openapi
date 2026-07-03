@@ -694,6 +694,14 @@ paths:
                   schema:
                     type: integer
                     format: int64
+                - name: autokill.time_ms
+                  in: query
+                  description: |-
+                    Time in milliseconds after the template was last used for cloning
+                    before it is deleted. A value of 0 disables template autokill.
+                  schema:
+                    type: integer
+                    format: uint64
             requestBody:
                 content:
                     application/json:
@@ -3863,6 +3871,20 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/Instance'
                     description: (Optional). Configuration parameters to apply when building the new instance from the source template.
+                prepare_timeout_s:
+                    example: 30
+                    type: integer
+                    description: |-
+                        (Optional). Timeout in seconds for preparing the template before the
+                        preparation is aborted. Only applies when `prepare` is set. A value of
+                        0 means no timeout.
+                    format: int64
+                autokill:
+                    allOf:
+                        - $ref: '#/components/schemas/TemplateAutokill'
+                    description: |-
+                        (Optional). Automatic delete-on-idle configuration for the template.
+                        Only applies when `prepare` is set.
             description: Defines the source template used to build a new instance.
             x-package: instances
         CreateInstanceRequestVolume:
@@ -3934,6 +3956,13 @@ components:
                         additionalProperties:
                             type: string
                         description: Script arguments passed to volume initialization scripts.
+                    access_mode:
+                        example: "rwo"
+                        allOf:
+                            - $ref: '#/components/schemas/VolumeAccessMode'
+                        description: |-
+                            Access mode of the volume, controlling sharing behavior.
+                            Defaults to read-write by a single instance (RWO).
                 - oneOf:
                     - title: size_mb
                       type: object
@@ -4817,6 +4846,13 @@ components:
                         Timeout in seconds to wait for the instance to be deleted.  No wait
                         performed for a value of 0.
                     format: int64
+                dont_retain:
+                    example: false
+                    type: boolean
+                    description: |-
+                        Delete immediately without retention.  If the instance is already
+                        being retained, this will force its deletion.  Ignored if retention
+                        for instances is not configured.
             description: Parameters for deleting the instance by UUID.
             x-package: instances
         DeleteInstanceRequestItem:
@@ -4837,6 +4873,13 @@ components:
                             Timeout in seconds to wait for the instance to be deleted.  No wait
                             performed for a value of 0.
                         format: int64
+                    dont_retain:
+                        example: false
+                        type: boolean
+                        description: |-
+                            Delete immediately without retention.  If the instance is already
+                            being retained, this will force its deletion.  Ignored if retention
+                            for instances is not configured.
                 - oneOf:
                     - title: uuid
                       required:
@@ -8361,6 +8404,12 @@ components:
                     example: running
                     type: string
                     description: Only stop the instance if it is in this state.
+                dump:
+                    example: false
+                    type: boolean
+                    description: |-
+                        If set, forces the VMM to shutdown immediately and generate a coredump.
+                        Can only be used in conjunction with force.
             description: Parameters for stopping the instance.
             x-package: instances
         StopInstancesRequestItem:
@@ -8400,6 +8449,12 @@ components:
                         example: running
                         type: string
                         description: Only stop the instance if it is in this state.
+                    dump:
+                        example: false
+                        type: boolean
+                        description: |-
+                            If set, forces the VMM to shutdown immediately and generate a coredump.
+                            Can only be used in conjunction with force.
                 - oneOf:
                     - title: uuid
                       type: object
@@ -8653,6 +8708,20 @@ components:
                         An optional error code providing additional information about the status.
                         This field is useful when the status is not `success`.
                     format: int32
+            x-package: instances
+        TemplateAutokill:
+            type: object
+            properties:
+                time_ms:
+                    example: 60000
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the template was last used for cloning
+                        before it is deleted. A value of 0 disables template autokill.
+                    format: uint64
+            description: |-
+                (Optional). Automatic delete-on-idle configuration for the template
+                instance. Only applies when `prepare` is set.
             x-package: instances
         UpdateCertificateByUUIDRequest:
             required:

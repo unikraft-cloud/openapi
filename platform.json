@@ -936,6 +936,15 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "autokill.time_ms",
+            "in": "query",
+            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
+            "schema": {
+              "type": "integer",
+              "format": "uint64"
+            }
           }
         ],
         "requestBody": {
@@ -4856,6 +4865,20 @@
               }
             ],
             "description": "(Optional). Configuration parameters to apply when building the new instance from the source template."
+          },
+          "prepare_timeout_s": {
+            "example": 30,
+            "type": "integer",
+            "description": "(Optional). Timeout in seconds for preparing the template before the\npreparation is aborted. Only applies when `prepare` is set. A value of\n0 means no timeout.",
+            "format": "int64"
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TemplateAutokill"
+              }
+            ],
+            "description": "(Optional). Automatic delete-on-idle configuration for the template.\nOnly applies when `prepare` is set."
           }
         },
         "description": "Defines the source template used to build a new instance.",
@@ -4928,6 +4951,15 @@
                   "type": "string"
                 },
                 "description": "Script arguments passed to volume initialization scripts."
+              },
+              "access_mode": {
+                "example": "rwo",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/VolumeAccessMode"
+                  }
+                ],
+                "description": "Access mode of the volume, controlling sharing behavior.\nDefaults to read-write by a single instance (RWO)."
               }
             }
           },
@@ -6012,6 +6044,11 @@
             "type": "integer",
             "description": "Timeout in seconds to wait for the instance to be deleted.  No wait\nperformed for a value of 0.",
             "format": "int64"
+          },
+          "dont_retain": {
+            "example": false,
+            "type": "boolean",
+            "description": "Delete immediately without retention.  If the instance is already\nbeing retained, this will force its deletion.  Ignored if retention\nfor instances is not configured."
           }
         },
         "description": "Parameters for deleting the instance by UUID.",
@@ -6033,6 +6070,11 @@
                 "type": "integer",
                 "description": "Timeout in seconds to wait for the instance to be deleted.  No wait\nperformed for a value of 0.",
                 "format": "int64"
+              },
+              "dont_retain": {
+                "example": false,
+                "type": "boolean",
+                "description": "Delete immediately without retention.  If the instance is already\nbeing retained, this will force its deletion.  Ignored if retention\nfor instances is not configured."
               }
             }
           },
@@ -9844,6 +9886,11 @@
             "example": "running",
             "type": "string",
             "description": "Only stop the instance if it is in this state."
+          },
+          "dump": {
+            "example": false,
+            "type": "boolean",
+            "description": "If set, forces the VMM to shutdown immediately and generate a coredump.\nCan only be used in conjunction with force."
           }
         },
         "description": "Parameters for stopping the instance.",
@@ -9880,6 +9927,11 @@
                 "example": "running",
                 "type": "string",
                 "description": "Only stop the instance if it is in this state."
+              },
+              "dump": {
+                "example": false,
+                "type": "boolean",
+                "description": "If set, forces the VMM to shutdown immediately and generate a coredump.\nCan only be used in conjunction with force."
               }
             }
           },
@@ -10217,6 +10269,19 @@
             "format": "int32"
           }
         },
+        "x-package": "instances"
+      },
+      "TemplateAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
+            "format": "uint64"
+          }
+        },
+        "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
         "x-package": "instances"
       },
       "UpdateCertificateByUUIDRequest": {

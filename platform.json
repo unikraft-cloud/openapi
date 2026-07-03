@@ -4518,8 +4518,11 @@
             "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated.  The name must be unique."
           },
           "image": {
-            "example": "nginx:latest",
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ImageSpec"
+              }
+            ],
             "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
           },
           "metro": {
@@ -8093,6 +8096,44 @@
         },
         "x-package": "images"
       },
+      "ImageSpec": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "example": "index.docker.io/library/nginx:latest",
+            "type": "string",
+            "description": "The image URL"
+          },
+          "credentials": {
+            "example": "dXNlcjpwYXNzd29yZA==",
+            "type": "string",
+            "description": "Optional credentials for authenticating to an OCI registry.\nOnly valid for OCI registry URLs; the platform rejects this\nfield for non-OCI schemes."
+          },
+          "headers": {
+            "example": {
+              "Authorization": "Bearer token123"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional HTTP headers to send when fetching the image."
+          },
+          "pull_policy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PullPolicy"
+              }
+            ],
+            "description": "Controls when the image is pulled relative to what is already cached on\nthe node."
+          }
+        },
+        "description": "ImageSpec describes an image to use for an instance.",
+        "x-package": "instances"
+      },
       "InlineDataEncoding": {
         "enum": [
           "text",
@@ -9000,6 +9041,17 @@
         "description": "The sort field used by list endpoints.",
         "format": "enum",
         "x-package": "common"
+      },
+      "PullPolicy": {
+        "enum": [
+          "always",
+          "if_not_present",
+          "never"
+        ],
+        "type": "string",
+        "description": "PullPolicy defines when an image should be pulled.",
+        "format": "enum",
+        "x-package": "instances"
       },
       "Quotas": {
         "required": [
@@ -10318,7 +10370,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
           }
         },
         "x-package": "instances"
@@ -10367,7 +10419,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": string\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
               }
             }
           },

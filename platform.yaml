@@ -684,31 +684,13 @@ paths:
                 The existing instances must be in the `stopped` state and not have existing
                 snapshots.
             operationId: CreateTemplateInstances
-            parameters:
-                - name: timeout_s
-                  in: query
-                  description: |-
-                    Timeout in seconds to wait for the template instances to be created.
-                    A value of -1 means to wait indefinitely until the instance
-                    reaches the desired state. No wait performed for a value of 0.
-                  schema:
-                    type: integer
-                    format: int64
-                - name: autokill.time_ms
-                  in: query
-                  description: |-
-                    Time in milliseconds after the template was last used for cloning
-                    before it is deleted. A value of 0 disables template autokill.
-                  schema:
-                    type: integer
-                    format: uint64
             requestBody:
                 content:
                     application/json:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/NameOrUUID'
+                                $ref: '#/components/schemas/CreateTemplateInstancesRequestItem'
                 required: true
             responses:
                 default:
@@ -4201,6 +4183,45 @@ components:
                         Note: only one service group can be specified in the request, so this
                         will always contain a single entry.
             x-package: services
+        CreateTemplateInstancesRequestItem:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    timeout_s:
+                        example: 2
+                        type: integer
+                        description: |-
+                            Timeout in seconds to wait for the template instances to be created.
+                            A value of -1 means to wait indefinitely until the instance reaches the
+                            desired state. No wait performed for a value of 0.
+                        format: int64
+                    autokill:
+                        allOf:
+                            - $ref: '#/components/schemas/ItemAutokill'
+                        description: (Optional). Automatic delete-on-idle configuration for the new template.
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: |-
+                                The UUID of the instance to convert into template. Mutually exclusive
+                                with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: |-
+                                The name of the instance to convert into template. Mutually exclusive
+                                with UUID.
+            description: A single template instance to be created.
+            x-package: instances
         CreateTemplateInstancesResponse:
             required:
                 - status
@@ -7437,6 +7458,18 @@ components:
 
                 Volumes can be used to store persistent data which should remain available
                 even if the instance is stopped or restarted.
+            x-package: instances
+        ItemAutokill:
+            type: object
+            properties:
+                time_ms:
+                    example: 60000
+                    type: integer
+                    description: |-
+                        Time in milliseconds after the template was last used for cloning
+                        before it is deleted. A value of 0 disables template autokill.
+                    format: uint64
+            description: Automatic delete-on-idle configuration for the template instance.
             x-package: instances
         MutableInstanceOperation:
             enum:

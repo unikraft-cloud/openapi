@@ -143,11 +143,6 @@ paths:
                   description: Optional filter by metro.
                   schema:
                     type: string
-                - name: region
-                  in: query
-                  description: Optional filter by region.
-                  schema:
-                    type: string
                 - name: limit
                   in: query
                   description: Maximum number of results to return.
@@ -300,7 +295,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/NodeHeartbeatResponse'
             x-package: controlplane
-    /v1/nodes/provider/{cloudprovider}/regions:
+    /v1/nodes/providers/{cloudprovider}/regions:
         get:
             tags:
                 - NodeService
@@ -326,7 +321,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ListRegionsResponse'
             x-package: controlplane
-    /v1/nodes/provider/{cloudprovider}/types:
+    /v1/nodes/providers/{cloudprovider}/types:
         get:
             tags:
                 - NodeService
@@ -723,8 +718,7 @@ components:
                             description: AWS-specific configuration.
             description: |-
                 CloudProviderConfig contains provider-specific configuration for node
-                provisioning.  Use this for advanced customization beyond the common
-                machine_type and region fields.
+                provisioning.
             x-package: controlplane
         DestroyNodeResponse:
             required:
@@ -1185,8 +1179,6 @@ components:
                 - name
                 - created_at
                 - state
-                - region
-                - machine_type
                 - vcpus
                 - memory_mib
                 - uptime_seconds
@@ -1236,21 +1228,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where this machine is provisioned.
-                region:
-                    example: us-east-1
-                    type: string
-                    description: |-
-                        The provider's region where the machine is located (e.g., "us-east-1" for
-                        AWS, "us-central1" for GCP, "westeurope" for Azure).
-                machine_type:
-                    example: m5.xlarge
-                    type: string
-                    description: |-
-                        The machine type as defined by the provider (e.g., "m5.xlarge" for AWS,
-                        "n2-standard-4" for GCP, "Standard_D4s_v3" for Azure).
-
-                        This determines the compute resources (CPU, memory, etc.) available on
-                        the machine. The valid values depend on the chosen provider.
                 vcpus:
                     example: 4
                     type: integer
@@ -1314,6 +1291,10 @@ components:
                     description: |-
                         Whether the machine is protected from deletion. When true, delete operations
                         will fail until this is set to false.
+                api_endpoint:
+                    example: https://api.node-metro1.unikraft.cloud/v1
+                    type: string
+                    description: The API endpoint for the node, used to connect to the node's platform SDK.
             description: |-
                 Node represents a physical or virtual compute node provisioned on a
                 cloud provider for use as part of the Unikraft Cloud infrastructure.
@@ -1447,8 +1428,6 @@ components:
             x-package: controlplane
         ProvisionNodeRequest:
             required:
-                - region
-                - machine_type
                 - ssh_keys
             type: object
             properties:
@@ -1462,14 +1441,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where the machine should be provisioned.
-                region:
-                    example: us-east-1
-                    type: string
-                    description: The provider region where the machine should be provisioned.
-                machine_type:
-                    example: m5.xlarge
-                    type: string
-                    description: The machine type to provision. This is provider-specific.
                 ssh_keys:
                     type: array
                     items:

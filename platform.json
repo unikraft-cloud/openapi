@@ -651,6 +651,428 @@
         "x-package": "instances"
       }
     },
+    "/v1/instances/checkpoints": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "List checkpoint instances",
+        "description": "Get one or more checkpoint instances by their UUID(s) or name(s).",
+        "operationId": "GetCheckpointInstances",
+        "parameters": [
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the checkpoints in the response.  By\ndefault this is set to true, meaning that all information about the\ncheckpoints will be included in the response.  If set to false, only the\nbasic information about the checkpoints will be included, such as their\nname and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of checkpoint instances to return.  If set to 0 or not\nset, all the checkpoint instances matching filters will be returned.  When\nfiltering by IDs, this should not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A list of tags to filter the checkpoint instances by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the checkpoint with the given UUID or at\nthe given ISO8601 creation timestamp (inclusive).  When count is 0 or not\nset, a UUID value may be used to match a specific checkpoint by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned checkpoint instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationOrder"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the checkpoint instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationSortBy"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "post": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Create checkpoint instances",
+        "description": "Create a checkpoint from an existing instance.  A checkpoint captures the\nstate of an instance at a specific point in time.  Checkpoints can be\ncreated from running, stopped, or standby instances.",
+        "operationId": "CreateCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateCheckpointInstancesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete checkpoint instances",
+        "description": "Delete the specified checkpoint instance(s) by ID(s) (name or UUID).\nAfter this call the IDs of the checkpoint instances are no longer valid.",
+        "operationId": "DeleteCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update checkpoint instances",
+        "description": "Update (modify) one or more checkpoint instances by ID(s) (name or UUID).",
+        "operationId": "UpdateCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint history",
+        "description": "Get the checkpoint history of one or more checkpoint instances.\nReturns the ordered list of checkpoints in each checkpoint's history.",
+        "operationId": "GetCheckpointHistory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/{uuid}": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint instance by UUID",
+        "description": "Get a single checkpoint instance by its UUID.",
+        "operationId": "GetCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to retrieve.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the checkpoint in the response.  By default\nthis is set to true, meaning that all information about the checkpoint will\nbe included in the response.  If set to false, only the basic information\nabout the checkpoint will be included, such as its name and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete checkpoint instance by UUID",
+        "description": "Delete a specified checkpoint instance by its UUID.  After this call the\nUUID of the checkpoint instance is no longer valid.",
+        "operationId": "DeleteCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to delete.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update checkpoint instance by UUID",
+        "description": "Update (modify) a checkpoint instance by its UUID.",
+        "operationId": "UpdateCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to update.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCheckpointInstanceByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/{uuid}/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint history by UUID",
+        "description": "Get the checkpoint history of a checkpoint instance by its UUID.\nReturns the ordered list of checkpoints in the checkpoint's history.",
+        "operationId": "GetCheckpointHistoryByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the instance or checkpoint to retrieve history for.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get instances checkpoint history",
+        "description": "Get the checkpoint history of one or more instances.\nReturns the ordered list of checkpoints associated with each instance.",
+        "operationId": "GetInstanceHistory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
     "/v1/instances/log": {
       "get": {
         "tags": [
@@ -1302,6 +1724,42 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/{uuid}/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get instance checkpoint history by UUID",
+        "description": "Get the checkpoint history of an instance by its UUID.\nReturns the ordered list of checkpoints associated with the instance.",
+        "operationId": "GetInstanceHistoryByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the instance or checkpoint to retrieve history for.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
                 }
               }
             }
@@ -3737,6 +4195,35 @@
         "format": "enum",
         "x-package": "certificates"
       },
+      "CheckpointHistoryEntry": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint."
+          },
+          "created_at": {
+            "example": "2023-10-01T12:00:00Z",
+            "type": "string",
+            "description": "The time the checkpoint was created.",
+            "format": "date-time"
+          }
+        },
+        "description": "A checkpoint history entry, representing a single checkpoint in the\nhistory of an instance.",
+        "x-package": "instances"
+      },
       "CloneVolumeByUUIDRequestBody": {
         "type": "object",
         "properties": {
@@ -4498,6 +4985,153 @@
         },
         "x-package": "certificates"
       },
+      "CreateCheckpointInstancesRequestItem": {
+        "required": [
+          "from"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "The source instance to create a checkpoint from (by name or UUID)."
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "(Optional).  The name of the checkpoint.\nIf not provided, a name will be generated."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
+          },
+          "timeout_s": {
+            "example": 10,
+            "type": "integer",
+            "description": "Timeout in seconds to wait for the checkpoint to be created.\nNo wait performed for a value of 0.",
+            "format": "int64"
+          }
+        },
+        "description": "A single checkpoint creation request.",
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint creation operation."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was created.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was created."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
+            ],
+            "description": "The current state of the checkpoint."
+          },
+          "message": {
+            "example": "Failed to create checkpoint",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were created during the operation."
+          }
+        },
+        "x-package": "instances"
+      },
       "CreateInstanceRequest": {
         "type": "object",
         "properties": {
@@ -4668,6 +5302,22 @@
               "$ref": "#/components/schemas/NameOrUUID"
             },
             "description": "(Optional).  Dependencies of the instance.\n\nA list of instance identifiers (name or UUID) that this instance depends\non.  Dependencies define startup ordering and can be used to ensure that\nprerequisite instances are running before this instance starts."
+          },
+          "branch_from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running, stopped, or a template.  If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
+          },
+          "checkpoint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "(Optional).  Reference to an existing checkpoint to create the instance\nfrom.  The checkpoint must be in the `checkpoint` state.  The new instance\nwill be created with the same configuration and state as the checkpoint.\nMutually exclusive with `image`, `template`, and `branch_from`."
           }
         },
         "description": "The request message for creating a new instance.",
@@ -6069,6 +6719,110 @@
         "description": "Details of the certificate which was deleted by this request.",
         "x-package": "certificates"
       },
+      "DeleteCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for deleting one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "DeleteCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was deleted.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was deleted."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint instance deletion operation."
+          },
+          "message": {
+            "example": "No checkpoint instance with name 'my-checkpoint'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "DeleteCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were processed during the delete operation."
+          }
+        },
+        "x-package": "instances"
+      },
       "DeleteInstanceByUUIDRequestBody": {
         "type": "object",
         "properties": {
@@ -7215,6 +7969,175 @@
           }
         },
         "x-package": "certificates"
+      },
+      "GetCheckpointHistoryResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetCheckpointHistoryResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting the checkpoint history.",
+        "x-package": "instances"
+      },
+      "GetCheckpointHistoryResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCheckpointHistoryResponseInstanceHistory"
+            },
+            "description": "The checkpoint histories for the requested instances."
+          }
+        },
+        "x-package": "instances"
+      },
+      "GetCheckpointHistoryResponseInstanceHistory": {
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the instance."
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckpointHistoryEntry"
+            },
+            "description": "The checkpoint history entries."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "History for a single instance.",
+        "x-package": "instances"
+      },
+      "GetCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "GetCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Instance"
+            },
+            "description": "List of checkpoint instances that were retrieved during the operation."
+          }
+        },
+        "x-package": "instances"
       },
       "GetImagesRequestTagOrDigest": {
         "type": "object",
@@ -8535,9 +9458,17 @@
               }
             ],
             "description": "The scheduling priority for the instance. Only present for\nusers with scheduling priority override permissions."
+          },
+          "checkpoint_autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceTemplateAutokill"
+              }
+            ],
+            "description": "Checkpoint-specific automatic delete-on-idle configuration.\nOnly used for checkpoint instances."
           }
         },
-        "description": "An instance is a unikernel virtual machine running an application.",
+        "description": "An instance is a micro vm running an application.",
         "x-package": "instances"
       },
       "InstanceAutokill": {
@@ -8867,7 +9798,8 @@
           "stopping",
           "template",
           "standby",
-          "deleted"
+          "deleted",
+          "checkpoint"
         ],
         "type": "string",
         "description": "The current state of an instance.",
@@ -8936,6 +9868,28 @@
           }
         },
         "description": "Automatic delete-on-idle configuration for the template instance.",
+        "x-package": "instances"
+      },
+      "MutableCheckpointInstanceOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on a checkpoint instance's properties.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableCheckpointInstanceProperty": {
+        "enum": [
+          "tags",
+          "delete_lock",
+          "autokill"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a checkpoint instance that can be updated.",
+        "format": "enum",
         "x-package": "instances"
       },
       "MutableInstanceOperation": {
@@ -10444,6 +11398,235 @@
           }
         },
         "x-package": "certificates"
+      },
+      "UpdateCheckpointInstanceByUUIDRequestBody": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+          },
+          "prop": {
+            "example": "tags",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableCheckpointInstanceProperty"
+              }
+            ],
+            "description": "The property to modify."
+          },
+          "op": {
+            "example": "add",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableCheckpointInstanceOperation"
+              }
+            ],
+            "description": "The operation to perform on the property."
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+          }
+        },
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesRequestItem": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+              },
+              "metro": {
+                "example": "fra",
+                "type": "string",
+                "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
+              },
+              "prop": {
+                "example": "tags",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableCheckpointInstanceProperty"
+                  }
+                ],
+                "description": "The property to modify."
+              },
+              "op": {
+                "example": "add",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableCheckpointInstanceOperation"
+                  }
+                ],
+                "description": "The operation to perform on the property."
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the checkpoint instance to update. Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "my-checkpoint",
+                    "type": "string",
+                    "description": "The name of the checkpoint instance to update. Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "A single update operation to be applied to a checkpoint instance.",
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating a checkpoint instance by its UUID.",
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was updated.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was updated."
+          },
+          "metro": {
+            "example": "fra",
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint instance update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No checkpoint instance with name 'my-checkpoint'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were processed during the update operation."
+          }
+        },
+        "x-package": "instances"
       },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [
@@ -12289,7 +13472,7 @@
     },
     {
       "name": "Instances",
-      "description": "An instance is a unikernel virtual machine running an application."
+      "description": "An instance is a micro vm running an application."
     },
     {
       "name": "Node"

@@ -4160,6 +4160,19 @@ components:
                         from.  The checkpoint must be in the `checkpoint` state.  The new instance
                         will be created with the same configuration and state as the checkpoint.
                         Mutually exclusive with `image`, `template`, and `branch_from`.
+                gateway:
+                    example: 10.0.0.1
+                    type: string
+                    description: The default gateway to configure inside the guest.
+                nameserver:
+                    example: 8.8.8.8
+                    type: string
+                    description: The DNS resolver to configure inside the guest.
+                network_interfaces:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestNetworkInterface'
+                    description: A list of one to four interfaces to attach
             description: The request message for creating a new instance.
             x-package: instances
         CreateInstanceRequestAutokill:
@@ -4215,6 +4228,38 @@ components:
                 and a FQDN is provided, Unikraft Cloud will automatically generate a new
                 certificate for the domain based on Let's Encrypt and seek to accomplish a
                 DNS-01 challenge.
+            x-package: instances
+        CreateInstanceRequestNetworkInterface:
+            type: object
+            properties:
+                name:
+                    example: eth0
+                    type: string
+                    description: |-
+                        The interface name. If omitted, Unikraft Cloud generates one as
+                        <instance-name>-ethX, falling back to eth-<suffix> when the
+                        instance name is too long.
+                tap_name:
+                    example: tap0
+                    type: string
+                    description: |-
+                        The TAP device to attach the interface to. Provide it together
+                        with ip.
+                ip:
+                    example: 10.0.0.5/24
+                    type: string
+                    description: |-
+                        The interface IP address in CIDR notation. Provide it together
+                        with tap_name to bring your own interface.
+                autoconfig:
+                    example: true
+                    type: boolean
+                    description: Whether the guest configures the interface itself. Defaults to true.
+                relay:
+                    allOf:
+                        - $ref: '#/components/schemas/NetworkInterfaceRelay'
+                    description: Relay configuration for this interface.
+            description: Network interface configuration for a new instance.
             x-package: instances
         CreateInstanceRequestRom:
             required:
@@ -7752,6 +7797,18 @@ components:
                     description: |-
                         Checkpoint-specific automatic delete-on-idle configuration.
                         Only used for checkpoint instances.
+                private_ip:
+                    example: 10.0.0.5
+                    type: string
+                    description: The private IP address of the instance.
+                gateway:
+                    example: 10.0.0.1
+                    type: string
+                    description: The default gateway configured inside the guest.
+                nameserver:
+                    example: 8.8.8.8
+                    type: string
+                    description: The DNS resolver configured inside the guest.
             description: An instance is a micro vm running an application.
             x-package: instances
         InstanceAutokill:
@@ -7859,7 +7916,54 @@ components:
                     type: integer
                     description: Count of packets sent to interface
                     format: uint64
+                name:
+                    example: eth0
+                    type: string
+                    description: |-
+                        The interface name. If omitted, Unikraft Cloud generates one as
+                        <instance-name>-ethX, falling back to eth-<suffix> when the
+                        instance name is too long.
+                tap_name:
+                    example: tap0
+                    type: string
+                    description: The TAP device to attach the interface. Provide it together with ip.
+                autoconfig:
+                    example: false
+                    type: boolean
+                    description: |-
+                        Whether the interface is automatically configured inside the guest
+                        (IP address, routes, etc.).  When absent or true, autoconfiguration
+                        is enabled.  Present and false when the guest is expected to
+                        configure the interface manually.
+                relay:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceNetworkInterfaceRelay'
+                    description: Relay configuration for this interface.
             description: An instance network interface.
+            x-package: instances
+        InstanceNetworkInterfaceRelay:
+            required:
+                - uuid
+                - name
+                - relay_dns
+            type: object
+            properties:
+                uuid:
+                    example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                    type: string
+                    description: UUID of the relay interface.
+                    format: uuid
+                name:
+                    example: eth-relay
+                    type: string
+                    description: Name of the relay interface.
+                relay_dns:
+                    example: true
+                    type: boolean
+                    description: |-
+                        Whether DNS traffic is relayed through this interface.
+                        Defaults to true.
+            description: An object that routes all traffic through another interface.
             x-package: instances
         InstancePendingUpdate:
             required:
@@ -8343,6 +8447,40 @@ components:
                             description: Mutually exclusive with UUID.
             description: An identifier for a resource.  Either a name or a UUID.
             x-package: common
+        NetworkInterfaceRelay:
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    relay_dns:
+                        example: true
+                        type: boolean
+                        description: |-
+                            Whether the relay forwards DNS requests. Set to false
+                            to let the default DNS server handle them instead.
+                            Defaults to true.
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: c1d2e3f4-5678-90ab-cdef-1234567890ab
+                            type: string
+                            description: |-
+                                UUID of the existing interface to relay through.
+                                Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: eth-relay
+                            type: string
+                            description: |-
+                                Name of the existing interface to relay through.
+                                Mutually exclusive with UUID.
+            description: An object that routes all traffic through another interface.
+            x-package: instances
         PaginationOrder:
             enum:
                 - "asc"

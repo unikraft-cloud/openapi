@@ -13315,6 +13315,16 @@
               }
             ],
             "description": "The access mode of the volume, controlling volume sharing behavior.\nDefaults to `rwo` if not specified."
+          },
+          "uid": {
+            "type": "integer",
+            "description": "Guest UID for managed volumes (host_path mode only).",
+            "format": "uint32"
+          },
+          "gid": {
+            "type": "integer",
+            "description": "Guest GID for managed volumes (host_path mode only).",
+            "format": "uint32"
           }
         },
         "description": "A volume represents a storage device that can be attached to an instance.",

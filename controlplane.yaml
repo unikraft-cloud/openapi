@@ -1143,14 +1143,6 @@ components:
         NameOrUUID:
             type: object
             allOf:
-                - type: object
-                  properties:
-                    metro:
-                        example: fra
-                        type: string
-                        description: |-
-                            (Only applies when using global control plane).
-                            The metro of the resource.
                 - oneOf:
                     - title: uuid
                       required:

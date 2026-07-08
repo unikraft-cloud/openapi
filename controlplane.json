@@ -1571,16 +1571,6 @@
         "type": "object",
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the resource."
-              }
-            }
-          },
-          {
             "oneOf": [
               {
                 "title": "uuid",

@@ -352,14 +352,6 @@
         "operationId": "GetImageStore",
         "parameters": [
           {
-            "name": "metro",
-            "in": "query",
-            "description": "(Only applies when using global control plane).\nThe metro of the image.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "digest",
             "in": "query",
             "schema": {
@@ -411,14 +403,6 @@
         "description": "Retrieve all images.",
         "operationId": "GetImages",
         "parameters": [
-          {
-            "name": "metro",
-            "in": "query",
-            "description": "(Only applies when using global control plane).\nThe metro of the image.",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "digest",
             "in": "query",
@@ -3865,11 +3849,6 @@
                 "example": false,
                 "type": "boolean",
                 "description": "Whether the volume should be mounted read-only."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               }
             }
           },
@@ -3983,11 +3962,6 @@
             "type": "string",
             "description": "The name of the volume that was attached."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4025,11 +3999,6 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the policy."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group the policy applies to."
           },
           "enabled": {
             "example": true,
@@ -4110,11 +4079,6 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the certificate in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the certificate is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -4257,11 +4221,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "vol_name": {
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
@@ -4402,11 +4361,6 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the newly cloned volume."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "state": {
             "allOf": [
@@ -4677,11 +4631,6 @@
             "type": "string",
             "description": "The name of the service of the added policy."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4705,11 +4654,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to."
-              },
               "min_size": {
                 "example": 2,
                 "type": "integer",
@@ -4854,11 +4798,6 @@
             "type": "string",
             "description": "The name of the service where the configuration was created."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the configuration."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4897,11 +4836,6 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "cn": {
             "example": "funky-town.com",
@@ -5004,11 +4938,6 @@
             "type": "string",
             "description": "(Optional).  The name of the checkpoint.\nIf not provided, a name will be generated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
           "timeout_s": {
             "example": 10,
             "type": "integer",
@@ -5092,11 +5021,6 @@
             "type": "string",
             "description": "The name of the checkpoint instance that was created."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
-          },
           "state": {
             "allOf": [
               {
@@ -5147,11 +5071,6 @@
               }
             ],
             "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "args": {
             "example": "--port=8080 --debug",
@@ -5535,11 +5454,6 @@
             "type": "string",
             "description": "(Optional).  The name of a template instance to create the instance from.\nMutually exclusive with UUID."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
-          },
           "create_args": {
             "allOf": [
               {
@@ -5775,11 +5689,6 @@
             "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "services": {
             "type": "array",
@@ -6051,11 +5960,6 @@
             "type": "string",
             "description": "The name of the template instance that was created."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
-          },
           "state": {
             "allOf": [
               {
@@ -6165,11 +6069,6 @@
             "type": "string",
             "description": "The name of the volume converted into a template."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "state": {
             "example": "available",
             "allOf": [
@@ -6203,11 +6102,6 @@
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
                 "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "quota_policy": {
                 "example": "static",
@@ -6389,11 +6283,6 @@
             "type": "string",
             "description": "The name of the newly created volume."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "state": {
             "allOf": [
               {
@@ -6452,11 +6341,6 @@
           "uuid": {
             "type": "string",
             "format": "uuid"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the user."
           },
           "added": {
             "example": true,
@@ -6542,11 +6426,6 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the deleted policy."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
           },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
@@ -6647,11 +6526,6 @@
             "type": "string",
             "description": "The name of the service where the configuration was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6751,11 +6625,6 @@
             "type": "string",
             "description": "The name of the certificate which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the certificate."
-          },
           "message": {
             "example": "No certificate with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6835,11 +6704,6 @@
             "type": "string",
             "description": "The name of the checkpoint instance that was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
-          },
           "status": {
             "allOf": [
               {
@@ -6899,11 +6763,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the instance."
-              },
               "timeout_s": {
                 "example": 2,
                 "type": "integer",
@@ -7040,11 +6899,6 @@
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "previous_state": {
             "example": "stopped",
             "type": "string",
@@ -7165,11 +7019,6 @@
             "type": "string",
             "description": "The name of the service group which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -7261,11 +7110,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template instance that was deleted."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "status": {
             "allOf": [
@@ -7366,11 +7210,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template volume that was deleted."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -7479,11 +7318,6 @@
             "type": "string",
             "description": "The name of the volume that was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -7518,11 +7352,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "from": {
                 "allOf": [
                   {
@@ -7654,11 +7483,6 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was detached."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
@@ -7793,11 +7617,6 @@
             ],
             "description": "The policy which was retrieved by the request."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -7900,11 +7719,6 @@
             "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
           },
           "enabled": {
             "example": true,
@@ -8097,11 +7911,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "history": {
             "type": "array",
@@ -8455,11 +8264,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "output": {
             "example": "d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==",
             "type": "string",
@@ -8698,11 +8502,6 @@
               }
             ],
             "description": "The status of the response."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           }
         },
         "x-package": "instances"
@@ -9029,11 +8828,6 @@
             },
             "description": "A list of errors which may have occurred during the request."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the node is located."
-          },
           "data": {
             "allOf": [
               {
@@ -9086,11 +8880,6 @@
           "url": {
             "example": "my-image:latest",
             "type": "string"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the image."
           },
           "created_at": {
             "example": "2021-01-01T00:00:00Z",
@@ -9243,11 +9032,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance.\n\nThis is a human-readable name that can be used to identify the instance.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the instance in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the instance is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -9876,11 +9660,6 @@
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the service group is located."
-          },
           "domains": {
             "type": "array",
             "items": {
@@ -9955,11 +9734,6 @@
             "example": "funky-volume-g756b5d",
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
           },
           "at": {
             "example": "/mnt/funky-volume",
@@ -10137,16 +9911,6 @@
         "type": "object",
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the resource."
-              }
-            }
-          },
-          {
             "oneOf": [
               {
                 "title": "uuid",
@@ -10314,11 +10078,6 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the user."
           }
         },
         "x-package": "users"
@@ -10663,11 +10422,6 @@
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup. The name must be unique within the context of your account.  The\nname can also be used to identify the service in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the service group is located."
-          },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
@@ -10850,11 +10604,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "wait_timeout_ms": {
                 "example": 2000,
                 "type": "integer",
@@ -10987,11 +10736,6 @@
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "example": "running",
             "type": "string",
@@ -11064,11 +10808,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "force": {
                 "example": false,
                 "type": "boolean",
@@ -11206,11 +10945,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "allOf": [
               {
@@ -11268,11 +11002,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "drain_timeout_ms": {
                 "example": 250,
                 "type": "integer",
@@ -11389,11 +11118,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
             "allOf": [
@@ -11617,11 +11341,6 @@
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
               },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
-              },
               "prop": {
                 "example": "tags",
                 "allOf": [
@@ -11745,11 +11464,6 @@
             "type": "string",
             "description": "The name of the checkpoint instance that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the checkpoint instance."
-          },
           "status": {
             "allOf": [
               {
@@ -11845,11 +11559,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "memory_mb",
@@ -11994,11 +11703,6 @@
               }
             ],
             "description": "The status of this particular instance update operation."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "id": {
             "example": "op-1",
@@ -12211,11 +11915,6 @@
             "type": "string",
             "description": "The name of the service group that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
-          },
           "status": {
             "allOf": [
               {
@@ -12298,11 +11997,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the template instance."
               },
               "prop": {
                 "example": "tags",
@@ -12440,11 +12134,6 @@
             "type": "string",
             "description": "The name of the template instance that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
-          },
           "status": {
             "allOf": [
               {
@@ -12527,11 +12216,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "tags",
@@ -12670,11 +12354,6 @@
             "type": "string",
             "description": "The name of the template volume that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "status": {
             "allOf": [
               {
@@ -12757,11 +12436,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "size_mb",
@@ -12898,11 +12572,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the volume that was updated."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -13196,11 +12865,6 @@
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
-          },
           "created_at": {
             "example": "2021-01-01T00:00:00Z",
             "type": "string",
@@ -13315,16 +12979,6 @@
               }
             ],
             "description": "The access mode of the volume, controlling volume sharing behavior.\nDefaults to `rwo` if not specified."
-          },
-          "uid": {
-            "type": "integer",
-            "description": "Guest UID for managed volumes (host_path mode only).",
-            "format": "uint32"
-          },
-          "gid": {
-            "type": "integer",
-            "description": "Guest GID for managed volumes (host_path mode only).",
-            "format": "uint32"
           }
         },
         "description": "A volume represents a storage device that can be attached to an instance.",
@@ -13580,11 +13234,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "state": {
             "allOf": [

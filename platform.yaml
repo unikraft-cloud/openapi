@@ -94,18 +94,18 @@ paths:
         put:
             tags:
                 - Certificates
-            summary: Update Certificate
+            summary: Update Certificates
             description: |-
-                Update the specified certificate with a new certificate chain and private
-                key. Only user-uploaded certificates can be updated; system-managed
-                certificates cannot be modified. The new certificate must have the same
-                common name (CN) as the existing certificate.
-            operationId: UpdateCertificate
+                Update the specified certificate(s) with new certificate chain(s) and private
+                key(s). Only user-uploaded certificates can be updated; system-managed
+                certificates cannot be modified. The new certificate(s) must have the same
+                common name (CN) as the existing certificate(s).
+            operationId: UpdateCertificates
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdateCertificateRequest'
+                            $ref: '#/components/schemas/UpdateCertificatesRequest'
                 required: true
             responses:
                 default:
@@ -113,7 +113,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/UpdateCertificateResponse'
+                                $ref: '#/components/schemas/UpdateCertificatesResponse'
             x-package: certificates
         post:
             tags:
@@ -210,7 +210,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/UpdateCertificateResponse'
+                                $ref: '#/components/schemas/UpdateCertificatesResponse'
             x-package: certificates
         delete:
             tags:
@@ -9337,38 +9337,63 @@ components:
                         key must match the public key in the certificate chain.
             description: The request message for updating a certificate by its UUID.
             x-package: certificates
-        UpdateCertificateRequest:
+        UpdateCertificatesRequest:
             required:
-                - id
-                - chain
-                - pkey
+                - body
             type: object
             properties:
-                id:
-                    allOf:
-                        - $ref: '#/components/schemas/NameOrUUID'
-                    description: The ID of the certificate to update.
-                chain:
-                    example: '-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----'
-                    type: string
-                    description: |-
-                        The new certificate chain.
-
-                        This is the public chain of the certificate in PEM format. The chain
-                        should include the certificate and any intermediate certificates.
-                pkey:
-                    example: '-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----'
-                    type: string
-                    description: |-
-                        The new private key.
-
-                        This is the private key of the certificate in PEM format. The private
-                        key must match the public key in the certificate chain.
+                body:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UpdateCertificatesRequestItem'
+                    description: A list of update operations to apply to certificates.
             description: |-
                 The request message for updating one or more certificate(s) by their
                 UUID(s) or name(s).
             x-package: certificates
-        UpdateCertificateResponse:
+        UpdateCertificatesRequestItem:
+            required:
+                - chain
+                - pkey
+            type: object
+            allOf:
+                - type: object
+                  properties:
+                    chain:
+                        example: '-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----'
+                        type: string
+                        description: |-
+                            The new certificate chain.
+
+                            This is the public chain of the certificate in PEM format. The chain
+                            should include the certificate and any intermediate certificates.
+                    pkey:
+                        example: '-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----'
+                        type: string
+                        description: |-
+                            The new private key.
+
+                            This is the private key of the certificate in PEM format. The private
+                            key must match the public key in the certificate chain.
+                - oneOf:
+                    - title: uuid
+                      type: object
+                      properties:
+                        uuid:
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                            type: string
+                            description: The UUID of the certificate to update. Mutually exclusive with name.
+                            format: uuid
+                    - title: name
+                      type: object
+                      properties:
+                        name:
+                            example: funky-town-g756b5d
+                            type: string
+                            description: The name of the certificate to update. Mutually exclusive with UUID.
+            description: A single update operation to be applied to a certificate.
+            x-package: certificates
+        UpdateCertificatesResponse:
             required:
                 - status
                 - op_time_us
@@ -9386,7 +9411,7 @@ components:
                         This field is useful when the status is not `success`.
                 data:
                     allOf:
-                        - $ref: '#/components/schemas/UpdateCertificateResponseData'
+                        - $ref: '#/components/schemas/UpdateCertificatesResponseData'
                     description: The response data for this request.
                 errors:
                     type: array
@@ -9402,7 +9427,7 @@ components:
                     format: uint64
             description: The response message for updating one or more certificate(s).
             x-package: certificates
-        UpdateCertificateResponseData:
+        UpdateCertificatesResponseData:
             type: object
             properties:
                 certificates:

@@ -105,7 +105,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdateCertificatesRequest'
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/UpdateCertificatesRequestItem'
                 required: true
             responses:
                 default:
@@ -202,7 +204,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdateCertificateByUUIDRequest'
+                            $ref: '#/components/schemas/UpdateCertificateByUUIDRequestBody'
                 required: true
             responses:
                 default:
@@ -9308,17 +9310,12 @@ components:
                 (Optional). Automatic delete-on-idle configuration for the template
                 instance. Only applies when `prepare` is set.
             x-package: instances
-        UpdateCertificateByUUIDRequest:
+        UpdateCertificateByUUIDRequestBody:
             required:
-                - uuid
                 - chain
                 - pkey
             type: object
             properties:
-                uuid:
-                    type: string
-                    description: The UUID of the certificate to update.
-                    format: uuid
                 chain:
                     example: '-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----'
                     type: string
@@ -9335,21 +9332,6 @@ components:
 
                         This is the private key of the certificate in PEM format. The private
                         key must match the public key in the certificate chain.
-            description: The request message for updating a certificate by its UUID.
-            x-package: certificates
-        UpdateCertificatesRequest:
-            required:
-                - body
-            type: object
-            properties:
-                body:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/UpdateCertificatesRequestItem'
-                    description: A list of update operations to apply to certificates.
-            description: |-
-                The request message for updating one or more certificate(s) by their
-                UUID(s) or name(s).
             x-package: certificates
         UpdateCertificatesRequestItem:
             required:

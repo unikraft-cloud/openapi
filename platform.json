@@ -122,7 +122,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCertificatesRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateCertificatesRequestItem"
+                }
               }
             }
           },
@@ -265,7 +268,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCertificateByUUIDRequest"
+                "$ref": "#/components/schemas/UpdateCertificateByUUIDRequestBody"
               }
             }
           },
@@ -11170,19 +11173,13 @@
         "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
         "x-package": "instances"
       },
-      "UpdateCertificateByUUIDRequest": {
+      "UpdateCertificateByUUIDRequestBody": {
         "required": [
-          "uuid",
           "chain",
           "pkey"
         ],
         "type": "object",
         "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the certificate to update.",
-            "format": "uuid"
-          },
           "chain": {
             "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
             "type": "string",
@@ -11194,24 +11191,6 @@
             "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
           }
         },
-        "description": "The request message for updating a certificate by its UUID.",
-        "x-package": "certificates"
-      },
-      "UpdateCertificatesRequest": {
-        "required": [
-          "body"
-        ],
-        "type": "object",
-        "properties": {
-          "body": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UpdateCertificatesRequestItem"
-            },
-            "description": "A list of update operations to apply to certificates."
-          }
-        },
-        "description": "The request message for updating one or more certificate(s) by their\nUUID(s) or name(s).",
         "x-package": "certificates"
       },
       "UpdateCertificatesRequestItem": {

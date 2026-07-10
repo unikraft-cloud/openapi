@@ -10314,8 +10314,7 @@
         "required": [
           "name",
           "when",
-          "action",
-          "next_at"
+          "action"
         ],
         "type": "object",
         "properties": {

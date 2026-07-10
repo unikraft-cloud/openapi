@@ -8478,7 +8478,6 @@ components:
                 - name
                 - when
                 - action
-                - next_at
             type: object
             properties:
                 name:

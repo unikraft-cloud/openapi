@@ -8502,14 +8502,14 @@ components:
                     description: The action to perform at the scheduled time.
                 next_at:
                     readOnly: true
-                    example: 1696512000
-                    type: integer
+                    example: 2023-10-05T14:48:00Z
+                    type: string
                     description: |-
                         The timestamp of when the next scheduled action will occur.
 
                         This field is populated only in responses (not settable in requests).
                         Unix timestamp in seconds.  Omitted if no next execution is scheduled.
-                    format: int64
+                    format: date-time
                 args:
                     example: ["/bin/sh", "-c", "echo hello"]
                     type: array
@@ -9614,7 +9614,7 @@ components:
                         - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                         - For "tags": array of strings
                         - For "delete_lock": boolean
-                        - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
+                        - For "schedules": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.
                           Use action "exec" together with args to execute a command at the scheduled time.
                         - For "autokill": object with time_ms and num_requests fields
                         - For "hostname": string (valid DNS label)
@@ -9659,7 +9659,7 @@ components:
                             - For "scale_to_zero": object with cooldown_time_ms, policy, and stateful fields
                             - For "tags": array of strings
                             - For "delete_lock": boolean
-                            - For "schedules": array of schedule objects (with name, when, action, and optional args fields).
+                            - For "schedules": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.
                               Use action "exec" together with args to execute a command at the scheduled time.
                             - For "autokill": object with time_ms and num_requests fields
                             - For "hostname": string (valid DNS label)

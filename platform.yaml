@@ -3998,6 +3998,17 @@ components:
                         to instances. It allows you to create a general-purpose base image and
                         then customize individual instances by attaching code or data as separate
                         ROM blobs.
+                plugins:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CreateInstanceRequestPlugin'
+                    description: |-
+                        (Optional).  Plugins to attach to the instance.  Plugins let you attach
+                        small helper programs to an instance and reach each one over a direct,
+                        authenticated HTTP endpoint.  Each plugin loads from its own ROM image,
+                        mounts at `/uk/plugins/<plugin_name>`, and is reachable at
+                        `.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins
+                        may be attached to an instance.
                 tags:
                     type: array
                     items:
@@ -4170,6 +4181,41 @@ components:
                         - $ref: '#/components/schemas/NetworkInterfaceRelay'
                     description: Relay configuration for this interface.
             description: Network interface configuration for a new instance.
+            x-package: instances
+        CreateInstanceRequestPlugin:
+            required:
+                - name
+                - rom
+            type: object
+            properties:
+                name:
+                    example: my-plugin
+                    type: string
+                    description: |-
+                        The plugin name.  It becomes the `<plugin_name>` segment in the plugin
+                        endpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a
+                        maximum length of 63 characters and contains only letters (`a`-`z`,
+                        `A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`).
+                rom:
+                    example: user/myplugin:latest
+                    type: string
+                    description: |-
+                        The plugin's ROM image, given as an image reference string such as
+                        `user/myplugin:latest`.  The platform loads the image, mounts it at
+                        `/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin
+                        starts.
+                config:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        (Optional).  Arbitrary JSON configuration that the platform passes to the
+                        plugin's `init` program on `STDIN`.  Any JSON value works, including a
+                        string, a number, or an object.
+            description: |-
+                A helper program attached to the instance and reachable over a direct,
+                authenticated HTTP endpoint.  A plugin runs inside the instance next to the
+                main application, loads from its own ROM image, and answers requests that
+                the Unikraft Cloud API forwards to it.
             x-package: instances
         CreateInstanceRequestRom:
             required:
@@ -7504,6 +7550,17 @@ components:
                         to instances. It allows you to create a general-purpose base image and
                         then customize individual instances by attaching code or data as separate
                         ROM blobs.
+                plugins:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstancePlugin'
+                    description: |-
+                        Plugins attached to the instance.  Plugins let you attach small helper
+                        programs to an instance and reach each one over a direct, authenticated
+                        HTTP endpoint.  Each plugin loads from its own ROM image, mounts at
+                        `/uk/plugins/<plugin_name>`, and is reachable at
+                        `.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins
+                        may be attached to an instance.
                 schedules:
                     type: array
                     items:
@@ -7746,6 +7803,41 @@ components:
                     type: string
                     description: Error message.  Only present when status is "failed".
             description: A queued property change awaiting application (typically on next restart).
+            x-package: instances
+        InstancePlugin:
+            required:
+                - name
+                - rom
+            type: object
+            properties:
+                name:
+                    example: my-plugin
+                    type: string
+                    description: |-
+                        The plugin name.  It becomes the `<plugin_name>` segment in the plugin
+                        endpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a
+                        maximum length of 63 characters and contains only letters (`a`-`z`,
+                        `A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`).
+                rom:
+                    example: user/myplugin:latest
+                    type: string
+                    description: |-
+                        The plugin's ROM image, given as an image reference string such as
+                        `user/myplugin:latest`.  The platform loads the image, mounts it at
+                        `/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin
+                        starts.
+                config:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufValue'
+                    description: |-
+                        (Optional).  Arbitrary JSON configuration that the platform passes to the
+                        plugin's `init` program on `STDIN`.  Any JSON value works, including a
+                        string, a number, or an object.
+            description: |-
+                A helper program attached to the instance and reachable over a direct,
+                authenticated HTTP endpoint.  A plugin runs inside the instance next to the
+                main application, loads from its own ROM image, and answers requests that
+                the Unikraft Cloud API forwards to it.
             x-package: instances
         InstanceRestartAttempt:
             required:
@@ -8072,6 +8164,7 @@ components:
                 - "roms"
                 - "dependencies"
                 - "sched_priority"
+                - "plugins"
             type: string
             description: The mutable properties of an instance that can be updated.
             format: enum
@@ -9619,6 +9712,7 @@ components:
                         - For "autokill": object with time_ms and num_requests fields
                         - For "hostname": string (valid DNS label)
                         - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
+                        - For "plugins": array of plugin objects (with name, rom, and optional config fields) for SET/ADD
                         - For "dependencies": array of instance identifiers (name or UUID)
                         - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
             x-package: instances
@@ -9664,6 +9758,7 @@ components:
                             - For "autokill": object with time_ms and num_requests fields
                             - For "hostname": string (valid DNS label)
                             - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
+                            - For "plugins": array of plugin objects (with name, rom, and optional config fields) for SET/ADD
                             - For "dependencies": array of instance identifiers (name or UUID)
                             - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
                 - oneOf:

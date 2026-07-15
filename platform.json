@@ -5174,6 +5174,13 @@
             },
             "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           },
+          "plugins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstanceRequestPlugin"
+            },
+            "description": "(Optional).  Plugins to attach to the instance.  Plugins let you attach\nsmall helper programs to an instance and reach each one over a direct,\nauthenticated HTTP endpoint.  Each plugin loads from its own ROM image,\nmounts at `/uk/plugins/<plugin_name>`, and is reachable at\n`.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins\nmay be attached to an instance."
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -5335,6 +5342,35 @@
           }
         },
         "description": "Network interface configuration for a new instance.",
+        "x-package": "instances"
+      },
+      "CreateInstanceRequestPlugin": {
+        "required": [
+          "name",
+          "rom"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "my-plugin",
+            "type": "string",
+            "description": "The plugin name.  It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`)."
+          },
+          "rom": {
+            "example": "user/myplugin:latest",
+            "type": "string",
+            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts."
+          },
+          "config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  Arbitrary JSON configuration that the platform passes to the\nplugin's `init` program on `STDIN`.  Any JSON value works, including a\nstring, a number, or an object."
+          }
+        },
+        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint.  A plugin runs inside the instance next to the\nmain application, loads from its own ROM image, and answers requests that\nthe Unikraft Cloud API forwards to it.",
         "x-package": "instances"
       },
       "CreateInstanceRequestRom": {
@@ -9259,6 +9295,13 @@
             },
             "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           },
+          "plugins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstancePlugin"
+            },
+            "description": "Plugins attached to the instance.  Plugins let you attach small helper\nprograms to an instance and reach each one over a direct, authenticated\nHTTP endpoint.  Each plugin loads from its own ROM image, mounts at\n`/uk/plugins/<plugin_name>`, and is reachable at\n`.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins\nmay be attached to an instance."
+          },
           "schedules": {
             "type": "array",
             "items": {
@@ -9530,6 +9573,35 @@
           }
         },
         "description": "A queued property change awaiting application (typically on next restart).",
+        "x-package": "instances"
+      },
+      "InstancePlugin": {
+        "required": [
+          "name",
+          "rom"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "my-plugin",
+            "type": "string",
+            "description": "The plugin name.  It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`)."
+          },
+          "rom": {
+            "example": "user/myplugin:latest",
+            "type": "string",
+            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts."
+          },
+          "config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  Arbitrary JSON configuration that the platform passes to the\nplugin's `init` program on `STDIN`.  Any JSON value works, including a\nstring, a number, or an object."
+          }
+        },
+        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint.  A plugin runs inside the instance next to the\nmain application, loads from its own ROM image, and answers requests that\nthe Unikraft Cloud API forwards to it.",
         "x-package": "instances"
       },
       "InstanceRestartAttempt": {
@@ -9813,7 +9885,8 @@
           "hostname",
           "roms",
           "dependencies",
-          "sched_priority"
+          "sched_priority",
+          "plugins"
         ],
         "type": "string",
         "description": "The mutable properties of an instance that can be updated.",
@@ -11558,7 +11631,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
           }
         },
         "x-package": "instances"
@@ -11602,7 +11675,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
               }
             }
           },

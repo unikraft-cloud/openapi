@@ -2235,7 +2235,8 @@
       "ResponseStatus": {
         "enum": [
           "success",
-          "error"
+          "error",
+          "partial_success"
         ],
         "type": "string",
         "description": "The response status of an API request.",

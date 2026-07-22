@@ -1652,6 +1652,7 @@ components:
             enum:
                 - "success"
                 - "error"
+                - "partial_success"
             type: string
             description: The response status of an API request.
             format: enum

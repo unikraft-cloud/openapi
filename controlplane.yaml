@@ -278,7 +278,7 @@ paths:
     /v1/nodes/heartbeat:
         post:
             tags:
-                - NodeActivationService
+                - NodeHeartbeatService
             description: Sends a heartbeat from a node to report its platform status.
             operationId: NodeHeartbeat
             requestBody:
@@ -1788,6 +1788,8 @@ tags:
       description: |-
         NodeActivationService provides APIs for activating and renewing node
         licenses.
+    - name: NodeHeartbeatService
+      description: NodeHeartbeatService provides APIs for reporting node platform status.
     - name: NodeService
       description: |-
         NodeService service provides APIs for provisioning and managing compute nodes

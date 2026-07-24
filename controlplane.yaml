@@ -1366,13 +1366,9 @@ components:
             x-package: controlplane
         NodeHeartbeatRequest:
             required:
-                - machine_id
                 - platform_status
             type: object
             properties:
-                machine_id:
-                    type: string
-                    description: The unique machine identifier of the node sending the heartbeat.
                 platform_status:
                     allOf:
                         - $ref: '#/components/schemas/PlatformStatus'

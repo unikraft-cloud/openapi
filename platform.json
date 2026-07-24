@@ -9422,11 +9422,7 @@
         "required": [
           "uuid",
           "private_ip",
-          "mac",
-          "rx_bytes",
-          "rx_packets",
-          "tx_bytes",
-          "tx_packets"
+          "mac"
         ],
         "type": "object",
         "properties": {
@@ -9445,30 +9441,6 @@
             "example": "12:b0:a0:00:00:3d",
             "type": "string",
             "description": "The MAC address of the network interface."
-          },
-          "rx_bytes": {
-            "example": 5345,
-            "type": "integer",
-            "description": "Amount of bytes received from interface.",
-            "format": "uint64"
-          },
-          "rx_packets": {
-            "example": 110,
-            "type": "integer",
-            "description": "Count of packets received from interface",
-            "format": "uint64"
-          },
-          "tx_bytes": {
-            "example": 1500,
-            "type": "integer",
-            "description": "Amount of bytes sent to interface.",
-            "format": "uint64"
-          },
-          "tx_packets": {
-            "example": 12,
-            "type": "integer",
-            "description": "Count of packets sent to interface",
-            "format": "uint64"
           },
           "name": {
             "example": "eth0",

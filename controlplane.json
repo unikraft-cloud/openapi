@@ -1916,6 +1916,7 @@
         "enum": [
           "healthy",
           "degraded",
+          "unavailable",
           "unknown"
         ],
         "type": "string",

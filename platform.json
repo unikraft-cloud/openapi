@@ -43,6 +43,28 @@
         "operationId": "GetCertificates",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the certificate in the response.  By\ndefault this is set to true, meaning that all information about the\ncertificate will be included in the response.  If set to false, only the\nbasic information about the certificate will be included, such as its name\nand UUID.",
@@ -94,8 +116,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -379,8 +400,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -431,8 +451,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -458,6 +477,28 @@
         "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by ID(s) (name or UUID).",
         "operationId": "GetInstances",
         "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
           {
             "name": "details",
             "in": "query",
@@ -521,8 +562,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -648,6 +688,28 @@
         "operationId": "GetCheckpointInstances",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the checkpoints in the response.  By\ndefault this is set to true, meaning that all information about the\ncheckpoints will be included in the response.  If set to false, only the\nbasic information about the checkpoints will be included, such as their\nname and UUID.",
@@ -710,8 +772,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -838,6 +899,30 @@
         "summary": "Get checkpoint history",
         "description": "Get the checkpoint history of one or more checkpoint instances.\nReturns the ordered list of checkpoints in each checkpoint's history.",
         "operationId": "GetCheckpointHistory",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -848,8 +933,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1032,6 +1116,30 @@
         "summary": "Get instances checkpoint history",
         "description": "Get the checkpoint history of one or more instances.\nReturns the ordered list of checkpoints associated with each instance.",
         "operationId": "GetInstanceHistory",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1042,8 +1150,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1068,6 +1175,54 @@
         "summary": "Get Instances Logs",
         "description": "Retrieve the logs of one or more instances by ID(s) (name or UUID).",
         "operationId": "GetInstanceLogs",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\nname.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\nUUID.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The amount of bytes to return at most.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1078,8 +1233,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1104,6 +1258,30 @@
         "summary": "Get Instances Metrics",
         "description": "Get the metrics of one or more instances by their ID(s) (name or UUID).",
         "operationId": "GetInstanceMetrics",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1114,8 +1292,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1250,6 +1427,28 @@
         "operationId": "GetTemplateInstances",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the templates in the response.  By default\nthis is set to true, meaning that all information about the templates will\nbe included in the response.  If set to false, only the basic information\nabout the templates will be included, such as their name and UUID.",
@@ -1312,8 +1511,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1562,6 +1760,65 @@
         "summary": "Wait for Instances States",
         "description": "Wait for one or more instances to reach certain states by ID(s)\n(name or UUID).\n\nIf the instances are already in the desired states, the request will return\nimmediately.  If the instances are not in the desired state, the request will\nblock until the instances reach the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstances reach the desired states.",
         "operationId": "WaitInstances",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to wait for.  Mutually exclusive with UUID.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "The desired state to wait for.  Default is `running`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InstanceState"
+              }
+            }
+          },
+          {
+            "name": "timeout_ms",
+            "in": "query",
+            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "timeout_s",
+            "in": "query",
+            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1572,8 +1829,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -2027,6 +2283,28 @@
         "operationId": "GetServiceGroups",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
@@ -2078,8 +2356,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -2203,6 +2480,30 @@
         "summary": "List Autoscale Configurations",
         "description": "Return the current states and configurations of autoscale configurations\nfor a given set of service groups given their UUIDs or names.",
         "operationId": "GetAutoscaleConfigurations",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2213,8 +2514,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -2844,6 +3144,28 @@
         "operationId": "GetVolumes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the volume in the response.  By\ndefault this is set to true, meaning that all information about the\nvolume will be included in the response.  If set to false, only the\nbasic information about the volume will be included, such as its name\nand UUID.",
@@ -2906,8 +3228,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -3141,6 +3462,28 @@
         "operationId": "GetTemplateVolumes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the template volumes in the response.  By\ndefault this is set to true, meaning that all information about the\ntemplates will be included in the response.  If set to false, only the\nbasic information about the templates will be included, such as their name\nand UUID.",
@@ -3203,8 +3546,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -9970,7 +10312,7 @@
                   "uuid": {
                     "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "Mutually exclusive with name.",
+                    "description": "The UUID of the resource.",
                     "format": "uuid"
                   }
                 }
@@ -9985,7 +10327,7 @@
                   "name": {
                     "example": "funky-town-g756b5d",
                     "type": "string",
-                    "description": "Mutually exclusive with UUID."
+                    "description": "The name of the resource."
                   }
                 }
               }

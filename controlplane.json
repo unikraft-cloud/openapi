@@ -183,6 +183,28 @@
         "operationId": "ListNodes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "cloudprovider",
             "in": "query",
             "description": "Optional filter by cloud provider.",
@@ -235,8 +257,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -334,6 +355,42 @@
         "summary": "Update Node Nodes",
         "description": "Update one or more nodes.\n\nBatch update of mutable properties for multiple nodes.",
         "operationId": "UpdateNodes",
+        "parameters": [
+          {
+            "name": "property",
+            "in": "query",
+            "description": "The property to update.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MutableNodeProperty"
+              }
+            }
+          },
+          {
+            "name": "operation",
+            "in": "query",
+            "description": "The operation to perform on the property.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MutableNodeOperation"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "bytes"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -511,6 +568,28 @@
         "description": "Wait for multiple nodes to reach specific states.",
         "operationId": "WaitNodes",
         "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
           {
             "name": "states",
             "in": "query",
@@ -1582,7 +1661,7 @@
                   "uuid": {
                     "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "Mutually exclusive with name.",
+                    "description": "The UUID of the resource.",
                     "format": "uuid"
                   }
                 }
@@ -1597,7 +1676,7 @@
                   "name": {
                     "example": "funky-town-g756b5d",
                     "type": "string",
-                    "description": "Mutually exclusive with UUID."
+                    "description": "The name of the resource."
                   }
                 }
               }

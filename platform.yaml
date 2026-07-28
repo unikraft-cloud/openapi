@@ -29,6 +29,20 @@ paths:
                 It's possible to filter this list by name or UUID.
             operationId: GetCertificates
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -82,7 +96,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -276,7 +289,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
-                required: true
             responses:
                 default:
                     description: default
@@ -308,7 +320,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/GetImagesRequestTagOrDigest'
-                required: true
             responses:
                 default:
                     description: default
@@ -327,6 +338,20 @@ paths:
                 It's possible to filter this list by ID(s) (name or UUID).
             operationId: GetInstances
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -386,7 +411,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -472,6 +496,20 @@ paths:
             description: Get one or more checkpoint instances by their UUID(s) or name(s).
             operationId: GetCheckpointInstances
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -532,7 +570,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -621,6 +658,21 @@ paths:
                 Get the checkpoint history of one or more checkpoint instances.
                 Returns the ordered list of checkpoints in each checkpoint's history.
             operationId: GetCheckpointHistory
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
             requestBody:
                 content:
                     application/json:
@@ -628,7 +680,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -759,6 +810,21 @@ paths:
                 Get the checkpoint history of one or more instances.
                 Returns the ordered list of checkpoints associated with each instance.
             operationId: GetInstanceHistory
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
             requestBody:
                 content:
                     application/json:
@@ -766,7 +832,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -782,6 +847,43 @@ paths:
             summary: Get Instances Logs
             description: Retrieve the logs of one or more instances by ID(s) (name or UUID).
             operationId: GetInstanceLogs
+            parameters:
+                - name: uuid
+                  in: query
+                  description: |-
+                    The UUID of the instance to retrieve logs for.  Mutually exclusive with
+                    name.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: |-
+                    The name of the instance to retrieve logs for.  Mutually exclusive with
+                    UUID.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: offset
+                  in: query
+                  description: |-
+                    The byte offset of the log output to receive.  A negative sign makes the
+                    offset relative to the end of the log.
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+                - name: limit
+                  in: query
+                  description: The amount of bytes to return at most.
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
             requestBody:
                 content:
                     application/json:
@@ -789,7 +891,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/GetInstancesLogsRequestItem'
-                required: true
             responses:
                 default:
                     description: default
@@ -805,6 +906,21 @@ paths:
             summary: Get Instances Metrics
             description: Get the metrics of one or more instances by their ID(s) (name or UUID).
             operationId: GetInstanceMetrics
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
             requestBody:
                 content:
                     application/json:
@@ -812,7 +928,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -904,6 +1019,20 @@ paths:
             description: Get one or more template instances by their UUID(s) or name(s).
             operationId: GetTemplateInstances
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -963,7 +1092,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -1148,6 +1276,52 @@ paths:
                 If the timeout is -1, the request will block indefinitely until the
                 instances reach the desired states.
             operationId: WaitInstances
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the instance to wait for.  Mutually exclusive with name.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the instance to wait for.  Mutually exclusive with UUID.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: state
+                  in: query
+                  description: The desired state to wait for.  Default is `running`.
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceState'
+                - name: timeout_ms
+                  in: query
+                  description: |-
+                    Deprecated: Use `timeout_s` instead. Timeout in milliseconds to
+                    wait for the instance to reach the desired state. If `timeout_s` is
+                    not set, this value is converted by rounding up to the next full
+                    second. A value of -1 means to wait indefinitely.
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+                - name: timeout_s
+                  in: query
+                  description: |-
+                    Timeout in seconds to wait for the instance to reach the desired
+                    state. If the timeout is reached, the request will fail with an
+                    error. A value of -1 means to wait indefinitely until the instance
+                    reaches the desired state. No wait performed for a value of 0.
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
             requestBody:
                 content:
                     application/json:
@@ -1155,7 +1329,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/WaitInstancesRequestItem'
-                required: true
             responses:
                 default:
                     description: default
@@ -1477,6 +1650,20 @@ paths:
                 It's possible to filter this list by name or UUID.
             operationId: GetServiceGroups
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -1531,7 +1718,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -1621,6 +1807,21 @@ paths:
                 Return the current states and configurations of autoscale configurations
                 for a given set of service groups given their UUIDs or names.
             operationId: GetAutoscaleConfigurations
+            parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
             requestBody:
                 content:
                     application/json:
@@ -1628,7 +1829,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -2076,6 +2276,20 @@ paths:
                 all volumes are returned.
             operationId: GetVolumes
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -2136,7 +2350,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -2311,6 +2524,20 @@ paths:
                 provided, all template volumes are returned.
             operationId: GetTemplateVolumes
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: details
                   in: query
                   description: |-
@@ -2371,7 +2598,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -8231,7 +8457,7 @@ components:
                         uuid:
                             example: 123e4567-e89b-12d3-a456-426614174000
                             type: string
-                            description: Mutually exclusive with name.
+                            description: The UUID of the resource.
                             format: uuid
                     - title: name
                       required:
@@ -8241,7 +8467,7 @@ components:
                         name:
                             example: funky-town-g756b5d
                             type: string
-                            description: Mutually exclusive with UUID.
+                            description: The name of the resource.
             description: An identifier for a resource.  Either a name or a UUID.
             x-package: common
         NetworkInterfaceRelay:

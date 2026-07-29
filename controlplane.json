@@ -451,38 +451,6 @@
         "x-package": "controlplane"
       }
     },
-    "/v1/nodes/heartbeat": {
-      "post": {
-        "tags": [
-          "NodeHeartbeatService"
-        ],
-        "description": "Sends a heartbeat from a node to report its platform status.",
-        "operationId": "NodeHeartbeat",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NodeHeartbeatRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NodeHeartbeatResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "controlplane"
-      }
-    },
     "/v1/nodes/providers/{cloudprovider}/regions": {
       "get": {
         "tags": [
@@ -1934,46 +1902,6 @@
         },
         "x-package": "controlplane"
       },
-      "NodeHeartbeatRequest": {
-        "required": [
-          "platform_status"
-        ],
-        "type": "object",
-        "properties": {
-          "platform_status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PlatformStatus"
-              }
-            ],
-            "description": "The current platform status of the node."
-          }
-        },
-        "description": "The request message for a node heartbeat.",
-        "x-package": "controlplane"
-      },
-      "NodeHeartbeatResponse": {
-        "required": [
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          }
-        },
-        "description": "The response message for a node heartbeat.",
-        "x-package": "controlplane"
-      },
       "NodeState": {
         "enum": [
           "unspecified",
@@ -1988,17 +1916,6 @@
         ],
         "type": "string",
         "description": "NodeState defines the provisioning lifecycle state of a machine which will\nrun the Unikraft Cloud Platform.",
-        "format": "enum",
-        "x-package": "controlplane"
-      },
-      "PlatformStatus": {
-        "enum": [
-          "healthy",
-          "degraded",
-          "unavailable",
-          "unknown"
-        ],
-        "type": "string",
         "format": "enum",
         "x-package": "controlplane"
       },
@@ -2507,10 +2424,6 @@
     {
       "name": "NodeActivationService",
       "description": "NodeActivationService provides APIs for activating and renewing node\nlicenses."
-    },
-    {
-      "name": "NodeHeartbeatService",
-      "description": "NodeHeartbeatService provides APIs for reporting node platform status."
     },
     {
       "name": "NodeService",

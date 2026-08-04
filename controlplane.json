@@ -183,6 +183,28 @@
         "operationId": "ListNodes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "cloudprovider",
             "in": "query",
             "description": "Optional filter by cloud provider.",
@@ -202,14 +224,6 @@
             "name": "metro",
             "in": "query",
             "description": "Optional filter by metro.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "region",
-            "in": "query",
-            "description": "Optional filter by region.",
             "schema": {
               "type": "string"
             }
@@ -243,8 +257,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -342,6 +355,42 @@
         "summary": "Update Node Nodes",
         "description": "Update one or more nodes.\n\nBatch update of mutable properties for multiple nodes.",
         "operationId": "UpdateNodes",
+        "parameters": [
+          {
+            "name": "property",
+            "in": "query",
+            "description": "The property to update.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MutableNodeProperty"
+              }
+            }
+          },
+          {
+            "name": "operation",
+            "in": "query",
+            "description": "The operation to perform on the property.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MutableNodeOperation"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "bytes"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -402,39 +451,7 @@
         "x-package": "controlplane"
       }
     },
-    "/v1/nodes/heartbeat": {
-      "post": {
-        "tags": [
-          "NodeActivationService"
-        ],
-        "description": "Sends a heartbeat from a node to report its platform status.",
-        "operationId": "NodeHeartbeat",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NodeHeartbeatRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NodeHeartbeatResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "controlplane"
-      }
-    },
-    "/v1/nodes/provider/{cloudprovider}/regions": {
+    "/v1/nodes/providers/{cloudprovider}/regions": {
       "get": {
         "tags": [
           "NodeService"
@@ -468,7 +485,7 @@
         "x-package": "controlplane"
       }
     },
-    "/v1/nodes/provider/{cloudprovider}/types": {
+    "/v1/nodes/providers/{cloudprovider}/types": {
       "get": {
         "tags": [
           "NodeService"
@@ -519,6 +536,28 @@
         "description": "Wait for multiple nodes to reach specific states.",
         "operationId": "WaitNodes",
         "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
           {
             "name": "states",
             "in": "query",
@@ -982,7 +1021,7 @@
             ]
           }
         ],
-        "description": "CloudProviderConfig contains provider-specific configuration for node\nprovisioning.  Use this for advanced customization beyond the common\nmachine_type and region fields.",
+        "description": "CloudProviderConfig contains provider-specific configuration for node\nprovisioning.",
         "x-package": "controlplane"
       },
       "DestroyNodeResponse": {
@@ -1579,16 +1618,6 @@
         "type": "object",
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the resource."
-              }
-            }
-          },
-          {
             "oneOf": [
               {
                 "title": "uuid",
@@ -1600,7 +1629,7 @@
                   "uuid": {
                     "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "Mutually exclusive with name.",
+                    "description": "The UUID of the resource.",
                     "format": "uuid"
                   }
                 }
@@ -1615,7 +1644,7 @@
                   "name": {
                     "example": "funky-town-g756b5d",
                     "type": "string",
-                    "description": "Mutually exclusive with UUID."
+                    "description": "The name of the resource."
                   }
                 }
               }
@@ -1631,8 +1660,6 @@
           "name",
           "created_at",
           "state",
-          "region",
-          "machine_type",
           "vcpus",
           "memory_mib",
           "uptime_seconds",
@@ -1682,16 +1709,6 @@
               }
             ],
             "description": "The cloud provider where this machine is provisioned."
-          },
-          "region": {
-            "example": "us-east-1",
-            "type": "string",
-            "description": "The provider's region where the machine is located (e.g., \"us-east-1\" for\nAWS, \"us-central1\" for GCP, \"westeurope\" for Azure)."
-          },
-          "machine_type": {
-            "example": "m5.xlarge",
-            "type": "string",
-            "description": "The machine type as defined by the provider (e.g., \"m5.xlarge\" for AWS,\n\"n2-standard-4\" for GCP, \"Standard_D4s_v3\" for Azure).\n\nThis determines the compute resources (CPU, memory, etc.) available on\nthe machine. The valid values depend on the chosen provider."
           },
           "vcpus": {
             "example": 4,
@@ -1774,6 +1791,11 @@
           "delete_lock": {
             "type": "boolean",
             "description": "Whether the machine is protected from deletion. When true, delete operations\nwill fail until this is set to false."
+          },
+          "api_endpoint": {
+            "example": "https://api.node-metro1.unikraft.cloud/v1",
+            "type": "string",
+            "description": "The API endpoint for the node, used to connect to the node's platform SDK."
           }
         },
         "description": "Node represents a physical or virtual compute node provisioned on a\ncloud provider for use as part of the Unikraft Cloud infrastructure.\n\nNode nodes are the underlying compute resources where Unikraft Cloud\ninstances run.  They are provisioned on-demand across multiple cloud\nproviders and managed through a unified API.",
@@ -1880,51 +1902,6 @@
         },
         "x-package": "controlplane"
       },
-      "NodeHeartbeatRequest": {
-        "required": [
-          "machine_id",
-          "platform_status"
-        ],
-        "type": "object",
-        "properties": {
-          "machine_id": {
-            "type": "string",
-            "description": "The unique machine identifier of the node sending the heartbeat."
-          },
-          "platform_status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PlatformStatus"
-              }
-            ],
-            "description": "The current platform status of the node."
-          }
-        },
-        "description": "The request message for a node heartbeat.",
-        "x-package": "controlplane"
-      },
-      "NodeHeartbeatResponse": {
-        "required": [
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          }
-        },
-        "description": "The response message for a node heartbeat.",
-        "x-package": "controlplane"
-      },
       "NodeState": {
         "enum": [
           "unspecified",
@@ -1942,20 +1919,8 @@
         "format": "enum",
         "x-package": "controlplane"
       },
-      "PlatformStatus": {
-        "enum": [
-          "healthy",
-          "degraded",
-          "unavailable"
-        ],
-        "type": "string",
-        "format": "enum",
-        "x-package": "controlplane"
-      },
       "ProvisionNodeRequest": {
         "required": [
-          "region",
-          "machine_type",
           "ssh_keys"
         ],
         "type": "object",
@@ -1972,16 +1937,6 @@
               }
             ],
             "description": "The cloud provider where the machine should be provisioned."
-          },
-          "region": {
-            "example": "us-east-1",
-            "type": "string",
-            "description": "The provider region where the machine should be provisioned."
-          },
-          "machine_type": {
-            "example": "m5.xlarge",
-            "type": "string",
-            "description": "The machine type to provision. This is provider-specific."
           },
           "ssh_keys": {
             "type": "array",
@@ -2272,7 +2227,8 @@
       "ResponseStatus": {
         "enum": [
           "success",
-          "error"
+          "error",
+          "partial_success"
         ],
         "type": "string",
         "description": "The response status of an API request.",

@@ -128,6 +128,20 @@ paths:
                 provided, all nodes are returned.
             operationId: ListNodes
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: cloudprovider
                   in: query
                   description: Optional filter by cloud provider.
@@ -141,11 +155,6 @@ paths:
                 - name: metro
                   in: query
                   description: Optional filter by metro.
-                  schema:
-                    type: string
-                - name: region
-                  in: query
-                  description: Optional filter by region.
                   schema:
                     type: string
                 - name: limit
@@ -167,7 +176,6 @@ paths:
                             type: array
                             items:
                                 $ref: '#/components/schemas/NameOrUUID'
-                required: true
             responses:
                 default:
                     description: default
@@ -241,6 +249,33 @@ paths:
 
                 Batch update of mutable properties for multiple nodes.
             operationId: UpdateNodes
+            parameters:
+                - name: property
+                  in: query
+                  description: The property to update.
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/MutableNodeProperty'
+                - name: operation
+                  in: query
+                  description: The operation to perform on the property.
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/MutableNodeOperation'
+                - name: value
+                  in: query
+                  description: |-
+                    The value for the update operation. The type depends on the property:
+                    - TAGS: google.protobuf.Struct with key-value pairs
+                    - DELETE_LOCK: google.protobuf.Value with boolean
+                    - SSH_KEYS: google.protobuf.ListValue with SSHKey objects
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                        format: bytes
             requestBody:
                 content:
                     application/json:
@@ -280,27 +315,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/NodeActivateResponse'
             x-package: controlplane
-    /v1/nodes/heartbeat:
-        post:
-            tags:
-                - NodeActivationService
-            description: Sends a heartbeat from a node to report its platform status.
-            operationId: NodeHeartbeat
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/NodeHeartbeatRequest'
-                required: true
-            responses:
-                default:
-                    description: default
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/NodeHeartbeatResponse'
-            x-package: controlplane
-    /v1/nodes/provider/{cloudprovider}/regions:
+    /v1/nodes/providers/{cloudprovider}/regions:
         get:
             tags:
                 - NodeService
@@ -326,7 +341,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ListRegionsResponse'
             x-package: controlplane
-    /v1/nodes/provider/{cloudprovider}/types:
+    /v1/nodes/providers/{cloudprovider}/types:
         get:
             tags:
                 - NodeService
@@ -365,6 +380,20 @@ paths:
             description: Wait for multiple nodes to reach specific states.
             operationId: WaitNodes
             parameters:
+                - name: uuid
+                  in: query
+                  description: The UUID of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: name
+                  in: query
+                  description: The name of the resource.
+                  schema:
+                    type: array
+                    items:
+                        type: string
                 - name: states
                   in: query
                   description: The desired state(s) to wait for.
@@ -723,8 +752,7 @@ components:
                             description: AWS-specific configuration.
             description: |-
                 CloudProviderConfig contains provider-specific configuration for node
-                provisioning.  Use this for advanced customization beyond the common
-                machine_type and region fields.
+                provisioning.
             x-package: controlplane
         DestroyNodeResponse:
             required:
@@ -1149,14 +1177,6 @@ components:
         NameOrUUID:
             type: object
             allOf:
-                - type: object
-                  properties:
-                    metro:
-                        example: fra
-                        type: string
-                        description: |-
-                            (Only applies when using global control plane).
-                            The metro of the resource.
                 - oneOf:
                     - title: uuid
                       required:
@@ -1166,7 +1186,7 @@ components:
                         uuid:
                             example: 123e4567-e89b-12d3-a456-426614174000
                             type: string
-                            description: Mutually exclusive with name.
+                            description: The UUID of the resource.
                             format: uuid
                     - title: name
                       required:
@@ -1176,7 +1196,7 @@ components:
                         name:
                             example: funky-town-g756b5d
                             type: string
-                            description: Mutually exclusive with UUID.
+                            description: The name of the resource.
             description: An identifier for a resource.  Either a name or a UUID.
             x-package: common
         Node:
@@ -1185,8 +1205,6 @@ components:
                 - name
                 - created_at
                 - state
-                - region
-                - machine_type
                 - vcpus
                 - memory_mib
                 - uptime_seconds
@@ -1236,21 +1254,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where this machine is provisioned.
-                region:
-                    example: us-east-1
-                    type: string
-                    description: |-
-                        The provider's region where the machine is located (e.g., "us-east-1" for
-                        AWS, "us-central1" for GCP, "westeurope" for Azure).
-                machine_type:
-                    example: m5.xlarge
-                    type: string
-                    description: |-
-                        The machine type as defined by the provider (e.g., "m5.xlarge" for AWS,
-                        "n2-standard-4" for GCP, "Standard_D4s_v3" for Azure).
-
-                        This determines the compute resources (CPU, memory, etc.) available on
-                        the machine. The valid values depend on the chosen provider.
                 vcpus:
                     example: 4
                     type: integer
@@ -1314,6 +1317,10 @@ components:
                     description: |-
                         Whether the machine is protected from deletion. When true, delete operations
                         will fail until this is set to false.
+                api_endpoint:
+                    example: https://api.node-metro1.unikraft.cloud/v1
+                    type: string
+                    description: The API endpoint for the node, used to connect to the node's platform SDK.
             description: |-
                 Node represents a physical or virtual compute node provisioned on a
                 cloud provider for use as part of the Unikraft Cloud infrastructure.
@@ -1391,35 +1398,6 @@ components:
                     type: string
                     description: The issued license certificate in base64 URL encoded PEM format.
             x-package: controlplane
-        NodeHeartbeatRequest:
-            required:
-                - machine_id
-                - platform_status
-            type: object
-            properties:
-                machine_id:
-                    type: string
-                    description: The unique machine identifier of the node sending the heartbeat.
-                platform_status:
-                    allOf:
-                        - $ref: '#/components/schemas/PlatformStatus'
-                    description: The current platform status of the node.
-            description: The request message for a node heartbeat.
-            x-package: controlplane
-        NodeHeartbeatResponse:
-            required:
-                - status
-            type: object
-            properties:
-                status:
-                    allOf:
-                        - $ref: '#/components/schemas/ResponseStatus'
-                    description: The status of the response.
-                message:
-                    type: string
-                    description: An optional message providing additional information about the response.
-            description: The response message for a node heartbeat.
-            x-package: controlplane
         NodeState:
             enum:
                 - "unspecified"
@@ -1437,18 +1415,8 @@ components:
                 run the Unikraft Cloud Platform.
             format: enum
             x-package: controlplane
-        PlatformStatus:
-            enum:
-                - "healthy"
-                - "degraded"
-                - "unavailable"
-            type: string
-            format: enum
-            x-package: controlplane
         ProvisionNodeRequest:
             required:
-                - region
-                - machine_type
                 - ssh_keys
             type: object
             properties:
@@ -1462,14 +1430,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/CloudProvider'
                     description: The cloud provider where the machine should be provisioned.
-                region:
-                    example: us-east-1
-                    type: string
-                    description: The provider region where the machine should be provisioned.
-                machine_type:
-                    example: m5.xlarge
-                    type: string
-                    description: The machine type to provision. This is provider-specific.
                 ssh_keys:
                     type: array
                     items:
@@ -1689,6 +1649,7 @@ components:
             enum:
                 - "success"
                 - "error"
+                - "partial_success"
             type: string
             description: The response status of an API request.
             format: enum

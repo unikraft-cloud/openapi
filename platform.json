@@ -43,6 +43,28 @@
         "operationId": "GetCertificates",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the certificate in the response.  By\ndefault this is set to true, meaning that all information about the\ncertificate will be included in the response.  If set to false, only the\nbasic information about the certificate will be included, such as its name\nand UUID.",
@@ -94,8 +116,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -115,14 +136,17 @@
         "tags": [
           "Certificates"
         ],
-        "summary": "Update Certificate",
-        "description": "Update the specified certificate with a new certificate chain and private\nkey. Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate must have the same\ncommon name (CN) as the existing certificate.",
-        "operationId": "UpdateCertificate",
+        "summary": "Update Certificates",
+        "description": "Update the specified certificate(s) with new certificate chain(s) and private\nkey(s). Only user-uploaded certificates can be updated; system-managed\ncertificates cannot be modified. The new certificate(s) must have the same\ncommon name (CN) as the existing certificate(s).",
+        "operationId": "UpdateCertificates",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCertificateRequest"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateCertificatesRequestItem"
+                }
               }
             }
           },
@@ -134,7 +158,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateCertificateResponse"
+                  "$ref": "#/components/schemas/UpdateCertificatesResponse"
                 }
               }
             }
@@ -265,7 +289,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCertificateByUUIDRequest"
+                "$ref": "#/components/schemas/UpdateCertificateByUUIDRequestBody"
               }
             }
           },
@@ -277,7 +301,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateCertificateResponse"
+                  "$ref": "#/components/schemas/UpdateCertificatesResponse"
                 }
               }
             }
@@ -352,14 +376,6 @@
         "operationId": "GetImageStore",
         "parameters": [
           {
-            "name": "metro",
-            "in": "query",
-            "description": "(Only applies when using global control plane).\nThe metro of the image.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "digest",
             "in": "query",
             "schema": {
@@ -384,8 +400,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -412,14 +427,6 @@
         "operationId": "GetImages",
         "parameters": [
           {
-            "name": "metro",
-            "in": "query",
-            "description": "(Only applies when using global control plane).\nThe metro of the image.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "digest",
             "in": "query",
             "schema": {
@@ -444,8 +451,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -471,6 +477,28 @@
         "description": "Get one or many instances with their current status and configuration.\nIt's possible to filter this list by ID(s) (name or UUID).",
         "operationId": "GetInstances",
         "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
           {
             "name": "details",
             "in": "query",
@@ -534,8 +562,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -651,6 +678,495 @@
         "x-package": "instances"
       }
     },
+    "/v1/instances/checkpoints": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "List checkpoint instances",
+        "description": "Get one or more checkpoint instances by their UUID(s) or name(s).",
+        "operationId": "GetCheckpointInstances",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the checkpoints in the response.  By\ndefault this is set to true, meaning that all information about the\ncheckpoints will be included in the response.  If set to false, only the\nbasic information about the checkpoints will be included, such as their\nname and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The maximum number of checkpoint instances to return.  If set to 0 or not\nset, all the checkpoint instances matching filters will be returned.  When\nfiltering by IDs, this should not be set.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A list of tags to filter the checkpoint instances by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "If set, the listing starts from the checkpoint with the given UUID or at\nthe given ISO8601 creation timestamp (inclusive).  When count is 0 or not\nset, a UUID value may be used to match a specific checkpoint by UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "The sort order for the returned checkpoint instances.\n\nValid values are `PAGINATION_ORDER_ASC` (ascending, oldest first) and\n`PAGINATION_ORDER_DESC` (descending, newest first).  Defaults to\n`PAGINATION_ORDER_ASC`.",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationOrder"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "description": "The field to sort the checkpoint instances by.\n\nCurrently only `PAGINATION_SORT_BY_CREATE_TIME` is supported.  Defaults to\n`PAGINATION_SORT_BY_CREATE_TIME`.",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationSortBy"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "post": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Create checkpoint instances",
+        "description": "Create a checkpoint from an existing instance.  A checkpoint captures the\nstate of an instance at a specific point in time.  Checkpoints can be\ncreated from running, stopped, or standby instances.",
+        "operationId": "CreateCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateCheckpointInstancesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete checkpoint instances",
+        "description": "Delete the specified checkpoint instance(s) by ID(s) (name or UUID).\nAfter this call the IDs of the checkpoint instances are no longer valid.",
+        "operationId": "DeleteCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update checkpoint instances",
+        "description": "Update (modify) one or more checkpoint instances by ID(s) (name or UUID).",
+        "operationId": "UpdateCheckpointInstances",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint history",
+        "description": "Get the checkpoint history of one or more checkpoint instances.\nReturns the ordered list of checkpoints in each checkpoint's history.",
+        "operationId": "GetCheckpointHistory",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/{uuid}": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint instance by UUID",
+        "description": "Get a single checkpoint instance by its UUID.",
+        "operationId": "GetCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to retrieve.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "description": "Whether to include details about the checkpoint in the response.  By default\nthis is set to true, meaning that all information about the checkpoint will\nbe included in the response.  If set to false, only the basic information\nabout the checkpoint will be included, such as its name and UUID.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Delete checkpoint instance by UUID",
+        "description": "Delete a specified checkpoint instance by its UUID.  After this call the\nUUID of the checkpoint instance is no longer valid.",
+        "operationId": "DeleteCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to delete.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update checkpoint instance by UUID",
+        "description": "Update (modify) a checkpoint instance by its UUID.",
+        "operationId": "UpdateCheckpointInstanceByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the checkpoint instance to update.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCheckpointInstanceByUUIDRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCheckpointInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/checkpoints/{uuid}/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get checkpoint history by UUID",
+        "description": "Get the checkpoint history of a checkpoint instance by its UUID.\nReturns the ordered list of checkpoints in the checkpoint's history.",
+        "operationId": "GetCheckpointHistoryByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the instance or checkpoint to retrieve history for.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get instances checkpoint history",
+        "description": "Get the checkpoint history of one or more instances.\nReturns the ordered list of checkpoints associated with each instance.",
+        "operationId": "GetInstanceHistory",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
     "/v1/instances/log": {
       "get": {
         "tags": [
@@ -659,6 +1175,54 @@
         "summary": "Get Instances Logs",
         "description": "Retrieve the logs of one or more instances by ID(s) (name or UUID).",
         "operationId": "GetInstanceLogs",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to retrieve logs for.  Mutually exclusive with\nname.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to retrieve logs for.  Mutually exclusive with\nUUID.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The byte offset of the log output to receive.  A negative sign makes the\noffset relative to the end of the log.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The amount of bytes to return at most.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -669,8 +1233,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -695,6 +1258,30 @@
         "summary": "Get Instances Metrics",
         "description": "Get the metrics of one or more instances by their ID(s) (name or UUID).",
         "operationId": "GetInstanceMetrics",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -705,8 +1292,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -841,6 +1427,28 @@
         "operationId": "GetTemplateInstances",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the templates in the response.  By default\nthis is set to true, meaning that all information about the templates will\nbe included in the response.  If set to false, only the basic information\nabout the templates will be included, such as their name and UUID.",
@@ -903,8 +1511,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -927,33 +1534,13 @@
         "summary": "Create template instances from Instances",
         "description": "Convert one or more existing instances by their UUID(s) or name(s) into\ntemplate instances that can be used to create new instances.\n\nThe existing instances must be in the `stopped` state and not have existing\nsnapshots.",
         "operationId": "CreateTemplateInstances",
-        "parameters": [
-          {
-            "name": "timeout_s",
-            "in": "query",
-            "description": "Timeout in seconds to wait for the template instances to be created.\nA value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "autokill.time_ms",
-            "in": "query",
-            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
-            "schema": {
-              "type": "integer",
-              "format": "uint64"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/NameOrUUID"
+                  "$ref": "#/components/schemas/CreateTemplateInstancesRequestItem"
                 }
               }
             }
@@ -1173,6 +1760,65 @@
         "summary": "Wait for Instances States",
         "description": "Wait for one or more instances to reach certain states by ID(s)\n(name or UUID).\n\nIf the instances are already in the desired states, the request will return\nimmediately.  If the instances are not in the desired state, the request will\nblock until the instances reach the desired state or the timeout is\nreached.  If the timeout is reached, the request will fail with an error.\nIf the timeout is -1, the request will block indefinitely until the\ninstances reach the desired states.",
         "operationId": "WaitInstances",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the instance to wait for.  Mutually exclusive with name.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the instance to wait for.  Mutually exclusive with UUID.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "The desired state to wait for.  Default is `running`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InstanceState"
+              }
+            }
+          },
+          {
+            "name": "timeout_ms",
+            "in": "query",
+            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "timeout_s",
+            "in": "query",
+            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1183,8 +1829,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1322,6 +1967,42 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "instances"
+      }
+    },
+    "/v1/instances/{uuid}/history": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get instance checkpoint history by UUID",
+        "description": "Get the checkpoint history of an instance by its UUID.\nReturns the ordered list of checkpoints associated with the instance.",
+        "operationId": "GetInstanceHistoryByUUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The UUID of the instance or checkpoint to retrieve history for.",
+            "required": true,
+            "schema": {
+              "example": "123e4567-e89b-12d3-a456-426614174000",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckpointHistoryResponse"
                 }
               }
             }
@@ -1602,6 +2283,28 @@
         "operationId": "GetServiceGroups",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the service group in the response.  By\ndefault this is set to true, meaning that all information about the service\ngroup will be included in the response.  If set to false, only the basic\ninformation about the service group will be included, such as its name and\nUUID.",
@@ -1653,8 +2356,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -1778,6 +2480,30 @@
         "summary": "List Autoscale Configurations",
         "description": "Return the current states and configurations of autoscale configurations\nfor a given set of service groups given their UUIDs or names.",
         "operationId": "GetAutoscaleConfigurations",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1788,8 +2514,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -2419,6 +3144,28 @@
         "operationId": "GetVolumes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the volume in the response.  By\ndefault this is set to true, meaning that all information about the\nvolume will be included in the response.  If set to false, only the\nbasic information about the volume will be included, such as its name\nand UUID.",
@@ -2481,8 +3228,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -2716,6 +3462,28 @@
         "operationId": "GetTemplateVolumes",
         "parameters": [
           {
+            "name": "uuid",
+            "in": "query",
+            "description": "The UUID of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The name of the resource.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "details",
             "in": "query",
             "description": "Whether to include details about the template volumes in the response.  By\ndefault this is set to true, meaning that all information about the\ntemplates will be included in the response.  If set to false, only the\nbasic information about the templates will be included, such as their name\nand UUID.",
@@ -2778,8 +3546,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "default": {
@@ -3427,11 +4194,6 @@
                 "example": false,
                 "type": "boolean",
                 "description": "Whether the volume should be mounted read-only."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               }
             }
           },
@@ -3545,11 +4307,6 @@
             "type": "string",
             "description": "The name of the volume that was attached."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -3587,11 +4344,6 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the policy."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group the policy applies to."
           },
           "enabled": {
             "example": true,
@@ -3673,11 +4425,6 @@
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the certificate in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the certificate is located."
-          },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
             "type": "string",
@@ -3757,6 +4504,35 @@
         "format": "enum",
         "x-package": "certificates"
       },
+      "CheckpointHistoryEntry": {
+        "required": [
+          "uuid",
+          "name",
+          "created_at"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint."
+          },
+          "created_at": {
+            "example": "2023-10-01T12:00:00Z",
+            "type": "string",
+            "description": "The time the checkpoint was created.",
+            "format": "date-time"
+          }
+        },
+        "description": "A checkpoint history entry, representing a single checkpoint in the\nhistory of an instance.",
+        "x-package": "instances"
+      },
       "CloneVolumeByUUIDRequestBody": {
         "type": "object",
         "properties": {
@@ -3790,11 +4566,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "vol_name": {
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
@@ -3935,11 +4706,6 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the newly cloned volume."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "state": {
             "allOf": [
@@ -4210,11 +4976,6 @@
             "type": "string",
             "description": "The name of the service of the added policy."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4238,11 +4999,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Optional, only applies when using global control plane).\nThe metro to route the request to."
-              },
               "min_size": {
                 "example": 2,
                 "type": "integer",
@@ -4387,11 +5143,6 @@
             "type": "string",
             "description": "The name of the service where the configuration was created."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the configuration."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -4430,11 +5181,6 @@
             "example": "funky-certificate",
             "type": "string",
             "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name is generated for you.  The name can also be used\nto identify the certificate in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "cn": {
             "example": "funky-town.com",
@@ -4518,6 +5264,143 @@
         },
         "x-package": "certificates"
       },
+      "CreateCheckpointInstancesRequestItem": {
+        "required": [
+          "from"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "The source instance to create a checkpoint from (by name or UUID)."
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "(Optional).  The name of the checkpoint.\nIf not provided, a name will be generated."
+          },
+          "timeout_s": {
+            "example": 10,
+            "type": "integer",
+            "description": "Timeout in seconds to wait for the checkpoint to be created.\nNo wait performed for a value of 0.",
+            "format": "int64"
+          }
+        },
+        "description": "A single checkpoint creation request.",
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for creating one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "status",
+          "uuid",
+          "name",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint creation operation."
+          },
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was created.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was created."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceState"
+              }
+            ],
+            "description": "The current state of the checkpoint."
+          },
+          "message": {
+            "example": "Failed to create checkpoint",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "CreateCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were created during the operation."
+          }
+        },
+        "x-package": "instances"
+      },
       "CreateInstanceRequest": {
         "type": "object",
         "properties": {
@@ -4533,11 +5416,6 @@
               }
             ],
             "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
           },
           "args": {
             "example": "--port=8080 --debug",
@@ -4638,6 +5516,13 @@
             },
             "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           },
+          "plugins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstanceRequestPlugin"
+            },
+            "description": "(Optional).  Plugins to attach to the instance.  Plugins let you attach\nsmall helper programs to an instance and reach each one over a direct,\nauthenticated HTTP endpoint.  Each plugin loads from its own ROM image,\nmounts at `/uk/plugins/<plugin_name>`, and is reachable at\n`.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins\nmay be attached to an instance."
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -4688,6 +5573,39 @@
               "$ref": "#/components/schemas/NameOrUUID"
             },
             "description": "(Optional).  Dependencies of the instance.\n\nA list of instance identifiers (name or UUID) that this instance depends\non.  Dependencies define startup ordering and can be used to ensure that\nprerequisite instances are running before this instance starts."
+          },
+          "branch_from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running, stopped, or a template.  If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
+          },
+          "checkpoint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrUUID"
+              }
+            ],
+            "description": "(Optional).  Reference to an existing checkpoint to create the instance\nfrom.  The checkpoint must be in the `checkpoint` state.  The new instance\nwill be created with the same configuration and state as the checkpoint.\nMutually exclusive with `image`, `template`, and `branch_from`."
+          },
+          "gateway": {
+            "example": "10.0.0.1",
+            "type": "string",
+            "description": "The default gateway to configure inside the guest."
+          },
+          "nameserver": {
+            "example": "8.8.8.8",
+            "type": "string",
+            "description": "The DNS resolver to configure inside the guest."
+          },
+          "network_interfaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstanceRequestNetworkInterface"
+            },
+            "description": "A list of one to four interfaces to attach"
           }
         },
         "description": "The request message for creating a new instance.",
@@ -4731,6 +5649,70 @@
           }
         },
         "description": "The domain configuration for the service group.\n\nA domain defines a publicly accessible domain name for the instance.  If\nthe domain name ends with a period `.`, it must be a valid Fully Qualified\nDomain Name (FQDN), otherwise it will become a subdomain of the target\nmetro.  The domain can be associated with an existing certificate by\nspecifying the certificate's name or UUID.  If no certificate is specified\nand a FQDN is provided, Unikraft Cloud will automatically generate a new\ncertificate for the domain based on Let's Encrypt and seek to accomplish a\nDNS-01 challenge.",
+        "x-package": "instances"
+      },
+      "CreateInstanceRequestNetworkInterface": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "eth0",
+            "type": "string",
+            "description": "The interface name. If omitted, Unikraft Cloud generates one as\n<instance-name>-ethX, falling back to eth-<suffix> when the\ninstance name is too long."
+          },
+          "tap_name": {
+            "example": "tap0",
+            "type": "string",
+            "description": "The TAP device to attach the interface to. Provide it together\nwith ip."
+          },
+          "ip": {
+            "example": "10.0.0.5/24",
+            "type": "string",
+            "description": "The interface IP address in CIDR notation. Provide it together\nwith tap_name to bring your own interface."
+          },
+          "autoconfig": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the guest configures the interface itself. Defaults to true."
+          },
+          "relay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkInterfaceRelay"
+              }
+            ],
+            "description": "Relay configuration for this interface."
+          }
+        },
+        "description": "Network interface configuration for a new instance.",
+        "x-package": "instances"
+      },
+      "CreateInstanceRequestPlugin": {
+        "required": [
+          "name",
+          "rom"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "my-plugin",
+            "type": "string",
+            "description": "The plugin name.  It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`)."
+          },
+          "rom": {
+            "example": "user/myplugin:latest",
+            "type": "string",
+            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts."
+          },
+          "config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  Arbitrary JSON configuration that the platform passes to the\nplugin's `init` program on `STDIN`.  Any JSON value works, including a\nstring, a number, or an object."
+          }
+        },
+        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint.  A plugin runs inside the instance next to the\nmain application, loads from its own ROM image, and answers requests that\nthe Unikraft Cloud API forwards to it.",
         "x-package": "instances"
       },
       "CreateInstanceRequestRom": {
@@ -4852,11 +5834,6 @@
             "example": "my-template",
             "type": "string",
             "description": "(Optional).  The name of a template instance to create the instance from.\nMutually exclusive with UUID."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
           },
           "create_args": {
             "allOf": [
@@ -5094,11 +6071,6 @@
             "type": "string",
             "description": "Name of the service group.  This is a human-readable name that can be used\nto identify the service group.  The name must be unique within the context\nof your account.  If no name is specified, a random name is generated for\nyou.  The name can also be used to identify the service group in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-          },
           "services": {
             "type": "array",
             "items": {
@@ -5230,6 +6202,59 @@
         },
         "x-package": "services"
       },
+      "CreateTemplateInstancesRequestItem": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "timeout_s": {
+                "example": 2,
+                "type": "integer",
+                "description": "Timeout in seconds to wait for the template instances to be created.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state. No wait performed for a value of 0.",
+                "format": "int64"
+              },
+              "autokill": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ItemAutokill"
+                  }
+                ],
+                "description": "(Optional). Automatic delete-on-idle configuration for the new template."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the instance to convert into template. Mutually exclusive\nwith name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the instance to convert into template. Mutually exclusive\nwith UUID."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "A single template instance to be created.",
+        "x-package": "instances"
+      },
       "CreateTemplateInstancesResponse": {
         "required": [
           "status",
@@ -5315,11 +6340,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template instance that was created."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "state": {
             "allOf": [
@@ -5430,11 +6450,6 @@
             "type": "string",
             "description": "The name of the volume converted into a template."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "state": {
             "example": "available",
             "allOf": [
@@ -5468,11 +6483,6 @@
                 "example": "funky-vol-t7qumh5j",
                 "type": "string",
                 "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  If no name is\nspecified, a random name of the form `vol-X` is generated for you, where\n`X` is a 5 character long random alphanumeric suffix..  The name can also\nbe used to identify the volume in API calls."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "quota_policy": {
                 "example": "static",
@@ -5654,11 +6664,6 @@
             "type": "string",
             "description": "The name of the newly created volume."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "state": {
             "allOf": [
               {
@@ -5717,11 +6722,6 @@
           "uuid": {
             "type": "string",
             "format": "uuid"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the user."
           },
           "added": {
             "example": true,
@@ -5807,11 +6807,6 @@
             "example": "funky-policy",
             "type": "string",
             "description": "The name of the service of the deleted policy."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
           },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
@@ -5912,11 +6907,6 @@
             "type": "string",
             "description": "The name of the service where the configuration was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6016,11 +7006,6 @@
             "type": "string",
             "description": "The name of the certificate which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the certificate."
-          },
           "message": {
             "example": "No certificate with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6035,6 +7020,105 @@
         },
         "description": "Details of the certificate which was deleted by this request.",
         "x-package": "certificates"
+      },
+      "DeleteCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for deleting one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "DeleteCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was deleted.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was deleted."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint instance deletion operation."
+          },
+          "message": {
+            "example": "No checkpoint instance with name 'my-checkpoint'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "DeleteCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were processed during the delete operation."
+          }
+        },
+        "x-package": "instances"
       },
       "DeleteInstanceByUUIDRequestBody": {
         "type": "object",
@@ -6060,11 +7144,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the instance."
-              },
               "timeout_s": {
                 "example": 2,
                 "type": "integer",
@@ -6201,11 +7280,6 @@
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "previous_state": {
             "example": "stopped",
             "type": "string",
@@ -6326,11 +7400,6 @@
             "type": "string",
             "description": "The name of the service group which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6422,11 +7491,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template instance that was deleted."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
           },
           "status": {
             "allOf": [
@@ -6527,11 +7591,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the template volume that was deleted."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -6640,11 +7699,6 @@
             "type": "string",
             "description": "The name of the volume that was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
             "type": "string",
@@ -6679,11 +7733,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "from": {
                 "allOf": [
                   {
@@ -6815,11 +7864,6 @@
             "example": "funky-vol-g7gum5cj",
             "type": "string",
             "description": "The name of the volume that was detached."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "message": {
             "example": "No volume with name 'funky-town-g756b5d'",
@@ -6954,11 +7998,6 @@
             ],
             "description": "The policy which was retrieved by the request."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the resource."
-          },
           "message": {
             "example": "No service with name 'funky-town-g756b5d'",
             "type": "string",
@@ -7061,11 +8100,6 @@
             "example": "funky-instance-template",
             "type": "string",
             "description": "The name of the service where the configuration was created."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
           },
           "enabled": {
             "example": true,
@@ -7182,6 +8216,170 @@
           }
         },
         "x-package": "certificates"
+      },
+      "GetCheckpointHistoryResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetCheckpointHistoryResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting the checkpoint history.",
+        "x-package": "instances"
+      },
+      "GetCheckpointHistoryResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCheckpointHistoryResponseInstanceHistory"
+            },
+            "description": "The checkpoint histories for the requested instances."
+          }
+        },
+        "x-package": "instances"
+      },
+      "GetCheckpointHistoryResponseInstanceHistory": {
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the instance.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "funky-town-g756b5d",
+            "type": "string",
+            "description": "The name of the instance."
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckpointHistoryEntry"
+            },
+            "description": "The checkpoint history entries."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "No instance with name 'funky-town-g756b5d'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "History for a single instance.",
+        "x-package": "instances"
+      },
+      "GetCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for getting one or more checkpoint instances.",
+        "x-package": "instances"
+      },
+      "GetCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Instance"
+            },
+            "description": "List of checkpoint instances that were retrieved during the operation."
+          }
+        },
+        "x-package": "instances"
       },
       "GetImagesRequestTagOrDigest": {
         "type": "object",
@@ -7447,11 +8645,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "output": {
             "example": "d2h5LWFyZS15b3UtZGVjb2RpbmctdGhpcw==",
             "type": "string",
@@ -7690,11 +8883,6 @@
               }
             ],
             "description": "The status of the response."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           }
         },
         "x-package": "instances"
@@ -8021,11 +9209,6 @@
             },
             "description": "A list of errors which may have occurred during the request."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the node is located."
-          },
           "data": {
             "allOf": [
               {
@@ -8078,11 +9261,6 @@
           "url": {
             "example": "my-image:latest",
             "type": "string"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the image."
           },
           "created_at": {
             "example": "2021-01-01T00:00:00Z",
@@ -8235,11 +9413,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the instance.\n\nThis is a human-readable name that can be used to identify the instance.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the instance in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the instance is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -8464,6 +9637,13 @@
             },
             "description": "Read-Only Memory (ROM) blobs to attach to the instance.\nUnikraft Cloud supports the ability to attach Read-Only Memory (ROM) blobs\nto instances. It allows you to create a general-purpose base image and\nthen customize individual instances by attaching code or data as separate\nROM blobs."
           },
+          "plugins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstancePlugin"
+            },
+            "description": "Plugins attached to the instance.  Plugins let you attach small helper\nprograms to an instance and reach each one over a direct, authenticated\nHTTP endpoint.  Each plugin loads from its own ROM image, mounts at\n`/uk/plugins/<plugin_name>`, and is reachable at\n`.../v1/instances/<uuid>/plugins/<plugin_name>/<path>`.  At most 8 plugins\nmay be attached to an instance."
+          },
           "schedules": {
             "type": "array",
             "items": {
@@ -8502,9 +9682,32 @@
               }
             ],
             "description": "The scheduling priority for the instance. Only present for\nusers with scheduling priority override permissions."
+          },
+          "checkpoint_autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceTemplateAutokill"
+              }
+            ],
+            "description": "Checkpoint-specific automatic delete-on-idle configuration.\nOnly used for checkpoint instances."
+          },
+          "private_ip": {
+            "example": "10.0.0.5",
+            "type": "string",
+            "description": "The private IP address of the instance."
+          },
+          "gateway": {
+            "example": "10.0.0.1",
+            "type": "string",
+            "description": "The default gateway configured inside the guest."
+          },
+          "nameserver": {
+            "example": "8.8.8.8",
+            "type": "string",
+            "description": "The DNS resolver configured inside the guest."
           }
         },
-        "description": "An instance is a unikernel virtual machine running an application.",
+        "description": "An instance is a micro vm running an application.",
         "x-package": "instances"
       },
       "InstanceAutokill": {
@@ -8561,11 +9764,7 @@
         "required": [
           "uuid",
           "private_ip",
-          "mac",
-          "rx_bytes",
-          "rx_packets",
-          "tx_bytes",
-          "tx_packets"
+          "mac"
         ],
         "type": "object",
         "properties": {
@@ -8585,32 +9784,59 @@
             "type": "string",
             "description": "The MAC address of the network interface."
           },
-          "rx_bytes": {
-            "example": 5345,
-            "type": "integer",
-            "description": "Amount of bytes received from interface.",
-            "format": "uint64"
+          "name": {
+            "example": "eth0",
+            "type": "string",
+            "description": "The interface name. If omitted, Unikraft Cloud generates one as\n<instance-name>-ethX, falling back to eth-<suffix> when the\ninstance name is too long."
           },
-          "rx_packets": {
-            "example": 110,
-            "type": "integer",
-            "description": "Count of packets received from interface",
-            "format": "uint64"
+          "tap_name": {
+            "example": "tap0",
+            "type": "string",
+            "description": "The TAP device to attach the interface. Provide it together with ip."
           },
-          "tx_bytes": {
-            "example": 1500,
-            "type": "integer",
-            "description": "Amount of bytes sent to interface.",
-            "format": "uint64"
+          "autoconfig": {
+            "example": false,
+            "type": "boolean",
+            "description": "Whether the interface is automatically configured inside the guest\n(IP address, routes, etc.).  When absent or true, autoconfiguration\nis enabled.  Present and false when the guest is expected to\nconfigure the interface manually."
           },
-          "tx_packets": {
-            "example": 12,
-            "type": "integer",
-            "description": "Count of packets sent to interface",
-            "format": "uint64"
+          "relay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceNetworkInterfaceRelay"
+              }
+            ],
+            "description": "Relay configuration for this interface."
           }
         },
         "description": "An instance network interface.",
+        "x-package": "instances"
+      },
+      "InstanceNetworkInterfaceRelay": {
+        "required": [
+          "uuid",
+          "name",
+          "relay_dns"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+            "type": "string",
+            "description": "UUID of the relay interface.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "eth-relay",
+            "type": "string",
+            "description": "Name of the relay interface."
+          },
+          "relay_dns": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether DNS traffic is relayed through this interface.\nDefaults to true."
+          }
+        },
+        "description": "An object that routes all traffic through another interface.",
         "x-package": "instances"
       },
       "InstancePendingUpdate": {
@@ -8661,6 +9887,35 @@
           }
         },
         "description": "A queued property change awaiting application (typically on next restart).",
+        "x-package": "instances"
+      },
+      "InstancePlugin": {
+        "required": [
+          "name",
+          "rom"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "my-plugin",
+            "type": "string",
+            "description": "The plugin name.  It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`)."
+          },
+          "rom": {
+            "example": "user/myplugin:latest",
+            "type": "string",
+            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts."
+          },
+          "config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "(Optional).  Arbitrary JSON configuration that the platform passes to the\nplugin's `init` program on `STDIN`.  Any JSON value works, including a\nstring, a number, or an object."
+          }
+        },
+        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint.  A plugin runs inside the instance next to the\nmain application, loads from its own ROM image, and answers requests that\nthe Unikraft Cloud API forwards to it.",
         "x-package": "instances"
       },
       "InstanceRestartAttempt": {
@@ -8794,11 +10049,6 @@
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup.  The name is unique within the context of your account.  The name\ncan also be used to identify the service group in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the service group is located."
-          },
           "domains": {
             "type": "array",
             "items": {
@@ -8834,7 +10084,8 @@
           "stopping",
           "template",
           "standby",
-          "deleted"
+          "deleted",
+          "checkpoint"
         ],
         "type": "string",
         "description": "The current state of an instance.",
@@ -8873,11 +10124,6 @@
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
-          },
           "at": {
             "example": "/mnt/funky-volume",
             "type": "string",
@@ -8890,6 +10136,41 @@
           }
         },
         "description": "A volume defines a storage which can be attached to the instance.\n\nVolumes can be used to store persistent data which should remain available\neven if the instance is stopped or restarted.",
+        "x-package": "instances"
+      },
+      "ItemAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Time in milliseconds after the template was last used for cloning\nbefore it is deleted. A value of 0 disables template autokill.",
+            "format": "uint64"
+          }
+        },
+        "description": "Automatic delete-on-idle configuration for the template instance.",
+        "x-package": "instances"
+      },
+      "MutableCheckpointInstanceOperation": {
+        "enum": [
+          "set",
+          "add",
+          "del"
+        ],
+        "type": "string",
+        "description": "The operations available on a checkpoint instance's properties.",
+        "format": "enum",
+        "x-package": "instances"
+      },
+      "MutableCheckpointInstanceProperty": {
+        "enum": [
+          "tags",
+          "delete_lock",
+          "autokill"
+        ],
+        "type": "string",
+        "description": "The mutable properties of a checkpoint instance that can be updated.",
+        "format": "enum",
         "x-package": "instances"
       },
       "MutableInstanceOperation": {
@@ -8918,7 +10199,8 @@
           "hostname",
           "roms",
           "dependencies",
-          "sched_priority"
+          "sched_priority",
+          "plugins"
         ],
         "type": "string",
         "description": "The mutable properties of an instance that can be updated.",
@@ -9019,16 +10301,6 @@
         "type": "object",
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the resource."
-              }
-            }
-          },
-          {
             "oneOf": [
               {
                 "title": "uuid",
@@ -9040,7 +10312,7 @@
                   "uuid": {
                     "example": "123e4567-e89b-12d3-a456-426614174000",
                     "type": "string",
-                    "description": "Mutually exclusive with name.",
+                    "description": "The UUID of the resource.",
                     "format": "uuid"
                   }
                 }
@@ -9055,7 +10327,7 @@
                   "name": {
                     "example": "funky-town-g756b5d",
                     "type": "string",
-                    "description": "Mutually exclusive with UUID."
+                    "description": "The name of the resource."
                   }
                 }
               }
@@ -9064,6 +10336,50 @@
         ],
         "description": "An identifier for a resource.  Either a name or a UUID.",
         "x-package": "common"
+      },
+      "NetworkInterfaceRelay": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "relay_dns": {
+                "example": true,
+                "type": "boolean",
+                "description": "Whether the relay forwards DNS requests. Set to false\nto let the default DNS server handle them instead.\nDefaults to true."
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+                    "type": "string",
+                    "description": "UUID of the existing interface to relay through.\nMutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "eth-relay",
+                    "type": "string",
+                    "description": "Name of the existing interface to relay through.\nMutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "An object that routes all traffic through another interface.",
+        "x-package": "instances"
       },
       "PaginationOrder": {
         "enum": [
@@ -9152,11 +10468,6 @@
             "type": "integer",
             "description": "An optional error code providing additional information about the status.\nThis field is only set when this message object is used as a response\nmessage, and is useful when the status is not `success`.",
             "format": "int32"
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the user."
           }
         },
         "x-package": "users"
@@ -9367,7 +10678,8 @@
       "ResponseStatus": {
         "enum": [
           "success",
-          "error"
+          "error",
+          "partial_success"
         ],
         "type": "string",
         "description": "The response status of an API request.",
@@ -9390,8 +10702,7 @@
         "required": [
           "name",
           "when",
-          "action",
-          "next_at"
+          "action"
         ],
         "type": "object",
         "properties": {
@@ -9416,10 +10727,10 @@
           },
           "next_at": {
             "readOnly": true,
-            "example": 1696512000,
-            "type": "integer",
+            "example": "2023-10-05T14:48:00Z",
+            "type": "string",
             "description": "The timestamp of when the next scheduled action will occur.\n\nThis field is populated only in responses (not settable in requests).\nUnix timestamp in seconds.  Omitted if no next execution is scheduled.",
-            "format": "int64"
+            "format": "date-time"
           },
           "args": {
             "example": [
@@ -9500,11 +10811,6 @@
             "example": "funky-service-g7gum5cj",
             "type": "string",
             "description": "The name of the service group.\n\nThis is a human-readable name that can be used to identify the service\ngroup. The name must be unique within the context of your account.  The\nname can also be used to identify the service in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the service group is located."
           },
           "created_at": {
             "example": "2023-10-01T12:00:00Z",
@@ -9688,11 +10994,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "wait_timeout_ms": {
                 "example": 2000,
                 "type": "integer",
@@ -9825,11 +11126,6 @@
             "type": "string",
             "description": "The name of the instance which was deleted."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "example": "running",
             "type": "string",
@@ -9902,11 +11198,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "force": {
                 "example": false,
                 "type": "boolean",
@@ -10044,11 +11335,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "allOf": [
               {
@@ -10106,11 +11392,6 @@
           {
             "type": "object",
             "properties": {
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
-              },
               "drain_timeout_ms": {
                 "example": 250,
                 "type": "integer",
@@ -10228,11 +11509,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "allOf": [
               {
@@ -10284,19 +11560,13 @@
         "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
         "x-package": "instances"
       },
-      "UpdateCertificateByUUIDRequest": {
+      "UpdateCertificateByUUIDRequestBody": {
         "required": [
-          "uuid",
           "chain",
           "pkey"
         ],
         "type": "object",
         "properties": {
-          "uuid": {
-            "type": "string",
-            "description": "The UUID of the certificate to update.",
-            "format": "uuid"
-          },
           "chain": {
             "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
             "type": "string",
@@ -10308,40 +11578,62 @@
             "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
           }
         },
-        "description": "The request message for updating a certificate by its UUID.",
         "x-package": "certificates"
       },
-      "UpdateCertificateRequest": {
+      "UpdateCertificatesRequestItem": {
         "required": [
-          "id",
           "chain",
           "pkey"
         ],
         "type": "object",
-        "properties": {
-          "id": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrUUID"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "chain": {
+                "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
+                "type": "string",
+                "description": "The new certificate chain.\n\nThis is the public chain of the certificate in PEM format. The chain\nshould include the certificate and any intermediate certificates."
+              },
+              "pkey": {
+                "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
+                "type": "string",
+                "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
               }
-            ],
-            "description": "The ID of the certificate to update."
+            }
           },
-          "chain": {
-            "example": "-----BEGIN CERTIFICATE----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END CERTIFICATE-----",
-            "type": "string",
-            "description": "The new certificate chain.\n\nThis is the public chain of the certificate in PEM format. The chain\nshould include the certificate and any intermediate certificates."
-          },
-          "pkey": {
-            "example": "-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQ... -----END PRIVATE KEY-----",
-            "type": "string",
-            "description": "The new private key.\n\nThis is the private key of the certificate in PEM format. The private\nkey must match the public key in the certificate chain."
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the certificate to update. Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "funky-town-g756b5d",
+                    "type": "string",
+                    "description": "The name of the certificate to update. Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
           }
-        },
-        "description": "The request message for updating one or more certificate(s) by their\nUUID(s) or name(s).",
+        ],
+        "description": "A single update operation to be applied to a certificate.",
         "x-package": "certificates"
       },
-      "UpdateCertificateResponse": {
+      "UpdateCertificatesResponse": {
         "required": [
           "status",
           "op_time_us"
@@ -10364,7 +11656,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/UpdateCertificateResponseData"
+                "$ref": "#/components/schemas/UpdateCertificatesResponseData"
               }
             ],
             "description": "The response data for this request."
@@ -10386,7 +11678,7 @@
         "description": "The response message for updating one or more certificate(s).",
         "x-package": "certificates"
       },
-      "UpdateCertificateResponseData": {
+      "UpdateCertificatesResponseData": {
         "type": "object",
         "properties": {
           "certificates": {
@@ -10398,6 +11690,225 @@
           }
         },
         "x-package": "certificates"
+      },
+      "UpdateCheckpointInstanceByUUIDRequestBody": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+          },
+          "prop": {
+            "example": "tags",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableCheckpointInstanceProperty"
+              }
+            ],
+            "description": "The property to modify."
+          },
+          "op": {
+            "example": "add",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MutableCheckpointInstanceOperation"
+              }
+            ],
+            "description": "The operation to perform on the property."
+          },
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoogleProtobufValue"
+              }
+            ],
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+          }
+        },
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesRequestItem": {
+        "required": [
+          "prop",
+          "op"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "example": "op-1",
+                "type": "string",
+                "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
+              },
+              "prop": {
+                "example": "tags",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableCheckpointInstanceProperty"
+                  }
+                ],
+                "description": "The property to modify."
+              },
+              "op": {
+                "example": "add",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MutableCheckpointInstanceOperation"
+                  }
+                ],
+                "description": "The operation to perform on the property."
+              },
+              "value": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GoogleProtobufValue"
+                  }
+                ],
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "title": "uuid",
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "type": "string",
+                    "description": "The UUID of the checkpoint instance to update. Mutually exclusive with name.",
+                    "format": "uuid"
+                  }
+                }
+              },
+              {
+                "title": "name",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "my-checkpoint",
+                    "type": "string",
+                    "description": "The name of the checkpoint instance to update. Mutually exclusive with UUID."
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "A single update operation to be applied to a checkpoint instance.",
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateCheckpointInstancesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 76,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for updating a checkpoint instance by its UUID.",
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponseCheckpointInstance": {
+        "required": [
+          "uuid",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string",
+            "description": "The UUID of the checkpoint instance that was updated.",
+            "format": "uuid"
+          },
+          "name": {
+            "example": "my-checkpoint",
+            "type": "string",
+            "description": "The name of the checkpoint instance that was updated."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of this particular checkpoint instance update operation."
+          },
+          "id": {
+            "example": "op-1",
+            "type": "string",
+            "description": "(Optional).  The client-provided ID from the request."
+          },
+          "message": {
+            "example": "No checkpoint instance with name 'my-checkpoint'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the status.\nThis field is useful when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "x-package": "instances"
+      },
+      "UpdateCheckpointInstancesResponseData": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateCheckpointInstancesResponseCheckpointInstance"
+            },
+            "description": "List of checkpoint instances that were processed during the update operation."
+          }
+        },
+        "x-package": "instances"
       },
       "UpdateInstanceByUUIDRequestBody": {
         "required": [
@@ -10435,7 +11946,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
           }
         },
         "x-package": "instances"
@@ -10454,11 +11965,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "memory_mb",
@@ -10484,7 +11990,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields).\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
               }
             }
           },
@@ -10603,11 +12109,6 @@
               }
             ],
             "description": "The status of this particular instance update operation."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
           },
           "id": {
             "example": "op-1",
@@ -10820,11 +12321,6 @@
             "type": "string",
             "description": "The name of the service group that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the service group."
-          },
           "status": {
             "allOf": [
               {
@@ -10907,11 +12403,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro of the template instance."
               },
               "prop": {
                 "example": "tags",
@@ -11049,11 +12540,6 @@
             "type": "string",
             "description": "The name of the template instance that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the template instance."
-          },
           "status": {
             "allOf": [
               {
@@ -11136,11 +12622,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in\nthe response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "tags",
@@ -11279,11 +12760,6 @@
             "type": "string",
             "description": "The name of the template volume that was updated."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
-          },
           "status": {
             "allOf": [
               {
@@ -11366,11 +12842,6 @@
                 "example": "op-1",
                 "type": "string",
                 "description": "(Optional).  A client-provided identifier for tracking this operation in the response."
-              },
-              "metro": {
-                "example": "fra",
-                "type": "string",
-                "description": "(Only applies when using global control plane).\nThe metro to route the request to."
               },
               "prop": {
                 "example": "size_mb",
@@ -11507,11 +12978,6 @@
             "example": "funky-town-g756b5d",
             "type": "string",
             "description": "The name of the volume that was updated."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the volume."
           },
           "status": {
             "allOf": [
@@ -11804,11 +13270,6 @@
             "example": "funky-town-g7gum5cj",
             "type": "string",
             "description": "The name of the volume.\n\nThis is a human-readable name that can be used to identify the volume.\nThe name must be unique within the context of your account.  The name can\nalso be used to identify the volume in API calls."
-          },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nWhere the volume is located."
           },
           "created_at": {
             "example": "2021-01-01T00:00:00Z",
@@ -12180,11 +13641,6 @@
             "type": "string",
             "description": "The name of the instance."
           },
-          "metro": {
-            "example": "fra",
-            "type": "string",
-            "description": "(Only applies when using global control plane).\nThe metro of the instance."
-          },
           "state": {
             "allOf": [
               {
@@ -12243,7 +13699,7 @@
     },
     {
       "name": "Instances",
-      "description": "An instance is a unikernel virtual machine running an application."
+      "description": "An instance is a micro vm running an application."
     },
     {
       "name": "Node"

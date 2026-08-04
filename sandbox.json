@@ -1,0 +1,1377 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Unikraft Cloud Sandbox API",
+    "description": "This specification describes the Unikraft Cloud Sandbox API, which provides mechanisms to interact with plugins running inside Unikraft Cloud instances. It allows you to run and supervise commands and to read and write files within an instance.",
+    "contact": {
+      "name": "Unikraft Support",
+      "url": "https://unikraft.com/contact",
+      "email": "support@unikraft.com"
+    },
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.fra.unikraft.cloud",
+      "description": "Frankfurt, DE"
+    },
+    {
+      "url": "https://api.dal.unikraft.cloud",
+      "description": "Dallas, TX, USA"
+    },
+    {
+      "url": "https://api.sin.unikraft.cloud",
+      "description": "Singapore"
+    },
+    {
+      "url": "https://api.was.unikraft.cloud",
+      "description": "Washington, DC, USA"
+    },
+    {
+      "url": "https://api.sfo.unikraft.cloud",
+      "description": "San Francisco, CA, USA"
+    }
+  ],
+  "paths": {
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands": {
+      "get": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "List Commands",
+        "description": "List commands running in the specified plugin.",
+        "operationId": "ListInstanceCommands",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListInstanceCommandsResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Start a Command",
+        "description": "Execute a new command in the specified plugin.",
+        "operationId": "ExecInstanceCommand",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecInstanceCommandRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}": {
+      "get": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Inspect Command",
+        "description": "Inspect an existing command.",
+        "operationId": "InspectInstanceCommand",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandInspectResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "delete": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Forget Command",
+        "description": "Forget a finished command.",
+        "operationId": "DeleteInstanceCommand",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/logs": {
+      "get": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Get Command Logs",
+        "description": "Fetch collected logs from a command.",
+        "operationId": "GetInstanceCommandLogs",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetInstanceCommandLogsRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandLogsResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/logs/raw/{stream}": {
+      "get": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Get Command Raw Logs",
+        "description": "Fetch raw stdout or stderr from a command.",
+        "operationId": "GetInstanceCommandRawLogs",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "stream",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SandboxLogStream"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetInstanceCommandRawLogsResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/signal": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Send Signal to Command",
+        "description": "Send a signal to a running command.",
+        "operationId": "SignalInstanceCommand",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignalInstanceCommandRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/stdin": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Feed Command Stdin",
+        "description": "Feed data into a command's standard input.",
+        "operationId": "FeedInstanceCommandStdin",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedInstanceCommandStdinRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/wait": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Wait for Command Completion",
+        "description": "Wait for a command to finish (blocking).",
+        "operationId": "WaitInstanceCommand",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/commands/{uuid}/wait_timeout": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Wait for Command with Timeout",
+        "description": "Wait for a command to finish with a timeout.",
+        "operationId": "WaitInstanceCommandWithTimeout",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaitInstanceCommandWithTimeoutRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/fs/mkdir": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Create Directory",
+        "description": "Create a directory via the filesystem API.",
+        "operationId": "MakeInstanceDirectory",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MakeInstanceDirectoryRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/fs/read": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Read File",
+        "description": "Read a file via the filesystem API.",
+        "operationId": "ReadInstanceFile",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadInstanceFileRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadInstanceFileResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/fs/read_raw": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Download File",
+        "description": "Download a file's raw contents via the filesystem API.",
+        "operationId": "ReadInstanceFileRaw",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadInstanceFileRawRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadInstanceFileRawResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "/v1/instances/{instance}/plugins/{plugin_name}/fs/write": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Write File",
+        "description": "Write a file via the filesystem API.",
+        "operationId": "WriteInstanceFile",
+        "parameters": [
+          {
+            "name": "instance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "plugin_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WriteInstanceFileRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginEmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "sandbox"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BodyStreamRange": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "example": 0,
+            "type": "integer",
+            "description": "The byte offset to start reading from.",
+            "format": "int64"
+          },
+          "limit": {
+            "example": 4096,
+            "type": "integer",
+            "description": "The maximum number of bytes to read.",
+            "format": "uint64"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "CommandInspectResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CommandInspectResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing the inspection details of a command.",
+        "x-package": "sandbox"
+      },
+      "CommandInspectResponseData": {
+        "required": [
+          "uuid",
+          "cmdline"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "cmdline": {
+            "type": "string"
+          },
+          "exitcode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "CommandLogsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CommandLogsResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing the standard output and error logs.",
+        "x-package": "sandbox"
+      },
+      "CommandLogsResponseData": {
+        "required": [
+          "stdout",
+          "stderr"
+        ],
+        "type": "object",
+        "properties": {
+          "stdout": {
+            "type": "string"
+          },
+          "stderr": {
+            "type": "string"
+          },
+          "stdout_available": {
+            "example": 1024,
+            "type": "integer",
+            "description": "Total available length of stdout, in bytes.",
+            "format": "uint64"
+          },
+          "stderr_available": {
+            "example": 256,
+            "type": "integer",
+            "description": "Total available length of stderr, in bytes.",
+            "format": "uint64"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "CommandResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CommandResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing the UUID of the executed command.",
+        "x-package": "sandbox"
+      },
+      "CommandResponseData": {
+        "required": [
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "ExecInstanceCommandRequestBody": {
+        "required": [
+          "cmd"
+        ],
+        "type": "object",
+        "properties": {
+          "cmd": {
+            "type": "string"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "FeedInstanceCommandStdinRequestBody": {
+        "required": [
+          "data",
+          "eof"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Base64-encoded bytes to feed into the command's standard input."
+          },
+          "eof": {
+            "type": "boolean",
+            "description": "If true, closes the standard input stream after injecting the data."
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "GetInstanceCommandLogsRequestBody": {
+        "type": "object",
+        "properties": {
+          "stdout": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BodyStreamRange"
+              }
+            ],
+            "description": "Range request for stdout."
+          },
+          "stderr": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BodyStreamRange"
+              }
+            ],
+            "description": "Range request for stderr."
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "GetInstanceCommandRawLogsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetInstanceCommandRawLogsResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing raw binary logs.",
+        "x-package": "sandbox"
+      },
+      "GetInstanceCommandRawLogsResponseData": {
+        "required": [
+          "output"
+        ],
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "string",
+            "format": "bytes"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "GoogleProtobufValue": {
+        "description": "Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values."
+      },
+      "ListInstanceCommandsResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ListInstanceCommandsResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for listing all commands.",
+        "x-package": "sandbox"
+      },
+      "ListInstanceCommandsResponseData": {
+        "type": "object",
+        "properties": {
+          "commands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "MakeInstanceDirectoryRequestBody": {
+        "required": [
+          "path",
+          "parents"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "parents": {
+            "type": "boolean"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "PluginEmptyResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PluginEmptyResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "General empty response for successful operations that don't return data.",
+        "x-package": "sandbox"
+      },
+      "PluginEmptyResponseData": {
+        "type": "object",
+        "properties": {},
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileRawRequestBody": {
+        "required": [
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileRawResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReadInstanceFileRawResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing the raw file contents.",
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileRawResponseData": {
+        "required": [
+          "contents"
+        ],
+        "type": "object",
+        "properties": {
+          "contents": {
+            "type": "string",
+            "format": "bytes"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileRequestBody": {
+        "required": [
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResponseStatus"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReadInstanceFileResponseData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            }
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message containing the file contents.",
+        "x-package": "sandbox"
+      },
+      "ReadInstanceFileResponseData": {
+        "required": [
+          "contents"
+        ],
+        "type": "object",
+        "properties": {
+          "contents": {
+            "type": "string",
+            "format": "bytes"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "ResponseError": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "example": 401,
+            "type": "integer",
+            "description": "The HTTP status code of the error.",
+            "format": "uint64"
+          }
+        },
+        "description": "The error response message for an API request.",
+        "x-package": "common"
+      },
+      "ResponseStatus": {
+        "enum": [
+          "success",
+          "error",
+          "partial_success"
+        ],
+        "type": "string",
+        "description": "The response status of an API request.",
+        "format": "enum",
+        "x-package": "common"
+      },
+      "SandboxLogStream": {
+        "enum": [
+          "stdout",
+          "stderr"
+        ],
+        "type": "string",
+        "description": "SandboxLogStream identifies which output stream to read raw logs from.",
+        "format": "enum",
+        "x-package": "sandbox"
+      },
+      "SignalInstanceCommandRequestBody": {
+        "required": [
+          "signal"
+        ],
+        "type": "object",
+        "properties": {
+          "signal": {
+            "$ref": "#/components/schemas/GoogleProtobufValue"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "WaitInstanceCommandWithTimeoutRequestBody": {
+        "required": [
+          "timeout_s"
+        ],
+        "type": "object",
+        "properties": {
+          "timeout_s": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "x-package": "sandbox"
+      },
+      "WriteInstanceFileEncoding": {
+        "enum": [
+          "utf-8",
+          "base64"
+        ],
+        "type": "string",
+        "description": "Encoding type for write instance file requests.",
+        "format": "enum",
+        "x-package": "sandbox"
+      },
+      "WriteInstanceFileRequestBody": {
+        "required": [
+          "path",
+          "append",
+          "encoding",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "append": {
+            "type": "boolean"
+          },
+          "encoding": {
+            "$ref": "#/components/schemas/WriteInstanceFileEncoding"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "x-package": "sandbox"
+      }
+    },
+    "securitySchemes": {
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Sandbox"
+    }
+  ]
+}

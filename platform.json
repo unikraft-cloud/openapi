@@ -5606,6 +5606,22 @@
               "$ref": "#/components/schemas/CreateInstanceRequestNetworkInterface"
             },
             "description": "A list of one to four interfaces to attach"
+          },
+          "type": {
+            "example": "full",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceType"
+              }
+            ],
+            "description": "(Optional).  The type of virtual machine to use for the instance.\nDefaults to `micro`, which runs on Firecracker.  `full` runs on QEMU\ninstead and is required for GPU passthrough (see `gpus`) and, in the\nfuture, Windows VMs.  QEMU-backed instances currently do not support\nscale-to-zero, templates, branching, or checkpointing, and only\nsupport block-based volumes (no virtiofs).  Requires a plan with full\nVM support and cannot be combined with `template`, `branch_from`, or\n`checkpoint`."
+          },
+          "gpus": {
+            "example": 1,
+            "maximum": 1.0,
+            "type": "integer",
+            "description": "(Optional).  Number of GPUs to attach to the instance.  Currently\nrestricted to at most 1.  Requires `type` to be `full` and a plan\nwith GPU support.  A GPU stays assigned to the instance, even while\nstopped, until the instance is deleted.  Cannot be combined with\n`template`, `branch_from`, or `checkpoint`.",
+            "format": "int32"
           }
         },
         "description": "The request message for creating a new instance.",
@@ -9400,7 +9416,8 @@
           "image",
           "memory_mb",
           "vcpus",
-          "restart_policy"
+          "restart_policy",
+          "type"
         ],
         "type": "object",
         "properties": {
@@ -9705,6 +9722,21 @@
             "example": "8.8.8.8",
             "type": "string",
             "description": "The DNS resolver configured inside the guest."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceType"
+              }
+            ],
+            "description": "The type of virtual machine used to run the instance."
+          },
+          "gpus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceGpu"
+            },
+            "description": "GPUs attached to the instance.  Only present for instances of type\n`full`."
           }
         },
         "description": "An instance is a micro vm running an application.",
@@ -9758,6 +9790,27 @@
         "type": "string",
         "description": "Features are specific configurations or capabilities that can be enabled for\nthe instance.\n\nThe list of available features to enable for the instance:\n\n| Feature          | Description |\n|------------------|-------------|\n| `delete_on_stop` | The instance will be deleted when it is stopped. This is useful for instances that are not needed after they are stopped, such as temporary or ephemeral instances. |",
         "format": "enum",
+        "x-package": "instances"
+      },
+      "InstanceGpu": {
+        "required": [
+          "uuid",
+          "model"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the GPU.",
+            "format": "uuid"
+          },
+          "model": {
+            "example": "10de:1eb8",
+            "type": "string",
+            "description": "The GPU model, given as its PCI vendor and device ID in the form\n`<vendor>:<device>`."
+          }
+        },
+        "description": "A GPU attached to the instance.",
         "x-package": "instances"
       },
       "InstanceNetworkInterface": {
@@ -10102,6 +10155,16 @@
           }
         },
         "description": "Automatic delete-on-idle configuration for template instances.",
+        "x-package": "instances"
+      },
+      "InstanceType": {
+        "enum": [
+          "micro",
+          "full"
+        ],
+        "type": "string",
+        "description": "The type of virtual machine used to run an instance.\n\n| Type    | Description |\n|---------|-------------|\n| `micro` | A lightweight microVM (default).  Boots in milliseconds and is suitable for most workloads. |\n| `full`  | A full virtual machine with broader hardware support, such as GPU passthrough.  Requires a plan with full VM support. |",
+        "format": "enum",
         "x-package": "instances"
       },
       "InstanceVolume": {

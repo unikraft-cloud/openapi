@@ -4320,6 +4320,30 @@ components:
                     items:
                         $ref: '#/components/schemas/CreateInstanceRequestNetworkInterface'
                     description: A list of one to four interfaces to attach
+                type:
+                    example: "full"
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceType'
+                    description: |-
+                        (Optional).  The type of virtual machine to use for the instance.
+                        Defaults to `micro`, which runs on Firecracker.  `full` runs on QEMU
+                        instead and is required for GPU passthrough (see `gpus`) and, in the
+                        future, Windows VMs.  QEMU-backed instances currently do not support
+                        scale-to-zero, templates, branching, or checkpointing, and only
+                        support block-based volumes (no virtiofs).  Requires a plan with full
+                        VM support and cannot be combined with `template`, `branch_from`, or
+                        `checkpoint`.
+                gpus:
+                    example: 1
+                    maximum: !!float 1
+                    type: integer
+                    description: |-
+                        (Optional).  Number of GPUs to attach to the instance.  Currently
+                        restricted to at most 1.  Requires `type` to be `full` and a plan
+                        with GPU support.  A GPU stays assigned to the instance, even while
+                        stopped, until the instance is deleted.  Cannot be combined with
+                        `template`, `branch_from`, or `checkpoint`.
+                    format: int32
             description: The request message for creating a new instance.
             x-package: instances
         CreateInstanceRequestAutokill:
@@ -7402,6 +7426,7 @@ components:
                 - memory_mb
                 - vcpus
                 - restart_policy
+                - type
             type: object
             properties:
                 uuid:
@@ -7840,6 +7865,17 @@ components:
                     example: 8.8.8.8
                     type: string
                     description: The DNS resolver configured inside the guest.
+                type:
+                    allOf:
+                        - $ref: '#/components/schemas/InstanceType'
+                    description: The type of virtual machine used to run the instance.
+                gpus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstanceGpu'
+                    description: |-
+                        GPUs attached to the instance.  Only present for instances of type
+                        `full`.
             description: An instance is a micro vm running an application.
             x-package: instances
         InstanceAutokill:
@@ -7897,6 +7933,24 @@ components:
                 |------------------|-------------|
                 | `delete_on_stop` | The instance will be deleted when it is stopped. This is useful for instances that are not needed after they are stopped, such as temporary or ephemeral instances. |
             format: enum
+            x-package: instances
+        InstanceGpu:
+            required:
+                - uuid
+                - model
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    description: The UUID of the GPU.
+                    format: uuid
+                model:
+                    example: 10de:1eb8
+                    type: string
+                    description: |-
+                        The GPU model, given as its PCI vendor and device ID in the form
+                        `<vendor>:<device>`.
+            description: A GPU attached to the instance.
             x-package: instances
         InstanceNetworkInterface:
             required:
@@ -8266,6 +8320,20 @@ components:
                         it is deleted. A value of 0 disables template autokill.
                     format: uint64
             description: Automatic delete-on-idle configuration for template instances.
+            x-package: instances
+        InstanceType:
+            enum:
+                - "micro"
+                - "full"
+            type: string
+            description: |-
+                The type of virtual machine used to run an instance.
+
+                | Type    | Description |
+                |---------|-------------|
+                | `micro` | A lightweight microVM (default).  Boots in milliseconds and is suitable for most workloads. |
+                | `full`  | A full virtual machine with broader hardware support, such as GPU passthrough.  Requires a plan with full VM support. |
+            format: enum
             x-package: instances
         InstanceVolume:
             required:

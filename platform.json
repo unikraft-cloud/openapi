@@ -9198,6 +9198,17 @@
       "GoogleProtobufValue": {
         "description": "Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values."
       },
+      "HealthState": {
+        "enum": [
+          "unknown",
+          "healthy",
+          "degraded"
+        ],
+        "type": "string",
+        "description": "The health state reported by a single health checker.",
+        "format": "enum",
+        "x-package": "node"
+      },
       "HealthzResponse": {
         "required": [
           "status",
@@ -9249,8 +9260,9 @@
           "checks": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
-            }
+              "$ref": "#/components/schemas/HealthState"
+            },
+            "description": "The health state of each registered checker, keyed by checker name.\nValid keys are \"images\", \"systemd\", and \"user-defined\"; a checker's\nkey is only present if it is enabled. Checkers report only their\naggregate state; per-check detail (e.g. which default image is\nmissing, or which user-defined script failed) is not exposed here."
           },
           "versions": {
             "type": "object",

@@ -136,10 +136,41 @@
       }
     },
     "/commands/{uuid}/logs": {
+      "delete": {
+        "operationId": "DeleteCommandLogsByUUID",
+        "summary": "Delete Command Logs",
+        "description": "Forget the output logs of an existing command, freeing up memory.\nThe stdin/out/err pipes of running commands will be closed. Idempotent.\n`404` is returned, with an empty body, when no such command exists.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The outcome of forgetting command logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "commands"
+        ]
+      },
       "get": {
         "operationId": "GetCommandLogs",
         "summary": "Get Command Logs",
-        "description": "Fetch the collected output of a command. Both streams are base64-encoded;\nuse the raw log endpoint for binary output. `404` is returned, with an\nempty body, when no such command exists.",
+        "description": "Fetch the collected output of a command. Both streams are base64-encoded;\nuse the raw log endpoint for binary output. `404` is returned, with an\nempty body, when no such command exists. `410` is returned, with an empty body,\nif the command's logs have been deleted.",
         "parameters": [
           {
             "name": "uuid",
@@ -213,7 +244,7 @@
         ],
         "responses": {
           "default": {
-            "description": "An output stream of a command, returned verbatim and unenveloped. A request\ncarrying no `Range` header is answered with `200` and the whole stream; a\nsatisfiable `Range` is answered with `206`, the requested bytes and a\n`Content-Range` header. `404` is returned when the command or the stream does\nnot exist, and `416` — with a `Content-Range` header reporting the total\nlength — when the range cannot be satisfied.",
+            "description": "An output stream of a command, returned verbatim and unenveloped. A request\ncarrying no `Range` header is answered with `200` and the whole stream; a\nsatisfiable `Range` is answered with `206`, the requested bytes and a\n`Content-Range` header. `404` is returned when the command or the stream does\nnot exist, `410` is returned, with an empty body, if the command's logs have been\ndeleted, and `416` — with a `Content-Range` header reporting the total length —\nwhen the range cannot be satisfied.",
             "headers": {
               "Content-Range": {
                 "required": false,
@@ -285,7 +316,7 @@
       "post": {
         "operationId": "WriteCommandStdin",
         "summary": "Write Command Stdin",
-        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, and `400` when `data` is not\nvalid base64. Feeding data into a command whose standard input has been\nclosed is an error.",
+        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, `410` if the command's logs have been\ndeleted, and `400` when `data` is not valid base64.\nFeeding data into a command whose standard input has been closed is an error.",
         "parameters": [
           {
             "name": "uuid",
@@ -700,7 +731,7 @@
             "description": "The operation time in microseconds."
           }
         },
-        "description": "The response to fetching the output of a command. `404` is returned, with an\nempty body, when no command with the given UUID exists."
+        "description": "The response to fetching the output of a command. `404` is returned, with an\nempty body, when no command with the given UUID exists. `410` is returned, with an\nempty body, if the command's logs have been deleted."
       },
       "CommandSignalRequest": {
         "type": "object",

@@ -113,13 +113,37 @@ paths:
       tags:
         - commands
   /commands/{uuid}/logs:
+    delete:
+      operationId: DeleteCommandLogsByUUID
+      summary: Delete Command Logs
+      description: |-
+        Forget the output logs of an existing command, freeing up memory.
+        The stdin/out/err pipes of running commands will be closed. Idempotent.
+        `404` is returned, with an empty body, when no such command exists.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: The outcome of forgetting command logs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      tags:
+        - commands
     get:
       operationId: GetCommandLogs
       summary: Get Command Logs
       description: |-
         Fetch the collected output of a command. Both streams are base64-encoded;
         use the raw log endpoint for binary output. `404` is returned, with an
-        empty body, when no such command exists.
+        empty body, when no such command exists. `410` is returned, with an empty body,
+        if the command's logs have been deleted.
       parameters:
         - name: uuid
           in: path
@@ -174,8 +198,9 @@ paths:
             carrying no `Range` header is answered with `200` and the whole stream; a
             satisfiable `Range` is answered with `206`, the requested bytes and a
             `Content-Range` header. `404` is returned when the command or the stream does
-            not exist, and `416` — with a `Content-Range` header reporting the total
-            length — when the range cannot be satisfied.
+            not exist, `410` is returned, with an empty body, if the command's logs have been
+            deleted, and `416` — with a `Content-Range` header reporting the total length —
+            when the range cannot be satisfied.
           headers:
             Content-Range:
               required: false
@@ -226,9 +251,9 @@ paths:
       summary: Write Command Stdin
       description: |-
         Feed data into the standard input of a command. `404` is returned, with an
-        empty body, when no such command exists, and `400` when `data` is not
-        valid base64. Feeding data into a command whose standard input has been
-        closed is an error.
+        empty body, when no such command exists, `410` if the command's logs have been
+        deleted, and `400` when `data` is not valid base64.
+        Feeding data into a command whose standard input has been closed is an error.
       parameters:
         - name: uuid
           in: path
@@ -522,7 +547,8 @@ components:
           description: The operation time in microseconds.
       description: |-
         The response to fetching the output of a command. `404` is returned, with an
-        empty body, when no command with the given UUID exists.
+        empty body, when no command with the given UUID exists. `410` is returned, with an
+        empty body, if the command's logs have been deleted.
     CommandSignalRequest:
       type: object
       required:

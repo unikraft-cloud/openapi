@@ -466,6 +466,74 @@
           }
         },
         "x-package": "images"
+      },
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Pin Images",
+        "description": "Pull and pin one or more images so they stay cached and are never\nevicted, without relying on an on-demand pull to succeed at instance\nstart.  If a pull fails, the agent's error is returned in the entry's\n`message` field.",
+        "operationId": "PinImages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PinImageRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PinImagesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "images"
+      },
+      "delete": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Unpin Images",
+        "description": "Unpin one or more images by UUID, making them eligible for normal\ncache eviction again.  This does not delete the image.",
+        "operationId": "UnpinImages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UnpinImageRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnpinImagesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "images"
       }
     },
     "/v1/instances": {
@@ -9251,6 +9319,11 @@
             "items": {
               "type": "string"
             }
+          },
+          "persistent": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the image is pinned and exempt from cache eviction.  Only\npopulated (and only ever `true`) for callers with image manager\npermissions; omitted otherwise, including when the image is not pinned."
           }
         },
         "x-package": "images"
@@ -10399,6 +10472,203 @@
         "description": "The sort field used by list endpoints.",
         "format": "enum",
         "x-package": "common"
+      },
+      "PinImageRequestItem": {
+        "required": [
+          "url",
+          "timeout_s"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "example": "user/image:latest",
+            "type": "string",
+            "description": "The image URL to pull and pin."
+          },
+          "credentials": {
+            "example": "dXNlcjpwYXNzd29yZA==",
+            "type": "string",
+            "description": "Optional credentials for authenticating to an OCI registry.\nOnly valid for OCI registry URLs; the platform rejects this\nfield for non-OCI schemes."
+          },
+          "headers": {
+            "example": {
+              "Authorization": "Bearer token123"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional HTTP headers to send when fetching the image."
+          },
+          "pull_policy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PullPolicy"
+              }
+            ],
+            "description": "Controls when the image is pulled relative to what is already cached on\nthe node.  If unset, this is inferred from the URL."
+          },
+          "timeout_s": {
+            "example": 30,
+            "type": "integer",
+            "description": "Number of seconds to wait for the pull to complete.  Required and must\nbe non-zero; `-1` waits up to the platform's maximum timeout.",
+            "format": "int64"
+          },
+          "merge_requests": {
+            "example": true,
+            "type": "boolean",
+            "description": "Avoid duplicate pulls by merging with any in-flight request for the\nsame image.  Defaults to `true`."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PinImageRequestItemAutokill"
+              }
+            ],
+            "description": "(Optional).  Automatically unpin the image after a period of inactivity."
+          }
+        },
+        "description": "The request item for pinning a single image.",
+        "x-package": "images"
+      },
+      "PinImageRequestItemAutokill": {
+        "required": [
+          "time_ms"
+        ],
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Automatically unpin the image after this many milliseconds of\ninactivity.  `0` (the default) disables this.",
+            "format": "uint64"
+          }
+        },
+        "x-package": "images"
+      },
+      "PinImagesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the response.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PinImagesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 123,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for pinning one or more images.",
+        "x-package": "images"
+      },
+      "PinImagesResponseData": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PinImagesResponseImage"
+            },
+            "description": "The result of pinning each requested image."
+          }
+        },
+        "x-package": "images"
+      },
+      "PinImagesResponseImage": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether this image was pulled and pinned successfully."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image.  Only set on success.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the image.  Only set on success."
+          },
+          "created_at": {
+            "example": "2021-01-01T00:00:00Z",
+            "type": "string",
+            "description": "The time the image was created.  Only set on success.",
+            "format": "date-time"
+          },
+          "state": {
+            "example": "ready",
+            "type": "string",
+            "description": "The current state of the image (e.g. `ready`).  Only set on success."
+          },
+          "url": {
+            "example": "user/image:latest",
+            "type": "string",
+            "description": "The image URL.  Only set on success."
+          },
+          "persistent": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the image is pinned and exempt from cache eviction.  Only set\non success, where it is always `true`."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags associated with the image.  Only set on success."
+          },
+          "message": {
+            "example": "Image pull failed",
+            "type": "string",
+            "description": "Set when the image could not be pulled; carries the agent's error, if\nany (e.g. a registry connectivity issue)."
+          },
+          "error": {
+            "example": 10,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the\nstatus.  This field is only set when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "The result of pinning a single image.  On success, `uuid` through `tags`\nare set; on failure, only `message` and `error` are set (the image\nbeing pulled is not otherwise identified in the response).",
+        "x-package": "images"
       },
       "PullPolicy": {
         "enum": [
@@ -11559,6 +11829,118 @@
         },
         "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
         "x-package": "instances"
+      },
+      "UnpinImageRequestItem": {
+        "required": [
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image to unpin.  Only UUID is supported; name, URL,\ntag, and digest are not.",
+            "format": "uuid"
+          }
+        },
+        "description": "The request item for unpinning a single image.",
+        "x-package": "images"
+      },
+      "UnpinImagesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the response.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UnpinImagesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 123,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for unpinning one or more images.",
+        "x-package": "images"
+      },
+      "UnpinImagesResponseData": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnpinImagesResponseImage"
+            },
+            "description": "The result of unpinning each requested image."
+          }
+        },
+        "x-package": "images"
+      },
+      "UnpinImagesResponseImage": {
+        "required": [
+          "status",
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether this image was unpinned successfully."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the image.  Only set on success, and only if the image\nhas a name."
+          },
+          "message": {
+            "example": "No image with UUID '123e4567-e89b-12d3-a456-426614174000'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the\nstatus.  This field is only set when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "The result of unpinning a single image.",
+        "x-package": "images"
       },
       "UpdateCertificateByUUIDRequestBody": {
         "required": [

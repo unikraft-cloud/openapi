@@ -500,6 +500,39 @@
         }
       }
     },
+    "/fs/upload": {
+      "post": {
+        "operationId": "UploadFile",
+        "summary": "Upload File",
+        "description": "Upload a file to the sandbox at a given path. A new file will be created at\n- if `path` ends with '/' or exists and is a directory: path/filename\n- else: path\n`400` is returned when `encoding` is not a known encoding or `data` is not\nvalid base64, and `500` when the file could not be created.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The outcome of uploading the file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "fs"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFileRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/fs/write": {
       "post": {
         "operationId": "WriteFile",
@@ -694,8 +727,7 @@
       "CommandStdinRequest": {
         "type": "object",
         "required": [
-          "data",
-          "eof"
+          "data"
         ],
         "properties": {
           "data": {
@@ -777,6 +809,8 @@
         "required": [
           "uuid",
           "cmdline",
+          "cwd",
+          "env",
           "exitcode"
         ],
         "properties": {
@@ -788,6 +822,19 @@
           "cmdline": {
             "type": "string",
             "description": "The command line the command was started with."
+          },
+          "cwd": {
+            "type": "string",
+            "nullable": true,
+            "description": "The current working directory, if supplied at startup, else null"
+          },
+          "env": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Environment variables, if supplied at startup, else null"
           },
           "exitcode": {
             "type": "integer",
@@ -1037,6 +1084,18 @@
             "type": "string",
             "description": "The command line to run, as passed to the shell.",
             "example": "echo hello"
+          },
+          "cwd": {
+            "type": "string",
+            "description": "(OPTIONAL) Current working directory",
+            "example": "/tmp"
+          },
+          "env": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) Environment variables"
           }
         },
         "description": "The request to start a command in the sandbox."
@@ -1083,6 +1142,46 @@
           }
         },
         "description": "The response to starting a command. `500` is returned when the command could\nnot be spawned."
+      },
+      "UploadFileRequest": {
+        "type": "object",
+        "required": [
+          "path",
+          "filename",
+          "parents",
+          "encoding",
+          "data"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path where to upload the file.",
+            "example": "/tmp/demo"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Name of uploaded file; will be used if `path` is a directory.",
+            "example": "file.txt"
+          },
+          "parents": {
+            "type": "boolean",
+            "description": "Whether to create parent directories of `path`."
+          },
+          "encoding": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FileEncoding"
+              }
+            ],
+            "description": "The encoding of `data`."
+          },
+          "data": {
+            "type": "string",
+            "description": "The data to write, in the given encoding",
+            "example": "hello"
+          }
+        },
+        "description": "The request to upload a file to the sandbox filesystem."
       },
       "WriteFileRequest": {
         "type": "object",

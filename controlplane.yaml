@@ -300,6 +300,13 @@ paths:
                 Activates a new node, or renews an existing node's license. For first-time
                 activation, a secret must be provided. For renewal, the CSR self-signature
                 is used as proof of key possession and the secret is omitted.
+
+                A renewal request may optionally also carry an HTTP message signature
+                (RFC 9421) made with the node's current stable private key. When present
+                and valid, it authorizes the CSR's public key to become the node's new
+                stable identity even if it differs from the current one -- i.e. key
+                rotation: prove who you are with the old key, then switch to the new one
+                named in the CSR.
             operationId: NodeActivate
             requestBody:
                 content:
@@ -314,6 +321,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/NodeActivateResponse'
+            x-package: controlplane
+    /v1/nodes/deactivate:
+        post:
+            tags:
+                - NodeActivationService
+            description: |-
+                Deactivates a node's license so it can no longer renew. The node's
+                issued certificate remains valid until it naturally expires -- this
+                only prevents renewal. The request must carry an HTTP message signature
+                (RFC 9421) made with the node's stable private key; the node is
+                identified by the signature, the same mechanism used by the private
+                node-facing APIs (e.g. NodeHeartbeat).
+            operationId: NodeDeactivate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/NodeDeactivateRequest'
+                required: true
+            responses:
+                default:
+                    description: default
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NodeDeactivateResponse'
             x-package: controlplane
     /v1/nodes/providers/{cloudprovider}/regions:
         get:
@@ -1397,6 +1430,46 @@ components:
                 license:
                     type: string
                     description: The issued license certificate in base64 URL encoded PEM format.
+            x-package: controlplane
+        NodeDeactivateRequest:
+            required:
+                - serial
+            type: object
+            properties:
+                serial:
+                    example: 1a2b3c4d5e6f
+                    type: string
+                    description: The serial number of the last issued certificate.
+            description: |-
+                The request message for license deactivation. The caller is identified by
+                an HTTP message signature (RFC 9421) made with the node's stable private
+                key, the same mechanism used by the private node-facing APIs (e.g.
+                NodeHeartbeat) -- not by any field in this message.
+            x-package: controlplane
+        NodeDeactivateResponse:
+            required:
+                - status
+                - op_time_us
+            type: object
+            properties:
+                status:
+                    allOf:
+                        - $ref: '#/components/schemas/ResponseStatus'
+                    description: The status of the response.
+                message:
+                    type: string
+                    description: An optional message providing additional information about the response.
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseError'
+                    description: A list of errors which may have occurred during the request.
+                op_time_us:
+                    example: 234
+                    type: integer
+                    description: The operation time in microseconds.
+                    format: uint64
+            description: The response message for license deactivation.
             x-package: controlplane
         NodeState:
             enum:

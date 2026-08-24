@@ -5249,6 +5249,21 @@
             "type": "integer",
             "description": "Timeout in seconds to wait for the checkpoint to be created.\nNo wait performed for a value of 0.",
             "format": "int64"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(Optional).  Tags to associate with the checkpoint."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemCheckpointAutokill"
+              }
+            ],
+            "description": "(Optional). Automatic delete-on-idle configuration for the new\ncheckpoint."
           }
         },
         "description": "A single checkpoint creation request.",
@@ -10222,6 +10237,19 @@
           }
         },
         "description": "Automatic delete-on-idle configuration for the template instance.",
+        "x-package": "instances"
+      },
+      "ItemCheckpointAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Time in milliseconds after the checkpoint was last used for restoring\nbefore it is deleted. A value of 0 disables checkpoint autokill.",
+            "format": "uint64"
+          }
+        },
+        "description": "Automatic delete-on-idle configuration for the checkpoint instance.",
         "x-package": "instances"
       },
       "MutableCheckpointInstanceOperation": {

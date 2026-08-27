@@ -5577,7 +5577,7 @@
                 "$ref": "#/components/schemas/NameOrUUID"
               }
             ],
-            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running, stopped, or a template.  If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
+            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running or stopped, If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
           },
           "checkpoint": {
             "allOf": [

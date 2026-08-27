@@ -5516,6 +5516,17 @@
             },
             "description": "(Optional).  Tags to associate with the instance."
           },
+          "annotations": {
+            "example": {
+              "my-key": "value1",
+              "example.com/annotation2": "value2"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "(Optional).  Annotations to associate with the instance.\n\nUnlike tags, annotations also reach the guest: they are included in the\ninstance's startdata, and selected keys can be injected into the console\nlog output.\n\nKeys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the\noptional prefix is a non-wildcard DNS subdomain of at most 253 characters,\nand the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and\nending with an alphanumeric.  Values are unconstrained apart from ASCII\ncontrol characters.  An instance holds at most 256 annotations.\n\nWhen the instance inherits annotations from a template, branch, or\ncheckpoint, the given annotations are merged into them rather than\nreplacing them.  On a key clash the value given here wins."
+          },
           "template": {
             "allOf": [
               {
@@ -9619,6 +9630,17 @@
             },
             "description": "The tags associated with the instance."
           },
+          "annotations": {
+            "example": {
+              "my-key": "value1",
+              "example.com/annotation2": "value2"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The annotations associated with the instance.\n\nKeys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the\noptional prefix is a non-wildcard DNS subdomain of at most 253 characters,\nand the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and\nending with an alphanumeric.  Values are unconstrained apart from ASCII\ncontrol characters, which are rejected because they would corrupt the\nconsole log output annotations can be forwarded to.\n\nAn instance holds at most 256 annotations."
+          },
           "status": {
             "allOf": [
               {
@@ -10301,7 +10323,8 @@
           "roms",
           "dependencies",
           "sched_priority",
-          "plugins"
+          "plugins",
+          "annotations"
         ],
         "type": "string",
         "description": "The mutable properties of an instance that can be updated.",
@@ -12356,7 +12379,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         },
         "x-package": "instances"
@@ -12400,7 +12423,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
               }
             }
           },

@@ -4231,6 +4231,29 @@ components:
                     items:
                         type: string
                     description: (Optional).  Tags to associate with the instance.
+                annotations:
+                    example:
+                        my-key: value1
+                        example.com/annotation2: value2
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: |-
+                        (Optional).  Annotations to associate with the instance.
+
+                        Unlike tags, annotations also reach the guest: they are included in the
+                        instance's startdata, and selected keys can be injected into the console
+                        log output.
+
+                        Keys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the
+                        optional prefix is a non-wildcard DNS subdomain of at most 253 characters,
+                        and the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and
+                        ending with an alphanumeric.  Values are unconstrained apart from ASCII
+                        control characters.  An instance holds at most 256 annotations.
+
+                        When the instance inherits annotations from a template, branch, or
+                        checkpoint, the given annotations are merged into them rather than
+                        replacing them.  On a key clash the value given here wins.
                 template:
                     allOf:
                         - $ref: '#/components/schemas/CreateInstanceRequestTemplate'
@@ -7770,6 +7793,24 @@ components:
                     items:
                         type: string
                     description: The tags associated with the instance.
+                annotations:
+                    example:
+                        my-key: value1
+                        example.com/annotation2: value2
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: |-
+                        The annotations associated with the instance.
+
+                        Keys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the
+                        optional prefix is a non-wildcard DNS subdomain of at most 253 characters,
+                        and the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and
+                        ending with an alphanumeric.  Values are unconstrained apart from ASCII
+                        control characters, which are rejected because they would corrupt the
+                        console log output annotations can be forwarded to.
+
+                        An instance holds at most 256 annotations.
                 status:
                     allOf:
                         - $ref: '#/components/schemas/ResponseStatus'
@@ -8469,6 +8510,7 @@ components:
                 - "dependencies"
                 - "sched_priority"
                 - "plugins"
+                - "annotations"
             type: string
             description: The mutable properties of an instance that can be updated.
             format: enum
@@ -10273,6 +10315,7 @@ components:
                         - For "plugins": array of plugin objects (with name, rom, and optional config fields) for SET/ADD
                         - For "dependencies": array of instance identifiers (name or UUID)
                         - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
+                        - For "annotations": object (for SET/ADD) or string/array of strings (for DEL)
             x-package: instances
         UpdateInstancesRequestItem:
             required:
@@ -10320,6 +10363,7 @@ components:
                             - For "plugins": array of plugin objects (with name, rom, and optional config fields) for SET/ADD
                             - For "dependencies": array of instance identifiers (name or UUID)
                             - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
+                            - For "annotations": object (for SET/ADD) or string/array of strings (for DEL)
                 - oneOf:
                     - title: uuid
                       type: object

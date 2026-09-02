@@ -466,6 +466,74 @@
           }
         },
         "x-package": "images"
+      },
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Pin Images",
+        "description": "Pull and pin one or more images so they stay cached and are never\nevicted, without relying on an on-demand pull to succeed at instance\nstart.  If a pull fails, the agent's error is returned in the entry's\n`message` field.",
+        "operationId": "PinImages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PinImageRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PinImagesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "images"
+      },
+      "delete": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Unpin Images",
+        "description": "Unpin one or more images by UUID, making them eligible for normal\ncache eviction again.  This does not delete the image.",
+        "operationId": "UnpinImages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UnpinImageRequestItem"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnpinImagesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-package": "images"
       }
     },
     "/v1/instances": {
@@ -3043,39 +3111,6 @@
         "x-package": "autoscale"
       }
     },
-    "/v1/users": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Add Users",
-        "description": "Create new user accounts. This will return 409 Conflict when any of the\nrequested users already existed on the target.",
-        "operationId": "AddUsers",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddUsersRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUsersResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "users"
-      }
-    },
     "/v1/users/quotas": {
       "get": {
         "tags": [
@@ -4050,80 +4085,6 @@
   },
   "components": {
     "schemas": {
-      "AddUsersRequest": {
-        "required": [
-          "users"
-        ],
-        "type": "object",
-        "properties": {
-          "users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            },
-            "format": "users"
-          }
-        },
-        "x-package": "users"
-      },
-      "AddUsersResponse": {
-        "required": [
-          "status",
-          "data",
-          "op_time_us"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "example": "Failed to perform all operations",
-            "type": "string",
-            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ResponseError"
-            },
-            "description": "A list of errors which may have occurred during the request."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AddUsersResponseData"
-              }
-            ],
-            "description": "The response data for this request."
-          },
-          "op_time_us": {
-            "example": 46,
-            "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
-          }
-        },
-        "x-package": "users"
-      },
-      "AddUsersResponseData": {
-        "type": "object",
-        "properties": {
-          "results": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DataResult"
-            },
-            "description": "The status of the operation for each user in the request."
-          }
-        },
-        "x-package": "users"
-      },
       "AdjustmentType": {
         "enum": [
           "change",
@@ -5288,6 +5249,21 @@
             "type": "integer",
             "description": "Timeout in seconds to wait for the checkpoint to be created.\nNo wait performed for a value of 0.",
             "format": "int64"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(Optional).  Tags to associate with the checkpoint."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemCheckpointAutokill"
+              }
+            ],
+            "description": "(Optional). Automatic delete-on-idle configuration for the new\ncheckpoint."
           }
         },
         "description": "A single checkpoint creation request.",
@@ -5410,12 +5386,22 @@
             "description": "(Optional).  The name of the instance.\n\nIf not provided, a random name will be generated.  The name must be unique."
           },
           "image": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/ImageSpec"
+                "example": "nginx:latest",
+                "type": "string",
+                "description": "The image as a plain image reference."
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ImageSpec"
+                  }
+                ],
+                "description": "The image together with its pull configuration."
               }
             ],
-            "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified."
+            "description": "(Optional).  The image to use for the instance.\n\nEither an image or a template must be specified.  Accepts either a plain\nimage reference string (`\"nginx:latest\"`) or an object carrying additional\npull configuration (`{\"url\": \"nginx:latest\", \"pull_policy\": \"always\"}`)."
           },
           "args": {
             "example": "--port=8080 --debug",
@@ -5530,6 +5516,17 @@
             },
             "description": "(Optional).  Tags to associate with the instance."
           },
+          "annotations": {
+            "example": {
+              "my-key": "value1",
+              "example.com/annotation2": "value2"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "(Optional).  Annotations to associate with the instance.\n\nUnlike tags, annotations also reach the guest: they are included in the\ninstance's startdata, and selected keys can be injected into the console\nlog output.\n\nKeys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the\noptional prefix is a non-wildcard DNS subdomain of at most 253 characters,\nand the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and\nending with an alphanumeric.  Values are unconstrained apart from ASCII\ncontrol characters.  An instance holds at most 256 annotations.\n\nWhen the instance inherits annotations from a template, branch, or\ncheckpoint, the given annotations are merged into them rather than\nreplacing them.  On a key clash the value given here wins."
+          },
           "template": {
             "allOf": [
               {
@@ -5580,7 +5577,7 @@
                 "$ref": "#/components/schemas/NameOrUUID"
               }
             ],
-            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running, stopped, or a template.  If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
+            "description": "(Optional).  Reference to an existing instance to branch from.\nThe instance can be running or stopped, If the source\ninstance is running, a snapshot will be taken asynchronously and the\nnew instance will wait for it to complete before starting.\nMutually exclusive with `image` and `template`."
           },
           "checkpoint": {
             "allOf": [
@@ -5606,6 +5603,22 @@
               "$ref": "#/components/schemas/CreateInstanceRequestNetworkInterface"
             },
             "description": "A list of one to four interfaces to attach"
+          },
+          "type": {
+            "example": "full",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceType"
+              }
+            ],
+            "description": "(Optional).  The type of virtual machine to use for the instance.\nDefaults to `micro`, which runs on Firecracker.  `full` runs on QEMU\ninstead and is required for GPU passthrough (see `gpus`) and, in the\nfuture, Windows VMs.  QEMU-backed instances currently do not support\nscale-to-zero, templates, branching, or checkpointing, and only\nsupport block-based volumes (no virtiofs).  Requires a plan with full\nVM support and cannot be combined with `template`, `branch_from`, or\n`checkpoint`."
+          },
+          "gpus": {
+            "example": 1,
+            "maximum": 1.0,
+            "type": "integer",
+            "description": "(Optional).  Number of GPUs to attach to the instance.  Currently\nrestricted to at most 1.  Requires `type` to be `full` and a plan\nwith GPU support.  A GPU stays assigned to the instance, even while\nstopped, until the instance is deleted.  Cannot be combined with\n`template`, `branch_from`, or `checkpoint`.",
+            "format": "int32"
           }
         },
         "description": "The request message for creating a new instance.",
@@ -5699,9 +5712,22 @@
             "description": "The plugin name.  It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`).  A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`)."
           },
           "rom": {
-            "example": "user/myplugin:latest",
-            "type": "string",
-            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts."
+            "anyOf": [
+              {
+                "example": "user/myplugin:latest",
+                "type": "string",
+                "description": "The ROM image as a plain image reference."
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ImageSpec"
+                  }
+                ],
+                "description": "The ROM image together with its pull configuration."
+              }
+            ],
+            "description": "The plugin's ROM image.  The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts.  Accepts either a plain image reference string\n(`\"user/myplugin:latest\"`) or an object carrying additional pull\nconfiguration (`{\"url\": \"user/myplugin:latest\", \"pull_policy\": \"always\"}`)."
           },
           "config": {
             "allOf": [
@@ -5727,9 +5753,22 @@
             "description": "The name of the ROM to use for the instance configuration."
           },
           "image": {
-            "example": "nginx:latest",
-            "type": "string",
-            "description": "(Optional).  The image of the ROM to use for the instance configuration.\nMutually exclusive with `files`."
+            "anyOf": [
+              {
+                "example": "nginx:latest",
+                "type": "string",
+                "description": "The ROM image as a plain image reference."
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ImageSpec"
+                  }
+                ],
+                "description": "The ROM image together with its pull configuration."
+              }
+            ],
+            "description": "(Optional).  The image of the ROM to use for the instance configuration.\nMutually exclusive with `files`.  Accepts either a plain image reference\nstring (`\"nginx:latest\"`) or an object carrying additional pull\nconfiguration (`{\"url\": \"nginx:latest\", \"pull_policy\": \"always\"}`)."
           },
           "files": {
             "type": "array",
@@ -6711,24 +6750,6 @@
         },
         "description": "License information (admin only).",
         "x-package": "node"
-      },
-      "DataResult": {
-        "required": [
-          "uuid",
-          "added"
-        ],
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "added": {
-            "example": true,
-            "type": "boolean"
-          }
-        },
-        "x-package": "users"
       },
       "DeleteAutoscaleConfigurationPolicyResponse": {
         "required": [
@@ -9182,6 +9203,17 @@
       "GoogleProtobufValue": {
         "description": "Represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values."
       },
+      "HealthState": {
+        "enum": [
+          "unknown",
+          "healthy",
+          "degraded"
+        ],
+        "type": "string",
+        "description": "The health state reported by a single health checker.",
+        "format": "enum",
+        "x-package": "node"
+      },
       "HealthzResponse": {
         "required": [
           "status",
@@ -9233,8 +9265,9 @@
           "checks": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
-            }
+              "$ref": "#/components/schemas/HealthState"
+            },
+            "description": "The health state of each registered checker, keyed by checker name.\nValid keys are \"images\", \"systemd\", and \"user-defined\"; a checker's\nkey is only present if it is enabled. Checkers report only their\naggregate state; per-check detail (e.g. which default image is\nmissing, or which user-defined script failed) is not exposed here."
           },
           "versions": {
             "type": "object",
@@ -9312,6 +9345,11 @@
             "items": {
               "type": "string"
             }
+          },
+          "persistent": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the image is pinned and exempt from cache eviction.  Only\npopulated (and only ever `true`) for callers with image manager\npermissions; omitted otherwise, including when the image is not pinned."
           }
         },
         "x-package": "images"
@@ -9400,7 +9438,8 @@
           "image",
           "memory_mb",
           "vcpus",
-          "restart_policy"
+          "restart_policy",
+          "type"
         ],
         "type": "object",
         "properties": {
@@ -9591,6 +9630,17 @@
             },
             "description": "The tags associated with the instance."
           },
+          "annotations": {
+            "example": {
+              "my-key": "value1",
+              "example.com/annotation2": "value2"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The annotations associated with the instance.\n\nKeys follow the Kubernetes annotation key syntax, `[<prefix>/]<name>`: the\noptional prefix is a non-wildcard DNS subdomain of at most 253 characters,\nand the name is at most 63 characters of `[-_.a-zA-Z0-9]` starting and\nending with an alphanumeric.  Values are unconstrained apart from ASCII\ncontrol characters, which are rejected because they would corrupt the\nconsole log output annotations can be forwarded to.\n\nAn instance holds at most 256 annotations."
+          },
           "status": {
             "allOf": [
               {
@@ -9705,6 +9755,21 @@
             "example": "8.8.8.8",
             "type": "string",
             "description": "The DNS resolver configured inside the guest."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceType"
+              }
+            ],
+            "description": "The type of virtual machine used to run the instance."
+          },
+          "gpus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceGpu"
+            },
+            "description": "GPUs attached to the instance.  Only present for instances of type\n`full`."
           }
         },
         "description": "An instance is a micro vm running an application.",
@@ -9738,8 +9803,22 @@
             "description": "The name of the ROM to use for the autoscale configuration."
           },
           "image": {
-            "type": "string",
-            "description": "(Optional).  The image of the ROM to use for the autoscale configuration.\nMutually exclusive with `files`."
+            "anyOf": [
+              {
+                "example": "nginx:latest",
+                "type": "string",
+                "description": "The ROM image as a plain image reference."
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ImageSpec"
+                  }
+                ],
+                "description": "The ROM image together with its pull configuration."
+              }
+            ],
+            "description": "(Optional).  The image of the ROM to use for the autoscale\nconfiguration.  Mutually exclusive with `files`.  Accepts either a\nplain image reference string (`\"nginx:latest\"`) or an object carrying\nadditional pull configuration\n(`{\"url\": \"nginx:latest\", \"pull_policy\": \"always\"}`)."
           },
           "files": {
             "type": "array",
@@ -9758,6 +9837,27 @@
         "type": "string",
         "description": "Features are specific configurations or capabilities that can be enabled for\nthe instance.\n\nThe list of available features to enable for the instance:\n\n| Feature          | Description |\n|------------------|-------------|\n| `delete_on_stop` | The instance will be deleted when it is stopped. This is useful for instances that are not needed after they are stopped, such as temporary or ephemeral instances. |",
         "format": "enum",
+        "x-package": "instances"
+      },
+      "InstanceGpu": {
+        "required": [
+          "uuid",
+          "model"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the GPU.",
+            "format": "uuid"
+          },
+          "model": {
+            "example": "10de:1eb8",
+            "type": "string",
+            "description": "The GPU model, given as its PCI vendor and device ID in the form\n`<vendor>:<device>`."
+          }
+        },
+        "description": "A GPU attached to the instance.",
         "x-package": "instances"
       },
       "InstanceNetworkInterface": {
@@ -10104,6 +10204,16 @@
         "description": "Automatic delete-on-idle configuration for template instances.",
         "x-package": "instances"
       },
+      "InstanceType": {
+        "enum": [
+          "micro",
+          "full"
+        ],
+        "type": "string",
+        "description": "The type of virtual machine used to run an instance.\n\n| Type    | Description |\n|---------|-------------|\n| `micro` | A lightweight microVM (default).  Boots in milliseconds and is suitable for most workloads. |\n| `full`  | A full virtual machine with broader hardware support, such as GPU passthrough.  Requires a plan with full VM support. |",
+        "format": "enum",
+        "x-package": "instances"
+      },
       "InstanceVolume": {
         "required": [
           "uuid",
@@ -10149,6 +10259,19 @@
           }
         },
         "description": "Automatic delete-on-idle configuration for the template instance.",
+        "x-package": "instances"
+      },
+      "ItemCheckpointAutokill": {
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Time in milliseconds after the checkpoint was last used for restoring\nbefore it is deleted. A value of 0 disables checkpoint autokill.",
+            "format": "uint64"
+          }
+        },
+        "description": "Automatic delete-on-idle configuration for the checkpoint instance.",
         "x-package": "instances"
       },
       "MutableCheckpointInstanceOperation": {
@@ -10200,7 +10323,8 @@
           "roms",
           "dependencies",
           "sched_priority",
-          "plugins"
+          "plugins",
+          "annotations"
         ],
         "type": "string",
         "description": "The mutable properties of an instance that can be updated.",
@@ -10399,6 +10523,203 @@
         "description": "The sort field used by list endpoints.",
         "format": "enum",
         "x-package": "common"
+      },
+      "PinImageRequestItem": {
+        "required": [
+          "url",
+          "timeout_s"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "example": "user/image:latest",
+            "type": "string",
+            "description": "The image URL to pull and pin."
+          },
+          "credentials": {
+            "example": "dXNlcjpwYXNzd29yZA==",
+            "type": "string",
+            "description": "Optional credentials for authenticating to an OCI registry.\nOnly valid for OCI registry URLs; the platform rejects this\nfield for non-OCI schemes."
+          },
+          "headers": {
+            "example": {
+              "Authorization": "Bearer token123"
+            },
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional HTTP headers to send when fetching the image."
+          },
+          "pull_policy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PullPolicy"
+              }
+            ],
+            "description": "Controls when the image is pulled relative to what is already cached on\nthe node.  If unset, this is inferred from the URL."
+          },
+          "timeout_s": {
+            "example": 30,
+            "type": "integer",
+            "description": "Number of seconds to wait for the pull to complete.  Required and must\nbe non-zero; `-1` waits up to the platform's maximum timeout.",
+            "format": "int64"
+          },
+          "merge_requests": {
+            "example": true,
+            "type": "boolean",
+            "description": "Avoid duplicate pulls by merging with any in-flight request for the\nsame image.  Defaults to `true`."
+          },
+          "autokill": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PinImageRequestItemAutokill"
+              }
+            ],
+            "description": "(Optional).  Automatically unpin the image after a period of inactivity."
+          }
+        },
+        "description": "The request item for pinning a single image.",
+        "x-package": "images"
+      },
+      "PinImageRequestItemAutokill": {
+        "required": [
+          "time_ms"
+        ],
+        "type": "object",
+        "properties": {
+          "time_ms": {
+            "example": 60000,
+            "type": "integer",
+            "description": "Automatically unpin the image after this many milliseconds of\ninactivity.  `0` (the default) disables this.",
+            "format": "uint64"
+          }
+        },
+        "x-package": "images"
+      },
+      "PinImagesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the response.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PinImagesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 123,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for pinning one or more images.",
+        "x-package": "images"
+      },
+      "PinImagesResponseData": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PinImagesResponseImage"
+            },
+            "description": "The result of pinning each requested image."
+          }
+        },
+        "x-package": "images"
+      },
+      "PinImagesResponseImage": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether this image was pulled and pinned successfully."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image.  Only set on success.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the image.  Only set on success."
+          },
+          "created_at": {
+            "example": "2021-01-01T00:00:00Z",
+            "type": "string",
+            "description": "The time the image was created.  Only set on success.",
+            "format": "date-time"
+          },
+          "state": {
+            "example": "ready",
+            "type": "string",
+            "description": "The current state of the image (e.g. `ready`).  Only set on success."
+          },
+          "url": {
+            "example": "user/image:latest",
+            "type": "string",
+            "description": "The image URL.  Only set on success."
+          },
+          "persistent": {
+            "example": true,
+            "type": "boolean",
+            "description": "Whether the image is pinned and exempt from cache eviction.  Only set\non success, where it is always `true`."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags associated with the image.  Only set on success."
+          },
+          "message": {
+            "example": "Image pull failed",
+            "type": "string",
+            "description": "Set when the image could not be pulled; carries the agent's error, if\nany (e.g. a registry connectivity issue)."
+          },
+          "error": {
+            "example": 10,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the\nstatus.  This field is only set when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "The result of pinning a single image.  On success, `uuid` through `tags`\nare set; on failure, only `message` and `error` are set (the image\nbeing pulled is not otherwise identified in the response).",
+        "x-package": "images"
       },
       "PullPolicy": {
         "enum": [
@@ -11560,6 +11881,118 @@
         "description": "(Optional). Automatic delete-on-idle configuration for the template\ninstance. Only applies when `prepare` is set.",
         "x-package": "instances"
       },
+      "UnpinImageRequestItem": {
+        "required": [
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image to unpin.  Only UUID is supported; name, URL,\ntag, and digest are not.",
+            "format": "uuid"
+          }
+        },
+        "description": "The request item for unpinning a single image.",
+        "x-package": "images"
+      },
+      "UnpinImagesResponse": {
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "example": "Failed to perform all operations",
+            "type": "string",
+            "description": "An optional message providing additional information about the response.\nThis field is useful when the status is not `success`."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UnpinImagesResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "example": 123,
+            "type": "integer",
+            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
+            "format": "uint64"
+          }
+        },
+        "description": "The response message for unpinning one or more images.",
+        "x-package": "images"
+      },
+      "UnpinImagesResponseData": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnpinImagesResponseImage"
+            },
+            "description": "The result of unpinning each requested image."
+          }
+        },
+        "x-package": "images"
+      },
+      "UnpinImagesResponseImage": {
+        "required": [
+          "status",
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether this image was unpinned successfully."
+          },
+          "uuid": {
+            "type": "string",
+            "description": "The UUID of the image.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the image.  Only set on success, and only if the image\nhas a name."
+          },
+          "message": {
+            "example": "No image with UUID '123e4567-e89b-12d3-a456-426614174000'",
+            "type": "string",
+            "description": "An optional message providing additional information about the status.\nThis field is useful when the status is not `success`."
+          },
+          "error": {
+            "example": 8,
+            "type": "integer",
+            "description": "An optional error code providing additional information about the\nstatus.  This field is only set when the status is not `success`.",
+            "format": "int32"
+          }
+        },
+        "description": "The result of unpinning a single image.",
+        "x-package": "images"
+      },
       "UpdateCertificateByUUIDRequestBody": {
         "required": [
           "chain",
@@ -11946,7 +12379,7 @@
                 "$ref": "#/components/schemas/GoogleProtobufValue"
               }
             ],
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         },
         "x-package": "instances"
@@ -11990,7 +12423,7 @@
                     "$ref": "#/components/schemas/GoogleProtobufValue"
                   }
                 ],
-                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": object with image url, credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")"
+                "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\n  credentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields) for SET/ADD, or array of schedule names for DEL.\n  Use action \"exec\" together with args to execute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
               }
             }
           },
@@ -13005,248 +13438,6 @@
           }
         },
         "x-package": "volumes"
-      },
-      "User": {
-        "required": [
-          "uuid",
-          "name",
-          "auth_token"
-        ],
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-            "type": "string",
-            "description": "The UUID of the user.",
-            "format": "uuid"
-          },
-          "name": {
-            "example": "example",
-            "maxLength": 64,
-            "minLength": 1,
-            "type": "string",
-            "description": "The name of the user."
-          },
-          "auth_token": {
-            "example": "ZXhhbXBsZS10b2tlbg==",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Authentication token(s) associated with the user."
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserPermission"
-            },
-            "description": "The permission level of the user."
-          },
-          "uid": {
-            "example": 1000,
-            "type": "integer",
-            "description": "The user ID (UID) on the host system.",
-            "format": "uint32"
-          },
-          "disabled": {
-            "example": false,
-            "type": "boolean",
-            "description": "Whether the user account is disabled."
-          },
-          "vmdb": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserVmdb"
-              }
-            ],
-            "description": "Per-VM Configuration limits for the user."
-          },
-          "net": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserNet"
-              }
-            ],
-            "description": "Network configuration limits for the user."
-          },
-          "vmm": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserVmm"
-              }
-            ],
-            "description": "Global VM configuration limits for the user."
-          },
-          "stor": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserStor"
-              }
-            ],
-            "description": "Storage configuration limits for the user."
-          },
-          "autoscale": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserAutoscale"
-              }
-            ],
-            "description": "Autoscale configuration limits for the user."
-          }
-        },
-        "x-package": "users"
-      },
-      "UserAutoscale": {
-        "type": "object",
-        "properties": {
-          "min_size": {
-            "example": 1,
-            "type": "integer",
-            "description": "Minimum size of an autoscale group.",
-            "format": "int32"
-          },
-          "max_size": {
-            "example": 16,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Maximum size of an autoscale group.",
-            "format": "int32"
-          }
-        },
-        "x-package": "users"
-      },
-      "UserNet": {
-        "type": "object",
-        "properties": {
-          "max_service_groups": {
-            "example": 16,
-            "type": "integer",
-            "description": "Maximum number of service groups the user can have at one moment.",
-            "format": "int32"
-          },
-          "max_services": {
-            "example": 32,
-            "type": "integer",
-            "description": "Maximum number of services across all service groups the user can have\nat one moment.",
-            "format": "int32"
-          },
-          "max_certificates": {
-            "example": 16,
-            "type": "integer",
-            "description": "Maximum number of TLS certificates the user can have at one moment.",
-            "format": "int32"
-          }
-        },
-        "x-package": "users"
-      },
-      "UserPermission": {
-        "enum": [
-          "root",
-          "override_edns_blacklist",
-          "developer",
-          "volume_manager",
-          "override_vm_priority"
-        ],
-        "type": "string",
-        "format": "enum",
-        "x-package": "users"
-      },
-      "UserStor": {
-        "type": "object",
-        "properties": {
-          "max_volumes": {
-            "example": 8,
-            "type": "integer",
-            "description": "Maximum number of volumes the user can have at one moment.",
-            "format": "int32"
-          },
-          "min_volume_mb": {
-            "example": 1,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Minimum size of a volume in MB.",
-            "format": "int32"
-          },
-          "max_volume_mb": {
-            "example": 1024,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Maximum size of a volume in MB.",
-            "format": "int32"
-          },
-          "max_total_volume_mb": {
-            "example": 2048,
-            "type": "integer",
-            "description": "Maximum total size of all volumes in MB.",
-            "format": "int32"
-          }
-        },
-        "x-package": "users"
-      },
-      "UserVmdb": {
-        "type": "object",
-        "properties": {
-          "max_instances": {
-            "example": 16,
-            "type": "integer",
-            "description": "Maximum number of VM instances the user can have at one moment.",
-            "format": "int32"
-          },
-          "min_memory_mb": {
-            "example": 16,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Minimum amount of memory assigned to a VM in MB.",
-            "format": "int32"
-          },
-          "def_memory_mb": {
-            "example": 512,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Default amount of memory assigned to a VM in MB.",
-            "format": "int32"
-          },
-          "max_memory_mb": {
-            "example": 2048,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Maximum amount of memory assigned to a VM in MB.",
-            "format": "int32"
-          },
-          "min_vcpus": {
-            "example": 1,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Minimum number of vCPUs assigned to a VM.",
-            "format": "int32"
-          },
-          "max_vcpus": {
-            "example": 4,
-            "minimum": 1.0,
-            "type": "integer",
-            "description": "Maximum number of vCPUs assigned to a VM.",
-            "format": "int32"
-          }
-        },
-        "x-package": "users"
-      },
-      "UserVmm": {
-        "type": "object",
-        "properties": {
-          "max_vcpus": {
-            "example": 4,
-            "type": "integer",
-            "description": "Maximum number of vCPUs the user can have assigned to live instances.",
-            "format": "int32"
-          },
-          "max_memory_mb": {
-            "example": 2048,
-            "type": "integer",
-            "description": "Maximum amount of memory in MB the user can have assigned to live\ninstances.",
-            "format": "int32"
-          }
-        },
-        "x-package": "users"
       },
       "Volume": {
         "required": [

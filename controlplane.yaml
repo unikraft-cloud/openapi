@@ -747,6 +747,8 @@ components:
                 - organization_name
                 - organization_display_name
                 - registry
+                - organization_uuid
+                - user_uuid
             type: object
             properties:
                 token:
@@ -761,6 +763,14 @@ components:
                 registry:
                     type: string
                     description: The global image registry.
+                organization_uuid:
+                    type: string
+                    description: The UUID of the organization the token is associated with.
+                    format: uuid
+                user_uuid:
+                    type: string
+                    description: The UUID of the user who approved the login.
+                    format: uuid
             x-package: controlplane
         CloudProvider:
             enum:
@@ -861,6 +871,7 @@ components:
                 - organization_name
                 - organization_display_name
                 - registry
+                - organization_uuid
             type: object
             properties:
                 organization_name:
@@ -872,6 +883,10 @@ components:
                 registry:
                     type: string
                     description: The global image registry.
+                organization_uuid:
+                    type: string
+                    description: The UUID of the organization the token is associated with.
+                    format: uuid
             x-package: controlplane
         Image:
             required:

@@ -1,0 +1,55 @@
+name: sdks
+
+# The specifications land here from proto (controlplane.*) and platform-api
+# (platform.*), each pushing to the branch that matches its own release
+# channel. The SDKs generate from this repository rather than from either
+# publisher, so the trigger belongs here: one publisher no longer has to know
+# which SDKs exist, and a spec that arrives from anywhere reaches all of them.
+on:
+  push:
+    branches:
+    - prod-stable
+    - prod-staging
+    paths:
+    - 'controlplane.json'
+    - 'controlplane.yaml'
+    - 'platform.json'
+    - 'platform.yaml'
+
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: The release channel to sync.
+        default: prod-staging
+        type: choice
+        options:
+        - prod-staging
+        - prod-stable
+
+# Automatically cancel in-progress actions on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sdks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+        - go-sdk
+        - js-sdk
+        - k8s-operator
+
+    steps:
+    - name: Trigger
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: sync.yaml
+        repo: unikraft-cloud/${{ matrix.repo }}
+        inputs: '{ "channel": "${{ inputs.channel || github.ref_name }}" }'
+        token: "${{ secrets.GH_PAT_SDKS }}"

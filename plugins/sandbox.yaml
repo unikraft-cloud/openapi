@@ -927,7 +927,7 @@ servers:
   - url: http://localhost:7263
     description: A sandbox running locally, listening on its default port
     variables: {}
-  - url: https://api.{metro}.unikraft.cloud/instances/{instance}/plugins/sandbox
+  - url: https://api.{metro}.unikraft.cloud/v1/instances/{instance}/plugins/sandbox
     description: The sandbox plugin route of an instance running on a Unikraft Cloud metro
     variables:
       metro:

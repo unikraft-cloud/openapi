@@ -605,6 +605,17 @@
   ],
   "components": {
     "schemas": {
+      "CommandLineArgs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "The command as an argument vector, executed directly without a shell."
+      },
+      "CommandLineShell": {
+        "type": "string",
+        "description": "The command line, interpreted by the shell."
+      },
       "CommandLogStream": {
         "type": "string",
         "enum": [
@@ -851,8 +862,15 @@
             "description": "The UUID of the command."
           },
           "cmdline": {
-            "type": "string",
-            "description": "The command line the command was started with."
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommandLineShell"
+              },
+              {
+                "$ref": "#/components/schemas/CommandLineArgs"
+              }
+            ],
+            "description": "The command the command was started with, in the form it was supplied in:\na shell command line, or an argument vector."
           },
           "cwd": {
             "type": "string",
@@ -1112,8 +1130,15 @@
         ],
         "properties": {
           "cmd": {
-            "type": "string",
-            "description": "The command line to run, as passed to the shell.",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommandLineShell"
+              },
+              {
+                "$ref": "#/components/schemas/CommandLineArgs"
+              }
+            ],
+            "description": "The command to run: a command line interpreted by the shell, or an argument\nvector executed directly. A bare program name in a vector is looked up in\nthe `PATH` of `env`, falling back to the sandbox's own `PATH`. `400` is\nreturned if the vector is empty or the program cannot be resolved.",
             "example": "echo hello"
           },
           "cwd": {

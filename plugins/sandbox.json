@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Unikraft Cloud Sandbox Plugin API",
-    "version": "v1.0.1",
+    "version": "v1.0.2",
     "description": "This specification describes the Sandbox plugin API, a control API exposed by\na sandbox instance running on Unikraft Cloud. It provides two services: the\nmanagement of shell commands running inside the sandbox, and reading and\nwriting files in the sandbox filesystem.\n\nEvery operation declares a single `default` response: the standard response\nenvelope, which carries the outcome of the request in `status`, the\nhuman-readable reason for a failure in `message` and the HTTP status code in\n`errors`. The HTTP status code itself distinguishes success from failure; the\nstatus codes an operation can return are documented on the operation. The two\nendpoints which stream bytes rather than JSON (the raw command log and the\nraw file download) return their payload verbatim, unenveloped."
   },
   "tags": [

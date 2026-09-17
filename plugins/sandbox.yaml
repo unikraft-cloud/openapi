@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Unikraft Cloud Sandbox Plugin API
-  version: v1.0.1
+  version: v1.0.2
   description: |-
     This specification describes the Sandbox plugin API, a control API exposed by
     a sandbox instance running on Unikraft Cloud. It provides two services: the

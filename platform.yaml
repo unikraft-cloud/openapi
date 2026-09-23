@@ -4,6 +4,12 @@ info:
   version: v1.0.0
   description: This specification describes the Unikraft Cloud Platform API, which provides mechanisms to interact with Unikraft Cloud metros. It allows you to create, manage, and interact with instances running on the platform.
 tags:
+  - name: audit
+    x-displayName: Audit
+    description: |-
+      Audit events attribute state changes to the operation that caused them.
+      Events are emitted to the controller's configured log sinks and are not
+      stored or queryable here; this API subscribes to them live.
   - name: node
     x-displayName: Node
   - name: users
@@ -79,6 +85,53 @@ tags:
     x-displayName: Instances
     description: An instance is a micro vm running an application.
 paths:
+  /v1/audit:
+    get:
+      operationId: SubscribeAuditEvents
+      summary: Subscribe to Audit Events
+      description: Subscribe to audit events as they are raised.
+      parameters:
+        - name: events
+          in: query
+          required: false
+          description: Deliver only these event types.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Audit.AuditEventType'
+          explode: false
+        - name: uuid
+          in: query
+          required: false
+          description: Deliver only events about these object UUIDs.
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: tags
+          in: query
+          required: false
+          description: Deliver only events about objects carrying all of these tags.
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+      responses:
+        default:
+          description: |-
+            The audit event stream.
+
+            The default response rather than 200 because that is what marks an operation
+            as streaming: a status-coded response describes one body, this describes every
+            message on an open connection.
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/Audit.AuditEvent'
+      tags:
+        - audit
   /v1/certificates:
     post:
       operationId: CreateCertificate
@@ -2392,6 +2445,196 @@ components:
         items:
           type: string
   schemas:
+    Audit.AuditAttribution:
+      type: object
+      required:
+        - operation
+        - kind
+        - trigger
+        - origin
+      properties:
+        operation:
+          type: string
+          format: uuid
+          description: UUID shared by every event belonging to the same operation.
+        kind:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditOperationKind'
+          description: What was performed on the object.
+        trigger:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditTrigger'
+          description: Whether this event was raised by the operation or observed after it.
+        origin:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditOrigin'
+          description: What caused the operation.
+        user:
+          type: string
+          format: uuid
+          description: The user that caused the operation, when one did.
+      description: |-
+        The operation an event belongs to.
+
+        Events sharing an `operation` describe one overarching action, which is what
+        makes a state transition attributable to the thing that caused it rather than
+        only observable after the fact.
+    Audit.AuditEvent:
+      type: object
+      required:
+        - type
+        - timestamp
+        - object
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditEventType'
+          description: The type of event.
+        timestamp:
+          type: string
+          format: date-time
+          description: When the event was raised.
+        object:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditObject'
+          description: The object the event is about.
+        attribution:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditAttribution'
+          description: The operation the event belongs to.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditEventData'
+          description: The event payload. Its fields depend on `type`.
+      description: One audit event.
+    Audit.AuditEventData:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: The state before the transition.
+        new:
+          type: string
+          description: The state after the transition.
+        state:
+          type: string
+          description: The state the instance was left in after a failed start.
+        error:
+          type: string
+          description: The error that failed the start, as an errno name such as `EDQUOT`.
+        stop:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditStop'
+          description: Why the instance stopped.
+      description: |-
+        The payload of an audit event.
+
+        Which fields are present depends on the event type:
+
+        - `vm.state_change`
+        - `vm.start_failed`
+    Audit.AuditEventType:
+      type: string
+      enum:
+        - vm.state_change
+        - vm.start_failed
+      description: |-
+        The type of an audit event.
+
+        An enum rather than an open union because this is also a query parameter, and
+        an open union generates as an interface that a client cannot serialise into a
+        filter. Further event types are added here; a Go client decodes one it does
+        not know as its plain string value rather than failing.
+    Audit.AuditObject:
+      type: object
+      required:
+        - type
+        - uuid
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Audit.AuditObjectType'
+          description: The kind of object.
+        uuid:
+          type: string
+          format: uuid
+          description: The object's UUID.
+        owner:
+          type: string
+          format: uuid
+          description: The UUID of the user the object belongs to.
+        tags:
+          type: array
+          items:
+            type: string
+          description: The tags set on the object.
+      description: The object an audit event is about.
+    Audit.AuditObjectType:
+      anyOf:
+        - type: string
+          enum:
+            - i
+            - v
+        - type: string
+      description: |-
+        The kind of object an audit event is about.
+
+        Open: the controller emits the ukpd object prefixes, and events for further
+        object kinds are added without a breaking change.
+    Audit.AuditOperationKind:
+      anyOf:
+        - type: string
+          enum:
+            - start
+            - stop
+            - drain
+            - suspend
+            - restart
+        - type: string
+      description: |-
+        What an operation was performed on the object.
+
+        Open: the set depends on the object type, and instances carry
+        `start`, `stop`, `drain`, `suspend` and `restart`.
+    Audit.AuditOrigin:
+      type: string
+      enum:
+        - unknown
+        - api
+        - guest
+        - proxy
+        - autoscale
+        - scale-to-zero
+        - scheduled-op
+        - restart
+        - update
+        - system
+        - network
+        - autokill
+        - mtss
+      description: What caused the operation.
+    Audit.AuditStop:
+      type: object
+      properties:
+        reason:
+          type: array
+          items:
+            type: string
+          description: The origins that contributed to the stop.
+        code:
+          type: integer
+          format: uint32
+          description: The kernel stop code.
+        cause:
+          type: string
+          description: The stop cause.
+      description: Why an instance stopped.
+    Audit.AuditTrigger:
+      type: string
+      enum:
+        - requested
+        - observed
+      description: Whether the event was raised by the operation or observed as a result of it.
     Autoscale.AdjustmentType:
       type: string
       enum:

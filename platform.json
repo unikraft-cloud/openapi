@@ -6388,14 +6388,25 @@
       "Instances.CreateInstanceRequestPlugin": {
         "type": "object",
         "required": [
-          "name",
-          "rom"
+          "name"
         ],
         "properties": {
           "name": {
             "type": "string",
             "description": "The plugin name. It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`). A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`).",
             "example": "my-plugin"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Instances.ImageSpec"
+              }
+            ],
+            "description": "The plugin's image. The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts. Accepts either a plain image reference string\n(`\"user/myplugin:latest\"`) or an object carrying additional pull\nconfiguration (`{\"url\": \"user/myplugin:latest\", \"pull_policy\": \"always\"}`).\nExactly one of `image` and `rom` must be set.",
+            "example": "user/myplugin:latest"
           },
           "rom": {
             "anyOf": [
@@ -6406,14 +6417,27 @@
                 "$ref": "#/components/schemas/Instances.ImageSpec"
               }
             ],
-            "description": "The plugin's ROM image. The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the plugin\nstarts. Accepts either a plain image reference string\n(`\"user/myplugin:latest\"`) or an object carrying additional pull\nconfiguration (`{\"url\": \"user/myplugin:latest\", \"pull_policy\": \"always\"}`).",
+            "description": "The plugin's image, under its former name. The platform still accepts\nit and adds a deprecation warning to the response. Exactly one of\n`image` and `rom` must be set.\n\nDeprecated: Use `image` instead.",
+            "deprecated": true,
             "example": "user/myplugin:latest"
           },
           "config": {
             "description": "Arbitrary JSON configuration that the platform passes to the plugin's\n`init` program on `STDIN`. Any JSON value works, including a string, a\nnumber, or an object."
           }
         },
-        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint. A plugin runs inside the instance next to\nthe main application, loads from its own ROM image, and answers requests\nthat the Unikraft Cloud API forwards to it."
+        "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint. A plugin runs inside the instance next to\nthe main application, loads from its own ROM image, and answers requests\nthat the Unikraft Cloud API forwards to it.",
+        "oneOf": [
+          {
+            "required": [
+              "image"
+            ]
+          },
+          {
+            "required": [
+              "rom"
+            ]
+          }
+        ]
       },
       "Instances.CreateInstanceRequestRom": {
         "type": "object",
@@ -8269,7 +8293,7 @@
         "type": "object",
         "required": [
           "name",
-          "rom"
+          "image"
         ],
         "properties": {
           "name": {
@@ -8277,9 +8301,9 @@
             "description": "The plugin name. It becomes the `<plugin_name>` segment in the plugin\nendpoint (`.../plugins/<plugin_name>/<path>`). A plugin name has a\nmaximum length of 63 characters and contains only letters (`a`-`z`,\n`A`-`Z`), digits (`0`-`9`), hyphen (`-`), and underscore (`_`).",
             "example": "my-plugin"
           },
-          "rom": {
+          "image": {
             "type": "string",
-            "description": "The plugin's ROM image, given as an image reference string such as\n`user/myplugin:latest`. The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the\nplugin starts.",
+            "description": "The plugin's image, given as an image reference string such as\n`user/myplugin:latest`. The platform loads the image, mounts it at\n`/uk/plugins/<plugin_name>`, and runs its `init` program when the\nplugin starts.",
             "example": "user/myplugin:latest"
           },
           "config": {
@@ -9351,7 +9375,7 @@
             "description": "The operation to perform on the property."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config fields)\nfor SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         }
       },
@@ -9393,7 +9417,7 @@
             "description": "The operation to perform on the property."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, rom, and optional config fields) for SET/ADD\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config fields)\nfor SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         },
         "description": "A single update operation to be applied to an instance."

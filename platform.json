@@ -3780,8 +3780,6 @@
       "Audit.AuditAttribution": {
         "type": "object",
         "required": [
-          "operation",
-          "kind",
           "trigger",
           "origin"
         ],
@@ -3827,8 +3825,7 @@
         "type": "object",
         "required": [
           "type",
-          "timestamp",
-          "object"
+          "timestamp"
         ],
         "properties": {
           "type": {
@@ -3850,7 +3847,7 @@
                 "$ref": "#/components/schemas/Audit.AuditObject"
               }
             ],
-            "description": "The object the event is about."
+            "description": "The object the event is about. Absent on `gap`, which names no object."
           },
           "attribution": {
             "allOf": [
@@ -3867,6 +3864,11 @@
               }
             ],
             "description": "The event payload. Its fields depend on `type`."
+          },
+          "dropped": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "How many events were lost. Only on `gap`."
           }
         },
         "description": "One audit event."
@@ -3905,7 +3907,8 @@
         "type": "string",
         "enum": [
           "vm.state_change",
-          "vm.start_failed"
+          "vm.start_failed",
+          "gap"
         ],
         "description": "The type of an audit event.\n\nAn enum rather than an open union because this is also a query parameter, and\nan open union generates as an interface that a client cannot serialise into a\nfilter. Further event types are added here; a Go client decodes one it does\nnot know as its plain string value rather than failing."
       },

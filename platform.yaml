@@ -2448,8 +2448,6 @@ components:
     Audit.AuditAttribution:
       type: object
       required:
-        - operation
-        - kind
         - trigger
         - origin
       properties:
@@ -2484,7 +2482,6 @@ components:
       required:
         - type
         - timestamp
-        - object
       properties:
         type:
           allOf:
@@ -2497,7 +2494,7 @@ components:
         object:
           allOf:
             - $ref: '#/components/schemas/Audit.AuditObject'
-          description: The object the event is about.
+          description: The object the event is about. Absent on `gap`, which names no object.
         attribution:
           allOf:
             - $ref: '#/components/schemas/Audit.AuditAttribution'
@@ -2506,6 +2503,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/Audit.AuditEventData'
           description: The event payload. Its fields depend on `type`.
+        dropped:
+          type: integer
+          format: uint64
+          description: How many events were lost. Only on `gap`.
       description: One audit event.
     Audit.AuditEventData:
       type: object
@@ -2538,6 +2539,7 @@ components:
       enum:
         - vm.state_change
         - vm.start_failed
+        - gap
       description: |-
         The type of an audit event.
 

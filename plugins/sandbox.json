@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Unikraft Cloud Sandbox Plugin API",
-    "version": "v1.0.2",
-    "description": "This specification describes the Sandbox plugin API, a control API exposed by\na sandbox instance running on Unikraft Cloud. It provides two services: the\nmanagement of shell commands running inside the sandbox, and reading and\nwriting files in the sandbox filesystem.\n\nEvery operation declares a single `default` response: the standard response\nenvelope, which carries the outcome of the request in `status`, the\nhuman-readable reason for a failure in `message` and the HTTP status code in\n`errors`. The HTTP status code itself distinguishes success from failure; the\nstatus codes an operation can return are documented on the operation. The two\nendpoints which stream bytes rather than JSON (the raw command log and the\nraw file download) return their payload verbatim, unenveloped."
+    "version": "v1.2.0",
+    "description": "This specification describes the Sandbox plugin API, a control API exposed by\na sandbox instance running on Unikraft Cloud. It provides two services: the\nmanagement of shell commands running inside the sandbox, and reading and\nwriting files in the sandbox filesystem.\n\nEvery operation declares a single `default` response: the standard response\nenvelope, which carries the outcome of the request in `status`, the\nhuman-readable reason for a failure in `message` and the HTTP status code in\n`errors`. The HTTP status code itself distinguishes success from failure; the\nstatus codes an operation can return are documented on the operation. The two\nendpoints which stream bytes rather than JSON (the raw command log and the\nraw file download) return their payload verbatim, unenveloped.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`GET /commands/{uuid}/ws` upgrades to a WebSocket that streams a command's\noutput as it is produced and takes its input, `eof`, `resize` and `signal`\nas frames. The frame contract is documented in the plugin's README."
   },
   "tags": [
     {
@@ -42,11 +42,11 @@
       "post": {
         "operationId": "RunCommand",
         "summary": "Start Command",
-        "description": "Start a command in the sandbox. `500` is returned when the command could\nnot be spawned.",
+        "description": "Start a command in the sandbox, and with `req_timeout_s` wait for it, so\nthat starting, waiting, inspecting and fetching the output take one\nrequest. `500` is returned when the command could not be spawned, and\n`400` when `cols` or `rows` are given without `pty` or are zero, when\n`req_timeout_s` is not between 0 (exclusive) and 55 seconds, or when\n`logs_limit` or `forget` are given without `req_timeout_s`.",
         "parameters": [],
         "responses": {
           "default": {
-            "description": "The UUID assigned to the newly started command.",
+            "description": "The command that was started, as GET .../{uuid} describes it, plus its output (logs) when req_timeout_s was given.",
             "content": {
               "application/json": {
                 "schema": {
@@ -269,6 +269,49 @@
         ]
       }
     },
+    "/commands/{uuid}/resize": {
+      "post": {
+        "operationId": "ResizeCommandTerminal",
+        "summary": "Resize Command Terminal",
+        "description": "Resize a command's terminal; the foreground job is told with SIGWINCH.\n`404` is returned, with an empty body, when no such command exists, `400`\nwhen the command has no terminal or the size is zero, and `409` once the\ncommand has finished.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The outcome of resizing the terminal.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "commands"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandResizeRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/commands/{uuid}/signal": {
       "post": {
         "operationId": "SignalCommand",
@@ -316,7 +359,7 @@
       "post": {
         "operationId": "WriteCommandStdin",
         "summary": "Write Command Stdin",
-        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, `410` if the command's logs have been\ndeleted, and `400` when `data` is not valid base64.\nFeeding data into a command whose standard input has been closed is an error.",
+        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, `410` if the command's logs have been\ndeleted, `400` when `data` is not valid base64, and `429` when the command\nhas not yet read what it was already given (its stdin queue holds 8 MiB;\non a terminal an `eof` counts as the byte it types).\nFeeding data into a command whose standard input has been closed is an error.",
         "parameters": [
           {
             "name": "uuid",
@@ -744,6 +787,28 @@
         },
         "description": "The response to fetching the output of a command. `404` is returned, with an\nempty body, when no command with the given UUID exists. `410` is returned, with an\nempty body, if the command's logs have been deleted."
       },
+      "CommandResizeRequest": {
+        "type": "object",
+        "required": [
+          "cols",
+          "rows"
+        ],
+        "properties": {
+          "cols": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The new width, in columns.",
+            "example": 120
+          },
+          "rows": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The new height, in rows.",
+            "example": 40
+          }
+        },
+        "description": "The request to resize a command's terminal."
+      },
       "CommandSignalRequest": {
         "type": "object",
         "required": [
@@ -853,6 +918,8 @@
           "cmdline",
           "cwd",
           "env",
+          "pty",
+          "duration_ms",
           "exitcode"
         ],
         "properties": {
@@ -884,6 +951,16 @@
             },
             "nullable": true,
             "description": "Environment variables, if supplied at startup, else null"
+          },
+          "pty": {
+            "type": "boolean",
+            "description": "Whether the command runs on a pseudo-terminal."
+          },
+          "duration_ms": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "Milliseconds from start to exit, or to now while the command runs. `null`\nfor a command restored from a status file written before it was recorded."
           },
           "exitcode": {
             "type": "integer",
@@ -1112,16 +1189,70 @@
       "RunCommandData": {
         "type": "object",
         "required": [
-          "uuid"
+          "uuid",
+          "cmdline",
+          "cwd",
+          "env",
+          "pty",
+          "duration_ms",
+          "exitcode"
         ],
         "properties": {
           "uuid": {
             "type": "string",
             "format": "uuid",
-            "description": "The UUID assigned to the newly started command."
+            "description": "The UUID of the command."
+          },
+          "cmdline": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommandLineShell"
+              },
+              {
+                "$ref": "#/components/schemas/CommandLineArgs"
+              }
+            ],
+            "description": "The command the command was started with, in the form it was supplied in:\na shell command line, or an argument vector."
+          },
+          "cwd": {
+            "type": "string",
+            "nullable": true,
+            "description": "The current working directory, if supplied at startup, else null"
+          },
+          "env": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Environment variables, if supplied at startup, else null"
+          },
+          "pty": {
+            "type": "boolean",
+            "description": "Whether the command runs on a pseudo-terminal."
+          },
+          "duration_ms": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "Milliseconds from start to exit, or to now while the command runs. `null`\nfor a command restored from a status file written before it was recorded."
+          },
+          "exitcode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The exit code of the command. It is `null` while the command is still\nrunning."
+          },
+          "logs": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CommandLogsData"
+              }
+            ],
+            "description": "Only with `req_timeout_s`: the output, as `GET .../logs` returns it.\nAbsent if the logs were deleted while the request waited."
           }
         },
-        "description": "The identity of a newly started command."
+        "description": "The command that was started, as `GET .../{uuid}` describes it."
       },
       "RunCommandRequest": {
         "type": "object",
@@ -1152,6 +1283,44 @@
               "type": "string"
             },
             "description": "(OPTIONAL) Environment variables"
+          },
+          "pty": {
+            "type": "boolean",
+            "description": "(OPTIONAL) Run the command on a pseudo-terminal instead of pipes. Its\noutput, stdout and stderr merged as a terminal shows them, is served as\n`stdout`; input fed to it is echoed by the terminal; an `eof` on stdin\ntypes the terminal's end-of-input character rather than closing anything;\nand deleting the logs hangs the terminal up, which ends most commands.\n`TERM` is set to `xterm-256color` unless `env` provides one."
+          },
+          "cols": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "(OPTIONAL) The terminal's width in columns. Needs `pty`; 80 by default."
+          },
+          "rows": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "(OPTIONAL) The terminal's height in rows. Needs `pty`; 24 by default."
+          },
+          "stdin": {
+            "type": "string",
+            "description": "(OPTIONAL) Bytes to feed into standard input before anything else,\nbase64-encoded, exactly as a `POST .../stdin` right after the start would.",
+            "example": "aGVsbG8K"
+          },
+          "stdin_eof": {
+            "type": "boolean",
+            "description": "(OPTIONAL) Whether to close standard input after `stdin` (at once when\nthere is none). Defaults to `true` when `req_timeout_s` is given, since\nnothing can be fed until the request answers, and to `false` otherwise."
+          },
+          "req_timeout_s": {
+            "type": "number",
+            "format": "double",
+            "description": "(OPTIONAL) Block until the command exits or this many seconds have\npassed, then answer with the command's state and output (`logs`). More\nthan 0 and at most 55: a proxy in front cuts a silent request at about a\nminute. A timeout is not an error: the answer has `exitcode: null`, the\noutput so far, and the command keeps running, addressable by UUID as any\nother. Absent: answer as soon as the command has started.",
+            "example": 30
+          },
+          "logs_limit": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "(OPTIONAL) With `req_timeout_s`: at most this many bytes of each stream in\nthe answer, the rest staying at `GET .../logs`. Whole streams by default."
+          },
+          "forget": {
+            "type": "boolean",
+            "description": "(OPTIONAL) With `req_timeout_s`: forget the command once it has finished,\nas `DELETE .../{uuid}` would, so that one request is the whole exchange.\nDoes nothing on a timeout, when the UUID is still needed."
           }
         },
         "description": "The request to start a command in the sandbox."

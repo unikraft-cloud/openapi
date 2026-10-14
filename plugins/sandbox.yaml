@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Unikraft Cloud Sandbox Plugin API
-  version: v1.0.2
+  version: v1.2.0
   description: |-
     This specification describes the Sandbox plugin API, a control API exposed by
     a sandbox instance running on Unikraft Cloud. It provides two services: the
@@ -15,6 +15,11 @@ info:
     status codes an operation can return are documented on the operation. The two
     endpoints which stream bytes rather than JSON (the raw command log and the
     raw file download) return their payload verbatim, unenveloped.
+
+    One endpoint is not an HTTP operation and so does not appear below:
+    `GET /commands/{uuid}/ws` upgrades to a WebSocket that streams a command's
+    output as it is produced and takes its input, `eof`, `resize` and `signal`
+    as frames. The frame contract is documented in the plugin's README.
 tags:
   - name: fs
     x-displayName: Filesystem
@@ -48,12 +53,16 @@ paths:
       operationId: RunCommand
       summary: Start Command
       description: |-
-        Start a command in the sandbox. `500` is returned when the command could
-        not be spawned.
+        Start a command in the sandbox, and with `req_timeout_s` wait for it, so
+        that starting, waiting, inspecting and fetching the output take one
+        request. `500` is returned when the command could not be spawned, and
+        `400` when `cols` or `rows` are given without `pty` or are zero, when
+        `req_timeout_s` is not between 0 (exclusive) and 55 seconds, or when
+        `logs_limit` or `forget` are given without `req_timeout_s`.
       parameters: []
       responses:
         default:
-          description: The UUID assigned to the newly started command.
+          description: The command that was started, as GET .../{uuid} describes it, plus its output (logs) when req_timeout_s was given.
           content:
             application/json:
               schema:
@@ -216,6 +225,37 @@ paths:
                 format: binary
       tags:
         - commands
+  /commands/{uuid}/resize:
+    post:
+      operationId: ResizeCommandTerminal
+      summary: Resize Command Terminal
+      description: |-
+        Resize a command's terminal; the foreground job is told with SIGWINCH.
+        `404` is returned, with an empty body, when no such command exists, `400`
+        when the command has no terminal or the size is zero, and `409` once the
+        command has finished.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: The outcome of resizing the terminal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      tags:
+        - commands
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandResizeRequest'
   /commands/{uuid}/signal:
     post:
       operationId: SignalCommand
@@ -252,7 +292,9 @@ paths:
       description: |-
         Feed data into the standard input of a command. `404` is returned, with an
         empty body, when no such command exists, `410` if the command's logs have been
-        deleted, and `400` when `data` is not valid base64.
+        deleted, `400` when `data` is not valid base64, and `429` when the command
+        has not yet read what it was already given (its stdin queue holds 8 MiB;
+        on a terminal an `eof` counts as the byte it types).
         Feeding data into a command whose standard input has been closed is an error.
       parameters:
         - name: uuid
@@ -557,6 +599,23 @@ components:
         The response to fetching the output of a command. `404` is returned, with an
         empty body, when no command with the given UUID exists. `410` is returned, with an
         empty body, if the command's logs have been deleted.
+    CommandResizeRequest:
+      type: object
+      required:
+        - cols
+        - rows
+      properties:
+        cols:
+          type: integer
+          format: uint16
+          description: The new width, in columns.
+          example: 120
+        rows:
+          type: integer
+          format: uint16
+          description: The new height, in rows.
+          example: 40
+      description: The request to resize a command's terminal.
     CommandSignalRequest:
       type: object
       required:
@@ -638,6 +697,8 @@ components:
         - cmdline
         - cwd
         - env
+        - pty
+        - duration_ms
         - exitcode
       properties:
         uuid:
@@ -661,6 +722,16 @@ components:
             type: string
           nullable: true
           description: Environment variables, if supplied at startup, else null
+        pty:
+          type: boolean
+          description: Whether the command runs on a pseudo-terminal.
+        duration_ms:
+          type: integer
+          format: uint64
+          nullable: true
+          description: |-
+            Milliseconds from start to exit, or to now while the command runs. `null`
+            for a command restored from a status file written before it was recorded.
         exitcode:
           type: integer
           format: int32
@@ -823,12 +894,58 @@ components:
       type: object
       required:
         - uuid
+        - cmdline
+        - cwd
+        - env
+        - pty
+        - duration_ms
+        - exitcode
       properties:
         uuid:
           type: string
           format: uuid
-          description: The UUID assigned to the newly started command.
-      description: The identity of a newly started command.
+          description: The UUID of the command.
+        cmdline:
+          anyOf:
+            - $ref: '#/components/schemas/CommandLineShell'
+            - $ref: '#/components/schemas/CommandLineArgs'
+          description: |-
+            The command the command was started with, in the form it was supplied in:
+            a shell command line, or an argument vector.
+        cwd:
+          type: string
+          nullable: true
+          description: The current working directory, if supplied at startup, else null
+        env:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Environment variables, if supplied at startup, else null
+        pty:
+          type: boolean
+          description: Whether the command runs on a pseudo-terminal.
+        duration_ms:
+          type: integer
+          format: uint64
+          nullable: true
+          description: |-
+            Milliseconds from start to exit, or to now while the command runs. `null`
+            for a command restored from a status file written before it was recorded.
+        exitcode:
+          type: integer
+          format: int32
+          nullable: true
+          description: |-
+            The exit code of the command. It is `null` while the command is still
+            running.
+        logs:
+          allOf:
+            - $ref: '#/components/schemas/CommandLogsData'
+          description: |-
+            Only with `req_timeout_s`: the output, as `GET .../logs` returns it.
+            Absent if the logs were deleted while the request waited.
+      description: The command that was started, as `GET .../{uuid}` describes it.
     RunCommandRequest:
       type: object
       required:
@@ -853,6 +970,58 @@ components:
           additionalProperties:
             type: string
           description: (OPTIONAL) Environment variables
+        pty:
+          type: boolean
+          description: |-
+            (OPTIONAL) Run the command on a pseudo-terminal instead of pipes. Its
+            output, stdout and stderr merged as a terminal shows them, is served as
+            `stdout`; input fed to it is echoed by the terminal; an `eof` on stdin
+            types the terminal's end-of-input character rather than closing anything;
+            and deleting the logs hangs the terminal up, which ends most commands.
+            `TERM` is set to `xterm-256color` unless `env` provides one.
+        cols:
+          type: integer
+          format: uint16
+          description: (OPTIONAL) The terminal's width in columns. Needs `pty`; 80 by default.
+        rows:
+          type: integer
+          format: uint16
+          description: (OPTIONAL) The terminal's height in rows. Needs `pty`; 24 by default.
+        stdin:
+          type: string
+          description: |-
+            (OPTIONAL) Bytes to feed into standard input before anything else,
+            base64-encoded, exactly as a `POST .../stdin` right after the start would.
+          example: aGVsbG8K
+        stdin_eof:
+          type: boolean
+          description: |-
+            (OPTIONAL) Whether to close standard input after `stdin` (at once when
+            there is none). Defaults to `true` when `req_timeout_s` is given, since
+            nothing can be fed until the request answers, and to `false` otherwise.
+        req_timeout_s:
+          type: number
+          format: double
+          description: |-
+            (OPTIONAL) Block until the command exits or this many seconds have
+            passed, then answer with the command's state and output (`logs`). More
+            than 0 and at most 55: a proxy in front cuts a silent request at about a
+            minute. A timeout is not an error: the answer has `exitcode: null`, the
+            output so far, and the command keeps running, addressable by UUID as any
+            other. Absent: answer as soon as the command has started.
+          example: 30
+        logs_limit:
+          type: integer
+          format: uint64
+          description: |-
+            (OPTIONAL) With `req_timeout_s`: at most this many bytes of each stream in
+            the answer, the rest staying at `GET .../logs`. Whole streams by default.
+        forget:
+          type: boolean
+          description: |-
+            (OPTIONAL) With `req_timeout_s`: forget the command once it has finished,
+            as `DELETE .../{uuid}` would, so that one request is the whole exchange.
+            Does nothing on a timeout, when the UUID is still needed.
       description: The request to start a command in the sandbox.
     RunCommandResponse:
       type: object

@@ -8328,6 +8328,12 @@
           },
           "config": {
             "description": "Arbitrary JSON configuration that the platform passes to the plugin's\n`init` program on `STDIN`. Any JSON value works, including a string, a\nnumber, or an object."
+          },
+          "api_port": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The port on the instance's address on which the plugin's API listens.\nThe platform picks it when the plugin is applied, so it lets a caller\nthat can reach the instance directly talk to the plugin without going\nthrough the platform API.",
+            "example": 20000
           }
         },
         "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint. A plugin runs inside the instance next to\nthe main application, loads from its own ROM image, and answers requests\nthat the Unikraft Cloud API forwards to it."

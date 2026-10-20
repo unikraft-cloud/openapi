@@ -335,15 +335,18 @@ components:
           allOf:
             - $ref: '#/components/schemas/Source'
           description: |-
-            The directory holding the Dockerfile. Defaults to `context`. Not
-            supported yet.
+            The directory holding the Dockerfile of the rootfs. Defaults to
+            `context`. The Dockerfile in it is its `filename`, which defaults to the
+            name of the Dockerfile the Kraftfile builds its rootfs with. Only valid
+            when the rootfs is built from a Dockerfile.
       additionalProperties:
         $ref: '#/components/schemas/Source'
       description: |-
         The contexts a build is built from, by the names of buildkit's Dockerfile
         frontend. Any other key is a named context, for `FROM <name>` and
-        `COPY --from=<name>`, like `docker buildx build --build-context`. Named
-        contexts are not supported yet.
+        `COPY --from=<name>`, like `docker buildx build --build-context`, for every
+        Dockerfile the build runs. Named contexts are only valid when the rootfs or
+        a rom is built from a Dockerfile.
     BuildEvent:
       type: object
       properties:
@@ -884,8 +887,9 @@ components:
           description: |-
             The file to read out of the source, relative to `subdir`. Only valid where
             the source names a single file: `kraftfile`, where it defaults to
-            `Kraftfile`, and `contexts.dockerfile`, where it defaults to `Dockerfile`.
-            A `filename` on any other context is a `400`.
+            `Kraftfile`, and `contexts.dockerfile`, where it defaults to the name of
+            the Dockerfile the Kraftfile builds with. A `filename` on any other
+            context is a `400`.
           example: Kraftfile
       description: |-
         Where the files of a build come from. A source is exactly one of a

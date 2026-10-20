@@ -402,13 +402,13 @@
                 "$ref": "#/components/schemas/Source"
               }
             ],
-            "description": "The directory holding the Dockerfile. Defaults to `context`. Not\nsupported yet."
+            "description": "The directory holding the Dockerfile of the rootfs. Defaults to\n`context`. The Dockerfile in it is its `filename`, which defaults to the\nname of the Dockerfile the Kraftfile builds its rootfs with. Only valid\nwhen the rootfs is built from a Dockerfile."
           }
         },
         "additionalProperties": {
           "$ref": "#/components/schemas/Source"
         },
-        "description": "The contexts a build is built from, by the names of buildkit's Dockerfile\nfrontend. Any other key is a named context, for `FROM <name>` and\n`COPY --from=<name>`, like `docker buildx build --build-context`. Named\ncontexts are not supported yet."
+        "description": "The contexts a build is built from, by the names of buildkit's Dockerfile\nfrontend. Any other key is a named context, for `FROM <name>` and\n`COPY --from=<name>`, like `docker buildx build --build-context`, for every\nDockerfile the build runs. Named contexts are only valid when the rootfs or\na rom is built from a Dockerfile."
       },
       "BuildEvent": {
         "type": "object",
@@ -1059,7 +1059,7 @@
           },
           "filename": {
             "type": "string",
-            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to\n`Kraftfile`, and `contexts.dockerfile`, where it defaults to `Dockerfile`.\nA `filename` on any other context is a `400`.",
+            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to\n`Kraftfile`, and `contexts.dockerfile`, where it defaults to the name of\nthe Dockerfile the Kraftfile builds with. A `filename` on any other\ncontext is a `400`.",
             "example": "Kraftfile"
           }
         },

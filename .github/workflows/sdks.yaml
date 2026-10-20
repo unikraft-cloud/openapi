@@ -47,6 +47,7 @@ jobs:
         - go-sdk
         - js-sdk
         - k8s-operator
+        - python-sdk
 
     steps:
     - name: Trigger

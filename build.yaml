@@ -1,0 +1,1076 @@
+openapi: 3.0.0
+info:
+  title: Unikraft Cloud Build API
+  version: v0.1.0
+  description: |-
+    This specification describes the Unikraft Cloud build API, served by
+    blacksmith. A build takes its files from git repositories, https tarballs
+    or the client's own buildkit session, builds a Unikraft image from a
+    Kraftfile or a plain image from a Dockerfile on a buildkitd running in the
+    caller's own account, and pushes the image to registries or imports it into
+    volumes.
+
+    Every request carries the caller's Unikraft Cloud token as a bearer token.
+    The token is validated against the platform on every request, and the answer
+    is the caller's identity: everything is scoped to that tenant, and the build
+    of another tenant is a `404`. Images are pulled and pushed with the caller's
+    token, unless `registries` gives other credentials for a registry.
+
+    Every operation answers a failed request with an HTTP status code and an
+    `ErrorBody`, which names the failure in `error.code` and explains it in
+    `error.message`. The status codes an operation can answer with are
+    documented on the operation. The success responses are plain JSON objects,
+    except for the progress stream of a build, which is newline-delimited JSON
+    or plain text.
+
+    A part of a request marked as not supported yet is answered with `400` and
+    the code `unsupported`.
+
+    One endpoint is not an HTTP operation and so does not appear below:
+    `POST /v1/builds/{id}/session` attaches the client's buildkit session to a
+    waiting build, as an h2c upgrade in the shape of dockerd's `/session`, with
+    its `X-Docker-Expose-Session-*` headers. After the `101`, the connection
+    serves the build's session sources, secrets, SSH agents and registry
+    credentials until the build ends. A session that does not advertise a
+    method the build needs is answered with `400`, and a build that does not
+    wait for a session, or already has one, with `409`. Not supported yet.
+tags:
+  - name: builds
+    x-displayName: Builds
+    description: |-
+      A build turns its sources into a Unikraft image or a plain image, on a
+      buildkitd running in the caller's own account, and pushes the image to
+      registries or imports it into volumes. A build runs whether or not anyone
+      is watching it, and its progress can be followed, replayed from the
+      start, until it has finished.
+paths:
+  /v1/builds:
+    post:
+      operationId: CreateBuild
+      summary: Create Build
+      description: |-
+        Create a build. It runs on a builder of the caller's tenant, which is
+        created on first use, whether or not anyone is watching it, and waits for
+        a build slot while each of the tenant's builders already runs as many
+        builds at once as the service allows. A request that uses a part of the full build API this
+        service does not support yet is answered with `400` and the code
+        `unsupported`. A tenant that already has as many builds running or waiting
+        as it may is answered with `429` and the code `too_many_builds`.
+      parameters: []
+      responses:
+        '201':
+          description: |-
+            The response message for creating a build: `201`, with the new build, which
+            is `waiting` if it reads anything from the client's session and `running`
+            otherwise, and a `Location` header naming it.
+          headers:
+            Location:
+              required: true
+              description: The path of the new build, e.g. `/v1/builds/{id}`.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Build'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBuildRequest'
+    get:
+      operationId: ListBuilds
+      summary: List Builds
+      description: List the builds of the caller's tenant, newest first.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Only the builds in this state.
+          schema:
+            $ref: '#/components/schemas/BuildStatus'
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          description: |-
+            The maximum number of builds to return. When omitted, every matching
+            build is returned.
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBuildsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+  /v1/builds/{id}:
+    get:
+      operationId: GetBuild
+      summary: Get Build
+      description: 'Get a build by ID: its state, and its result or error once it has finished.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the build.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Build'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+    delete:
+      operationId: DeleteBuild
+      summary: Delete Build
+      description: |-
+        Delete a finished build by ID: its record and its progress stream. The
+        images it pushed and the volumes it imported into are left alone. A build
+        that is still waiting or running is answered with `409`; cancel it first.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the build.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: There is no content to send for this request, but the headers may be useful.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+  /v1/builds/{id}/cancel:
+    post:
+      operationId: CancelBuild
+      summary: Cancel Build
+      description: |-
+        Cancel a build by ID. A waiting or running build is answered with `202`
+        and becomes `cancelled` once buildkit has unwound, with its progress stream
+        ending in an `error` whose code is `cancelled`. A build that has already
+        finished is left as it is and answered with `200`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the build.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Build'
+        '202':
+          description: |-
+            The response message for cancelling a build that was still waiting or
+            running: `202`, with the build as it was; it becomes `cancelled` once
+            buildkit has unwound.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Build'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+  /v1/builds/{id}/logs:
+    get:
+      operationId: GetBuildLogs
+      summary: Get Build Logs
+      description: |-
+        Follow the progress of a build by ID. Every request replays the stream
+        from the start and ends once the build has finished, with a `result` or an
+        `error` as its last line, so reconnecting is just asking again.
+        `Accept: text/plain` renders the stream as text instead of
+        newline-delimited JSON.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the build.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: |-
+            The progress stream of a build as newline-delimited JSON: one `BuildEvent`
+            per line. This is the default rendering, and the one that
+            `Accept: application/x-ndjson` selects.
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/BuildEvent'
+            text/plain:
+              schema:
+                type: string
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builds
+security:
+  - bearerToken: []
+components:
+  schemas:
+    Build:
+      type: object
+      required:
+        - id
+        - status
+        - builder
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the build.
+          example: 0b9c6f1e-6a52-4d1f-9a43-2f0d9b7f5c11
+        status:
+          allOf:
+            - $ref: '#/components/schemas/BuildStatus'
+          description: The state of the build.
+        builder:
+          type: string
+          description: The name of the builder the build runs on.
+          example: default
+        session:
+          type: string
+          description: |-
+            The path to attach the build's session at. Only present while the build is
+            `waiting` for it.
+          example: /v1/builds/0b9c6f1e-6a52-4d1f-9a43-2f0d9b7f5c11/session
+        created_at:
+          type: string
+          format: date-time
+          description: The time the build was created.
+        started_at:
+          type: string
+          format: date-time
+          description: The time the build started on its builder. Absent until it has.
+        finished_at:
+          type: string
+          format: date-time
+          description: The time the build reached a final state. Absent until it has.
+        result:
+          allOf:
+            - $ref: '#/components/schemas/BuildResult'
+          description: What the build produced. Only present on a `succeeded` build.
+        error:
+          allOf:
+            - $ref: '#/components/schemas/Error'
+          description: |-
+            Why the build did not succeed. Only present on a `failed` or `cancelled`
+            build.
+      description: |-
+        A build. `result` and `error` are exclusive: a build that succeeded has the
+        one, a build that failed or was cancelled has the other, and a build that is
+        still waiting or running has neither.
+      not:
+        required:
+          - result
+          - error
+    BuildContexts:
+      type: object
+      required:
+        - context
+      properties:
+        context:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+          description: |-
+            The build context: the directory the Dockerfile is built in, and the
+            directory relative paths in the Kraftfile resolve in.
+        dockerfile:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+          description: |-
+            The directory holding the Dockerfile. Defaults to `context`. Not
+            supported yet.
+      additionalProperties:
+        $ref: '#/components/schemas/Source'
+      description: |-
+        The contexts a build is built from, by the names of buildkit's Dockerfile
+        frontend. Any other key is a named context, for `FROM <name>` and
+        `COPY --from=<name>`, like `docker buildx build --build-context`. Named
+        contexts are not supported yet.
+    BuildEvent:
+      type: object
+      properties:
+        vertexes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vertex'
+          description: The vertices that started or completed.
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexStatus'
+          description: The statuses that progressed.
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexLog'
+          description: The output that vertices produced.
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexWarning'
+          description: The warnings that were raised.
+        result:
+          allOf:
+            - $ref: '#/components/schemas/BuildResult'
+          description: What the build produced. Only on the last line, of a succeeded build.
+        error:
+          allOf:
+            - $ref: '#/components/schemas/Error'
+          description: |-
+            Why the build did not succeed. Only on the last line, of a failed or
+            cancelled build.
+      description: |-
+        One line of the progress stream of a build. Every line is a buildkit
+        `SolveStatus` in the shape of `docker buildx build --progress=rawjson`, so
+        anything that renders buildkit progress renders this stream as-is. Steps
+        that buildkit does not run itself, such as pulling the kernel, packing the
+        image and pushing it, are reported as vertices of their own. The last line
+        of the stream is always exactly one of `result` or `error`, and no other
+        line carries either.
+      not:
+        required:
+          - result
+          - error
+    BuildOutput:
+      type: object
+      properties:
+        image:
+          type: string
+          description: |-
+            The reference to push the built image to, including the tag. The caller
+            picks the tag, and checks whether it already exists. The push is done with
+            the caller's token, unless `registries` has credentials for its registry.
+          example: index.unikraft.io/acme/app:1.2.3
+        volume:
+          type: string
+          description: |-
+            The name or UUID of an existing volume to import the built filesystem
+            into. Only valid for a plain image of a single platform. Not supported
+            yet.
+          example: pgdata
+        metro:
+          type: string
+          description: |-
+            The metro of `volume`, only needed when its name is ambiguous. Only valid
+            with `volume`. Not supported yet.
+          example: fra
+      description: |-
+        Where the result of a build goes: exactly one of an image, named by `image`,
+        or a volume, named by `volume`.
+      oneOf:
+        - required:
+            - image
+          not:
+            anyOf:
+              - required:
+                  - volume
+              - required:
+                  - metro
+        - required:
+            - volume
+          not:
+            required:
+              - image
+    BuildResult:
+      type: object
+      required:
+        - images
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildResultImage'
+          description: The pushed images, one per `image` entry of `output`.
+        volumes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildResultVolume'
+          description: The imported volumes, one per `volume` entry of `output`.
+      description: What a succeeded build produced.
+    BuildResultImage:
+      type: object
+      required:
+        - ref
+        - digest
+        - platforms
+      properties:
+        ref:
+          type: string
+          description: The reference the image was pushed to, as requested in `output`.
+          example: index.unikraft.io/acme/app:1.2.3
+        digest:
+          type: string
+          description: The digest of the pushed image.
+          example: sha256:4c1a9d0e2b7f8c3a5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4
+        platforms:
+          type: array
+          items:
+            type: string
+          description: The platforms the image was built for, e.g. `kraftcloud/x86_64`.
+          example:
+            - kraftcloud/x86_64
+      description: An image a build pushed.
+    BuildResultVolume:
+      type: object
+      required:
+        - uuid
+        - name
+        - metro
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the volume.
+          example: 4b5f2c1d-8e3a-4f6b-9c7d-0a1b2c3d4e5f
+        name:
+          type: string
+          description: The name of the volume.
+          example: pgdata
+        metro:
+          type: string
+          description: The metro of the volume.
+          example: fra
+      description: A volume a build imported its filesystem into.
+    BuildStatus:
+      type: string
+      enum:
+        - waiting
+        - running
+        - succeeded
+        - failed
+        - cancelled
+      description: |-
+        The state of a build. A build starts as `waiting` or `running` and ends as
+        `succeeded`, `failed` or `cancelled`; it never leaves a final state.
+
+        | State       | Description |
+        |-------------|-------------|
+        | `waiting`   | The build waits for a client to attach its buildkit session, and then becomes `running`. |
+        | `running`   | The build waits for a build slot or for its builder, or is being built. |
+        | `succeeded` | The build finished and every output was pushed; see `result`. |
+        | `failed`    | The build failed; see `error`. |
+        | `cancelled` | The build was cancelled before it finished; `error` says so. |
+    Builder:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the builder. Empty means `default`.
+          example: ci
+        image:
+          type: string
+          description: The buildkit image the builder boots. Defaults to the service's.
+        vcpus:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The vCPUs of the builder.
+          example: 4
+        memory_mb:
+          type: integer
+          format: int64
+          minimum: 1
+          description: The memory of the builder, in MiB.
+          example: 8192
+        cache_mb:
+          type: integer
+          format: int64
+          minimum: 1
+          description: The size of the builder's cache volume, in MiB.
+          example: 51200
+        autokill:
+          allOf:
+            - $ref: '#/components/schemas/BuilderAutokill'
+          description: Delete the builder once it has been idle for a while.
+      description: |-
+        The builder a build runs on: a buildkitd instance and its cache volume in the
+        caller's account. Builds on the same builder share its cache. A builder that
+        does not exist yet is created from these fields; for one that does, every
+        field but `name` only has to match it, and one that conflicts is a `409`.
+    BuilderAutokill:
+      type: object
+      properties:
+        time_ms:
+          type: integer
+          format: uint64
+          description: |-
+            Delete the builder and its cache once it has had no running build for this
+            many milliseconds. `0` (the default) never does.
+          example: 300000
+      description: When to delete an idle builder.
+    CreateBuildRequest:
+      type: object
+      required:
+        - contexts
+        - output
+      properties:
+        kraftfile:
+          allOf:
+            - $ref: '#/components/schemas/Kraftfile'
+          description: |-
+            The Kraftfile to build, which makes the build a Unikraft image. Without
+            one, the build is a plain image of `context`, built with the Dockerfile in
+            `dockerfile`.
+        contexts:
+          allOf:
+            - $ref: '#/components/schemas/BuildContexts'
+          description: The contexts to build from.
+        platforms:
+          type: array
+          items:
+            type: string
+          description: |-
+            The platforms to build for. Only the architecture selects, so `x86_64` is
+            `linux/amd64`. Defaults to the targets of the Kraftfile or of its runtime,
+            or to the builder's own platform for a plain image.
+          example:
+            - linux/amd64
+        build_args:
+          type: object
+          additionalProperties:
+            type: string
+          description: The values of the Dockerfile's `ARG`s, by name.
+          example:
+            VERSION: 1.2.3
+        target:
+          type: string
+          description: The Dockerfile stage to build. Defaults to the last one.
+          example: runtime
+        no_cache:
+          type: boolean
+          description: Ignore the builder's cache, like `--no-cache`.
+        builder:
+          allOf:
+            - $ref: '#/components/schemas/Builder'
+          description: |-
+            The builder to run on. Defaults to the one named `default`. Not supported
+            yet.
+        secrets:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Secret'
+          description: The secrets the build can mount, by ID. Not supported yet.
+        ssh:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SSHAgent'
+          description: The SSH agents the build can mount, by ID. Not supported yet.
+        registries:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Registry'
+          description: |-
+            The credentials for registries, by host, with `*` for any other host. The
+            caller's token is the credential for a registry that has none. Not
+            supported yet.
+        output:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildOutput'
+          minItems: 1
+          description: |-
+            Where the result goes. At least one output is required. The outputs are
+            pushed one after the other, so a build that fails or is cancelled can
+            leave the first outputs pushed.
+      description: The request message for creating a build.
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          allOf:
+            - $ref: '#/components/schemas/ErrorCode'
+          description: The code of the error, for a program to act on.
+        message:
+          type: string
+          description: The reason for the error, for a person to read.
+          example: 'unsupported field: builder'
+      description: Why a request, or a build, failed.
+    ErrorBody:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+      description: |-
+        The response message for a failed request. The HTTP status code says that
+        the request failed and `error` says why.
+    ErrorCode:
+      type: string
+      enum:
+        - invalid
+        - unsupported
+        - unauthenticated
+        - auth_unavailable
+        - not_found
+        - conflict
+        - too_many_builds
+        - internal
+        - failed
+        - cancelled
+        - interrupted
+        - builder_quota
+      description: |-
+        The reason a request, or a build, failed.
+
+        The first eight codes are answered by the API together with the HTTP status
+        code given. The last four are the `code` of the `error` of a build whose
+        `status` is `failed` or `cancelled`, both in the build itself and in the last
+        event of its progress stream.
+
+        | Code               | Description |
+        |--------------------|-------------|
+        | `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, ... |
+        | `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |
+        | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
+        | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
+        | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |
+        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, or already has one. Or the `builder` of the request conflicts with the existing builder of that name. |
+        | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
+        | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
+        | `failed`           | The build itself failed: a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |
+        | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
+        | `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |
+        | `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
+    Kraftfile:
+      anyOf:
+        - $ref: '#/components/schemas/KraftfileInline'
+        - $ref: '#/components/schemas/Source'
+        - $ref: '#/components/schemas/KraftfileObject'
+      description: |-
+        The Kraftfile of a build, in one of three forms: the whole file as a string,
+        a source to read it from, or the parsed file as an object. A source has
+        `session`, `git` or `url`, and none is a Kraftfile key, so the two object
+        forms never collide. Relative paths in the Kraftfile resolve inside the
+        build context.
+    KraftfileInline:
+      type: string
+      description: |-
+        A whole Kraftfile, in YAML, as a string. The service parses it, so the
+        client does not need a Kraftfile parser of its own.
+    KraftfileObject:
+      type: object
+      additionalProperties: {}
+      description: |-
+        An already-parsed Kraftfile, as an object in the JSON form of
+        `unikraft.com/x/kraftfile`: the same keys as the YAML file (`runtime`,
+        `rootfs`, `roms`, `cmd`, `env`, `labels`, ...), with `spec` optional. See
+        https://unikraft.com/docs/cli/reference/kraftfile for the keys. None of
+        `session`, `git` and `url` is one of them, which is what tells the object
+        apart from a source.
+      not:
+        anyOf:
+          - required:
+              - session
+          - required:
+              - git
+          - required:
+              - url
+    ListBuildsResponse:
+      type: object
+      required:
+        - builds
+      properties:
+        builds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Build'
+          description: The builds, newest first.
+      description: The response message for listing the builds of the caller's tenant.
+    Position:
+      type: object
+      properties:
+        line:
+          type: integer
+          format: int32
+          description: The line, counted from one.
+        character:
+          type: integer
+          format: int32
+          description: The character within the line, counted from zero.
+      description: A position in a source file.
+    ProgressGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The identifier of the group.
+        name:
+          type: string
+          description: The name the group is rendered under.
+        weak:
+          type: boolean
+          description: Whether the group only exists while its vertices are running.
+      description: A group of vertices that progress renderers fold into one line.
+    Range:
+      type: object
+      properties:
+        start:
+          allOf:
+            - $ref: '#/components/schemas/Position'
+          description: Where the range starts.
+        end:
+          allOf:
+            - $ref: '#/components/schemas/Position'
+          description: Where the range ends.
+      description: A range of a source file.
+    Registry:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username to log in with.
+          example: acme-bot
+        password:
+          type: string
+          description: The password to log in with, which is never stored.
+        session:
+          type: boolean
+          description: "Must be `true`: the client's session answers for the registry."
+      description: |-
+        The credentials for a registry: exactly one of a `username` and `password`,
+        or `session` to ask the client's session for them.
+      oneOf:
+        - required:
+            - username
+            - password
+          not:
+            required:
+              - session
+        - required:
+            - session
+          not:
+            anyOf:
+              - required:
+                  - username
+              - required:
+                  - password
+    SSHAgent:
+      type: object
+      required:
+        - session
+      properties:
+        session:
+          type: string
+          description: The ID the client's session serves the agent under.
+          example: default
+      description: |-
+        An SSH agent the build can mount with `RUN --mount=type=ssh,id=<key>`, which
+        only the client's session can serve.
+    Secret:
+      type: object
+      properties:
+        value:
+          type: string
+          description: The value of the secret, which is never stored.
+        session:
+          type: string
+          description: The ID the client's session serves the secret under.
+          example: npmrc
+      description: |-
+        A secret the build can mount with `RUN --mount=type=secret,id=<key>`: exactly
+        one of a value in the request or a secret the client's session serves.
+      oneOf:
+        - required:
+            - value
+          not:
+            required:
+              - session
+        - required:
+            - session
+          not:
+            required:
+              - value
+    Source:
+      type: object
+      properties:
+        session:
+          type: string
+          description: |-
+            The name the client's buildkit session serves the directory under.
+            Mutually exclusive with `git` and `url`. Not supported yet.
+          example: context
+        git:
+          type: string
+          format: uri
+          description: |-
+            The HTTPS URL of a git repository, cloned anonymously. Mutually exclusive
+            with `session` and `url`.
+          example: https://github.com/acme/app.git
+        url:
+          type: string
+          format: uri
+          description: |-
+            The HTTPS URL of a tarball, which is fetched and unpacked. Mutually
+            exclusive with `session` and `git`.
+          example: https://example.com/app.tar.gz
+        ref:
+          type: string
+          description: |-
+            The branch, tag or commit of a git repository to check out. Defaults to
+            the default branch of the repository. Only valid with `git`.
+          example: main
+        subdir:
+          type: string
+          description: |-
+            A directory inside the source; the source is that directory rather than
+            the whole tree. Defaults to the root.
+          example: app
+        filename:
+          type: string
+          description: |-
+            The file to read out of the source, relative to `subdir`. Only valid where
+            the source names a single file: `kraftfile`, where it defaults to
+            `Kraftfile`, and `contexts.dockerfile`, where it defaults to `Dockerfile`.
+            A `filename` on any other context is a `400`.
+          example: Kraftfile
+      description: |-
+        Where the files of a build come from. A source is exactly one of a
+        directory the client's buildkit session serves, named by `session`, a git
+        repository, named by `git`, or an https tarball, named by `url`; `ref`
+        qualifies a repository, and `subdir` and `filename` qualify any. A git or
+        https source is fetched by the builder itself, not by the service, so it is
+        cached on the builder like any other build step. A session source is read
+        from the client as the build needs it, so the build waits for the session.
+      oneOf:
+        - required:
+            - session
+          not:
+            anyOf:
+              - required:
+                  - git
+              - required:
+                  - url
+              - required:
+                  - ref
+        - required:
+            - git
+          not:
+            anyOf:
+              - required:
+                  - session
+              - required:
+                  - url
+        - required:
+            - url
+          not:
+            anyOf:
+              - required:
+                  - session
+              - required:
+                  - git
+              - required:
+                  - ref
+    SourceInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          description: The name of the file.
+        data:
+          type: string
+          format: byte
+          description: The contents of the file, base64-encoded.
+        definition:
+          description: The LLB definition the file was lowered to.
+        language:
+          type: string
+          description: The language of the file, e.g. `dockerfile`.
+      description: A source file a warning points into.
+    Vertex:
+      type: object
+      properties:
+        digest:
+          type: string
+          description: The digest identifying the vertex.
+        inputs:
+          type: array
+          items:
+            type: string
+          description: The digests of the vertices this one depends on.
+        name:
+          type: string
+          description: The name of the step, e.g. `[rootfs 2/4] RUN npm ci`.
+        started:
+          type: string
+          format: date-time
+          description: The time the step started.
+        completed:
+          type: string
+          format: date-time
+          description: The time the step completed.
+        cached:
+          type: boolean
+          description: Whether the step was served from the builder's cache.
+        error:
+          type: string
+          description: The error of the step, when it failed.
+        progressGroup:
+          allOf:
+            - $ref: '#/components/schemas/ProgressGroup'
+          description: The group of steps this one is rendered as part of.
+      description: |-
+        A step of the build, which buildkit calls a vertex: a pull, a Dockerfile
+        instruction, the packing of the image, the push, ... A vertex is reported
+        when it starts and again when it completes, and is identified by its digest.
+    VertexLog:
+      type: object
+      required:
+        - data
+        - timestamp
+      properties:
+        vertex:
+          type: string
+          description: The digest of the vertex that produced the output.
+        stream:
+          type: integer
+          format: int32
+          description: 'The stream the output was written to: `1` is stdout, `2` is stderr.'
+        data:
+          type: string
+          format: byte
+          description: The output itself, base64-encoded.
+        timestamp:
+          type: string
+          format: date-time
+          description: The time the output was produced.
+      description: A chunk of the output of a vertex.
+    VertexStatus:
+      type: object
+      required:
+        - id
+        - current
+        - timestamp
+      properties:
+        id:
+          type: string
+          description: The identifier of the status within its vertex.
+        vertex:
+          type: string
+          description: The digest of the vertex this status belongs to.
+        name:
+          type: string
+          description: The name of what is progressing.
+        total:
+          type: integer
+          format: int64
+          description: The total amount of work, when known.
+        current:
+          type: integer
+          format: int64
+          description: The amount of work done so far.
+        timestamp:
+          type: string
+          format: date-time
+          description: The time this status was reported.
+        started:
+          type: string
+          format: date-time
+          description: The time the work started.
+        completed:
+          type: string
+          format: date-time
+          description: The time the work completed.
+      description: The progress of a long-running part of a vertex, such as a download.
+    VertexWarning:
+      type: object
+      properties:
+        vertex:
+          type: string
+          description: The digest of the vertex the warning belongs to.
+        level:
+          type: integer
+          format: int32
+          description: The severity of the warning.
+        short:
+          type: string
+          format: byte
+          description: The one-line summary of the warning, base64-encoded.
+        detail:
+          type: array
+          items:
+            type: string
+            format: byte
+          description: The lines of the full explanation of the warning, base64-encoded.
+        url:
+          type: string
+          description: A page documenting the warning.
+        sourceInfo:
+          allOf:
+            - $ref: '#/components/schemas/SourceInfo'
+          description: The source file the warning points into.
+        range:
+          type: array
+          items:
+            $ref: '#/components/schemas/Range'
+          description: The ranges of the source file the warning points at.
+      description: A warning buildkit raised while building a vertex.
+  securitySchemes:
+    bearerToken:
+      type: http
+      scheme: bearer
+servers:
+  - url: https://build.unikraft.cloud
+    description: The Unikraft Cloud build service
+    variables: {}

@@ -1863,6 +1863,60 @@ paths:
                 $ref: '#/components/schemas/Users.QuotasResponse'
       tags:
         - users
+  /v1/users/resume:
+    put:
+      operationId: ResumeUsers
+      summary: Resume Users
+      description: |-
+        Resume suspended user accounts by UUID(s). Removes the suspension and
+        restores the instances that the suspension brought to rest. Requires the
+        `root` permission.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users.ResumeUsersResponse'
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Users.ResumeUsersRequestItem'
+  /v1/users/suspend:
+    put:
+      operationId: SuspendUsers
+      summary: Suspend Users
+      description: |-
+        Suspend user accounts by UUID(s). A suspended user keeps read access to
+        its resources but cannot create, modify, start, stop, or delete them. Its
+        scheduled operations fail, autoscaling of its service groups stops, and
+        autokill of its instances pauses. Requires the `root` permission; root
+        users cannot be suspended.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users.SuspendUsersResponse'
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Users.SuspendUsersRequestItem'
   /v1/users/{uuid}/quotas:
     get:
       operationId: GetUserByUUID
@@ -1884,6 +1938,62 @@ paths:
                 $ref: '#/components/schemas/Users.QuotasResponse'
       tags:
         - users
+  /v1/users/{uuid}/resume:
+    put:
+      operationId: ResumeUserByUUID
+      summary: Resume User by UUID
+      description: |-
+        Resume a suspended user account by UUID. Removes the suspension and
+        restores the instances that the suspension brought to rest. Requires the
+        `root` permission.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users.ResumeUsersResponse'
+      tags:
+        - users
+  /v1/users/{uuid}/suspend:
+    put:
+      operationId: SuspendUserByUUID
+      summary: Suspend User by UUID
+      description: |-
+        Suspend a user account by UUID. A suspended user keeps read access to its
+        resources but cannot create, modify, start, stop, or delete them. Its
+        scheduled operations fail, autoscaling of its service groups stops, and
+        autokill of its instances pauses. Requires the `root` permission; root
+        users cannot be suspended.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users.SuspendUsersResponse'
+      tags:
+        - users
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users.SuspendUserByUUIDRequestBody'
   /v1/volumes:
     post:
       operationId: CreateVolume
@@ -8509,6 +8619,296 @@ components:
           format: int64
           description: Total size of all volumes in megabytes.
       description: Quota statistics for resource usage.
+    Users.ResumeUsersRequestItem:
+      type: object
+      required:
+        - uuid
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the user.
+      description: A single request item to resume a user account.
+    Users.ResumeUsersResponse:
+      type: object
+      required:
+        - status
+        - op_time_us
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: The status of the response.
+        message:
+          type: string
+          description: An optional message providing additional information about the status.
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/Users.ResumeUsersResponseResumedUser'
+          description: The response data for this request.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Common.ResponseError'
+          description: A list of errors which may have occurred during the request.
+        op_time_us:
+          type: integer
+          format: uint64
+          description: The operation time in microseconds.
+      description: |-
+        The response message for resuming one or more user account(s) given their
+        UUID(s).
+    Users.ResumeUsersResponseResumedInstance:
+      type: object
+      required:
+        - status
+        - uuid
+        - name
+        - state
+        - previous_state
+        - on_resume
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: Indicates whether the operation was successful for this item.
+        message:
+          type: string
+          description: An optional message providing additional information.
+        error:
+          type: integer
+          format: int32
+          description: An optional error code.
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the resource.
+        name:
+          type: string
+          description: The human-readable name of the resource.
+        state:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstanceState'
+          description: The current state of the instance.
+        previous_state:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstanceState'
+          description: |-
+            The previous state of the instance before the resume operation was
+            invoked.
+        on_resume:
+          allOf:
+            - $ref: '#/components/schemas/Users.UserResumeAction'
+          description: What the resume operation did with this instance.
+      description: An instance that a resume users operation restored.
+    Users.ResumeUsersResponseResumedUser:
+      type: object
+      required:
+        - status
+        - uuid
+        - name
+        - suspended
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: Indicates whether the operation was successful for this item.
+        message:
+          type: string
+          description: An optional message providing additional information.
+        error:
+          type: integer
+          format: int32
+          description: An optional error code.
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the resource.
+        name:
+          type: string
+          description: The human-readable name of the resource.
+        suspended:
+          type: boolean
+          description: |-
+            Whether the user account is still suspended after this request, for
+            example because it was suspended again concurrently.
+        instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Users.ResumeUsersResponseResumedInstance'
+          description: |-
+            The instances of the user that were restored, as recorded when the user
+            was suspended. Instances that had nothing to restore are not listed. An
+            instance that failed to start keeps its record, so a later resume tries
+            again.
+      description: Per-item result for a resume users operation.
+    Users.SuspendUserByUUIDRequestBody:
+      type: object
+      properties:
+        suspend_instances:
+          type: boolean
+          description: |-
+            Whether to also bring all instances of the user to rest. Autostart is
+            disabled, running instances are suspended (or stopped if they cannot be
+            suspended, or if they only return to standby and are not stateful), and
+            pending restarts are cancelled. Instances that are draining, stopping, or
+            in a start-stop cycle finish that transition first. Booting instances are
+            brought to rest once they are running. Without this flag only the account
+            is suspended and its instances are left as they are.
+          example: true
+      description: Parameters for suspending a user account.
+    Users.SuspendUsersRequestItem:
+      type: object
+      required:
+        - uuid
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the user.
+        suspend_instances:
+          type: boolean
+          description: |-
+            Whether to also bring all instances of the user to rest. Autostart is
+            disabled, running instances are suspended (or stopped if they cannot be
+            suspended, or if they only return to standby and are not stateful), and
+            pending restarts are cancelled. Instances that are draining, stopping, or
+            in a start-stop cycle finish that transition first. Booting instances are
+            brought to rest once they are running. Without this flag only the account
+            is suspended and its instances are left as they are.
+          example: true
+      description: A single request item to suspend a user account.
+    Users.SuspendUsersResponse:
+      type: object
+      required:
+        - status
+        - op_time_us
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: The status of the response.
+        message:
+          type: string
+          description: An optional message providing additional information about the status.
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/Users.SuspendUsersResponseSuspendedUser'
+          description: The response data for this request.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Common.ResponseError'
+          description: A list of errors which may have occurred during the request.
+        op_time_us:
+          type: integer
+          format: uint64
+          description: The operation time in microseconds.
+      description: |-
+        The response message for suspending one or more user account(s) given their
+        UUID(s).
+    Users.SuspendUsersResponseSuspendedInstance:
+      type: object
+      required:
+        - status
+        - uuid
+        - name
+        - state
+        - previous_state
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: Indicates whether the operation was successful for this item.
+        message:
+          type: string
+          description: An optional message providing additional information.
+        error:
+          type: integer
+          format: int32
+          description: An optional error code.
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the resource.
+        name:
+          type: string
+          description: The human-readable name of the resource.
+        state:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstanceState'
+          description: The current state of the instance.
+        previous_state:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstanceState'
+          description: |-
+            The previous state of the instance before the suspend operation was
+            invoked.
+        on_resume:
+          allOf:
+            - $ref: '#/components/schemas/Users.UserResumeAction'
+          description: |-
+            What resuming the user will do with this instance. Absent if the
+            instance was already at rest and resuming the user leaves it unchanged.
+      description: An instance that a suspend users operation brought to rest.
+    Users.SuspendUsersResponseSuspendedUser:
+      type: object
+      required:
+        - status
+        - uuid
+        - name
+        - suspended
+      properties:
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Common.ResponseStatus'
+          description: Indicates whether the operation was successful for this item.
+        message:
+          type: string
+          description: An optional message providing additional information.
+        error:
+          type: integer
+          format: int32
+          description: An optional error code.
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the resource.
+        name:
+          type: string
+          description: The human-readable name of the resource.
+        suspended:
+          type: boolean
+          description: Whether the user account is suspended after this request.
+        instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Users.SuspendUsersResponseSuspendedInstance'
+          description: |-
+            The instances of the user that were brought to rest. Only present if
+            `suspend_instances` was set in the request.
+      description: Per-item result for a suspend users operation.
+    Users.UserResumeAction:
+      type: string
+      enum:
+        - standby
+        - start
+      description: |-
+        What resuming a user does with an instance that the suspension of the user
+        brought to rest.
+
+        | Action    | Description |
+        |-----------|-------------|
+        | `standby` | Autostart is enabled again. The instance is in standby and starts on the next incoming request. |
+        | `start`   | The instance is started. |
     Volumes.AttachVolumeByUUIDRequestBody:
       type: object
       required:

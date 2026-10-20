@@ -607,7 +607,7 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Secret'
-          description: The secrets the build can mount, by ID. Not supported yet.
+          description: The secrets the build can mount, by ID.
         ssh:
           type: object
           additionalProperties:
@@ -618,9 +618,9 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/Registry'
           description: |-
-            The credentials for registries, by host, with `*` for any other host. The
-            caller's token is the credential for a registry that has none. Not
-            supported yet.
+            The credentials for registries, by host, with `*` for any other host.
+            `docker.io` names Docker Hub. The caller's token is the credential for
+            a registry that has none, and so is only used when there is no `*`.
         output:
           type: array
           items:
@@ -787,7 +787,9 @@ components:
           description: The password to log in with, which is never stored.
         session:
           type: boolean
-          description: "Must be `true`: the client's session answers for the registry."
+          description: |-
+            Must be `true`: the client's session answers for the registry. Not
+            supported yet.
       description: |-
         The credentials for a registry: exactly one of a `username` and `password`,
         or `session` to ask the client's session for them.
@@ -823,10 +825,10 @@ components:
       properties:
         value:
           type: string
-          description: The value of the secret, which is never stored.
+          description: The value of the secret, at most 500 KiB, which is never stored.
         session:
           type: string
-          description: The ID the client's session serves the secret under.
+          description: The ID the client's session serves the secret under. Not supported yet.
           example: npmrc
       description: |-
         A secret the build can mount with `RUN --mount=type=secret,id=<key>`: exactly

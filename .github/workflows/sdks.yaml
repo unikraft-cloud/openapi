@@ -1,16 +1,19 @@
 name: sdks
 
-# The specifications land here from proto (controlplane.*) and platform-api
-# (platform.*), each pushing to the branch that matches its own release
-# channel. The SDKs generate from this repository rather than from either
-# publisher, so the trigger belongs here: one publisher no longer has to know
-# which SDKs exist, and a spec that arrives from anywhere reaches all of them.
+# The specifications land here from proto (controlplane.*), platform-api
+# (platform.*) and builds (build.*), each pushing to the branch that
+# matches its own release channel. The SDKs generate from this repository
+# rather than from any publisher, so the trigger belongs here: one publisher
+# no longer has to know which SDKs exist, and a spec that arrives from
+# anywhere reaches all of them.
 on:
   push:
     branches:
     - prod-stable
     - prod-staging
     paths:
+    - 'build.json'
+    - 'build.yaml'
     - 'controlplane.json'
     - 'controlplane.yaml'
     - 'platform.json'

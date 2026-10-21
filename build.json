@@ -695,7 +695,7 @@
                 "$ref": "#/components/schemas/Kraftfile"
               }
             ],
-            "description": "The Kraftfile to build. Without one, the build uses a Kraftfile with\n`runtime: base-compat:latest` and `rootfs: ./Dockerfile`, so its rootfs\nis `contexts.context` built with the file `Dockerfile`, or with the one\nthat `contexts.dockerfile` gives. A service whose metro boots kernel-less\nimages with its own kernel leaves the runtime out."
+            "description": "The Kraftfile to build. Without one, the build is the kernel-less image\nof `contexts.context` built with the file `Dockerfile`, or with the one\nthat `contexts.dockerfile` gives, for x86_64 unless `platforms` names\nothers."
           },
           "contexts": {
             "allOf": [

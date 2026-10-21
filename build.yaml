@@ -531,7 +531,10 @@ components:
           example: ci
         image:
           type: string
-          description: The buildkit image the builder boots. Defaults to the service's.
+          description: |-
+            The buildkit image the builder boots. Defaults to the service's. An
+            existing builder matches it by repository, and by registry, tag or digest
+            when both name one.
         vcpus:
           type: integer
           format: int32
@@ -553,7 +556,7 @@ components:
         autokill:
           allOf:
             - $ref: '#/components/schemas/BuilderAutokill'
-          description: Delete the builder once it has been idle for a while.
+          description: Delete the builder once it has been idle for a while. Not supported yet.
       description: |-
         The builder a build runs on: a buildkitd instance and its cache volume in the
         caller's account. Builds on the same builder share its cache. A builder that
@@ -616,9 +619,7 @@ components:
         builder:
           allOf:
             - $ref: '#/components/schemas/Builder'
-          description: |-
-            The builder to run on. Defaults to the one named `default`. Not supported
-            yet.
+          description: The builder to run on. Defaults to the one named `default`.
         secrets:
           type: object
           additionalProperties:

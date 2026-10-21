@@ -636,7 +636,7 @@
           },
           "image": {
             "type": "string",
-            "description": "The buildkit image the builder boots. Defaults to the service's."
+            "description": "The buildkit image the builder boots. Defaults to the service's. An\nexisting builder matches it by repository, and by registry, tag or digest\nwhen both name one."
           },
           "vcpus": {
             "type": "integer",
@@ -665,7 +665,7 @@
                 "$ref": "#/components/schemas/BuilderAutokill"
               }
             ],
-            "description": "Delete the builder once it has been idle for a while."
+            "description": "Delete the builder once it has been idle for a while. Not supported yet."
           }
         },
         "description": "The builder a build runs on: a buildkitd instance and its cache volume in the\ncaller's account. Builds on the same builder share its cache. A builder that\ndoes not exist yet is created from these fields; for one that does, every\nfield but `name` only has to match it, and one that conflicts is a `409`."
@@ -740,7 +740,7 @@
                 "$ref": "#/components/schemas/Builder"
               }
             ],
-            "description": "The builder to run on. Defaults to the one named `default`. Not supported\nyet."
+            "description": "The builder to run on. Defaults to the one named `default`."
           },
           "secrets": {
             "type": "object",

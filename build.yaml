@@ -284,6 +284,18 @@ components:
           type: string
           description: The name of the builder the build runs on.
           example: default
+        kraftfile:
+          allOf:
+            - $ref: '#/components/schemas/Kraftfile'
+          description: |-
+            The Kraftfile of the request. Absent for a build without one, and for a
+            build from before the service kept its requests.
+        contexts:
+          allOf:
+            - $ref: '#/components/schemas/BuildContexts'
+          description: |-
+            The contexts of the request, where the build gets its files from. Absent
+            for a build from before the service kept its requests.
         session:
           type: string
           description: |-

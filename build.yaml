@@ -6,7 +6,7 @@ info:
     This specification describes the Unikraft Cloud build API, served by
     blacksmith. A build takes its files from git repositories, https tarballs
     or the client's own buildkit session, builds a Unikraft image from a
-    Kraftfile or a plain image from a Dockerfile on a buildkitd running in the
+    Kraftfile, or from a Dockerfile alone, on a buildkitd running in the
     caller's own account, and pushes the image to registries or imports it into
     volumes.
 
@@ -38,11 +38,11 @@ tags:
   - name: builds
     x-displayName: Builds
     description: |-
-      A build turns its sources into a Unikraft image or a plain image, on a
-      buildkitd running in the caller's own account, and pushes the image to
-      registries or imports it into volumes. A build runs whether or not anyone
-      is watching it, and its progress can be followed, replayed from the
-      start, until it has finished.
+      A build turns its sources into a Unikraft image, on a buildkitd running
+      in the caller's own account, and pushes the image to registries or
+      imports it into volumes. A build runs whether or not anyone is watching
+      it, and its progress can be followed, replayed from the start, until it
+      has finished.
 paths:
   /v1/builds:
     post:
@@ -406,8 +406,7 @@ components:
           type: string
           description: |-
             The name or UUID of an existing volume to import the built filesystem
-            into. Only valid for a plain image of a single platform. Not supported
-            yet.
+            into. Only valid for a build of a single platform. Not supported yet.
           example: pgdata
         metro:
           type: string
@@ -569,9 +568,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/Kraftfile'
           description: |-
-            The Kraftfile to build, which makes the build a Unikraft image. Without
-            one, the build is a plain image of `context`, built with the Dockerfile in
-            `dockerfile`.
+            The Kraftfile to build. Without one, the build uses a Kraftfile with
+            `runtime: base-compat:latest` and `rootfs: ./Dockerfile`, so its rootfs
+            is `contexts.context` built with the file `Dockerfile`, or with the one
+            that `contexts.dockerfile` gives.
         contexts:
           allOf:
             - $ref: '#/components/schemas/BuildContexts'
@@ -582,8 +582,8 @@ components:
             type: string
           description: |-
             The platforms to build for. Only the architecture selects, so `x86_64` is
-            `linux/amd64`. Defaults to the targets of the Kraftfile or of its runtime,
-            or to the builder's own platform for a plain image.
+            `linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`
+            when it has none.
           example:
             - linux/amd64
         build_args:

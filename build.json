@@ -3,13 +3,13 @@
   "info": {
     "title": "Unikraft Cloud Build API",
     "version": "v0.1.0",
-    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile or a plain image from a Dockerfile on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON\nor plain text.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`POST /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as an h2c upgrade in the shape of dockerd's `/session`, with\nits `X-Docker-Expose-Session-*` headers. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, or already has one, with `409`. Not supported yet."
+    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile, or from a Dockerfile alone, on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON\nor plain text.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`POST /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as an h2c upgrade in the shape of dockerd's `/session`, with\nits `X-Docker-Expose-Session-*` headers. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, or already has one, with `409`. Not supported yet."
   },
   "tags": [
     {
       "name": "builds",
       "x-displayName": "Builds",
-      "description": "A build turns its sources into a Unikraft image or a plain image, on a\nbuildkitd running in the caller's own account, and pushes the image to\nregistries or imports it into volumes. A build runs whether or not anyone\nis watching it, and its progress can be followed, replayed from the\nstart, until it has finished."
+      "description": "A build turns its sources into a Unikraft image, on a buildkitd running\nin the caller's own account, and pushes the image to registries or\nimports it into volumes. A build runs whether or not anyone is watching\nit, and its progress can be followed, replayed from the start, until it\nhas finished."
     }
   ],
   "paths": {
@@ -476,7 +476,7 @@
           },
           "volume": {
             "type": "string",
-            "description": "The name or UUID of an existing volume to import the built filesystem\ninto. Only valid for a plain image of a single platform. Not supported\nyet.",
+            "description": "The name or UUID of an existing volume to import the built filesystem\ninto. Only valid for a build of a single platform. Not supported yet.",
             "example": "pgdata"
           },
           "metro": {
@@ -679,7 +679,7 @@
                 "$ref": "#/components/schemas/Kraftfile"
               }
             ],
-            "description": "The Kraftfile to build, which makes the build a Unikraft image. Without\none, the build is a plain image of `context`, built with the Dockerfile in\n`dockerfile`."
+            "description": "The Kraftfile to build. Without one, the build uses a Kraftfile with\n`runtime: base-compat:latest` and `rootfs: ./Dockerfile`, so its rootfs\nis `contexts.context` built with the file `Dockerfile`, or with the one\nthat `contexts.dockerfile` gives."
           },
           "contexts": {
             "allOf": [
@@ -694,7 +694,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile or of its runtime,\nor to the builder's own platform for a plain image.",
+            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`\nwhen it has none.",
             "example": [
               "linux/amd64"
             ]

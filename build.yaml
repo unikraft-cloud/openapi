@@ -558,12 +558,13 @@ components:
         autokill:
           allOf:
             - $ref: '#/components/schemas/BuilderAutokill'
-          description: Delete the builder once it has been idle for a while. Not supported yet.
+          description: Delete the builder once it has been idle for a while, set when it is created.
       description: |-
         The builder a build runs on: a buildkitd instance and its cache volume in the
         caller's account. Builds on the same builder share its cache. A builder that
         does not exist yet is created from these fields; for one that does, every
-        field but `name` only has to match it, and one that conflicts is a `409`.
+        field but `name` and `autokill` only has to match it, and one that conflicts
+        is a `409`.
     BuilderAutokill:
       type: object
       properties:
@@ -571,8 +572,10 @@ components:
           type: integer
           format: uint64
           description: |-
-            Delete the builder and its cache once it has had no running build for this
-            many milliseconds. `0` (the default) never does.
+            Delete the builder and its cache once it has scaled to zero for this many
+            milliseconds, past the cooldown that follows its last build. `0` never
+            does. Without it, `default` is deleted after 7 days and a named builder
+            never is. A delete lock on the builder's instance keeps it.
           example: 300000
       description: When to delete an idle builder.
     CreateBuildRequest:

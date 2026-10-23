@@ -381,7 +381,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
+            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects\n- API_ENDPOINT: the URL as plain text",
             "schema": {
               "type": "array",
               "items": {
@@ -1657,7 +1657,8 @@
         "enum": [
           "tags",
           "delete_lock",
-          "ssh_keys"
+          "ssh_keys",
+          "api_endpoint"
         ],
         "type": "string",
         "description": "The mutable properties of a node which can be updated.",
@@ -2382,7 +2383,7 @@
           },
           "value": {
             "type": "string",
-            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
+            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects\n- API_ENDPOINT: the URL as plain text",
             "format": "bytes"
           }
         },

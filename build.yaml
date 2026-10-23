@@ -33,7 +33,9 @@ info:
     serves the build's session sources, secrets, SSH agents and registry
     credentials until the build ends. A session that does not advertise a
     method the build needs is answered with `400`, and a build that does not
-    wait for a session, or already has one, with `409`. Not supported yet.
+    wait for a session, or already has one, with `409`. A build that no session
+    attaches to within a minute fails. The builder cannot read from the session
+    yet, thus a build fails once its session attaches.
 tags:
   - name: builds
     x-displayName: Builds
@@ -628,7 +630,7 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/SSHAgent'
-          description: The SSH agents the build can mount, by ID. Not supported yet.
+          description: The SSH agents the build can mount, by ID.
         registries:
           type: object
           additionalProperties:
@@ -697,7 +699,7 @@ components:
 
         | Code               | Description |
         |--------------------|-------------|
-        | `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, ... |
+        | `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, ... |
         | `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
@@ -705,7 +707,7 @@ components:
         | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, or already has one. Or the `builder` of the request conflicts with the existing builder of that name. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
-        | `failed`           | The build itself failed: a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |
+        | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |
         | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
         | `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |
         | `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
@@ -803,9 +805,7 @@ components:
           description: The password to log in with, which is never stored.
         session:
           type: boolean
-          description: |-
-            Must be `true`: the client's session answers for the registry. Not
-            supported yet.
+          description: "Must be `true`: the client's session answers for the registry."
       description: |-
         The credentials for a registry: exactly one of a `username` and `password`,
         or `session` to ask the client's session for them.
@@ -844,7 +844,7 @@ components:
           description: The value of the secret, at most 500 KiB, which is never stored.
         session:
           type: string
-          description: The ID the client's session serves the secret under. Not supported yet.
+          description: The ID the client's session serves the secret under.
           example: npmrc
       description: |-
         A secret the build can mount with `RUN --mount=type=secret,id=<key>`: exactly
@@ -867,7 +867,7 @@ components:
           type: string
           description: |-
             The name the client's buildkit session serves the directory under.
-            Mutually exclusive with `git` and `url`. Not supported yet.
+            Mutually exclusive with `git` and `url`.
           example: context
         git:
           type: string

@@ -33,9 +33,10 @@ info:
     serves the build's session sources, secrets, SSH agents and registry
     credentials until the build ends. A session that does not advertise a
     method the build needs is answered with `400`, and a build that does not
-    wait for a session, or already has one, with `409`. A build that no session
-    attaches to within a minute fails. The builder cannot read from the session
-    yet, thus a build fails once its session attaches.
+    wait for a session, already has one, or that another user started, with
+    `409`. A build that no session attaches to within a minute fails. The build
+    reads from the session only when it needs to, thus a session that ends
+    early does not end the build, but fails the next read that needs it.
 tags:
   - name: builds
     x-displayName: Builds
@@ -707,7 +708,7 @@ components:
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
         | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |
-        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, or already has one. Or the `builder` of the request conflicts with the existing builder of that name. |
+        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
         | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |
@@ -808,7 +809,10 @@ components:
           description: The password to log in with, which is never stored.
         session:
           type: boolean
-          description: "Must be `true`: the client's session answers for the registry."
+          description: |-
+            Must be `true`: the client's session answers for the registry. For the
+            registry of Unikraft Cloud, the caller's token answers when the session
+            has no credentials.
       description: |-
         The credentials for a registry: exactly one of a `username` and `password`,
         or `session` to ask the client's session for them.
@@ -870,7 +874,10 @@ components:
           type: string
           description: |-
             The name the client's buildkit session serves the directory under.
-            Mutually exclusive with `git` and `url`.
+            Mutually exclusive with `git` and `url`. The build reads only the files
+            it needs, and a `.dockerignore` applies only when the whole `context`
+            directory is the build context. With `session`, a `subdir` or `filename`
+            cannot start with `!` or contain `*`, `?`, `[` or a backslash.
           example: context
         git:
           type: string

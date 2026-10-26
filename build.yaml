@@ -58,9 +58,27 @@ paths:
         builds at once as the service allows. A request that uses a part of the full build API this
         service does not support yet is answered with `400` and the code
         `unsupported`. A tenant that already has as many builds running or waiting
-        as it may is answered with `429` and the code `too_many_builds`.
+        as it may is answered with `429` and the code `too_many_builds`. A
+        request whose `hints.dedupe` names a running or succeeded build
+        is answered with `200` and that build, and starts nothing, or with `409`
+        and the code `conflict` when that build has other `output`.
       parameters: []
       responses:
+        '200':
+          description: |-
+            The response message for creating a build whose `hints.dedupe` names an
+            existing build: `200`, with that build as it is, and a `Location` header
+            naming it.
+          headers:
+            Location:
+              required: true
+              description: The path of the existing build, e.g. `/v1/builds/{id}`.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Build'
         '201':
           description: |-
             The response message for creating a build: `201`, with the new build, which
@@ -419,7 +437,22 @@ components:
             `contexts.context` without its query, followed by its `subdir`, and no
             name for a session context. Only builds on `default` use it.
           example: acme/app
-      description: Advice on where to run a build, which the service may follow.
+        dedupe:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: |-
+            A key that the caller computes for the build, for example a hash of its
+            definition. When a build of the caller's tenant with the same key is
+            `running` or `succeeded`, the request is answered with that build and
+            `200`, and no new build starts. A build with the same key and other
+            `output` is a `409`. Failed builds do not count, and neither do
+            cancelled builds, from the cancel on. A build that reads from the
+            client's session is never shared: its request always starts a new build.
+          example: 3f9a1c2b7d4e
+      description: |-
+        Hints on how to handle a build request. They do not change what the build
+        builds.
     BuildOutput:
       type: object
       properties:
@@ -644,7 +677,9 @@ components:
         hints:
           allOf:
             - $ref: '#/components/schemas/BuildHints'
-          description: Advice on where to run the build.
+          description: |-
+            Hints on how to handle the request: where to run the build, and which
+            existing build to answer instead.
         secrets:
           type: object
           additionalProperties:
@@ -728,7 +763,7 @@ components:
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
         | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |
-        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |
+        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. Or a build with the same `hints.dedupe` has other `output`. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
         | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |

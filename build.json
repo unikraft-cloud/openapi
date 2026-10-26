@@ -17,9 +17,28 @@
       "post": {
         "operationId": "CreateBuild",
         "summary": "Create Build",
-        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`.",
+        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`. A\nrequest whose `hints.dedupe` names a running or succeeded build\nis answered with `200` and that build, and starts nothing, or with `409`\nand the code `conflict` when that build has other `output`.",
         "parameters": [],
         "responses": {
+          "200": {
+            "description": "The response message for creating a build whose `hints.dedupe` names an\nexisting build: `200`, with that build as it is, and a `Location` header\nnaming it.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "description": "The path of the existing build, e.g. `/v1/builds/{id}`.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Build"
+                }
+              }
+            }
+          },
           "201": {
             "description": "The response message for creating a build: `201`, with the new build, which\nis `waiting` if it reads anything from the client's session and `running`\notherwise, and a `Location` header naming it.",
             "headers": {
@@ -489,9 +508,16 @@
             "type": "string",
             "description": "A name for what the build builds, such as a repository or a project.\nThe service tries to run builds with the same name on the same builder,\nso that they share its cache. Empty or absent means the URL of\n`contexts.context` without its query, followed by its `subdir`, and no\nname for a session context. Only builds on `default` use it.",
             "example": "acme/app"
+          },
+          "dedupe": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "A key that the caller computes for the build, for example a hash of its\ndefinition. When a build of the caller's tenant with the same key is\n`running` or `succeeded`, the request is answered with that build and\n`200`, and no new build starts. A build with the same key and other\n`output` is a `409`. Failed builds do not count, and neither do\ncancelled builds, from the cancel on. A build that reads from the\nclient's session is never shared: its request always starts a new build.",
+            "example": "3f9a1c2b7d4e"
           }
         },
-        "description": "Advice on where to run a build, which the service may follow."
+        "description": "Hints on how to handle a build request. They do not change what the build\nbuilds."
       },
       "BuildOutput": {
         "type": "object",
@@ -759,7 +785,7 @@
                 "$ref": "#/components/schemas/BuildHints"
               }
             ],
-            "description": "Advice on where to run the build."
+            "description": "Hints on how to handle the request: where to run the build, and which\nexisting build to answer instead."
           },
           "secrets": {
             "type": "object",
@@ -844,7 +870,7 @@
           "interrupted",
           "builder_quota"
         ],
-        "description": "The reason a request, or a build, failed.\n\nThe first eight codes are answered by the API together with the HTTP status\ncode given. The last four are the `code` of the `error` of a build whose\n`status` is `failed` or `cancelled`, both in the build itself and in the last\nevent of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |\n| `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
+        "description": "The reason a request, or a build, failed.\n\nThe first eight codes are answered by the API together with the HTTP status\ncode given. The last four are the `code` of the `error` of a build whose\n`status` is `failed` or `cancelled`, both in the build itself and in the last\nevent of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. Or a build with the same `hints.dedupe` has other `output`. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |\n| `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
       },
       "Kraftfile": {
         "anyOf": [

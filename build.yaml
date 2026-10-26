@@ -450,9 +450,9 @@ components:
             service's image builder. When a build of the caller's tenant with the
             same key and `output` is `running` or `succeeded`, the request is answered
             with that build and `200`, and no new build starts. Else, when a build
-            with the same key `succeeded`, the new build pushes its image to the new
-            `output`, and builds the image only if it cannot read it. A request with
-            `no_cache` always starts a new build. Failed builds do not count, and
+            with the same key `succeeded`, the new build pushes its image, or imports
+            its filesystem, to the new `output`, and builds the image only if it
+            cannot read it. A request with `no_cache` always starts a new build. Failed builds do not count, and
             neither do cancelled builds, from the cancel on. A build that reads from
             the client's session is never shared: its request always starts a new
             build.
@@ -474,13 +474,16 @@ components:
           type: string
           description: |-
             The name or UUID of an existing volume to import the built filesystem
-            into. Only valid for a build of a single platform. Not supported yet.
+            into, as cpio, through a short-lived instance in the metro of the volume
+            that runs with the caller's token. A volume that does not exist is not
+            created. Only valid for a build without a `kraftfile`, of a single
+            platform.
           example: pgdata
         metro:
           type: string
           description: |-
-            The metro of `volume`, only needed when its name is ambiguous. Only valid
-            with `volume`. Not supported yet.
+            The name of the metro of `volume`, only needed when it is not the metro
+            of the service. Only valid with `volume`.
           example: fra
       description: |-
         Where the result of a build goes: exactly one of an image, named by `image`,
@@ -575,7 +578,7 @@ components:
         |-------------|-------------|
         | `waiting`   | The build waits for a client to attach its buildkit session, and then becomes `running`. |
         | `running`   | The build waits for a build slot or for its builder, or is being built. |
-        | `succeeded` | The build finished and every output was pushed; see `result`. |
+        | `succeeded` | The build finished and every output was pushed or imported; see `result`. |
         | `failed`    | The build failed; see `error`. |
         | `cancelled` | The build was cancelled before it finished; `error` says so. |
     Builder:
@@ -712,8 +715,8 @@ components:
           minItems: 1
           description: |-
             Where the result goes. At least one output is required. The outputs are
-            pushed one after the other, so a build that fails or is cancelled can
-            leave the first outputs pushed.
+            pushed or imported one after the other, so a build that fails or is
+            cancelled can leave the first outputs pushed or imported.
       description: The request message for creating a build.
     Error:
       type: object
@@ -765,7 +768,7 @@ components:
 
         | Code               | Description |
         |--------------------|-------------|
-        | `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, ... |
+        | `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, a volume output has a `kraftfile` or more than one platform, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, ... |
         | `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
@@ -773,10 +776,10 @@ components:
         | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
-        | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |
+        | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |
         | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
         | `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |
-        | `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
+        | `builder_quota`    | The builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
     Kraftfile:
       anyOf:
         - $ref: '#/components/schemas/KraftfileInline'

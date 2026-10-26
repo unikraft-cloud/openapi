@@ -59,16 +59,16 @@ paths:
         service does not support yet is answered with `400` and the code
         `unsupported`. A tenant that already has as many builds running or waiting
         as it may is answered with `429` and the code `too_many_builds`. A
-        request whose `hints.dedupe` names a running or succeeded build
-        is answered with `200` and that build, and starts nothing, or with `409`
-        and the code `conflict` when that build has other `output`.
+        request whose `hints.dedupe` names a running or succeeded build with the
+        same `output` is answered with `200` and that build, and starts nothing.
+        With other `output`, the new build pushes the image of a succeeded build.
       parameters: []
       responses:
         '200':
           description: |-
             The response message for creating a build whose `hints.dedupe` names an
-            existing build: `200`, with that build as it is, and a `Location` header
-            naming it.
+            existing build with the same `output`: `200`, with that build as it is, and
+            a `Location` header naming it.
           headers:
             Location:
               required: true
@@ -442,13 +442,20 @@ components:
           minLength: 1
           maxLength: 256
           description: |-
-            A key that the caller computes for the build, for example a hash of its
-            definition. When a build of the caller's tenant with the same key is
-            `running` or `succeeded`, the request is answered with that build and
-            `200`, and no new build starts. A build with the same key and other
-            `output` is a `409`. Failed builds do not count, and neither do
-            cancelled builds, from the cancel on. A build that reads from the
-            client's session is never shared: its request always starts a new build.
+            A key that the caller computes from the files that the build reads from
+            its sources, for example a hash of the contexts and of a Kraftfile from a
+            source. The service makes the key of the build from it, from the rest of
+            the request except `output`, `builder`, `hints.cache`, `no_cache`,
+            `registries` and the values of `secrets`, and from the version of the
+            service's image builder. When a build of the caller's tenant with the
+            same key and `output` is `running` or `succeeded`, the request is answered
+            with that build and `200`, and no new build starts. Else, when a build
+            with the same key `succeeded`, the new build pushes its image to the new
+            `output`, and builds the image only if it cannot read it. A request with
+            `no_cache` always starts a new build. Failed builds do not count, and
+            neither do cancelled builds, from the cancel on. A build that reads from
+            the client's session is never shared: its request always starts a new
+            build.
           example: 3f9a1c2b7d4e
       description: |-
         Hints on how to handle a build request. They do not change what the build
@@ -763,7 +770,7 @@ components:
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |
         | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |
-        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. Or a build with the same `hints.dedupe` has other `output`. |
+        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |
         | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |

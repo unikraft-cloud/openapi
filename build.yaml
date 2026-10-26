@@ -407,6 +407,19 @@ components:
         required:
           - result
           - error
+    BuildHints:
+      type: object
+      properties:
+        cache:
+          type: string
+          description: |-
+            A name for what the build builds, such as a repository or a project.
+            The service tries to run builds with the same name on the same builder,
+            so that they share its cache. Empty or absent means the URL of
+            `contexts.context` without its query, followed by its `subdir`, and no
+            name for a session context. Only builds on `default` use it.
+          example: acme/app
+      description: Advice on where to run a build, which the service may follow.
     BuildOutput:
       type: object
       properties:
@@ -624,7 +637,14 @@ components:
         builder:
           allOf:
             - $ref: '#/components/schemas/Builder'
-          description: The builder to run on. Defaults to the one named `default`.
+          description: |-
+            The builder to run on. Defaults to `default`, which runs each build on
+            one of `default`, `default-2`, ..., as many as the service allows: the
+            first with a free slot, in the order that `hints.cache` gives.
+        hints:
+          allOf:
+            - $ref: '#/components/schemas/BuildHints'
+          description: Advice on where to run the build.
         secrets:
           type: object
           additionalProperties:

@@ -482,6 +482,17 @@
           ]
         }
       },
+      "BuildHints": {
+        "type": "object",
+        "properties": {
+          "cache": {
+            "type": "string",
+            "description": "A name for what the build builds, such as a repository or a project.\nThe service tries to run builds with the same name on the same builder,\nso that they share its cache. Empty or absent means the URL of\n`contexts.context` without its query, followed by its `subdir`, and no\nname for a session context. Only builds on `default` use it.",
+            "example": "acme/app"
+          }
+        },
+        "description": "Advice on where to run a build, which the service may follow."
+      },
       "BuildOutput": {
         "type": "object",
         "properties": {
@@ -740,7 +751,15 @@
                 "$ref": "#/components/schemas/Builder"
               }
             ],
-            "description": "The builder to run on. Defaults to the one named `default`."
+            "description": "The builder to run on. Defaults to `default`, which runs each build on\none of `default`, `default-2`, ..., as many as the service allows: the\nfirst with a free slot, in the order that `hints.cache` gives."
+          },
+          "hints": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildHints"
+              }
+            ],
+            "description": "Advice on where to run the build."
           },
           "secrets": {
             "type": "object",

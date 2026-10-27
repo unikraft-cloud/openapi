@@ -262,7 +262,8 @@ paths:
       summary: Signal Command
       description: |-
         Send a signal to a command. `404` is returned, with an empty body, when no
-        such command exists, and `400` when the signal is not a known signal name.
+        such command exists, and `400` when the signal is not a known signal, by
+        name or by number.
       parameters:
         - name: uuid
           in: path
@@ -292,10 +293,11 @@ paths:
       description: |-
         Feed data into the standard input of a command. `404` is returned, with an
         empty body, when no such command exists, `410` if the command's logs have been
-        deleted, `400` when `data` is not valid base64, and `429` when the command
-        has not yet read what it was already given (its stdin queue holds 8 MiB;
-        on a terminal an `eof` counts as the byte it types).
-        Feeding data into a command whose standard input has been closed is an error.
+        deleted, `400` when `data` is not valid base64, `409` when the command has
+        finished or its standard input is closed (an `eof` alone is still fine),
+        and `429` when the command has not yet read what it was already given
+        (its stdin queue holds 8 MiB; on a terminal an `eof` counts as the byte
+        it types).
       parameters:
         - name: uuid
           in: path
@@ -959,7 +961,10 @@ components:
             The command to run: a command line interpreted by the shell, or an argument
             vector executed directly. A bare program name in a vector is looked up in
             the `PATH` of `env`, falling back to the sandbox's own `PATH`. `400` is
-            returned if the vector is empty or the program cannot be resolved.
+            returned if the vector is empty, the program cannot be resolved or run,
+            `cwd` is not a directory, an environment variable name is empty or has a
+            `=` in it, or the request holds what exec will not take (NUL bytes, an
+            argument list past the kernel's limit).
           example: echo hello
         cwd:
           type: string

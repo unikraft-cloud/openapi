@@ -316,7 +316,7 @@
       "post": {
         "operationId": "SignalCommand",
         "summary": "Signal Command",
-        "description": "Send a signal to a command. `404` is returned, with an empty body, when no\nsuch command exists, and `400` when the signal is not a known signal name.",
+        "description": "Send a signal to a command. `404` is returned, with an empty body, when no\nsuch command exists, and `400` when the signal is not a known signal, by\nname or by number.",
         "parameters": [
           {
             "name": "uuid",
@@ -359,7 +359,7 @@
       "post": {
         "operationId": "WriteCommandStdin",
         "summary": "Write Command Stdin",
-        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, `410` if the command's logs have been\ndeleted, `400` when `data` is not valid base64, and `429` when the command\nhas not yet read what it was already given (its stdin queue holds 8 MiB;\non a terminal an `eof` counts as the byte it types).\nFeeding data into a command whose standard input has been closed is an error.",
+        "description": "Feed data into the standard input of a command. `404` is returned, with an\nempty body, when no such command exists, `410` if the command's logs have been\ndeleted, `400` when `data` is not valid base64, `409` when the command has\nfinished or its standard input is closed (an `eof` alone is still fine),\nand `429` when the command has not yet read what it was already given\n(its stdin queue holds 8 MiB; on a terminal an `eof` counts as the byte\nit types).",
         "parameters": [
           {
             "name": "uuid",
@@ -1269,7 +1269,7 @@
                 "$ref": "#/components/schemas/CommandLineArgs"
               }
             ],
-            "description": "The command to run: a command line interpreted by the shell, or an argument\nvector executed directly. A bare program name in a vector is looked up in\nthe `PATH` of `env`, falling back to the sandbox's own `PATH`. `400` is\nreturned if the vector is empty or the program cannot be resolved.",
+            "description": "The command to run: a command line interpreted by the shell, or an argument\nvector executed directly. A bare program name in a vector is looked up in\nthe `PATH` of `env`, falling back to the sandbox's own `PATH`. `400` is\nreturned if the vector is empty, the program cannot be resolved or run,\n`cwd` is not a directory, an environment variable name is empty or has a\n`=` in it, or the request holds what exec will not take (NUL bytes, an\nargument list past the kernel's limit).",
             "example": "echo hello"
           },
           "cwd": {

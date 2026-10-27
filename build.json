@@ -803,7 +803,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`\nwhen it has none.",
+            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`\nwhen it has none. With several architectures, an architecture that the\nservice builds in a metro of its own builds there, on a builder of the\ncaller's account in that metro.",
             "example": [
               "linux/amd64"
             ]

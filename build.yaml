@@ -707,7 +707,9 @@ components:
           description: |-
             The platforms to build for. Only the architecture selects, so `x86_64` is
             `linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`
-            when it has none.
+            when it has none. With several architectures, an architecture that the
+            service builds in a metro of its own builds there, on a builder of the
+            caller's account in that metro.
           example:
             - linux/amd64
         build_args:

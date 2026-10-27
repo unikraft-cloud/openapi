@@ -4694,6 +4694,14 @@ components:
             Arbitrary JSON configuration that the platform passes to the plugin's
             `init` program on `STDIN`. Any JSON value works, including a string, a
             number, or an object.
+        authorization:
+          allOf:
+            - $ref: '#/components/schemas/Instances.PluginAuthorization'
+          description: |-
+            How requests to the plugin endpoint are authenticated. Without it, the
+            platform API token of a user with access to the instance (`userdb`) is
+            required. The platform checks the token and strips it before forwarding
+            the request to the plugin.
       description: |-
         A helper program attached to the instance and reachable over a direct,
         authenticated HTTP endpoint. A plugin runs inside the instance next to
@@ -6416,11 +6424,30 @@ components:
             that can reach the instance directly talk to the plugin without going
             through the platform API.
           example: 20000
+        authorization:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstancePluginAuthorization'
+          description: |-
+            The plugin's authorization method. Only present when it is not the
+            default (`userdb`).
       description: |-
         A helper program attached to the instance and reachable over a direct,
         authenticated HTTP endpoint. A plugin runs inside the instance next to
         the main application, loads from its own ROM image, and answers requests
         that the Unikraft Cloud API forwards to it.
+    Instances.InstancePluginAuthorization:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Instances.PluginAuthorizationType'
+          description: The authorization method.
+          example: bearer
+      description: |-
+        The authorization method of a plugin, as reported in the instance status.
+        The token is never returned.
     Instances.InstanceRestartAttempt:
       type: object
       required:
@@ -6745,6 +6772,44 @@ components:
             - uuid
         - required:
             - name
+    Instances.PluginAuthorization:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Instances.PluginAuthorizationType'
+          description: The authorization method.
+          example: bearer
+        token:
+          type: string
+          maxLength: 256
+          description: |-
+            The token that requests must present as `Authorization: Bearer <token>`.
+            Required for, and only allowed with, the `bearer` type.
+          example: my-secret-token
+      description: Authorization for requests to a plugin endpoint.
+      oneOf:
+        - properties:
+            type:
+              enum:
+                - bearer
+          required:
+            - token
+        - properties:
+            type:
+              enum:
+                - userdb
+          not:
+            required:
+              - token
+    Instances.PluginAuthorizationType:
+      type: string
+      enum:
+        - userdb
+        - bearer
+      description: How requests to a plugin endpoint are authenticated.
     Instances.PullPolicy:
       type: string
       enum:
@@ -7408,8 +7473,8 @@ components:
             - For "autokill": object with time_ms and num_requests fields
             - For "hostname": string (valid DNS label)
             - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
-            - For "plugins": array of plugin objects (with name, image, and optional config fields)
-            for SET/ADD. The deprecated `rom` field is accepted in place of `image`.
+            - For "plugins": array of plugin objects (with name, image, and optional config and
+            authorization fields) for SET/ADD. The deprecated `rom` field is accepted in place of `image`.
             - For "dependencies": array of instance identifiers (name or UUID)
             - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
             - For "annotations": object (for SET/ADD) or string/array of strings (for DEL)
@@ -7456,8 +7521,8 @@ components:
             - For "autokill": object with time_ms and num_requests fields
             - For "hostname": string (valid DNS label)
             - For "roms": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL
-            - For "plugins": array of plugin objects (with name, image, and optional config fields)
-            for SET/ADD. The deprecated `rom` field is accepted in place of `image`.
+            - For "plugins": array of plugin objects (with name, image, and optional config and
+            authorization fields) for SET/ADD. The deprecated `rom` field is accepted in place of `image`.
             - For "dependencies": array of instance identifiers (name or UUID)
             - For "sched_priority": SchedPriority enum value ("normal", "medium", "high", "admin")
             - For "annotations": object (for SET/ADD) or string/array of strings (for DEL)

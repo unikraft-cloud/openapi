@@ -6574,6 +6574,14 @@
           },
           "config": {
             "description": "Arbitrary JSON configuration that the platform passes to the plugin's\n`init` program on `STDIN`. Any JSON value works, including a string, a\nnumber, or an object."
+          },
+          "authorization": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.PluginAuthorization"
+              }
+            ],
+            "description": "How requests to the plugin endpoint are authenticated. Without it, the\nplatform API token of a user with access to the instance (`userdb`) is\nrequired. The platform checks the token and strips it before forwarding\nthe request to the plugin."
           }
         },
         "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint. A plugin runs inside the instance next to\nthe main application, loads from its own ROM image, and answers requests\nthat the Unikraft Cloud API forwards to it.",
@@ -8482,9 +8490,35 @@
             "format": "uint32",
             "description": "The port on the instance's address on which the plugin's API listens.\nThe platform picks it when the plugin is applied, so it lets a caller\nthat can reach the instance directly talk to the plugin without going\nthrough the platform API.",
             "example": 20000
+          },
+          "authorization": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.InstancePluginAuthorization"
+              }
+            ],
+            "description": "The plugin's authorization method. Only present when it is not the\ndefault (`userdb`)."
           }
         },
         "description": "A helper program attached to the instance and reachable over a direct,\nauthenticated HTTP endpoint. A plugin runs inside the instance next to\nthe main application, loads from its own ROM image, and answers requests\nthat the Unikraft Cloud API forwards to it."
+      },
+      "Instances.InstancePluginAuthorization": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.PluginAuthorizationType"
+              }
+            ],
+            "description": "The authorization method.",
+            "example": "bearer"
+          }
+        },
+        "description": "The authorization method of a plugin, as reported in the instance status.\nThe token is never returned."
       },
       "Instances.InstanceRestartAttempt": {
         "type": "object",
@@ -8805,6 +8839,66 @@
             ]
           }
         ]
+      },
+      "Instances.PluginAuthorization": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.PluginAuthorizationType"
+              }
+            ],
+            "description": "The authorization method.",
+            "example": "bearer"
+          },
+          "token": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "The token that requests must present as `Authorization: Bearer <token>`.\nRequired for, and only allowed with, the `bearer` type.",
+            "example": "my-secret-token"
+          }
+        },
+        "description": "Authorization for requests to a plugin endpoint.",
+        "oneOf": [
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "bearer"
+                ]
+              }
+            },
+            "required": [
+              "token"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "userdb"
+                ]
+              }
+            },
+            "not": {
+              "required": [
+                "token"
+              ]
+            }
+          }
+        ]
+      },
+      "Instances.PluginAuthorizationType": {
+        "type": "string",
+        "enum": [
+          "userdb",
+          "bearer"
+        ],
+        "description": "How requests to a plugin endpoint are authenticated."
       },
       "Instances.PullPolicy": {
         "type": "string",
@@ -9549,7 +9643,7 @@
             "description": "The operation to perform on the property."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config fields)\nfor SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config and\nauthorization fields) for SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         }
       },
@@ -9591,7 +9685,7 @@
             "description": "The operation to perform on the property."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config fields)\nfor SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
+            "description": "The value for the update operation. The type depends on the property and operation:\n- For \"image\": image reference string, or object with image url,\ncredentials, headers and pull policy\n- For \"args\": string or array of strings\n- For \"env\": object (for SET/ADD) or string/array of strings (for DEL)\n- For \"memory_mb\": integer\n- For \"vcpus\": integer\n- For \"scale_to_zero\": object with cooldown_time_ms, policy, and stateful fields\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"schedules\": array of schedule objects (with name, when, action, and optional args fields)\nfor SET/ADD, or array of schedule names for DEL. Use action \"exec\" together with args to\nexecute a command at the scheduled time.\n- For \"autokill\": object with time_ms and num_requests fields\n- For \"hostname\": string (valid DNS label)\n- For \"roms\": array of ROM objects (with name and image fields) for SET/ADD, or array of ROM names for DEL\n- For \"plugins\": array of plugin objects (with name, image, and optional config and\nauthorization fields) for SET/ADD. The deprecated `rom` field is accepted in place of `image`.\n- For \"dependencies\": array of instance identifiers (name or UUID)\n- For \"sched_priority\": SchedPriority enum value (\"normal\", \"medium\", \"high\", \"admin\")\n- For \"annotations\": object (for SET/ADD) or string/array of strings (for DEL)"
           }
         },
         "description": "A single update operation to be applied to an instance."

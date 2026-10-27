@@ -317,6 +317,45 @@ components:
           description: |-
             The contexts of the request, where the build gets its files from. Absent
             for a build from before the service kept its requests.
+        platforms:
+          type: array
+          items:
+            type: string
+          description: The platforms of the request. Absent when the request names none.
+          example:
+            - linux/amd64
+        build_args:
+          type: object
+          additionalProperties:
+            type: string
+          description: The build args of the request, by name. Absent when it has none.
+          example:
+            VERSION: 1.2.3
+        target:
+          type: string
+          description: The Dockerfile stage of the request. Absent when it names none.
+          example: runtime
+        no_cache:
+          type: boolean
+          description: Whether the request ignores the builder's cache.
+        secrets:
+          type: array
+          items:
+            type: string
+          description: |-
+            The IDs of the secrets of the request, sorted. The service does not keep
+            their values. Absent when the request has none.
+          example:
+            - npmrc
+        registries:
+          type: array
+          items:
+            type: string
+          description: |-
+            The registry hosts of the request, sorted. The service does not keep
+            their credentials. Absent when the request has none.
+          example:
+            - ghcr.io
         session:
           type: string
           description: |-

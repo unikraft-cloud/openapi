@@ -316,7 +316,7 @@
       "post": {
         "operationId": "SignalCommand",
         "summary": "Signal Command",
-        "description": "Send a signal to a command. `404` is returned, with an empty body, when no\nsuch command exists, and `400` when the signal is not a known signal, by\nname or by number.",
+        "description": "Send a signal to a command. `404` is returned, with an empty body, when no\nsuch command exists, and `400` when the signal is not one: a number the\nkernel does not have, or a name that is not a signal's.",
         "parameters": [
           {
             "name": "uuid",
@@ -825,7 +825,7 @@
                 "type": "string"
               }
             ],
-            "description": "The signal to send, either as a number or as a name, with or without the\n`SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`.",
+            "description": "The signal to send, either as a number or as a name, with or without the\n`SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`. `0` sends nothing and only\nchecks that the command can be signalled. Real-time signals go by number:\nwhere `SIGRTMIN` sits is up to the program's libc (34 on glibc, 35 on\nmusl), so they have no names here.",
             "example": 15
           }
         },

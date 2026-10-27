@@ -262,8 +262,8 @@ paths:
       summary: Signal Command
       description: |-
         Send a signal to a command. `404` is returned, with an empty body, when no
-        such command exists, and `400` when the signal is not a known signal, by
-        name or by number.
+        such command exists, and `400` when the signal is not one: a number the
+        kernel does not have, or a name that is not a signal's.
       parameters:
         - name: uuid
           in: path
@@ -630,7 +630,10 @@ components:
             - type: string
           description: |-
             The signal to send, either as a number or as a name, with or without the
-            `SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`.
+            `SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`. `0` sends nothing and only
+            checks that the command can be signalled. Real-time signals go by number:
+            where `SIGRTMIN` sits is up to the program's libc (34 on glibc, 35 on
+            musl), so they have no names here.
           example: 15
       description: The request to send a signal to a command.
     CommandStdinRequest:

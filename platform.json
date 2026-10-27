@@ -8294,6 +8294,14 @@
             ],
             "description": "The type of virtual machine used to run the instance."
           },
+          "clone_source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.InstanceCloneSource"
+              }
+            ],
+            "description": "The source this instance was cloned from, while the source exists."
+          },
           "gpus": {
             "type": "array",
             "items": {
@@ -8319,6 +8327,25 @@
           }
         },
         "description": "Automatic delete-on-idle/request-limit configuration for non-template\ninstances. Not used for template instances."
+      },
+      "Instances.InstanceCloneSource": {
+        "type": "object",
+        "required": [
+          "uuid"
+        ],
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the source."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the source.",
+            "example": "my-template"
+          }
+        },
+        "description": "The instance, template, or checkpoint that an instance was cloned from."
       },
       "Instances.InstanceFeature": {
         "type": "string",
@@ -8804,9 +8831,12 @@
         "enum": [
           "tags",
           "delete_lock",
-          "autokill"
+          "autokill",
+          "image",
+          "roms",
+          "plugins"
         ],
-        "description": "The mutable properties of a template instance that can be updated."
+        "description": "The mutable properties of a template instance that can be updated.\nSetting `image`, `roms`, or `plugins` updates the template in place."
       },
       "Instances.NetworkInterfaceRelay": {
         "type": "object",
@@ -9805,7 +9835,7 @@
             "description": "The operation to perform."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and\noperation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+            "description": "The value for the update operation. The type depends on the property and\noperation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field\n- For \"image\": image reference string or object (SET only)\n- For \"roms\": array of ROM objects (SET only)\n- For \"plugins\": array of plugin objects (SET only)"
           }
         }
       },
@@ -9846,7 +9876,7 @@
             "description": "The operation to perform."
           },
           "value": {
-            "description": "The value for the update operation. The type depends on the property and\noperation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field"
+            "description": "The value for the update operation. The type depends on the property and\noperation:\n- For \"tags\": array of strings\n- For \"delete_lock\": boolean\n- For \"autokill\": object with time_ms field\n- For \"image\": image reference string or object (SET only)\n- For \"roms\": array of ROM objects (SET only)\n- For \"plugins\": array of plugin objects (SET only)"
           }
         },
         "description": "A single template instance update request item."

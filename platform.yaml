@@ -4329,6 +4329,28 @@ components:
           format: int64
           description: Memory in MB to allocate for the instance. Default is 128.
           example: 256
+        min_memory_mb:
+          type: integer
+          format: int64
+          description: |-
+            Lower bound in MB for memory vertical scaling. Setting this or
+            `max_memory_mb` enables memory vertical scaling, which is only supported
+            by microVM instances. The instance boots with this amount of memory, and
+            `memory_mb` selects the initial allocation within the bounds, defaulting
+            to `min_memory_mb`. Must be lower than `max_memory_mb`, and within the
+            user's memory limits. Cannot be used with templates that have a
+            snapshot, `branch_from` or `checkpoint`.
+          example: 256
+        max_memory_mb:
+          type: integer
+          format: int64
+          description: |-
+            Upper bound in MB for memory vertical scaling. Setting this or
+            `min_memory_mb` enables memory vertical scaling. Defaults to the user's
+            maximum memory limit. Must be higher than `min_memory_mb` by at least
+            the platform's memory block size. Cannot be used with templates that
+            have a snapshot, `branch_from` or `checkpoint`.
+          example: 1024
         service_group:
           allOf:
             - $ref: '#/components/schemas/Instances.CreateInstanceRequestServiceGroup'
@@ -4384,6 +4406,27 @@ components:
           format: int32
           description: Number of vCPUs to allocate for the instance. Defaults to 1.
           example: 1
+        min_vcpus:
+          type: integer
+          format: int32
+          description: |-
+            Lower bound for vCPU vertical scaling. Setting this or `max_vcpus`
+            enables vCPU vertical scaling, which is only supported by microVM
+            instances. The instance boots with this number of vCPUs, and `vcpus`
+            selects the initial allocation within the bounds, defaulting to
+            `min_vcpus`. Must be lower than `max_vcpus`, and within the user's vCPU
+            limits. Cannot be used with templates that have a snapshot,
+            `branch_from` or `checkpoint`.
+          example: 1
+        max_vcpus:
+          type: integer
+          format: int32
+          description: |-
+            Upper bound for vCPU vertical scaling. Setting this or `min_vcpus`
+            enables vCPU vertical scaling. Defaults to the user's maximum vCPU
+            limit. Must be higher than `min_vcpus`. Cannot be used with templates
+            that have a snapshot, `branch_from` or `checkpoint`.
+          example: 4
         wait_timeout_ms:
           type: integer
           format: int64
@@ -5803,6 +5846,27 @@ components:
             total amount of memory that is available to the instance for its
             operations.
           example: 1024
+        boot_memory_mb:
+          type: integer
+          format: uint64
+          description: |-
+            The amount of memory in megabytes the instance boots with. Only present
+            if memory vertical scaling is enabled for the instance.
+          example: 512
+        min_memory_mb:
+          type: integer
+          format: uint64
+          description: |-
+            The lower bound of memory vertical scaling in megabytes. Only present if
+            memory vertical scaling is enabled for the instance.
+          example: 512
+        max_memory_mb:
+          type: integer
+          format: uint64
+          description: |-
+            The upper bound of memory vertical scaling in megabytes. Only present if
+            memory vertical scaling is enabled for the instance.
+          example: 2048
         vcpus:
           type: integer
           format: uint32
@@ -5811,6 +5875,27 @@ components:
             number of virtual CPUs that are available to the instance for its
             operations.
           example: 1
+        boot_vcpus:
+          type: integer
+          format: uint32
+          description: |-
+            The number of vCPUs the instance boots with. Only present if vCPU
+            vertical scaling is enabled for the instance.
+          example: 1
+        min_vcpus:
+          type: integer
+          format: uint32
+          description: |-
+            The lower bound of vCPU vertical scaling. Only present if vCPU vertical
+            scaling is enabled for the instance.
+          example: 1
+        max_vcpus:
+          type: integer
+          format: uint32
+          description: |-
+            The upper bound of vCPU vertical scaling. Only present if vCPU vertical
+            scaling is enabled for the instance.
+          example: 4
         args:
           type: array
           items:

@@ -115,7 +115,9 @@ paths:
         List the builds of the caller's tenant, newest first. A finished build is
         kept for 7 days. A new build removes the oldest finished builds of its
         tenant once they pass the tenant's storage, and the service removes the
-        oldest finished builds of all tenants when it runs out of storage.
+        oldest finished builds of all tenants when it runs out of storage. The
+        builds come in pages, of 10 without `limit`: `next` gives the page that
+        follows. A build created after the first page is only on a new first page.
       parameters:
         - name: status
           in: query
@@ -128,12 +130,22 @@ paths:
           in: query
           required: false
           description: |-
-            The maximum number of builds to return. When omitted, every matching
-            build is returned.
+            The maximum number of builds in the page, from 1 to 50. Defaults to 10,
+            also when there are more builds.
           schema:
             type: integer
             format: int32
             minimum: 1
+            maximum: 50
+          explode: false
+        - name: after
+          in: query
+          required: false
+          description: |-
+            The `next` of the previous page, for the builds that follow it. It is
+            opaque: pass it as it is, with the `status` of that page.
+          schema:
+            type: string
           explode: false
       responses:
         '200':
@@ -809,6 +821,7 @@ components:
         - not_found
         - conflict
         - too_many_builds
+        - rate_limited
         - internal
         - failed
         - cancelled
@@ -817,7 +830,7 @@ components:
       description: |-
         The reason a request, or a build, failed.
 
-        The first eight codes are answered by the API together with the HTTP status
+        The first nine codes are answered by the API together with the HTTP status
         code given. The last four are the `code` of the `error` of a build whose
         `status` is `failed` or `cancelled`, both in the build itself and in the last
         event of its progress stream.
@@ -831,6 +844,7 @@ components:
         | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |
         | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may, or the platform limits the rate of its requests. Submit the build again once one of them has finished, or later. |
+        | `rate_limited`     | `429`, with `Retry-After`: the platform refused too many tokens from the caller's address. Wait as long as `Retry-After` says. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down or out of storage. Retrying later is the right response. |
         | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |
         | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
@@ -880,6 +894,12 @@ components:
           items:
             $ref: '#/components/schemas/Build'
           description: The builds, newest first.
+        next:
+          type: string
+          description: |-
+            The `after` of the request for the next page, which is opaque. Absent on
+            the last page.
+          example: MjAyNi0xMC0yOFQxNDozODo0OC4wMDAwMDAwMDBaIDAxOWExYjJjLTNkNGUtN2Y1YS04YjZjLTdkOGU5ZjBhMWIyYw
       description: The response message for listing the builds of the caller's tenant.
     Position:
       type: object

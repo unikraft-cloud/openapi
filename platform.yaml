@@ -2936,6 +2936,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         status:
           allOf:
             - $ref: '#/components/schemas/Common.ResponseStatus'
@@ -3036,6 +3041,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         status:
           allOf:
             - $ref: '#/components/schemas/Common.ResponseStatus'
@@ -3145,6 +3155,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         status:
           allOf:
             - $ref: '#/components/schemas/Common.ResponseStatus'
@@ -3279,6 +3294,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         enabled:
           type: boolean
           description: If the autoscale configuration is enabled.
@@ -3363,6 +3383,11 @@ components:
         name:
           type: string
           description: The name of the template used for the autoscale configuration.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: The instance template used for an autoscale configuration.
     Autoscale.StepPolicyMetric:
       type: string
@@ -3399,6 +3424,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         created_at:
           type: string
           format: date-time
@@ -3476,7 +3506,7 @@ components:
         service_groups:
           type: array
           items:
-            $ref: '#/components/schemas/Common.ID'
+            $ref: '#/components/schemas/Common.ResourceID'
           description: Service groups using this certificate.
       description: Certificate with per-item response envelope fields merged in.
     Certificates.CertificateState:
@@ -3519,13 +3549,13 @@ components:
         name:
           type: string
           description: |-
-            The name of the certificate.
-
-            This is a human-readable name that can be used to identify the certificate.
-            The name must be unique within the context of your account. If no name is
-            specified, a random name is generated for you. The name can also be used
-            to identify the certificate in API calls.
-          example: funky-certificate
+            The name of the resource. If not provided, a random name is generated.
+            The name must be unique within the context of your account.
+        node:
+          type: string
+          description: |-
+            The name of the node to place the resource on. If not provided, the
+            platform picks one. Only accepted on metros that span multiple nodes.
         cn:
           type: string
           description: |-
@@ -3638,6 +3668,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a delete certificates operation.
     Certificates.GetCertificatesResponse:
       type: object
@@ -3750,20 +3785,6 @@ components:
       description: |-
         The response message for updating one or more certificate(s) given their
         UUID(s) or name(s).
-    Common.ID:
-      type: object
-      required:
-        - uuid
-        - name
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: The UUID of the resource.
-        name:
-          type: string
-          description: The human-readable name of the resource.
-      description: Common identity fields for a resource.
     Common.InlineDataEncoding:
       type: string
       enum:
@@ -3820,6 +3841,25 @@ components:
       enum:
         - create_time
       description: The sort field used by list endpoints.
+    Common.ResourceID:
+      type: object
+      required:
+        - uuid
+        - name
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the resource.
+        name:
+          type: string
+          description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
+      description: Identity fields for a resource, including the node it is placed on.
     Common.ResponseError:
       type: object
       required:
@@ -4190,6 +4230,11 @@ components:
           type: string
           description: The name of the checkpoint.
           example: my-checkpoint
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         created_at:
           type: string
           format: date-time
@@ -4208,6 +4253,11 @@ components:
           type: string
           description: The name of the checkpoint. If not provided, a name will be generated.
           example: my-checkpoint
+        node:
+          type: string
+          description: |-
+            The name of the node to place the checkpoint on. Must be the node of the
+            source instance. Only accepted on metros that span multiple nodes.
         timeout_s:
           type: integer
           format: int64
@@ -4285,6 +4335,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -4296,11 +4351,13 @@ components:
         name:
           type: string
           description: |-
-            The name of the instance.
-
-            If not provided, a random name will be generated. The name must be
-            unique.
-          example: funky-town-g756b5d
+            The name of the resource. If not provided, a random name is generated.
+            The name must be unique within the context of your account.
+        node:
+          type: string
+          description: |-
+            The name of the node to place the resource on. If not provided, the
+            platform picks one. Only accepted on metros that span multiple nodes.
         image:
           anyOf:
             - type: string
@@ -5056,6 +5113,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -5120,6 +5182,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a delete checkpoint instances operation.
     Instances.DeleteInstanceByUUIDRequestBody:
       type: object
@@ -5223,6 +5290,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         previous_state:
           type: string
           description: The previous state of the instance before it was deleted.
@@ -5285,6 +5357,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a delete template instances operation.
     Instances.GetCheckpointHistoryResponse:
       type: object
@@ -5344,6 +5421,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         history:
           type: array
           items:
@@ -5500,6 +5582,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         output:
           type: string
           description: Base64 encoded log output of the instance.
@@ -5603,6 +5690,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         rss_bytes:
           type: integer
           format: uint64
@@ -5815,6 +5907,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         created_at:
           type: string
           format: date-time
@@ -6363,6 +6460,9 @@ components:
           type: string
           description: The name of the source.
           example: my-template
+        node:
+          type: string
+          description: The name of the node the source is placed on.
       description: The instance, template, or checkpoint that an instance was cloned from.
     Instances.InstanceFeature:
       type: string
@@ -6406,6 +6506,9 @@ components:
         uuid:
           type: string
           format: uuid
+        node:
+          type: string
+          description: The name of the node the network interface is placed on.
         private_ip:
           type: string
           description: |-
@@ -6456,6 +6559,11 @@ components:
           type: string
           description: Name of the relay interface.
           example: eth-relay
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         relay_dns:
           type: boolean
           description: |-
@@ -6703,6 +6811,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         domains:
           type: array
           items:
@@ -6772,6 +6885,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         at:
           type: string
           description: |-
@@ -7145,6 +7263,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           type: string
           description: The current state of the instance after this request.
@@ -7298,6 +7421,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -7397,6 +7525,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -7541,6 +7674,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: The client-provided ID from the request.
@@ -7693,6 +7831,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: The client-provided ID from the request.
@@ -7817,6 +7960,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: Client-provided operation ID.
@@ -7942,6 +8090,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -8059,11 +8212,13 @@ components:
         name:
           type: string
           description: |-
-            Name of the service group. This is a human-readable name that can be used
-            to identify the service group. The name must be unique within the context
-            of your account. If no name is specified, a random name is generated for
-            you. The name can also be used to identify the service group in API calls.
-          example: funky-service-g7gum5cj
+            The name of the resource. If not provided, a random name is generated.
+            The name must be unique within the context of your account.
+        node:
+          type: string
+          description: |-
+            The name of the node to place the resource on. If not provided, the
+            platform picks one. Only accepted on metros that span multiple nodes.
         services:
           type: array
           items:
@@ -8212,6 +8367,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         status:
           allOf:
             - $ref: '#/components/schemas/Common.ResponseStatus'
@@ -8368,6 +8528,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         created_at:
           type: string
           format: date-time
@@ -8482,6 +8647,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: An instance belonging to a service group.
     Services.ServiceProtocol:
       type: string
@@ -8616,6 +8786,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: The client-provided ID from the request.
@@ -8869,6 +9044,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -8910,6 +9090,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         suspended:
           type: boolean
           description: |-
@@ -9021,6 +9206,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Instances.InstanceState'
@@ -9064,6 +9254,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         suspended:
           type: boolean
           description: Whether the user account is suspended after this request.
@@ -9200,6 +9395,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for an attach volumes operation.
     Volumes.CloneVolumeByUUIDRequestBody:
       type: object
@@ -9314,6 +9514,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Volumes.VolumeState'
@@ -9377,6 +9582,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Volumes.VolumeState'
@@ -9387,6 +9597,14 @@ components:
       properties:
         name:
           type: string
+          description: |-
+            The name of the resource. If not provided, a random name is generated.
+            The name must be unique within the context of your account.
+        node:
+          type: string
+          description: |-
+            The name of the node to place the resource on. If not provided, the
+            platform picks one. Only accepted on metros that span multiple nodes.
         size_mb:
           type: integer
           format: uint64
@@ -9479,6 +9697,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         state:
           allOf:
             - $ref: '#/components/schemas/Volumes.VolumeState'
@@ -9542,6 +9765,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a delete template volumes operation.
     Volumes.DeleteVolumesResponse:
       type: object
@@ -9601,6 +9829,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a delete volumes operation.
     Volumes.DetachVolumeByUUIDRequestBody:
       type: object
@@ -9686,6 +9919,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
       description: Per-item result for a detach volumes operation.
     Volumes.GetTemplateVolumesResponse:
       type: object
@@ -9919,6 +10157,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: The client-provided ID from the request.
@@ -10061,6 +10304,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         id:
           type: string
           description: The client-provided ID from the request.
@@ -10094,6 +10342,11 @@ components:
         name:
           type: string
           description: The human-readable name of the resource.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         created_at:
           type: string
           format: date-time
@@ -10214,6 +10467,9 @@ components:
             your account. If no name is specified, a random name is generated for
             you. The name can also be used to identify the instance in API calls.
           example: funky-vol-g7gum5cj
+        node:
+          type: string
+          description: The name of the node the instance is placed on.
       description: An instance a volume is attached to.
     Volumes.VolumeInstanceMount:
       type: object
@@ -10229,6 +10485,11 @@ components:
         name:
           type: string
           description: The name of the instance that the volume is mounted in.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
         readonly:
           type: boolean
           description: Whether the volume is mounted read-only or read-write.

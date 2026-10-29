@@ -4451,6 +4451,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "status": {
             "allOf": [
               {
@@ -4598,6 +4602,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "status": {
             "allOf": [
@@ -4758,6 +4766,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "status": {
             "allOf": [
@@ -4953,6 +4965,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "enabled": {
             "type": "boolean",
             "description": "If the autoscale configuration is enabled."
@@ -5059,6 +5075,10 @@
           "name": {
             "type": "string",
             "description": "The name of the template used for the autoscale configuration."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "The instance template used for an autoscale configuration."
@@ -5105,6 +5125,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "created_at": {
             "type": "string",
@@ -5160,7 +5184,7 @@
           "service_groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Common.ID"
+              "$ref": "#/components/schemas/Common.ResourceID"
             },
             "description": "Service groups using this certificate."
           }
@@ -5205,8 +5229,11 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the certificate.\n\nThis is a human-readable name that can be used to identify the certificate.\nThe name must be unique within the context of your account. If no name is\nspecified, a random name is generated for you. The name can also be used\nto identify the certificate in API calls.",
-            "example": "funky-certificate"
+            "description": "The name of the resource. If not provided, a random name is generated.\nThe name must be unique within the context of your account."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node to place the resource on. If not provided, the\nplatform picks one. Only accepted on metros that span multiple nodes."
           },
           "cn": {
             "type": "string",
@@ -5355,6 +5382,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a delete certificates operation."
@@ -5496,25 +5527,6 @@
         },
         "description": "The response message for updating one or more certificate(s) given their\nUUID(s) or name(s)."
       },
-      "Common.ID": {
-        "type": "object",
-        "required": [
-          "uuid",
-          "name"
-        ],
-        "properties": {
-          "uuid": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The UUID of the resource."
-          },
-          "name": {
-            "type": "string",
-            "description": "The human-readable name of the resource."
-          }
-        },
-        "description": "Common identity fields for a resource."
-      },
       "Common.InlineDataEncoding": {
         "type": "string",
         "enum": [
@@ -5600,6 +5612,29 @@
           "create_time"
         ],
         "description": "The sort field used by list endpoints."
+      },
+      "Common.ResourceID": {
+        "type": "object",
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the resource."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          }
+        },
+        "description": "Identity fields for a resource, including the node it is placed on."
       },
       "Common.ResponseError": {
         "type": "object",
@@ -6075,6 +6110,10 @@
             "description": "The name of the checkpoint.",
             "example": "my-checkpoint"
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -6101,6 +6140,10 @@
             "type": "string",
             "description": "The name of the checkpoint. If not provided, a name will be generated.",
             "example": "my-checkpoint"
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node to place the checkpoint on. Must be the node of the\nsource instance. Only accepted on metros that span multiple nodes."
           },
           "timeout_s": {
             "type": "integer",
@@ -6208,6 +6251,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -6224,8 +6271,11 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the instance.\n\nIf not provided, a random name will be generated. The name must be\nunique.",
-            "example": "funky-town-g756b5d"
+            "description": "The name of the resource. If not provided, a random name is generated.\nThe name must be unique within the context of your account."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node to place the resource on. If not provided, the\nplatform picks one. Only accepted on metros that span multiple nodes."
           },
           "image": {
             "anyOf": [
@@ -7008,6 +7058,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -7099,6 +7153,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a delete checkpoint instances operation."
@@ -7227,6 +7285,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "previous_state": {
             "type": "string",
             "description": "The previous state of the instance before it was deleted."
@@ -7313,6 +7375,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a delete template instances operation."
@@ -7396,6 +7462,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "history": {
             "type": "array",
@@ -7603,6 +7673,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "output": {
             "type": "string",
             "description": "Base64 encoded log output of the instance."
@@ -7745,6 +7819,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "rss_bytes": {
             "type": "integer",
@@ -7989,6 +8067,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "created_at": {
             "type": "string",
@@ -8403,6 +8485,10 @@
             "type": "string",
             "description": "The name of the source.",
             "example": "my-template"
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the source is placed on."
           }
         },
         "description": "The instance, template, or checkpoint that an instance was cloned from."
@@ -8446,6 +8532,10 @@
           "uuid": {
             "type": "string",
             "format": "uuid"
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the network interface is placed on."
           },
           "private_ip": {
             "type": "string",
@@ -8500,6 +8590,10 @@
             "type": "string",
             "description": "Name of the relay interface.",
             "example": "eth-relay"
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "relay_dns": {
             "type": "boolean",
@@ -8728,6 +8822,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "domains": {
             "type": "array",
             "items": {
@@ -8802,6 +8900,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "at": {
             "type": "string",
@@ -9206,6 +9308,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "type": "string",
             "description": "The current state of the instance after this request."
@@ -9371,6 +9477,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -9503,6 +9613,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "state": {
             "allOf": [
@@ -9697,6 +9811,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "id": {
             "type": "string",
             "description": "The client-provided ID from the request."
@@ -9860,6 +9978,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "id": {
             "type": "string",
             "description": "The client-provided ID from the request."
@@ -10021,6 +10143,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "id": {
             "type": "string",
             "description": "Client-provided operation ID."
@@ -10174,6 +10300,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -10305,8 +10435,11 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Name of the service group. This is a human-readable name that can be used\nto identify the service group. The name must be unique within the context\nof your account. If no name is specified, a random name is generated for\nyou. The name can also be used to identify the service group in API calls.",
-            "example": "funky-service-g7gum5cj"
+            "description": "The name of the resource. If not provided, a random name is generated.\nThe name must be unique within the context of your account."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node to place the resource on. If not provided, the\nplatform picks one. Only accepted on metros that span multiple nodes."
           },
           "services": {
             "type": "array",
@@ -10486,6 +10619,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "status": {
             "allOf": [
@@ -10667,6 +10804,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -10752,6 +10893,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "An instance belonging to a service group."
@@ -10902,6 +11047,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "id": {
             "type": "string",
@@ -11248,6 +11397,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -11309,6 +11462,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "suspended": {
             "type": "boolean",
@@ -11436,6 +11593,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -11497,6 +11658,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "suspended": {
             "type": "boolean",
@@ -11663,6 +11828,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for an attach volumes operation."
@@ -11814,6 +11983,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -11907,6 +12080,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -11922,7 +12099,12 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the resource. If not provided, a random name is generated.\nThe name must be unique within the context of your account."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node to place the resource on. If not provided, the\nplatform picks one. Only accepted on metros that span multiple nodes."
           },
           "size_mb": {
             "type": "integer",
@@ -12064,6 +12246,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "state": {
             "allOf": [
               {
@@ -12154,6 +12340,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a delete template volumes operation."
@@ -12237,6 +12427,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a delete volumes operation."
@@ -12356,6 +12550,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           }
         },
         "description": "Per-item result for a detach volumes operation."
@@ -12644,6 +12842,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "id": {
             "type": "string",
             "description": "The client-provided ID from the request."
@@ -12807,6 +13009,10 @@
             "type": "string",
             "description": "The human-readable name of the resource."
           },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
+          },
           "id": {
             "type": "string",
             "description": "The client-provided ID from the request."
@@ -12851,6 +13057,10 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the resource."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "created_at": {
             "type": "string",
@@ -12983,6 +13193,10 @@
             "type": "string",
             "description": "The name of the instance. This is a human-readable name that can be used\nto identify the instance. The name must be unique within the context of\nyour account. If no name is specified, a random name is generated for\nyou. The name can also be used to identify the instance in API calls.",
             "example": "funky-vol-g7gum5cj"
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the instance is placed on."
           }
         },
         "description": "An instance a volume is attached to."
@@ -13003,6 +13217,10 @@
           "name": {
             "type": "string",
             "description": "The name of the instance that the volume is mounted in."
+          },
+          "node": {
+            "type": "string",
+            "description": "The name of the node the resource is placed on. Only present on metros\nthat span multiple nodes."
           },
           "readonly": {
             "type": "boolean",

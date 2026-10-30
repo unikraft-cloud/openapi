@@ -7,12 +7,156 @@
   },
   "tags": [
     {
+      "name": "builders",
+      "x-displayName": "Builders",
+      "description": "A builder is the buildkitd instance, and its cache volume, that builds\nrun on in the caller's own account, in the service's metro. Builds create\ntheir builder on first use; these operations create one ahead of a\nbuild and look after its cache."
+    },
+    {
       "name": "builds",
       "x-displayName": "Builds",
       "description": "A build turns its sources into a Unikraft image, on a buildkitd running\nin the caller's own account, and pushes the image to registries or\nimports it into volumes. A build runs whether or not anyone is watching\nit, and its progress can be followed, replayed from the start, until it\nhas finished."
     }
   ],
   "paths": {
+    "/v1/builders": {
+      "post": {
+        "operationId": "CreateBuilder",
+        "summary": "Create Builder",
+        "description": "Create a builder of the caller's tenant in the service's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The builder already exists and every field of the request matches it:\n`200`, with the builder as requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Builder"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The builder was created: `201`, with the builder as requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Builder"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Builder"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/builders/{name}/prune": {
+      "post": {
+        "operationId": "PruneBuilder",
+        "summary": "Prune Builder",
+        "description": "Free the records of a builder's cache that no build uses, waking the\nbuilder and keeping it. Only the builder of this name in the service's\nmetro is pruned. A builder that does not exist is answered with `404`, and\nis not created.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PruneBuilderResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
+    "/v1/builders/{name}/usage": {
+      "get": {
+        "operationId": "GetBuilderUsage",
+        "summary": "Get Builder Usage",
+        "description": "Get the disk usage of a builder's cache, waking the builder. Only the\nbuilder of this name in the service's metro is counted. A builder that\ndoes not exist is answered with `404`, and is not created.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuilderUsage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
     "/v1/builds": {
       "post": {
         "operationId": "CreateBuild",
@@ -786,6 +930,26 @@
         },
         "description": "When to delete an idle builder."
       },
+      "BuilderUsage": {
+        "type": "object",
+        "required": [
+          "reclaimable_bytes",
+          "total_bytes"
+        ],
+        "properties": {
+          "reclaimable_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of the records that no build uses, which a prune frees."
+          },
+          "total_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of all the records."
+          }
+        },
+        "description": "How much of a builder's cache its records take."
+      },
       "CreateBuildRequest": {
         "type": "object",
         "required": [
@@ -938,7 +1102,7 @@
           "interrupted",
           "builder_quota"
         ],
-        "description": "The reason a request, or a build, failed.\n\nThe first nine codes are answered by the API together with the HTTP status\ncode given. The last four are the `code` of the `error` of a build whose\n`status` is `failed` or `cancelled`, both in the build itself and in the last\nevent of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, a volume output has a `kraftfile` or more than one platform, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, the request without its secret values is larger than 64 KiB, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. `503`, with `Retry-After`, while the service checks too many tokens at once. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request conflicts with the existing builder of that name. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may, or the platform limits the rate of its requests. Submit the build again once one of them has finished, or later. |\n| `rate_limited`     | `429`, with `Retry-After`: the platform refused too many tokens from the caller's address. Wait as long as `Retry-After` says. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down or out of storage. Retrying later is the right response. |\n| `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | The builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
+        "description": "The reason a request, or a build, failed.\n\nThe first nine codes, and `builder_quota`, are answered by the API together\nwith the HTTP status code given. The last four are the `code` of the `error`\nof a build whose `status` is `failed` or `cancelled`, both in the build\nitself and in the last event of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, a volume output has a `kraftfile` or more than one platform, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, the request without its secret values is larger than 64 KiB, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. `503`, with `Retry-After`, while the service checks too many tokens at once. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. Or the caller has no builder of this name. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request, or the builder to create, conflicts with the existing builder of that name. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may, or the platform limits the rate of its requests. Submit the build again once one of them has finished, or later. |\n| `rate_limited`     | `429`, with `Retry-After`: the platform refused too many tokens from the caller's address. Wait as long as `Retry-After` says. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down or out of storage. Retrying later is the right response. |\n| `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | `403`: the builder to create could not be created because the tenant is over its quota. Or, as the error of a build: the builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
       },
       "Kraftfile": {
         "anyOf": [
@@ -1036,6 +1200,20 @@
           }
         },
         "description": "A group of vertices that progress renderers fold into one line."
+      },
+      "PruneBuilderResponse": {
+        "type": "object",
+        "required": [
+          "freed_bytes"
+        ],
+        "properties": {
+          "freed_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of the records the prune freed."
+          }
+        },
+        "description": "What a prune freed."
       },
       "Range": {
         "type": "object",

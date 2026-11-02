@@ -6564,6 +6564,12 @@ components:
           description: |-
             The name of the node the resource is placed on. Only present on metros
             that span multiple nodes.
+        instance:
+          allOf:
+            - $ref: '#/components/schemas/Instances.InstanceNetworkInterfaceRelayInstance'
+          description: |-
+            The instance the relay interface is attached to. Omitted if the interface
+            is not attached to an instance.
         relay_dns:
           type: boolean
           description: |-
@@ -6571,6 +6577,25 @@ components:
             Defaults to true.
           example: true
       description: An object that routes all traffic through another interface.
+    Instances.InstanceNetworkInterfaceRelayInstance:
+      type: object
+      required:
+        - uuid
+        - name
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: UUID of the instance the relay interface is attached to.
+        name:
+          type: string
+          description: Name of the instance the relay interface is attached to.
+        node:
+          type: string
+          description: |-
+            The name of the node the resource is placed on. Only present on metros
+            that span multiple nodes.
+      description: The instance that a relay interface is attached to.
     Instances.InstancePendingUpdate:
       type: object
       required:

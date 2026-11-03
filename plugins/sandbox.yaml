@@ -325,8 +325,11 @@ paths:
       operationId: WaitForCommand
       summary: Wait for Command
       description: |-
-        Wait for a command to finish, without a timeout. `404` is returned, with an
-        empty body, when no such command exists.
+        Wait for a command to finish, for up to `timeout_s` seconds, 55 when
+        absent, which is the most there is. `408` is returned when the time is up
+        with the command still running, `404`, with an empty body, when no such
+        command exists, and `400` when `timeout_s` is not between 0 and 55 or the
+        body does not parse.
       parameters:
         - name: uuid
           in: path
@@ -336,22 +339,28 @@ paths:
             format: uuid
       responses:
         default:
-          description: Returned once the command has finished.
+          description: Returned once the command has finished, within the timeout.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmptyResponse'
       tags:
         - commands
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandWaitRequest'
   /commands/{uuid}/wait_timeout:
     post:
       operationId: WaitForCommandWithTimeout
       summary: Wait for Command with Timeout
       description: |-
-        Wait for a command to finish, up to a timeout. Commands which are still
-        running when the timeout elapses return `408`. `404` is returned, with an
-        empty body, when no such command exists, and `400` when the timeout is not
-        a representable duration.
+        The old name for `POST .../wait` with a body: the same wait, `408` when
+        the time is up with the command still running, `404`, with an empty body,
+        when no such command exists, and `400` when `timeout_s` is not between 0
+        and 55.
       parameters:
         - name: uuid
           in: path
@@ -374,6 +383,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CommandWaitTimeoutRequest'
+      deprecated: true
   /fs/mkdir:
     post:
       operationId: CreateDirectory
@@ -649,6 +659,18 @@ components:
           type: boolean
           description: Whether to close standard input after injecting `data`.
       description: The request to feed data into a command's standard input.
+    CommandWaitRequest:
+      type: object
+      properties:
+        timeout_s:
+          type: number
+          format: double
+          description: |-
+            The longest to wait, in seconds; decimals are accepted, `0` only asks.
+            At most 55, and 55 when absent: a proxy in front cuts a silent request
+            at about a minute, so a longer wait is a loop on `408`.
+          example: 5
+      description: The request to wait for a command to finish.
     CommandWaitTimeoutRequest:
       type: object
       required:
@@ -657,7 +679,7 @@ components:
         timeout_s:
           type: number
           format: double
-          description: The maximum time to wait, in seconds. Decimals are accepted.
+          description: The maximum time to wait, in seconds, at most 55. Decimals are accepted.
           example: 1
       description: The request to wait for a command to finish, up to a timeout.
     EmptyResponse:

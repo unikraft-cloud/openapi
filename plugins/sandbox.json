@@ -402,7 +402,7 @@
       "post": {
         "operationId": "WaitForCommand",
         "summary": "Wait for Command",
-        "description": "Wait for a command to finish, without a timeout. `404` is returned, with an\nempty body, when no such command exists.",
+        "description": "Wait for a command to finish, for up to `timeout_s` seconds, 55 when\nabsent, which is the most there is. `408` is returned when the time is up\nwith the command still running, `404`, with an empty body, when no such\ncommand exists, and `400` when `timeout_s` is not between 0 and 55 or the\nbody does not parse.",
         "parameters": [
           {
             "name": "uuid",
@@ -416,7 +416,7 @@
         ],
         "responses": {
           "default": {
-            "description": "Returned once the command has finished.",
+            "description": "Returned once the command has finished, within the timeout.",
             "content": {
               "application/json": {
                 "schema": {
@@ -428,14 +428,24 @@
         },
         "tags": [
           "commands"
-        ]
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandWaitRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/commands/{uuid}/wait_timeout": {
       "post": {
         "operationId": "WaitForCommandWithTimeout",
         "summary": "Wait for Command with Timeout",
-        "description": "Wait for a command to finish, up to a timeout. Commands which are still\nrunning when the timeout elapses return `408`. `404` is returned, with an\nempty body, when no such command exists, and `400` when the timeout is not\na representable duration.",
+        "description": "The old name for `POST .../wait` with a body: the same wait, `408` when\nthe time is up with the command still running, `404`, with an empty body,\nwhen no such command exists, and `400` when `timeout_s` is not between 0\nand 55.",
         "parameters": [
           {
             "name": "uuid",
@@ -471,7 +481,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/fs/mkdir": {
@@ -849,6 +860,18 @@
         },
         "description": "The request to feed data into a command's standard input."
       },
+      "CommandWaitRequest": {
+        "type": "object",
+        "properties": {
+          "timeout_s": {
+            "type": "number",
+            "format": "double",
+            "description": "The longest to wait, in seconds; decimals are accepted, `0` only asks.\nAt most 55, and 55 when absent: a proxy in front cuts a silent request\nat about a minute, so a longer wait is a loop on `408`.",
+            "example": 5
+          }
+        },
+        "description": "The request to wait for a command to finish."
+      },
       "CommandWaitTimeoutRequest": {
         "type": "object",
         "required": [
@@ -858,7 +881,7 @@
           "timeout_s": {
             "type": "number",
             "format": "double",
-            "description": "The maximum time to wait, in seconds. Decimals are accepted.",
+            "description": "The maximum time to wait, in seconds, at most 55. Decimals are accepted.",
             "example": 1
           }
         },

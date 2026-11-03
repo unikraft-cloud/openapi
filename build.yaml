@@ -700,7 +700,9 @@ components:
             with the same key `succeeded`, the new build pushes its image, or imports
             its filesystem, to the new `output`, and builds the image only if it
             cannot read it. A request with `no_cache` always starts a new build. Failed builds do not count, and
-            neither do cancelled builds, from the cancel on. A build that reads from
+            neither do cancelled builds, from the cancel on. When the service runs
+            more than one replica, a build cancelled on another one counts until it
+            ends. A build that reads from
             the client's session is never shared: its request always starts a new
             build.
           example: 3f9a1c2b7d4e

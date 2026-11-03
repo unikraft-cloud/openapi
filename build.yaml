@@ -971,7 +971,7 @@ components:
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down or out of storage. Retrying later is the right response. |
         | `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |
         | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
-        | `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |
+        | `interrupted`      | The service restarted, or lost the replica that ran the build, while the build was running, so the build was lost. It can be submitted again. |
         | `builder_quota`    | `403`: the builder to create could not be created because the tenant is over its quota. Or, as the error of a build: the builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
     Kraftfile:
       anyOf:

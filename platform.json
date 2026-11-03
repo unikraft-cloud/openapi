@@ -1264,6 +1264,114 @@
         }
       }
     },
+    "/v1/instances/migrate": {
+      "put": {
+        "operationId": "MigrateInstances",
+        "summary": "Migrate Instances",
+        "description": "Migrate instances by ID(s) to another node. Call accept on the\ndestination node first. A running instance migrates live, a stopped one\nas it is. Requires the `migration` permission.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instances.MigrateInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "instances"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Instances.MigrateInstancesRequestItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instances/migrate/abort": {
+      "put": {
+        "operationId": "AbortInstanceMigrations",
+        "summary": "Abort Instance Migrations",
+        "description": "Abort the migrations of instances by ID(s). Only the source node can\nabort a migration, and not once it commits. Requires the `migration`\npermission.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instances.AbortInstanceMigrationsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "instances"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Common.NameOrUUID"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instances/migrate/accept": {
+      "put": {
+        "operationId": "AcceptInstanceMigrations",
+        "summary": "Accept Instance Migrations",
+        "description": "Accept migrations on this node. Issues a migration URL and token for each\nitem, to pass to the migrate request on the source node. A request\nwithout a body accepts one migration of any instance. Requires the\n`migration` permission.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instances.AcceptInstanceMigrationsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "instances"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Instances.AcceptInstanceMigrationsRequestItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/instances/start": {
       "put": {
         "operationId": "StartInstances",
@@ -1961,6 +2069,82 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Instances.GetInstancesMetricsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "instances"
+        ]
+      }
+    },
+    "/v1/instances/{uuid}/migrate": {
+      "put": {
+        "operationId": "MigrateInstanceByUUID",
+        "summary": "Migrate Instance by UUID",
+        "description": "Migrate instance by UUID to another node. Call accept on the destination\nnode first. A running instance migrates live, a stopped one as it is.\nRequires the `migration` permission.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instances.MigrateInstancesResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "instances"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Instances.MigrateInstanceByUUIDRequestBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instances/{uuid}/migrate/abort": {
+      "put": {
+        "operationId": "AbortInstanceMigrationByUUID",
+        "summary": "Abort Instance Migration by UUID",
+        "description": "Abort the migration of an instance by UUID. Only the source node can abort\na migration, and not once it commits. Requires the `migration` permission.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instances.AbortInstanceMigrationsResponse"
                 }
               }
             }
@@ -6080,6 +6264,201 @@
         },
         "description": "The result of unpinning a single image."
       },
+      "Instances.AbortInstanceMigrationsResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "instances": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Instances.AbortInstanceMigrationsResponseItem"
+                }
+              }
+            },
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Common.ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response message for aborting the migration of one or more\ninstance(s) given their UUID(s) or name(s)."
+      },
+      "Instances.AbortInstanceMigrationsResponseItem": {
+        "type": "object",
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether the operation was successful for this item."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information."
+          },
+          "error": {
+            "type": "integer",
+            "format": "int32",
+            "description": "An optional error code."
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the resource."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the resource."
+          }
+        },
+        "description": "Per-item result for an abort migrations operation."
+      },
+      "Instances.AcceptInstanceMigrationsRequestItem": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the instance the token is valid for. If omitted, the token\nis valid for any instance."
+          },
+          "ttl_s": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 3600,
+            "description": "The lifetime of the token until its first use in seconds, at most 3600.\nUses the default of the node if 0 or omitted.",
+            "example": 300
+          }
+        },
+        "description": "Parameters for accepting a migration on the destination node."
+      },
+      "Instances.AcceptInstanceMigrationsResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "instances": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Instances.AcceptInstanceMigrationsResponseItem"
+                }
+              }
+            },
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Common.ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response message for accepting migrations."
+      },
+      "Instances.AcceptInstanceMigrationsResponseItem": {
+        "type": "object",
+        "required": [
+          "url",
+          "token",
+          "ttl_s"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether the operation was successful for this item."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information."
+          },
+          "error": {
+            "type": "integer",
+            "format": "int32",
+            "description": "An optional error code."
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the instance the token is valid for, if one was given."
+          },
+          "url": {
+            "type": "string",
+            "description": "The migration URL of this node, to pass to the migrate request.",
+            "example": "https://node-2.example.com:4430"
+          },
+          "token": {
+            "type": "string",
+            "description": "The token for the migration, to pass to the migrate request."
+          },
+          "ttl_s": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The lifetime of the token until its first use in seconds.",
+            "example": 300
+          }
+        },
+        "description": "Per-item result for an accept migrations operation."
+      },
       "Instances.CheckpointAutokill": {
         "type": "object",
         "properties": {
@@ -8373,6 +8752,14 @@
             },
             "description": "Scheduled operations for this instance.\n\nEach schedule defines a calendar expression and an action (`start`,\n`stop`, `delete`, or `exec`) to perform at matching times. When the\naction is `exec`, the `args` field of the schedule specifies the command\nto run inside the instance."
           },
+          "migration": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.InstanceMigration"
+              }
+            ],
+            "description": "The migration of the instance, if it migrates or waits to migrate. Only\npresent for users with the `migration` permission."
+          },
           "autokill": {
             "allOf": [
               {
@@ -8520,6 +8907,58 @@
           }
         },
         "description": "A GPU attached to the instance."
+      },
+      "Instances.InstanceMigration": {
+        "type": "object",
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "incoming": {
+            "type": "boolean",
+            "description": "Whether the instance is the copy of an incoming migration. Only present\non the destination node.",
+            "example": true
+          },
+          "destination": {
+            "type": "string",
+            "description": "The migration URL of the destination. Only present on the source node.",
+            "example": "https://node-2.example.com:4430"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.InstanceMigrationState"
+              }
+            ],
+            "description": "The phase of the migration.",
+            "example": "copying"
+          },
+          "total_bytes": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The size of the files the migration copies in bytes, including the holes\nof sparse files. Only present once the migration knows the files.",
+            "example": 1073741824
+          },
+          "copied_bytes": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The bytes of these files that have been copied. Only present together\nwith total_bytes.",
+            "example": 536870912
+          }
+        },
+        "description": "The migration of an instance."
+      },
+      "Instances.InstanceMigrationState": {
+        "type": "string",
+        "enum": [
+          "waiting",
+          "queued",
+          "copying",
+          "syncing",
+          "committing",
+          "aborting"
+        ],
+        "description": "The phase of the migration of an instance.\n\n| Phase        | Description |\n|--------------|-------------|\n| `waiting`    | The instance is starting, stopping or draining, and the migration waits until it has started or stopped. |\n| `queued`     | The migration waits for a transfer slot on the source node. The instance can still be started, stopped and changed. |\n| `copying`    | The instance and the files of its volumes are copied to the destination. |\n| `syncing`    | The running instance is transferred to the destination. |\n| `committing` | The migration is being committed. |\n| `aborting`   | The migration is being aborted. |"
       },
       "Instances.InstanceNetworkInterface": {
         "type": "object",
@@ -8960,6 +9399,170 @@
           }
         },
         "description": "Automatic delete-on-idle configuration for the template instance."
+      },
+      "Instances.MigrateInstanceByUUIDRequestBody": {
+        "type": "object",
+        "required": [
+          "destination"
+        ],
+        "properties": {
+          "destination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.MigrateInstanceDestination"
+              }
+            ],
+            "description": "The destination, as returned by its accept request."
+          },
+          "timeout_s": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timeout in seconds to wait for the migration to end. No wait if 0\n(default). Use -1 for the largest possible value.\n\nA migration that waits in the queue or for the instance to start or\nstop has not ended. If the timeout expires first, the request fails\nwith a timeout and the instance reports the state of its migration.\nThe migration goes on.",
+            "example": 60
+          }
+        },
+        "description": "Parameters for migrating the instance to another node."
+      },
+      "Instances.MigrateInstanceDestination": {
+        "type": "object",
+        "required": [
+          "url",
+          "token"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The migration URL that the destination returned.",
+            "example": "https://node-2.example.com:4430"
+          },
+          "token": {
+            "type": "string",
+            "description": "The token that the destination returned."
+          }
+        },
+        "description": "The destination of a migration, as issued by its accept request."
+      },
+      "Instances.MigrateInstancesRequestItem": {
+        "type": "object",
+        "required": [
+          "destination"
+        ],
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the resource."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the resource."
+          },
+          "destination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.MigrateInstanceDestination"
+              }
+            ],
+            "description": "The destination, as returned by its accept request."
+          },
+          "timeout_s": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timeout in seconds to wait for the migration to end. No wait if 0\n(default). Use -1 for the largest possible value.\n\nA migration that waits in the queue or for the instance to start or\nstop has not ended. If the timeout expires first, the request fails\nwith a timeout and the instance reports the state of its migration.\nThe migration goes on.",
+            "example": 60
+          }
+        },
+        "description": "A single request item to migrate an instance."
+      },
+      "Instances.MigrateInstancesResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "instances": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Instances.MigrateInstancesResponseMigratedInstance"
+                }
+              }
+            },
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Common.ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response message for migrating one or more instance(s) given their\nUUID(s) or name(s)."
+      },
+      "Instances.MigrateInstancesResponseMigratedInstance": {
+        "type": "object",
+        "required": [
+          "uuid",
+          "name"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Common.ResponseStatus"
+              }
+            ],
+            "description": "Indicates whether the operation was successful for this item."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information."
+          },
+          "error": {
+            "type": "integer",
+            "format": "int32",
+            "description": "An optional error code."
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the resource."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the resource."
+          },
+          "migration": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instances.InstanceMigration"
+              }
+            ],
+            "description": "The migration of the instance. Present if the request did not wait,\nor if the wait timed out."
+          }
+        },
+        "description": "Per-item result for a migrate instances operation."
       },
       "Instances.MutableCheckpointInstanceOperation": {
         "type": "string",

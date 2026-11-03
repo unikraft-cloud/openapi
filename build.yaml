@@ -44,7 +44,7 @@ tags:
       A builder is the buildkitd instance, and its cache volume, that builds
       run on in the caller's own account, in the service's metro. Builds create
       their builder on first use; these operations create one ahead of a
-      build and look after its cache.
+      build, show the builds on it, look after its cache and delete it.
   - name: builds
     x-displayName: Builds
     description: |-
@@ -94,6 +94,82 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Builder'
+    get:
+      operationId: ListBuilders
+      summary: List Builders
+      description: List the builders of the caller's tenant in the service's metro.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBuildersResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builders
+  /v1/builders/{name}:
+    get:
+      operationId: GetBuilder
+      summary: Get Builder
+      description: |-
+        Get a builder by name: the builds of the caller's tenant on it, and its
+        instance. Only the builder of this name in the service's metro is looked
+        up, without waking it.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The name of the builder, `default` for the one builds use without a `builder`.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuilderStatus'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builders
+    delete:
+      operationId: DeleteBuilder
+      summary: Delete Builder
+      description: |-
+        Delete a builder by name: its instance and its cache. The builds running
+        on it fail, and a later build on it creates it again. Only the builder of
+        this name in the service's metro is deleted. A builder whose instance has
+        a delete lock is answered with `409`.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The name of the builder, `default` for the one builds use without a `builder`.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: There is no content to send for this request, but the headers may be useful.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      tags:
+        - builders
   /v1/builders/{name}/prune:
     post:
       operationId: PruneBuilder
@@ -807,6 +883,66 @@ components:
             never is. A delete lock on the builder's instance keeps it.
           example: 300000
       description: When to delete an idle builder.
+    BuilderInstance:
+      type: object
+      required:
+        - uuid
+        - name
+        - metro
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the instance.
+          example: 019a1b2c-3d4e-7f5a-8b6c-7d8e9f0a1b2c
+        name:
+          type: string
+          description: The name of the instance.
+          example: remote-builder-ci
+        metro:
+          type: string
+          description: The metro of the instance.
+          example: fra
+      description: The instance a builder runs as, which the platform's API answers for.
+    BuilderStatus:
+      type: object
+      required:
+        - name
+        - default
+        - builds
+        - waiting_builds
+        - max_builds
+        - instance
+      properties:
+        name:
+          type: string
+          description: The name of the builder.
+          example: ci
+        default:
+          type: boolean
+          description: Whether builds without a `builder` run on it.
+        builds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Build'
+          description: The builds of the tenant running on the builder now.
+        waiting_builds:
+          type: integer
+          format: int32
+          description: |-
+            The number of builds of the tenant waiting for the builder, or for any
+            builder of the pool for `default`.
+          example: 1
+        max_builds:
+          type: integer
+          format: int32
+          description: The number of builds that run on the builder at once; more wait.
+          example: 2
+        instance:
+          allOf:
+            - $ref: '#/components/schemas/BuilderInstance'
+          description: The instance of the builder, for its image, sizes and state.
+      description: A builder of the caller's tenant, and the builds the service runs on it.
     BuilderUsage:
       type: object
       required:
@@ -965,7 +1101,7 @@ components:
         | `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |
         | `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. `503`, with `Retry-After`, while the service checks too many tokens at once. Retrying later is the right response. |
         | `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. Or the caller has no builder of this name. |
-        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request, or the builder to create, conflicts with the existing builder of that name. |
+        | `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request, or the builder to create, conflicts with the existing builder of that name. Or the instance of the builder to delete has a delete lock. |
         | `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may, or the platform limits the rate of its requests. Submit the build again once one of them has finished, or later. |
         | `rate_limited`     | `429`, with `Retry-After`: the platform refused too many tokens from the caller's address. Wait as long as `Retry-After` says. |
         | `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down or out of storage. Retrying later is the right response. |
@@ -1007,6 +1143,17 @@ components:
               - git
           - required:
               - url
+    ListBuildersResponse:
+      type: object
+      required:
+        - builders
+      properties:
+        builders:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuilderStatus'
+          description: The builders, by name.
+      description: The response message for listing the builders of the caller's tenant.
     ListBuildsResponse:
       type: object
       required:

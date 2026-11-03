@@ -1,0 +1,411 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Unikraft Cloud noVNC Plugin API",
+    "version": "v1.0.0",
+    "description": "This specification describes the noVNC plugin API, a control API exposed by\nan instance running a virtual desktop on Unikraft Cloud.  It reads and\nresizes the screen of the desktop and moves and clicks its pointer, so that a\nprogram can drive the desktop without a VNC client.\n\nEvery operation declares a single `default` response: the standard response\nenvelope, which carries the outcome of the request in `status`, the\nhuman-readable reason for a failure in `message` and the HTTP status code in\n`errors`."
+  },
+  "tags": [
+    {
+      "name": "Pointer",
+      "x-displayName": "Pointer"
+    },
+    {
+      "name": "Screen",
+      "x-displayName": "Screen"
+    }
+  ],
+  "paths": {
+    "/pointer/click": {
+      "post": {
+        "operationId": "ClickPointer",
+        "description": "Click a button of the pointer, optionally at a position.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointerResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Pointer"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClickRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pointer/move": {
+      "post": {
+        "operationId": "MovePointer",
+        "description": "Move the pointer to a position on the screen.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointerResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Pointer"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovePointerRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/screen": {
+      "get": {
+        "operationId": "GetScreen",
+        "description": "Get the size of the screen.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Screen"
+        ]
+      },
+      "put": {
+        "operationId": "ResizeScreen",
+        "description": "Resize the screen.  The windows of the desktop stay open and connected\nVNC clients follow the new size.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Screen"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResizeScreenRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerToken": []
+    }
+  ],
+  "components": {
+    "schemas": {
+      "ClickRequest": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "(OPTIONAL) The position to move the pointer to before the click.  When\nomitted, the click is at the current position of the pointer."
+          },
+          "y": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "(OPTIONAL) See `x`.  Both or neither of `x` and `y` must be set."
+          },
+          "button": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PointerButton"
+              }
+            ],
+            "description": "The button to click.",
+            "default": "left"
+          },
+          "count": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "The number of clicks, for example `2` for a double click.",
+            "default": 1
+          }
+        },
+        "description": "The request to click the pointer."
+      },
+      "MovePointerRequest": {
+        "type": "object",
+        "required": [
+          "x",
+          "y"
+        ],
+        "properties": {
+          "x": {
+            "type": "integer",
+            "format": "uint32",
+            "example": 512
+          },
+          "y": {
+            "type": "integer",
+            "format": "uint32",
+            "example": 384
+          }
+        },
+        "description": "The request to move the pointer, in pixels from the top-left corner."
+      },
+      "PointerButton": {
+        "type": "string",
+        "enum": [
+          "left",
+          "middle",
+          "right"
+        ],
+        "description": "The pointer button to click."
+      },
+      "PointerResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PointerResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The position of the pointer after the operation."
+      },
+      "PointerResponseData": {
+        "type": "object",
+        "required": [
+          "x",
+          "y"
+        ],
+        "properties": {
+          "x": {
+            "type": "integer",
+            "format": "uint32",
+            "example": 512
+          },
+          "y": {
+            "type": "integer",
+            "format": "uint32",
+            "example": 384
+          }
+        },
+        "description": "A position on the screen, in pixels from the top-left corner."
+      },
+      "ResizeScreenRequest": {
+        "type": "object",
+        "required": [
+          "width",
+          "height"
+        ],
+        "properties": {
+          "width": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 2560,
+            "example": 1280
+          },
+          "height": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 1600,
+            "example": 800
+          }
+        },
+        "description": "The request to resize the screen, in pixels."
+      },
+      "ResponseError": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The HTTP status code of the error."
+          }
+        },
+        "description": "The error response message for an API request."
+      },
+      "ResponseStatus": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "partial_success"
+        ],
+        "description": "The response status of an API request."
+      },
+      "ScreenResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScreenResponseData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The size of the screen.  `400` is returned by a resize when the requested\nsize is larger than the largest size the desktop supports."
+      },
+      "ScreenResponseData": {
+        "type": "object",
+        "required": [
+          "width",
+          "height"
+        ],
+        "properties": {
+          "width": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "example": 1024
+          },
+          "height": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "example": 768
+          }
+        },
+        "description": "The size of the screen, in pixels."
+      }
+    },
+    "securitySchemes": {
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "A desktop running locally, with `--api-addr :8080`",
+      "variables": {}
+    },
+    {
+      "url": "https://api.{metro}.unikraft.cloud/v1/instances/{instance}/plugins/novnc",
+      "description": "The noVNC plugin route of an instance running on a Unikraft Cloud metro",
+      "variables": {
+        "metro": {
+          "default": "",
+          "description": "The metro the instance is running in, e.g. `fra`."
+        },
+        "instance": {
+          "default": "",
+          "description": "The UUID or name of the instance running the desktop."
+        }
+      }
+    }
+  ],
+  "x-unikraft-plugin-rom": "unikraft.io/plugins/novnc",
+  "x-unikraft-plugin-name": "novnc"
+}

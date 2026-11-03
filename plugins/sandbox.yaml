@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Unikraft Cloud Sandbox Plugin API
-  version: v1.0.2
+  version: v1.2.0
   description: |-
     This specification describes the Sandbox plugin API, a control API exposed by
     a sandbox instance running on Unikraft Cloud. It provides two services: the
@@ -15,6 +15,11 @@ info:
     status codes an operation can return are documented on the operation. The two
     endpoints which stream bytes rather than JSON (the raw command log and the
     raw file download) return their payload verbatim, unenveloped.
+
+    One endpoint is not an HTTP operation and so does not appear below:
+    `GET /commands/{uuid}/ws` upgrades to a WebSocket that streams a command's
+    output as it is produced and takes its input, `eof`, `resize` and `signal`
+    as frames. The frame contract is documented in the plugin's README.
 tags:
   - name: fs
     x-displayName: Filesystem
@@ -48,12 +53,16 @@ paths:
       operationId: RunCommand
       summary: Start Command
       description: |-
-        Start a command in the sandbox. `500` is returned when the command could
-        not be spawned.
+        Start a command in the sandbox, and with `req_timeout_s` wait for it, so
+        that starting, waiting, inspecting and fetching the output take one
+        request. `500` is returned when the command could not be spawned, and
+        `400` when `cols` or `rows` are given without `pty` or are zero, when
+        `req_timeout_s` is not between 0 (exclusive) and 55 seconds, or when
+        `logs_limit` or `forget` are given without `req_timeout_s`.
       parameters: []
       responses:
         default:
-          description: The UUID assigned to the newly started command.
+          description: The command that was started, as GET .../{uuid} describes it, plus its output (logs) when req_timeout_s was given.
           content:
             application/json:
               schema:
@@ -216,13 +225,45 @@ paths:
                 format: binary
       tags:
         - commands
+  /commands/{uuid}/resize:
+    post:
+      operationId: ResizeCommandTerminal
+      summary: Resize Command Terminal
+      description: |-
+        Resize a command's terminal; the foreground job is told with SIGWINCH.
+        `404` is returned, with an empty body, when no such command exists, `400`
+        when the command has no terminal or the size is zero, and `409` once the
+        command has finished.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: The outcome of resizing the terminal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      tags:
+        - commands
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandResizeRequest'
   /commands/{uuid}/signal:
     post:
       operationId: SignalCommand
       summary: Signal Command
       description: |-
         Send a signal to a command. `404` is returned, with an empty body, when no
-        such command exists, and `400` when the signal is not a known signal name.
+        such command exists, and `400` when the signal is not one: a number the
+        kernel does not have, or a name that is not a signal's.
       parameters:
         - name: uuid
           in: path
@@ -252,8 +293,11 @@ paths:
       description: |-
         Feed data into the standard input of a command. `404` is returned, with an
         empty body, when no such command exists, `410` if the command's logs have been
-        deleted, and `400` when `data` is not valid base64.
-        Feeding data into a command whose standard input has been closed is an error.
+        deleted, `400` when `data` is not valid base64, `409` when the command has
+        finished or its standard input is closed (an `eof` alone is still fine),
+        and `429` when the command has not yet read what it was already given
+        (its stdin queue holds 8 MiB; on a terminal an `eof` counts as the byte
+        it types).
       parameters:
         - name: uuid
           in: path
@@ -281,8 +325,11 @@ paths:
       operationId: WaitForCommand
       summary: Wait for Command
       description: |-
-        Wait for a command to finish, without a timeout. `404` is returned, with an
-        empty body, when no such command exists.
+        Wait for a command to finish, for up to `timeout_s` seconds, 55 when
+        absent, which is the most there is. `408` is returned when the time is up
+        with the command still running, `404`, with an empty body, when no such
+        command exists, and `400` when `timeout_s` is not between 0 and 55 or the
+        body does not parse.
       parameters:
         - name: uuid
           in: path
@@ -292,22 +339,28 @@ paths:
             format: uuid
       responses:
         default:
-          description: Returned once the command has finished.
+          description: Returned once the command has finished, within the timeout.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmptyResponse'
       tags:
         - commands
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandWaitRequest'
   /commands/{uuid}/wait_timeout:
     post:
       operationId: WaitForCommandWithTimeout
       summary: Wait for Command with Timeout
       description: |-
-        Wait for a command to finish, up to a timeout. Commands which are still
-        running when the timeout elapses return `408`. `404` is returned, with an
-        empty body, when no such command exists, and `400` when the timeout is not
-        a representable duration.
+        The old name for `POST .../wait` with a body: the same wait, `408` when
+        the time is up with the command still running, `404`, with an empty body,
+        when no such command exists, and `400` when `timeout_s` is not between 0
+        and 55.
       parameters:
         - name: uuid
           in: path
@@ -330,6 +383,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CommandWaitTimeoutRequest'
+      deprecated: true
   /fs/mkdir:
     post:
       operationId: CreateDirectory
@@ -557,6 +611,23 @@ components:
         The response to fetching the output of a command. `404` is returned, with an
         empty body, when no command with the given UUID exists. `410` is returned, with an
         empty body, if the command's logs have been deleted.
+    CommandResizeRequest:
+      type: object
+      required:
+        - cols
+        - rows
+      properties:
+        cols:
+          type: integer
+          format: uint16
+          description: The new width, in columns.
+          example: 120
+        rows:
+          type: integer
+          format: uint16
+          description: The new height, in rows.
+          example: 40
+      description: The request to resize a command's terminal.
     CommandSignalRequest:
       type: object
       required:
@@ -569,7 +640,10 @@ components:
             - type: string
           description: |-
             The signal to send, either as a number or as a name, with or without the
-            `SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`.
+            `SIG` prefix, e.g. `15`, `TERM` or `SIGTERM`. `0` sends nothing and only
+            checks that the command can be signalled. Real-time signals go by number:
+            where `SIGRTMIN` sits is up to the program's libc (34 on glibc, 35 on
+            musl), so they have no names here.
           example: 15
       description: The request to send a signal to a command.
     CommandStdinRequest:
@@ -585,6 +659,18 @@ components:
           type: boolean
           description: Whether to close standard input after injecting `data`.
       description: The request to feed data into a command's standard input.
+    CommandWaitRequest:
+      type: object
+      properties:
+        timeout_s:
+          type: number
+          format: double
+          description: |-
+            The longest to wait, in seconds; decimals are accepted, `0` only asks.
+            At most 55, and 55 when absent: a proxy in front cuts a silent request
+            at about a minute, so a longer wait is a loop on `408`.
+          example: 5
+      description: The request to wait for a command to finish.
     CommandWaitTimeoutRequest:
       type: object
       required:
@@ -593,7 +679,7 @@ components:
         timeout_s:
           type: number
           format: double
-          description: The maximum time to wait, in seconds. Decimals are accepted.
+          description: The maximum time to wait, in seconds, at most 55. Decimals are accepted.
           example: 1
       description: The request to wait for a command to finish, up to a timeout.
     EmptyResponse:
@@ -638,6 +724,8 @@ components:
         - cmdline
         - cwd
         - env
+        - pty
+        - duration_ms
         - exitcode
       properties:
         uuid:
@@ -661,6 +749,16 @@ components:
             type: string
           nullable: true
           description: Environment variables, if supplied at startup, else null
+        pty:
+          type: boolean
+          description: Whether the command runs on a pseudo-terminal.
+        duration_ms:
+          type: integer
+          format: uint64
+          nullable: true
+          description: |-
+            Milliseconds from start to exit, or to now while the command runs. `null`
+            for a command restored from a status file written before it was recorded.
         exitcode:
           type: integer
           format: int32
@@ -823,12 +921,58 @@ components:
       type: object
       required:
         - uuid
+        - cmdline
+        - cwd
+        - env
+        - pty
+        - duration_ms
+        - exitcode
       properties:
         uuid:
           type: string
           format: uuid
-          description: The UUID assigned to the newly started command.
-      description: The identity of a newly started command.
+          description: The UUID of the command.
+        cmdline:
+          anyOf:
+            - $ref: '#/components/schemas/CommandLineShell'
+            - $ref: '#/components/schemas/CommandLineArgs'
+          description: |-
+            The command the command was started with, in the form it was supplied in:
+            a shell command line, or an argument vector.
+        cwd:
+          type: string
+          nullable: true
+          description: The current working directory, if supplied at startup, else null
+        env:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Environment variables, if supplied at startup, else null
+        pty:
+          type: boolean
+          description: Whether the command runs on a pseudo-terminal.
+        duration_ms:
+          type: integer
+          format: uint64
+          nullable: true
+          description: |-
+            Milliseconds from start to exit, or to now while the command runs. `null`
+            for a command restored from a status file written before it was recorded.
+        exitcode:
+          type: integer
+          format: int32
+          nullable: true
+          description: |-
+            The exit code of the command. It is `null` while the command is still
+            running.
+        logs:
+          allOf:
+            - $ref: '#/components/schemas/CommandLogsData'
+          description: |-
+            Only with `req_timeout_s`: the output, as `GET .../logs` returns it.
+            Absent if the logs were deleted while the request waited.
+      description: The command that was started, as `GET .../{uuid}` describes it.
     RunCommandRequest:
       type: object
       required:
@@ -842,7 +986,10 @@ components:
             The command to run: a command line interpreted by the shell, or an argument
             vector executed directly. A bare program name in a vector is looked up in
             the `PATH` of `env`, falling back to the sandbox's own `PATH`. `400` is
-            returned if the vector is empty or the program cannot be resolved.
+            returned if the vector is empty, the program cannot be resolved or run,
+            `cwd` is not a directory, an environment variable name is empty or has a
+            `=` in it, or the request holds what exec will not take (NUL bytes, an
+            argument list past the kernel's limit).
           example: echo hello
         cwd:
           type: string
@@ -853,6 +1000,58 @@ components:
           additionalProperties:
             type: string
           description: (OPTIONAL) Environment variables
+        pty:
+          type: boolean
+          description: |-
+            (OPTIONAL) Run the command on a pseudo-terminal instead of pipes. Its
+            output, stdout and stderr merged as a terminal shows them, is served as
+            `stdout`; input fed to it is echoed by the terminal; an `eof` on stdin
+            types the terminal's end-of-input character rather than closing anything;
+            and deleting the logs hangs the terminal up, which ends most commands.
+            `TERM` is set to `xterm-256color` unless `env` provides one.
+        cols:
+          type: integer
+          format: uint16
+          description: (OPTIONAL) The terminal's width in columns. Needs `pty`; 80 by default.
+        rows:
+          type: integer
+          format: uint16
+          description: (OPTIONAL) The terminal's height in rows. Needs `pty`; 24 by default.
+        stdin:
+          type: string
+          description: |-
+            (OPTIONAL) Bytes to feed into standard input before anything else,
+            base64-encoded, exactly as a `POST .../stdin` right after the start would.
+          example: aGVsbG8K
+        stdin_eof:
+          type: boolean
+          description: |-
+            (OPTIONAL) Whether to close standard input after `stdin` (at once when
+            there is none). Defaults to `true` when `req_timeout_s` is given, since
+            nothing can be fed until the request answers, and to `false` otherwise.
+        req_timeout_s:
+          type: number
+          format: double
+          description: |-
+            (OPTIONAL) Block until the command exits or this many seconds have
+            passed, then answer with the command's state and output (`logs`). More
+            than 0 and at most 55: a proxy in front cuts a silent request at about a
+            minute. A timeout is not an error: the answer has `exitcode: null`, the
+            output so far, and the command keeps running, addressable by UUID as any
+            other. Absent: answer as soon as the command has started.
+          example: 30
+        logs_limit:
+          type: integer
+          format: uint64
+          description: |-
+            (OPTIONAL) With `req_timeout_s`: at most this many bytes of each stream in
+            the answer, the rest staying at `GET .../logs`. Whole streams by default.
+        forget:
+          type: boolean
+          description: |-
+            (OPTIONAL) With `req_timeout_s`: forget the command once it has finished,
+            as `DELETE .../{uuid}` would, so that one request is the whole exchange.
+            Does nothing on a timeout, when the UUID is still needed.
       description: The request to start a command in the sandbox.
     RunCommandResponse:
       type: object

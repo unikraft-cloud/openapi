@@ -1305,7 +1305,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "(OPTIONAL) Environment variables"
+            "description": "(OPTIONAL) Environment variables: the command's whole environment,\nunless the sandbox is configured with `inherit_env`, when they are laid\nover the environment the sandbox itself was started with."
           },
           "pty": {
             "type": "boolean",

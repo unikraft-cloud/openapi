@@ -999,7 +999,10 @@ components:
           type: object
           additionalProperties:
             type: string
-          description: (OPTIONAL) Environment variables
+          description: |-
+            (OPTIONAL) Environment variables: the command's whole environment,
+            unless the sandbox is configured with `inherit_env`, when they are laid
+            over the environment the sandbox itself was started with.
         pty:
           type: boolean
           description: |-

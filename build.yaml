@@ -27,9 +27,11 @@ info:
     the code `unsupported`.
 
     One endpoint is not an HTTP operation and so does not appear below:
-    `POST /v1/builds/{id}/session` attaches the client's buildkit session to a
-    waiting build, as an h2c upgrade in the shape of dockerd's `/session`, with
-    its `X-Docker-Expose-Session-*` headers. After the `101`, the connection
+    `GET /v1/builds/{id}/session` attaches the client's buildkit session to a
+    waiting build, as a WebSocket upgrade whose binary messages carry the
+    session, with the `X-Docker-Expose-Session-*` headers of dockerd's
+    `/session`. A `POST` takes the session as an h2c upgrade instead, as dockerd
+    does. After the `101`, the connection
     serves the build's session sources, secrets, SSH agents and registry
     credentials until the build ends. A session that does not advertise a
     method the build needs is answered with `400`, and a build that does not

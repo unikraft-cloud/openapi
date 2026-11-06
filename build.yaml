@@ -1523,6 +1523,6 @@ components:
       type: http
       scheme: bearer
 servers:
-  - url: https://build.unikraft.cloud
+  - url: https://controlplane.unikraft.com
     description: The Unikraft Cloud build service
     variables: {}

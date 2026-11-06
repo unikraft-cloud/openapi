@@ -44,9 +44,9 @@ tags:
     x-displayName: Builders
     description: |-
       A builder is the buildkitd instance, and its cache volume, that builds
-      run on in the caller's own account, in the service's metro. Builds create
-      their builder on first use; these operations create one ahead of a
-      build, show the builds on it, look after its cache and delete it.
+      run on in the caller's own account and metro. Builds create their
+      builder on first use; these operations create one ahead of a build,
+      show the builds on it, look after its cache and delete it.
   - name: builds
     x-displayName: Builds
     description: |-
@@ -61,7 +61,7 @@ paths:
       operationId: CreateBuilder
       summary: Create Builder
       description: |-
-        Create a builder of the caller's tenant in the service's metro, which then
+        Create a builder of the caller's tenant in the caller's metro, which then
         scales to zero until a build uses it. A builder that already exists is
         answered with `200` if every field of the request matches it and `409`
         otherwise, and is left as it is. A tenant over its quota is answered with
@@ -99,7 +99,7 @@ paths:
     get:
       operationId: ListBuilders
       summary: List Builders
-      description: List the builders of the caller's tenant in the service's metro.
+      description: List the builders of the caller's tenant in the caller's metro.
       parameters: []
       responses:
         '200':
@@ -122,7 +122,7 @@ paths:
       summary: Get Builder
       description: |-
         Get a builder by name: the builds of the caller's tenant on it, and its
-        instance. Only the builder of this name in the service's metro is looked
+        instance. Only the builder of this name in the caller's metro is looked
         up, without waking it.
       parameters:
         - name: name
@@ -152,7 +152,7 @@ paths:
       description: |-
         Delete a builder by name: its instance and its cache. The builds running
         on it fail, and a later build on it creates it again. Only the builder of
-        this name in the service's metro is deleted. A builder whose instance has
+        this name in the caller's metro is deleted. A builder whose instance has
         a delete lock is answered with `409`.
       parameters:
         - name: name
@@ -178,7 +178,7 @@ paths:
       summary: Prune Builder
       description: |-
         Free the records of a builder's cache that no build uses, waking the
-        builder and keeping it. Only the builder of this name in the service's
+        builder and keeping it. Only the builder of this name in the caller's
         metro is pruned. A builder that does not exist is answered with `404`, and
         is not created.
       parameters:
@@ -209,7 +209,7 @@ paths:
       summary: Get Builder Usage
       description: |-
         Get the disk usage of a builder's cache, waking the builder. Only the
-        builder of this name in the service's metro is counted. A builder that
+        builder of this name in the caller's metro is counted. A builder that
         does not exist is answered with `404`, and is not created.
       parameters:
         - name: name
@@ -734,7 +734,7 @@ components:
           type: string
           description: |-
             The metro of `volume`, only needed when it is not the metro of the
-            service: the name of a metro of Unikraft Cloud, or the https URL of the API
+            build: the name of a metro of Unikraft Cloud, or the https URL of the API
             of any other metro. Only valid with `volume`.
           example: fra
       description: |-

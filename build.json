@@ -9,7 +9,7 @@
     {
       "name": "builders",
       "x-displayName": "Builders",
-      "description": "A builder is the buildkitd instance, and its cache volume, that builds\nrun on in the caller's own account, in the service's metro. Builds create\ntheir builder on first use; these operations create one ahead of a\nbuild, show the builds on it, look after its cache and delete it."
+      "description": "A builder is the buildkitd instance, and its cache volume, that builds\nrun on in the caller's own account and metro. Builds create their\nbuilder on first use; these operations create one ahead of a build,\nshow the builds on it, look after its cache and delete it."
     },
     {
       "name": "builds",
@@ -22,7 +22,7 @@
       "post": {
         "operationId": "CreateBuilder",
         "summary": "Create Builder",
-        "description": "Create a builder of the caller's tenant in the service's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`.",
+        "description": "Create a builder of the caller's tenant in the caller's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`.",
         "parameters": [],
         "responses": {
           "200": {
@@ -73,7 +73,7 @@
       "get": {
         "operationId": "ListBuilders",
         "summary": "List Builders",
-        "description": "List the builders of the caller's tenant in the service's metro.",
+        "description": "List the builders of the caller's tenant in the caller's metro.",
         "parameters": [],
         "responses": {
           "200": {
@@ -106,7 +106,7 @@
       "get": {
         "operationId": "GetBuilder",
         "summary": "Get Builder",
-        "description": "Get a builder by name: the builds of the caller's tenant on it, and its\ninstance. Only the builder of this name in the service's metro is looked\nup, without waking it.",
+        "description": "Get a builder by name: the builds of the caller's tenant on it, and its\ninstance. Only the builder of this name in the caller's metro is looked\nup, without waking it.",
         "parameters": [
           {
             "name": "name",
@@ -147,7 +147,7 @@
       "delete": {
         "operationId": "DeleteBuilder",
         "summary": "Delete Builder",
-        "description": "Delete a builder by name: its instance and its cache. The builds running\non it fail, and a later build on it creates it again. Only the builder of\nthis name in the service's metro is deleted. A builder whose instance has\na delete lock is answered with `409`.",
+        "description": "Delete a builder by name: its instance and its cache. The builds running\non it fail, and a later build on it creates it again. Only the builder of\nthis name in the caller's metro is deleted. A builder whose instance has\na delete lock is answered with `409`.",
         "parameters": [
           {
             "name": "name",
@@ -183,7 +183,7 @@
       "post": {
         "operationId": "PruneBuilder",
         "summary": "Prune Builder",
-        "description": "Free the records of a builder's cache that no build uses, waking the\nbuilder and keeping it. Only the builder of this name in the service's\nmetro is pruned. A builder that does not exist is answered with `404`, and\nis not created.",
+        "description": "Free the records of a builder's cache that no build uses, waking the\nbuilder and keeping it. Only the builder of this name in the caller's\nmetro is pruned. A builder that does not exist is answered with `404`, and\nis not created.",
         "parameters": [
           {
             "name": "name",
@@ -226,7 +226,7 @@
       "get": {
         "operationId": "GetBuilderUsage",
         "summary": "Get Builder Usage",
-        "description": "Get the disk usage of a builder's cache, waking the builder. Only the\nbuilder of this name in the service's metro is counted. A builder that\ndoes not exist is answered with `404`, and is not created.",
+        "description": "Get the disk usage of a builder's cache, waking the builder. Only the\nbuilder of this name in the caller's metro is counted. A builder that\ndoes not exist is answered with `404`, and is not created.",
         "parameters": [
           {
             "name": "name",
@@ -853,7 +853,7 @@
           },
           "metro": {
             "type": "string",
-            "description": "The metro of `volume`, only needed when it is not the metro of the\nservice: the name of a metro of Unikraft Cloud, or the https URL of the API\nof any other metro. Only valid with `volume`.",
+            "description": "The metro of `volume`, only needed when it is not the metro of the\nbuild: the name of a metro of Unikraft Cloud, or the https URL of the API\nof any other metro. Only valid with `volume`.",
             "example": "fra"
           }
         },

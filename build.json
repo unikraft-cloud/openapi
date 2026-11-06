@@ -3,23 +3,294 @@
   "info": {
     "title": "Unikraft Cloud Build API",
     "version": "v0.1.0",
-    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile or a plain image from a Dockerfile on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON\nor plain text.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`POST /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as an h2c upgrade in the shape of dockerd's `/session`, with\nits `X-Docker-Expose-Session-*` headers. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, or already has one, with `409`. Not supported yet."
+    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile, or from a Dockerfile alone, on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON\nor plain text.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`GET /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as a WebSocket upgrade whose binary messages carry the\nsession, with the `X-Docker-Expose-Session-*` headers of dockerd's\n`/session`. A `POST` takes the session as an h2c upgrade instead, as dockerd\ndoes. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, already has one, or that another user started, with\n`409`. A build that no session attaches to within a minute fails. The build\nreads from the session only when it needs to, thus a session that ends\nearly does not end the build, but fails the next read that needs it."
   },
   "tags": [
     {
+      "name": "builders",
+      "x-displayName": "Builders",
+      "description": "A builder is the buildkitd instance, and its cache volume, that builds\nrun on in the caller's own account and metro. Builds create their\nbuilder on first use; these operations create one ahead of a build,\nshow the builds on it, look after its cache and delete it."
+    },
+    {
       "name": "builds",
       "x-displayName": "Builds",
-      "description": "A build turns its sources into a Unikraft image or a plain image, on a\nbuildkitd running in the caller's own account, and pushes the image to\nregistries or imports it into volumes. A build runs whether or not anyone\nis watching it, and its progress can be followed, replayed from the\nstart, until it has finished."
+      "description": "A build turns its sources into a Unikraft image, on a buildkitd running\nin the caller's own account, and pushes the image to registries or\nimports it into volumes. A build runs whether or not anyone is watching\nit, and its progress can be followed, replayed from the start, until it\nhas finished."
     }
   ],
   "paths": {
+    "/v1/builders": {
+      "post": {
+        "operationId": "CreateBuilder",
+        "summary": "Create Builder",
+        "description": "Create a builder of the caller's tenant in the caller's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The builder already exists and every field of the request matches it:\n`200`, with the builder as requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Builder"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The builder was created: `201`, with the builder as requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Builder"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Builder"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "ListBuilders",
+        "summary": "List Builders",
+        "description": "List the builders of the caller's tenant in the caller's metro.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListBuildersResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
+    "/v1/builders/{name}": {
+      "get": {
+        "operationId": "GetBuilder",
+        "summary": "Get Builder",
+        "description": "Get a builder by name: the builds of the caller's tenant on it, and its\ninstance. Only the builder of this name in the caller's metro is looked\nup, without waking it.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuilderStatus"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteBuilder",
+        "summary": "Delete Builder",
+        "description": "Delete a builder by name: its instance and its cache. The builds running\non it fail, and a later build on it creates it again. Only the builder of\nthis name in the caller's metro is deleted. A builder whose instance has\na delete lock is answered with `409`.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
+    "/v1/builders/{name}/prune": {
+      "post": {
+        "operationId": "PruneBuilder",
+        "summary": "Prune Builder",
+        "description": "Free the records of a builder's cache that no build uses, waking the\nbuilder and keeping it. Only the builder of this name in the caller's\nmetro is pruned. A builder that does not exist is answered with `404`, and\nis not created.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PruneBuilderResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
+    "/v1/builders/{name}/usage": {
+      "get": {
+        "operationId": "GetBuilderUsage",
+        "summary": "Get Builder Usage",
+        "description": "Get the disk usage of a builder's cache, waking the builder. Only the\nbuilder of this name in the caller's metro is counted. A builder that\ndoes not exist is answered with `404`, and is not created.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the builder, `default` for the one builds use without a `builder`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuilderUsage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "builders"
+        ]
+      }
+    },
     "/v1/builds": {
       "post": {
         "operationId": "CreateBuild",
         "summary": "Create Build",
-        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`.",
+        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`. A\nrequest whose `hints.dedupe` names a running or succeeded build with the\nsame `output` is answered with `200` and that build, and starts nothing.\nWith other `output`, the new build pushes the image of a succeeded build.",
         "parameters": [],
         "responses": {
+          "200": {
+            "description": "The response message for creating a build whose `hints.dedupe` names an\nexisting build with the same `output`: `200`, with that build as it is, and\na `Location` header naming it.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "description": "The path of the existing build, e.g. `/v1/builds/{id}`.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Build"
+                }
+              }
+            }
+          },
           "201": {
             "description": "The response message for creating a build: `201`, with the new build, which\nis `waiting` if it reads anything from the client's session and `running`\notherwise, and a `Location` header naming it.",
             "headers": {
@@ -67,7 +338,7 @@
       "get": {
         "operationId": "ListBuilds",
         "summary": "List Builds",
-        "description": "List the builds of the caller's tenant, newest first.",
+        "description": "List the builds of the caller's tenant, newest first. A finished build is\nkept for 7 days. A new build removes the oldest finished builds of its\ntenant once they pass the tenant's storage, and the service removes the\noldest finished builds of all tenants when it runs out of storage. The\nbuilds come in pages, of 10 without `limit`: `next` gives the page that\nfollows. A build created after the first page is only on a new first page.",
         "parameters": [
           {
             "name": "status",
@@ -83,11 +354,22 @@
             "name": "limit",
             "in": "query",
             "required": false,
-            "description": "The maximum number of builds to return. When omitted, every matching\nbuild is returned.",
+            "description": "The maximum number of builds in the page, from 1 to 50. Defaults to 10,\nalso when there are more builds.",
             "schema": {
               "type": "integer",
               "format": "int32",
-              "minimum": 1
+              "minimum": 1,
+              "maximum": 50
+            },
+            "explode": false
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The `next` of the previous page, for the builds that follow it. It is\nopaque: pass it as it is, with the `status` of that page.",
+            "schema": {
+              "type": "string"
             },
             "explode": false
           }
@@ -256,7 +538,7 @@
       "get": {
         "operationId": "GetBuildLogs",
         "summary": "Get Build Logs",
-        "description": "Follow the progress of a build by ID. Every request replays the stream\nfrom the start and ends once the build has finished, with a `result` or an\n`error` as its last line, so reconnecting is just asking again.\n`Accept: text/plain` renders the stream as text instead of\nnewline-delimited JSON.",
+        "description": "Follow the progress of a build by ID. Every request replays the stream\nfrom the start and ends once the build has finished, with a `result` or an\n`error` as its last line, so reconnecting is just asking again. Past\n8 MiB, the stream has one event that says so, and then only its last\nline. `Accept: text/plain` renders the stream as text instead of\nnewline-delimited JSON.",
         "parameters": [
           {
             "name": "id",
@@ -337,6 +619,78 @@
             "description": "The name of the builder the build runs on.",
             "example": "default"
           },
+          "kraftfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Kraftfile"
+              }
+            ],
+            "description": "The Kraftfile of the request. Absent for a build without one, and for a\nbuild from before the service kept its requests."
+          },
+          "contexts": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildContexts"
+              }
+            ],
+            "description": "The contexts of the request, where the build gets its files from. Absent\nfor a build from before the service kept its requests."
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The platforms of the request. Absent when the request names none.",
+            "example": [
+              "linux/amd64"
+            ]
+          },
+          "build_args": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The build args of the request, by name. Absent when it has none.",
+            "example": {
+              "VERSION": "1.2.3"
+            }
+          },
+          "target": {
+            "type": "string",
+            "description": "The Dockerfile stage of the request. Absent when it names none.",
+            "example": "runtime"
+          },
+          "no_cache": {
+            "type": "boolean",
+            "description": "Whether the request ignores the builder's cache."
+          },
+          "secrets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The IDs of the secrets of the request, sorted. The service does not keep\ntheir values. Absent when the request has none.",
+            "example": [
+              "npmrc"
+            ]
+          },
+          "registries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The registry hosts of the request, sorted. The service does not keep\ntheir credentials. Absent when the request has none.",
+            "example": [
+              "ghcr.io"
+            ]
+          },
+          "output": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuildOutput"
+            },
+            "description": "The outputs of the request, where the build goes. Absent for a build from\nbefore the service kept its requests."
+          },
           "session": {
             "type": "string",
             "description": "The path to attach the build's session at. Only present while the build is\n`waiting` for it.",
@@ -402,13 +756,13 @@
                 "$ref": "#/components/schemas/Source"
               }
             ],
-            "description": "The directory holding the Dockerfile. Defaults to `context`. Not\nsupported yet."
+            "description": "The directory holding the Dockerfile of the rootfs. Defaults to\n`context`. The Dockerfile in it is its `filename`, which defaults to the\nname of the Dockerfile the Kraftfile builds its rootfs with. Only valid\nwhen the rootfs is built from a Dockerfile."
           }
         },
         "additionalProperties": {
           "$ref": "#/components/schemas/Source"
         },
-        "description": "The contexts a build is built from, by the names of buildkit's Dockerfile\nfrontend. Any other key is a named context, for `FROM <name>` and\n`COPY --from=<name>`, like `docker buildx build --build-context`. Named\ncontexts are not supported yet."
+        "description": "The contexts a build is built from, by the names of buildkit's Dockerfile\nfrontend. Any other key is a named context, for `FROM <name>` and\n`COPY --from=<name>`, like `docker buildx build --build-context`, for every\nDockerfile the build runs. Named contexts are only valid when the rootfs or\na rom is built from a Dockerfile."
       },
       "BuildEvent": {
         "type": "object",
@@ -466,6 +820,24 @@
           ]
         }
       },
+      "BuildHints": {
+        "type": "object",
+        "properties": {
+          "cache": {
+            "type": "string",
+            "description": "A name for what the build builds, such as a repository or a project.\nThe service tries to run builds with the same name on the same builder,\nso that they share its cache. Empty or absent means the URL of\n`contexts.context` without its query, followed by its `subdir`, and no\nname for a session context. Only builds on `default` use it.",
+            "example": "acme/app"
+          },
+          "dedupe": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "A key that the caller computes from the files that the build reads from\nits sources, for example a hash of the contexts and of a Kraftfile from a\nsource. The service makes the key of the build from it, from the rest of\nthe request except `output`, `builder`, `hints.cache`, `no_cache`,\n`registries` and the values of `secrets`, and from the version of the\nservice's image builder. When a build of the caller's tenant with the\nsame key and `output` is `running` or `succeeded`, the request is answered\nwith that build and `200`, and no new build starts. Else, when a build\nwith the same key `succeeded`, the new build pushes its image, or imports\nits filesystem, to the new `output`, and builds the image only if it\ncannot read it. A request with `no_cache` always starts a new build. Failed builds do not count, and\nneither do cancelled builds, from the cancel on. When the service runs\nmore than one replica, a build cancelled on another one counts until it\nends. A build that reads from\nthe client's session is never shared: its request always starts a new\nbuild.",
+            "example": "3f9a1c2b7d4e"
+          }
+        },
+        "description": "Hints on how to handle a build request. They do not change what the build\nbuilds."
+      },
       "BuildOutput": {
         "type": "object",
         "properties": {
@@ -476,12 +848,12 @@
           },
           "volume": {
             "type": "string",
-            "description": "The name or UUID of an existing volume to import the built filesystem\ninto. Only valid for a plain image of a single platform. Not supported\nyet.",
+            "description": "The name or UUID of an existing volume to import the built filesystem\ninto, as cpio, through a short-lived instance in the metro of the volume\nthat runs with the caller's token. A volume that does not exist is not\ncreated. Only valid for a build without a `kraftfile`, of a single\nplatform.",
             "example": "pgdata"
           },
           "metro": {
             "type": "string",
-            "description": "The metro of `volume`, only needed when its name is ambiguous. Only valid\nwith `volume`. Not supported yet.",
+            "description": "The metro of `volume`, only needed when it is not the metro of the\nbuild: the name of a metro of Unikraft Cloud, or the https URL of the API\nof any other metro. Only valid with `volume`.",
             "example": "fra"
           }
         },
@@ -608,7 +980,7 @@
           "failed",
           "cancelled"
         ],
-        "description": "The state of a build. A build starts as `waiting` or `running` and ends as\n`succeeded`, `failed` or `cancelled`; it never leaves a final state.\n\n| State       | Description |\n|-------------|-------------|\n| `waiting`   | The build waits for a client to attach its buildkit session, and then becomes `running`. |\n| `running`   | The build waits for a build slot or for its builder, or is being built. |\n| `succeeded` | The build finished and every output was pushed; see `result`. |\n| `failed`    | The build failed; see `error`. |\n| `cancelled` | The build was cancelled before it finished; `error` says so. |"
+        "description": "The state of a build. A build starts as `waiting` or `running` and ends as\n`succeeded`, `failed` or `cancelled`; it never leaves a final state.\n\n| State       | Description |\n|-------------|-------------|\n| `waiting`   | The build waits for a client to attach its buildkit session, and then becomes `running`. |\n| `running`   | The build waits for a build slot or for its builder, or is being built. |\n| `succeeded` | The build finished and every output was pushed or imported; see `result`. |\n| `failed`    | The build failed; see `error`. |\n| `cancelled` | The build was cancelled before it finished; `error` says so. |"
       },
       "Builder": {
         "type": "object",
@@ -620,7 +992,7 @@
           },
           "image": {
             "type": "string",
-            "description": "The buildkit image the builder boots. Defaults to the service's."
+            "description": "The buildkit image the builder boots. Defaults to the service's. An\nexisting builder matches it by repository, and by registry, tag or digest\nwhen both name one."
           },
           "vcpus": {
             "type": "integer",
@@ -649,10 +1021,10 @@
                 "$ref": "#/components/schemas/BuilderAutokill"
               }
             ],
-            "description": "Delete the builder once it has been idle for a while."
+            "description": "Delete the builder once it has been idle for a while, set when it is created."
           }
         },
-        "description": "The builder a build runs on: a buildkitd instance and its cache volume in the\ncaller's account. Builds on the same builder share its cache. A builder that\ndoes not exist yet is created from these fields; for one that does, every\nfield but `name` only has to match it, and one that conflicts is a `409`."
+        "description": "The builder a build runs on: a buildkitd instance and its cache volume in the\ncaller's account. Builds on the same builder share its cache. A builder that\ndoes not exist yet is created from these fields; for one that does, every\nfield but `name` and `autokill` only has to match it, and one that conflicts\nis a `409`."
       },
       "BuilderAutokill": {
         "type": "object",
@@ -660,11 +1032,108 @@
           "time_ms": {
             "type": "integer",
             "format": "uint64",
-            "description": "Delete the builder and its cache once it has had no running build for this\nmany milliseconds. `0` (the default) never does.",
+            "description": "Delete the builder and its cache once it has scaled to zero for this many\nmilliseconds, past the cooldown that follows its last build. `0` never\ndoes. Without it, `default` is deleted after 7 days and a named builder\nnever is. A delete lock on the builder's instance keeps it.",
             "example": 300000
           }
         },
         "description": "When to delete an idle builder."
+      },
+      "BuilderInstance": {
+        "type": "object",
+        "required": [
+          "uuid",
+          "name",
+          "metro"
+        ],
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the instance.",
+            "example": "019a1b2c-3d4e-7f5a-8b6c-7d8e9f0a1b2c"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the instance.",
+            "example": "remote-builder-ci"
+          },
+          "metro": {
+            "type": "string",
+            "description": "The metro of the instance.",
+            "example": "fra"
+          }
+        },
+        "description": "The instance a builder runs as, which the platform's API answers for."
+      },
+      "BuilderStatus": {
+        "type": "object",
+        "required": [
+          "name",
+          "default",
+          "builds",
+          "waiting_builds",
+          "max_builds",
+          "instance"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the builder.",
+            "example": "ci"
+          },
+          "default": {
+            "type": "boolean",
+            "description": "Whether builds without a `builder` run on it."
+          },
+          "builds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Build"
+            },
+            "description": "The builds of the tenant running on the builder now."
+          },
+          "waiting_builds": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of builds of the tenant waiting for the builder, or for any\nbuilder of the pool for `default`.",
+            "example": 1
+          },
+          "max_builds": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of builds that run on the builder at once; more wait.",
+            "example": 2
+          },
+          "instance": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuilderInstance"
+              }
+            ],
+            "description": "The instance of the builder, for its image, sizes and state."
+          }
+        },
+        "description": "A builder of the caller's tenant, and the builds the service runs on it."
+      },
+      "BuilderUsage": {
+        "type": "object",
+        "required": [
+          "reclaimable_bytes",
+          "total_bytes"
+        ],
+        "properties": {
+          "reclaimable_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of the records that no build uses, which a prune frees."
+          },
+          "total_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of all the records."
+          }
+        },
+        "description": "How much of a builder's cache its records take."
       },
       "CreateBuildRequest": {
         "type": "object",
@@ -679,7 +1148,7 @@
                 "$ref": "#/components/schemas/Kraftfile"
               }
             ],
-            "description": "The Kraftfile to build, which makes the build a Unikraft image. Without\none, the build is a plain image of `context`, built with the Dockerfile in\n`dockerfile`."
+            "description": "The Kraftfile to build. Without one, the build is the kernel-less image\nof `contexts.context` built with the file `Dockerfile`, or with the one\nthat `contexts.dockerfile` gives, for x86_64 unless `platforms` names\nothers."
           },
           "contexts": {
             "allOf": [
@@ -694,7 +1163,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile or of its runtime,\nor to the builder's own platform for a plain image.",
+            "description": "The platforms to build for. Only the architecture selects, so `x86_64` is\n`linux/amd64`. Defaults to the targets of the Kraftfile, or to `x86_64`\nwhen it has none. With several architectures, an architecture that the\nservice builds in a metro of its own builds there, on a builder of the\ncaller's account in that metro.",
             "example": [
               "linux/amd64"
             ]
@@ -704,7 +1173,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "The values of the Dockerfile's `ARG`s, by name.",
+            "description": "The values of the Dockerfile's `ARG`s, by name. The record of the build\nkeeps them and answers them, so pass credentials as `secrets` instead.",
             "example": {
               "VERSION": "1.2.3"
             }
@@ -724,28 +1193,36 @@
                 "$ref": "#/components/schemas/Builder"
               }
             ],
-            "description": "The builder to run on. Defaults to the one named `default`. Not supported\nyet."
+            "description": "The builder to run on. Defaults to `default`, which runs each build on\none of `default`, `default-2`, ..., as many as the service allows: the\nfirst with a free slot, in the order that `hints.cache` gives."
+          },
+          "hints": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildHints"
+              }
+            ],
+            "description": "Hints on how to handle the request: where to run the build, and which\nexisting build to answer instead."
           },
           "secrets": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Secret"
             },
-            "description": "The secrets the build can mount, by ID. Not supported yet."
+            "description": "The secrets the build can mount, by ID."
           },
           "ssh": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/SSHAgent"
             },
-            "description": "The SSH agents the build can mount, by ID. Not supported yet."
+            "description": "The SSH agents the build can mount, by ID."
           },
           "registries": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Registry"
             },
-            "description": "The credentials for registries, by host, with `*` for any other host. The\ncaller's token is the credential for a registry that has none. Not\nsupported yet."
+            "description": "The credentials for registries, by host, with `*` for any other host.\n`docker.io` names Docker Hub. The caller's token is the credential for\na registry that has none, and so is only used when there is no `*`."
           },
           "output": {
             "type": "array",
@@ -753,7 +1230,7 @@
               "$ref": "#/components/schemas/BuildOutput"
             },
             "minItems": 1,
-            "description": "Where the result goes. At least one output is required. The outputs are\npushed one after the other, so a build that fails or is cancelled can\nleave the first outputs pushed."
+            "description": "Where the result goes. At least one output is required. The outputs are\npushed or imported one after the other, so a build that fails or is\ncancelled can leave the first outputs pushed or imported."
           }
         },
         "description": "The request message for creating a build."
@@ -803,13 +1280,14 @@
           "not_found",
           "conflict",
           "too_many_builds",
+          "rate_limited",
           "internal",
           "failed",
           "cancelled",
           "interrupted",
           "builder_quota"
         ],
-        "description": "The reason a request, or a build, failed.\n\nThe first eight codes are answered by the API together with the HTTP status\ncode given. The last four are the `code` of the `error` of a build whose\n`status` is `failed` or `cancelled`, both in the build itself and in the last\nevent of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, an inline Kraftfile does not parse or cannot be built, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, or already has one. Or the `builder` of the request conflicts with the existing builder of that name. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may. Submit the build again once one of them has finished. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `503` while the service is shutting down. Retrying later is the right response. |\n| `failed`           | The build itself failed: a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | The builder of the build could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
+        "description": "The reason a request, or a build, failed.\n\nThe first nine codes, and `builder_quota`, are answered by the API together\nwith the HTTP status code given. The last four are the `code` of the `error`\nof a build whose `status` is `failed` or `cancelled`, both in the build\nitself and in the last event of its progress stream.\n\n| Code               | Description |\n|--------------------|-------------|\n| `invalid`          | `400`: the request is malformed, or a value in it is not valid: the body is not JSON, a required field is missing, a source has more than one of `session`, `git` and `url`, an image reference does not parse, a volume output has a `kraftfile` or more than one platform, an inline Kraftfile does not parse or cannot be built, a session does not advertise a method the build needs, the request without its secret values is larger than 64 KiB, ... |\n| `unsupported`      | `400`: the request uses a part of the full build API, or of the Kraftfile, that this service does not support yet. Nothing is ignored silently. |\n| `unauthenticated`  | `401`: the request carries no bearer token, or one that the platform does not accept. |\n| `auth_unavailable` | `502`: the token could not be validated because the platform did not give a usable answer. `503`, with `Retry-After`, while the service checks too many tokens at once. Retrying later is the right response. |\n| `not_found`        | `404`: no build with this ID belongs to the caller's tenant. The build of another tenant is indistinguishable from a build that does not exist. Or the caller has no builder of this name. |\n| `conflict`         | `409`: the build is still waiting or running, so its record cannot be deleted yet; cancel it first. Or the build does not wait for a session, already has one, or another user started it. Or the `builder` of the request, or the builder to create, conflicts with the existing builder of that name. Or the instance of the builder to delete has a delete lock. |\n| `too_many_builds`  | `429`: the caller's tenant already has as many builds running or waiting as it may, or the platform limits the rate of its requests. Submit the build again once one of them has finished, or later. |\n| `rate_limited`     | `429`, with `Retry-After`: the platform refused too many tokens from the caller's address. Wait as long as `Retry-After` says. |\n| `internal`         | `500`: the service could not handle the request, through no fault of the request; the details are in the service's log. `502` when the request did not reach the replica that handles it. `503` while the service is shutting down or out of storage. Retrying later is the right response, but a create that got `502` may have started. |\n| `failed`           | The build itself failed: no session attached in time, a source could not be fetched, a Kraftfile read from a source did not parse, a build step exited non-zero, the push was refused, the volume of an output does not exist or refused the import. The message is the error buildkit or the pipeline reported. |\n| `cancelled`        | The build was cancelled by a request to the cancel endpoint. |\n| `interrupted`      | The service restarted, or lost the replica that ran the build, while the build was running, so the build was lost. It can be submitted again. |\n| `builder_quota`    | `403`: the builder to create could not be created because the tenant is over its quota. Or, as the error of a build: the builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |"
       },
       "Kraftfile": {
         "anyOf": [
@@ -853,6 +1331,22 @@
           ]
         }
       },
+      "ListBuildersResponse": {
+        "type": "object",
+        "required": [
+          "builders"
+        ],
+        "properties": {
+          "builders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuilderStatus"
+            },
+            "description": "The builders, by name."
+          }
+        },
+        "description": "The response message for listing the builders of the caller's tenant."
+      },
       "ListBuildsResponse": {
         "type": "object",
         "required": [
@@ -865,6 +1359,11 @@
               "$ref": "#/components/schemas/Build"
             },
             "description": "The builds, newest first."
+          },
+          "next": {
+            "type": "string",
+            "description": "The `after` of the request for the next page, which is opaque. Absent on\nthe last page.",
+            "example": "MjAyNi0xMC0yOFQxNDozODo0OC4wMDAwMDAwMDBaIDAxOWExYjJjLTNkNGUtN2Y1YS04YjZjLTdkOGU5ZjBhMWIyYw"
           }
         },
         "description": "The response message for listing the builds of the caller's tenant."
@@ -903,6 +1402,20 @@
         },
         "description": "A group of vertices that progress renderers fold into one line."
       },
+      "PruneBuilderResponse": {
+        "type": "object",
+        "required": [
+          "freed_bytes"
+        ],
+        "properties": {
+          "freed_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The bytes of the records the prune freed."
+          }
+        },
+        "description": "What a prune freed."
+      },
       "Range": {
         "type": "object",
         "properties": {
@@ -939,7 +1452,7 @@
           },
           "session": {
             "type": "boolean",
-            "description": "Must be `true`: the client's session answers for the registry."
+            "description": "Must be `true`: the client's session answers for the registry. For the\nregistry of Unikraft Cloud, the caller's token answers when the session\nhas no credentials."
           }
         },
         "description": "The credentials for a registry: exactly one of a `username` and `password`,\nor `session` to ask the client's session for them.",
@@ -995,7 +1508,7 @@
         "properties": {
           "value": {
             "type": "string",
-            "description": "The value of the secret, which is never stored."
+            "description": "The value of the secret, at most 500 KiB, which is never stored."
           },
           "session": {
             "type": "string",
@@ -1032,7 +1545,7 @@
         "properties": {
           "session": {
             "type": "string",
-            "description": "The name the client's buildkit session serves the directory under.\nMutually exclusive with `git` and `url`. Not supported yet.",
+            "description": "The name the client's buildkit session serves the directory under.\nMutually exclusive with `git` and `url`. The build reads only the files\nit needs, and a `.dockerignore` applies only when the whole `context`\ndirectory is the build context. With `session`, a `subdir` or `filename`\ncannot start with `!` or contain `*`, `?`, `[` or a backslash.",
             "example": "context"
           },
           "git": {
@@ -1059,7 +1572,7 @@
           },
           "filename": {
             "type": "string",
-            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to\n`Kraftfile`, and `contexts.dockerfile`, where it defaults to `Dockerfile`.\nA `filename` on any other context is a `400`.",
+            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to\n`Kraftfile`, and `contexts.dockerfile`, where it defaults to the name of\nthe Dockerfile the Kraftfile builds with. A `filename` on any other\ncontext is a `400`.",
             "example": "Kraftfile"
           }
         },
@@ -1337,7 +1850,7 @@
   },
   "servers": [
     {
-      "url": "https://build.unikraft.cloud",
+      "url": "https://controlplane.unikraft.com",
       "description": "The Unikraft Cloud build service",
       "variables": {}
     }

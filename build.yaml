@@ -44,7 +44,7 @@ tags:
     x-displayName: Builders
     description: |-
       A builder is the buildkitd instance, and its cache volume, that builds
-      run on in the caller's own account and metro. Builds create their
+      run on in the caller's own account, in one of its metros. Builds create their
       builder on first use; these operations create one ahead of a build,
       show the builds on it, look after its cache and delete it.
   - name: builds
@@ -61,14 +61,23 @@ paths:
       operationId: CreateBuilder
       summary: Create Builder
       description: |-
-        Create a builder of the caller's tenant in the caller's metro, which then
+        Create a builder of the caller's tenant in `metro`, which then
         scales to zero until a build uses it. A builder that already exists is
         answered with `200` if every field of the request matches it and `409`
         otherwise, and is left as it is. A tenant over its quota is answered with
         `403` and the code `builder_quota`, and a builder that the platform
         refuses, such as one with sizes past the limits of the tenant's plan, with
         `400` and the code `invalid`.
-      parameters: []
+      parameters:
+        - name: metro
+          in: query
+          required: false
+          description: |-
+            The metro of the builder: its name, or the URL of its API. It must be
+            one that the caller's builds may run in. Defaults to the first of them.
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: |-
@@ -101,7 +110,10 @@ paths:
     get:
       operationId: ListBuilders
       summary: List Builders
-      description: List the builders of the caller's tenant in the caller's metro.
+      description: |-
+        List the builders of the caller's tenant in each metro that its builds
+        may run in. A metro that does not answer within 10 seconds, or that
+        refuses the token, is left out.
       parameters: []
       responses:
         '200':
@@ -124,7 +136,7 @@ paths:
       summary: Get Builder
       description: |-
         Get a builder by name: the builds of the caller's tenant on it, and its
-        instance. Only the builder of this name in the caller's metro is looked
+        instance. Only the builder of this name in `metro` is looked
         up, without waking it.
       parameters:
         - name: name
@@ -133,6 +145,15 @@ paths:
           description: The name of the builder, `default` for the one builds use without a `builder`.
           schema:
             type: string
+        - name: metro
+          in: query
+          required: false
+          description: |-
+            The metro of the builder: its name, or the URL of its API. It must be
+            one that the caller's builds may run in. Defaults to the first of them.
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -154,7 +175,7 @@ paths:
       description: |-
         Delete a builder by name: its instance and its cache. The builds running
         on it fail, and a later build on it creates it again. Only the builder of
-        this name in the caller's metro is deleted. A builder whose instance has
+        this name in `metro` is deleted. A builder whose instance has
         a delete lock is answered with `409`.
       parameters:
         - name: name
@@ -163,6 +184,15 @@ paths:
           description: The name of the builder, `default` for the one builds use without a `builder`.
           schema:
             type: string
+        - name: metro
+          in: query
+          required: false
+          description: |-
+            The metro of the builder: its name, or the URL of its API. It must be
+            one that the caller's builds may run in. Defaults to the first of them.
+          schema:
+            type: string
+          explode: false
       responses:
         '204':
           description: There is no content to send for this request, but the headers may be useful.
@@ -180,8 +210,8 @@ paths:
       summary: Prune Builder
       description: |-
         Free the records of a builder's cache that no build uses, waking the
-        builder and keeping it. Only the builder of this name in the caller's
-        metro is pruned. A builder that does not exist is answered with `404`, and
+        builder and keeping it. Only the builder of this name in `metro`
+        is pruned. A builder that does not exist is answered with `404`, and
         is not created.
       parameters:
         - name: name
@@ -190,6 +220,15 @@ paths:
           description: The name of the builder, `default` for the one builds use without a `builder`.
           schema:
             type: string
+        - name: metro
+          in: query
+          required: false
+          description: |-
+            The metro of the builder: its name, or the URL of its API. It must be
+            one that the caller's builds may run in. Defaults to the first of them.
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -211,7 +250,7 @@ paths:
       summary: Get Builder Usage
       description: |-
         Get the disk usage of a builder's cache, waking the builder. Only the
-        builder of this name in the caller's metro is counted. A builder that
+        builder of this name in `metro` is counted. A builder that
         does not exist is answered with `404`, and is not created.
       parameters:
         - name: name
@@ -220,6 +259,15 @@ paths:
           description: The name of the builder, `default` for the one builds use without a `builder`.
           schema:
             type: string
+        - name: metro
+          in: query
+          required: false
+          description: |-
+            The metro of the builder: its name, or the URL of its API. It must be
+            one that the caller's builds may run in. Defaults to the first of them.
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -510,6 +558,14 @@ components:
           type: string
           description: The name of the builder the build runs on.
           example: default
+        metro:
+          type: string
+          description: |-
+            The URL of the API of the metro of that builder: the one that the build
+            tries first, until it started. Absent for a build that the service did
+            not run in a metro.
+            It is not always the metro of a volume of `output`.
+          example: https://api.fra.unikraft.cloud
         kraftfile:
           allOf:
             - $ref: '#/components/schemas/Kraftfile'
@@ -696,8 +752,8 @@ components:
             A key that the caller computes from the files that the build reads from
             its sources, for example a hash of the contexts and of a Kraftfile from a
             source. The service makes the key of the build from it, from the rest of
-            the request except `output`, `builder`, `hints.cache`, `no_cache`,
-            `registries` and the values of `secrets`, and from the version of the
+            the request except `output`, `builder`, `hints.cache`, `hints.metros`,
+            `no_cache`, `registries` and the values of `secrets`, and from the version of the
             service's image builder. When a build of the caller's tenant with the
             same key and `output` is `running` or `succeeded`, the request is answered
             with that build and `200`, and no new build starts. Else, when a build
@@ -710,6 +766,21 @@ components:
             the client's session is never shared: its request always starts a new
             build.
           example: 3f9a1c2b7d4e
+        metros:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 16
+          description: |-
+            The metros that the build may run in: names of metros, or the URLs of
+            their APIs. The build runs in the first that answers, in the order of
+            the service, and `metro` of the build tells which. Each must be a metro
+            of the caller's organization that the service builds in, else the
+            request is `invalid`. Absent means each of those metros. With them, no
+            architecture of `platforms` builds in another metro.
+          example:
+            - fra
       description: |-
         Hints on how to handle a build request. They do not change what the build
         builds.
@@ -735,9 +806,11 @@ components:
         metro:
           type: string
           description: |-
-            The metro of `volume`, only needed when it is not the metro of the
-            build: the name of a metro of Unikraft Cloud, or the https URL of the API
-            of any other metro. Only valid with `volume`.
+            The metro of `volume`: the name of a metro of Unikraft Cloud, or the https URL of the API
+            of any other metro. Only valid with `volume`. Defaults to the first
+            metro that the build may run in, in the order of the service, also when
+            that metro does not answer and the build runs in another one: name the
+            metro of a volume that is not there.
           example: fra
       description: |-
         Where the result of a build goes: exactly one of an image, named by `image`,
@@ -1092,12 +1165,13 @@ components:
         - cancelled
         - interrupted
         - builder_quota
+        - no_metro
       description: |-
         The reason a request, or a build, failed.
 
-        The first nine codes, and `builder_quota`, are answered by the API together
-        with the HTTP status code given. The last four are the `code` of the `error`
-        of a build whose `status` is `failed` or `cancelled`, both in the build
+        The first nine codes, `builder_quota` and `no_metro` are answered by the API together
+        with the HTTP status code given. `failed`, `cancelled`, `interrupted` and
+        `builder_quota` are the `code` of the `error` of a build whose `status` is `failed` or `cancelled`, both in the build
         itself and in the last event of its progress stream.
 
         | Code               | Description |
@@ -1115,6 +1189,7 @@ components:
         | `cancelled`        | The build was cancelled by a request to the cancel endpoint. |
         | `interrupted`      | The service restarted, or lost the replica that ran the build, while the build was running, so the build was lost. It can be submitted again. |
         | `builder_quota`    | `403`: the builder to create could not be created because the tenant is over its quota. Or, as the error of a build: the builder of the build, or the instance that imports it into a volume, could not be created or started because the tenant is over its quota. Free resources or raise the quota, then submit the build again. |
+        | `no_metro`         | `403`: the caller's organization has none of the metros that the service builds in. |
     Kraftfile:
       anyOf:
         - $ref: '#/components/schemas/KraftfileInline'
@@ -1158,7 +1233,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BuilderStatus'
-          description: The builders, by name.
+          description: 'The builders, by name and then by metro: one of a name in each metro that has it.'
       description: The response message for listing the builders of the caller's tenant.
     ListBuildsResponse:
       type: object

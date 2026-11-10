@@ -1,0 +1,2027 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Unikraft Cloud Network Shield Plugin API",
+    "version": "v1.0.0",
+    "description": "This specification describes the Network Shield plugin API, the control API\nof a network shield instance on Unikraft Cloud. It manages the policies that\nsay what the sandboxes behind the shield may reach and what may reach them,\nthe secrets the shield substitutes into their requests and the limits on the\nshield as a whole, and it reports what is enforced and what the control\nplane has done.\n\nEvery operation declares a single `default` response: the standard response\nenvelope, which carries the outcome of the request in `status`, the\nhuman-readable reason for a failure in `message` and the HTTP status code in\n`errors`. The HTTP status code itself distinguishes success from failure; the\nstatus codes an operation can return are documented on the operation.\n\nA failure whose reason has structure carries it in `data` instead, with\n`message` empty. There are three: a body that fails validation (`422`), whose\n`data` lists each field at fault as `type`, `loc` and `msg` and never the\nvalue it held; a write to a shield that has sealed (`503`), whose `data` is\nthe shield's account of what failed, as `error`, `reason`, `failures`,\n`sealed` and `remedy`; and a bandwidth limit the host could not apply\n(`500`), whose `data` is `error` and `failures`. A path no operation serves\nis `404`, and a method an operation does not take `405`, both enveloped."
+  },
+  "tags": [
+    {
+      "name": "logs",
+      "x-displayName": "Logs"
+    },
+    {
+      "name": "status",
+      "x-displayName": "Status"
+    },
+    {
+      "name": "limits",
+      "x-displayName": "Limits"
+    },
+    {
+      "name": "secrets",
+      "x-displayName": "Secrets"
+    },
+    {
+      "name": "policies",
+      "x-displayName": "Policies"
+    }
+  ],
+  "paths": {
+    "/limits": {
+      "get": {
+        "operationId": "GetLimits",
+        "summary": "Get Limits",
+        "description": "Get the limits in force, read back from the kernel.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The limits in force.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "limits"
+        ]
+      },
+      "put": {
+        "operationId": "SetLimits",
+        "summary": "Set Limits",
+        "description": "Set the limits. `422` is returned for a rate that is not a multiple of 8,\nor out of range, and `500` when the host could not apply it, in which case\nthe cap before stays in force.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The limits as they now stand.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "limits"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Limits"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs": {
+      "get": {
+        "operationId": "GetLogs",
+        "summary": "Get Logs",
+        "description": "Read the log of what the control plane did, a page at a time, oldest\nfirst; the latest entries are `order=desc&count=N`. Each category keeps\nits 10,000 most recent entries. `422` is returned for a `count` out of\nrange, an `order` other than `asc` or `desc`, a `from` that is neither an\nid nor a time, or a query parameter this operation does not take.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/LogsQuery.count"
+          },
+          {
+            "$ref": "#/components/parameters/LogsQuery.from"
+          },
+          {
+            "$ref": "#/components/parameters/LogsQuery.order"
+          },
+          {
+            "$ref": "#/components/parameters/LogsQuery.category"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "A page of the log.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "logs"
+        ]
+      }
+    },
+    "/policies": {
+      "get": {
+        "operationId": "ListPolicies",
+        "summary": "List Policies",
+        "description": "List every policy in force, in the order they were written.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "Every policy in force.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ]
+      },
+      "put": {
+        "operationId": "SetPolicies",
+        "summary": "Replace All Policies",
+        "description": "Replace the whole policy set. A policy whose id is in both keeps its\ncounters, address sets and listener where the change leaves them meaning\nthe same thing. `409` is returned when an id appears twice, and `422` when\nthe set is refused: a policy fails validation, two policies collide, the\nset needs more address sets or listeners than the shield has, or it would\nleave a secret bound to a policy that is gone, or substituting into none.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The policy set as it now stands.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PolicyRule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AddPolicies",
+        "summary": "Add Policies",
+        "description": "Add policies, as an array even of one, which is added whole or not at all.\n`201` is returned with the policies added. `409` is returned when an id is\ntaken or appears twice, and `422` when the addition is refused.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The policies added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PolicyRule"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policies/{policy_id}": {
+      "get": {
+        "operationId": "GetPolicy",
+        "summary": "Get Policy",
+        "description": "Get one policy by id. `404` is returned when no such policy exists.",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ]
+      },
+      "put": {
+        "operationId": "ReplacePolicy",
+        "summary": "Replace Policy",
+        "description": "Replace one policy, in place, leaving the others as they are. The policy\nand the set it leaves are checked as a whole-set replace checks them, and\na refused replace changes nothing. A request counter is kept while the\nport keeps a request limit; a connection allowance is kept while the\nport's rule is unchanged, and starts full when the limit's numbers change.\n`404` is returned when no such policy exists, and `422` when the body\nnames another id or the change is refused.",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The policy as it now stands.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplacePolicyRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeletePolicy",
+        "summary": "Delete Policy",
+        "description": "Delete one policy. `404` is returned when no such policy exists, and `409`\nwhen a secret is bound to it, or substitutes into nothing else.",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The outcome of deleting the policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "policies"
+        ]
+      }
+    },
+    "/secrets": {
+      "get": {
+        "operationId": "ListSecrets",
+        "summary": "List Secrets",
+        "description": "List every secret in force. Values are never returned.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "Every secret in force, values excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ]
+      },
+      "put": {
+        "operationId": "SetSecrets",
+        "summary": "Replace All Secrets",
+        "description": "Replace every secret. A stored secret may leave out its `value` to keep\nit. `409` is returned when an id appears twice, and `422` when a secret is\nrefused: it fails validation, is new and has no value, is bound to an\n`http`, `passthrough` or missing policy, no `https` policy it is bound to\ncovers its hostnames, or the set holds more than 100.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The secrets as they now stand, values excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SecretReplacement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AddSecrets",
+        "summary": "Add Secrets",
+        "description": "Add secrets, as an array even of one, which is added whole or not at all.\n`201` is returned with the secrets added. `409` is returned when an id is\ntaken or appears twice, and `422` when a secret is refused.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The secrets added, values excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Secret"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secrets/{id}": {
+      "get": {
+        "operationId": "GetSecret",
+        "summary": "Get Secret",
+        "description": "Get one secret by id. `404` is returned when no such secret exists.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The secret, value excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ]
+      },
+      "put": {
+        "operationId": "ReplaceSecret",
+        "summary": "Replace Secret",
+        "description": "Replace one secret, leaving the others as they are. Its value is replaced\nwhen the body gives one, and kept when the body leaves `value` out. It is\nin force when the request is answered. `404` is returned when no such\nsecret exists, and `422` when the body names another id or the secret is\nrefused as an added one would be.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The secret as it now stands, value excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplaceSecretRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteSecret",
+        "summary": "Delete Secret",
+        "description": "Delete one secret. `404` is returned when no such secret exists.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The outcome of deleting the secret.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "secrets"
+        ]
+      }
+    },
+    "/status": {
+      "get": {
+        "operationId": "GetStatus",
+        "summary": "Get Status",
+        "description": "Get the state of the shield: what is enforced, which generations the proxy\nhas loaded, and whether the shield has sealed.\n\nThis operation is also the plugin's readiness probe: it takes no\nparameters, changes nothing, and answers on a shield with no policies and\non one that has sealed. Hence `x-unikraft-plugin-readiness`, which the SDK\ngenerators read to render their readiness helpers against this operation.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "The state of the shield.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "status"
+        ],
+        "x-unikraft-plugin-readiness": true
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerToken": []
+    }
+  ],
+  "components": {
+    "parameters": {
+      "LogsQuery.category": {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "(OPTIONAL) Only the entries of this category.",
+        "schema": {
+          "$ref": "#/components/schemas/LogCategory"
+        },
+        "explode": false
+      },
+      "LogsQuery.count": {
+        "name": "count",
+        "in": "query",
+        "required": false,
+        "description": "(OPTIONAL) The most entries to return.",
+        "schema": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100
+        },
+        "explode": false
+      },
+      "LogsQuery.from": {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "description": "(OPTIONAL) Where the page starts: an ISO-8601 time, meaning the first\nentry at or after it, or with `order=desc` the last at or before it. A time\nwithout a zone is UTC, and a number is refused. The oldest entry by\ndefault, or with `order=desc` the newest.",
+        "schema": {
+          "type": "string"
+        },
+        "explode": false
+      },
+      "LogsQuery.order": {
+        "name": "order",
+        "in": "query",
+        "required": false,
+        "description": "(OPTIONAL) Oldest first, or newest first. The default is oldest first.",
+        "schema": {
+          "$ref": "#/components/schemas/PaginationOrder"
+        },
+        "explode": false
+      }
+    },
+    "schemas": {
+      "AddressConflict": {
+        "type": "object",
+        "required": [
+          "port",
+          "policies",
+          "addresses"
+        ],
+        "properties": {
+          "port": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The port."
+          },
+          "policies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The two policies."
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The addresses both hold."
+          }
+        },
+        "description": "An address two policies on one port have resolved under two handlers."
+      },
+      "AddressSets": {
+        "type": "object",
+        "required": [
+          "needed",
+          "max"
+        ],
+        "properties": {
+          "needed": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "max": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        },
+        "description": "The address sets the policy set needs, against the kernel's table."
+      },
+      "BandwidthLimit": {
+        "type": "object",
+        "required": [
+          "max_bits_per_second"
+        ],
+        "properties": {
+          "max_bits_per_second": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 8,
+            "maximum": 100000000000,
+            "description": "The cap, a whole number of bytes per second: a multiple of 8.",
+            "example": 10000000
+          }
+        },
+        "description": "A cap on what the shield sends to the sandboxes, in bits per second."
+      },
+      "ConnectionLimit": {
+        "type": "object",
+        "required": [
+          "max_connections",
+          "window_seconds"
+        ],
+        "properties": {
+          "max_connections": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 1000000,
+            "description": "New connections allowed within the window. Over it they are reset."
+          },
+          "window_seconds": {
+            "type": "number",
+            "enum": [
+              1,
+              60,
+              3600,
+              86400
+            ],
+            "description": "The window: a second, a minute, an hour or a day."
+          }
+        },
+        "description": "A cap on new connections, counted by the kernel, on any handler."
+      },
+      "ConnectionLimited": {
+        "type": "object",
+        "required": [
+          "policy",
+          "port"
+        ],
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "The policy."
+          },
+          "port": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The destination port."
+          }
+        },
+        "description": "A connection limit, for one policy and port."
+      },
+      "Direction": {
+        "type": "string",
+        "enum": [
+          "outbound",
+          "inbound"
+        ],
+        "description": "Which way the connections a policy applies to go."
+      },
+      "EmptyResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "nullable": true,
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "A response which carries no data of its own. `data` is `null`; the outcome of\nthe request is the HTTP status code."
+      },
+      "Enforcement": {
+        "type": "object",
+        "required": [
+          "ipset",
+          "bandwidth_limit"
+        ],
+        "properties": {
+          "ipset": {
+            "type": "boolean",
+            "description": "Whether the kernel matches address sets; no policy is enforced without."
+          },
+          "intercepted": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Intercept"
+            },
+            "description": "Redirects into the proxy, one per policy and port."
+          },
+          "passthrough": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Exemption"
+            },
+            "description": "Exemptions from the proxy, one per policy, port and protocol."
+          },
+          "connection_limited": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionLimited"
+            },
+            "description": "Connection limits, one per policy and port."
+          },
+          "inbound": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InboundPort"
+            },
+            "description": "Sandbox ports opened by inbound policies."
+          },
+          "address_conflicts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressConflict"
+            },
+            "description": "Addresses claimed under two handlers on one port. Normally empty."
+          },
+          "sets_near_capacity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SetNearCapacity"
+            },
+            "description": "Address sets near capacity. Normally empty."
+          },
+          "address_sets": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressSets"
+              }
+            ],
+            "description": "The address sets needed, and the most the kernel holds."
+          },
+          "error": {
+            "type": "string",
+            "description": "Present only when the fields above could not be worked out: why."
+          },
+          "bandwidth_limit": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "The shield-wide bandwidth cap in bits per second, or `null`."
+          }
+        },
+        "description": "What the packet layer enforces, derived from the policy set."
+      },
+      "Exemption": {
+        "type": "object",
+        "required": [
+          "policy",
+          "protocol",
+          "port"
+        ],
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "The policy."
+          },
+          "protocol": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Protocol"
+              }
+            ],
+            "description": "The protocol."
+          },
+          "port": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The destination port."
+          }
+        },
+        "description": "An exemption from the proxy, for one policy, port and protocol."
+      },
+      "Handler": {
+        "type": "string",
+        "enum": [
+          "http",
+          "https",
+          "passthrough"
+        ],
+        "description": "How the connections a policy matches are carried."
+      },
+      "IcapGenerations": {
+        "type": "object",
+        "required": [
+          "published",
+          "secrets",
+          "limits"
+        ],
+        "properties": {
+          "published": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "The generation last published."
+          },
+          "secrets": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "The generation of secrets the proxy has loaded, or `null`."
+          },
+          "limits": {
+            "type": "integer",
+            "format": "uint64",
+            "nullable": true,
+            "description": "The generation of request limits the proxy has loaded, or `null`."
+          }
+        },
+        "description": "The snapshot generations, published and loaded by the proxy."
+      },
+      "InboundPort": {
+        "type": "object",
+        "required": [
+          "policy",
+          "sandbox",
+          "address",
+          "port_range",
+          "handler",
+          "listener",
+          "sources"
+        ],
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "The policy."
+          },
+          "sandbox": {
+            "type": "string",
+            "description": "The sandbox's name as the policy gave it, or else its address or range."
+          },
+          "address": {
+            "type": "string",
+            "description": "The sandbox's address, or the range of sandboxes."
+          },
+          "port_range": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PortRange"
+              }
+            ],
+            "description": "The ports opened, both ends included: one port is a range of one."
+          },
+          "handler": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Handler"
+              }
+            ],
+            "description": "How connections are carried."
+          },
+          "listener": {
+            "type": "integer",
+            "format": "uint16",
+            "nullable": true,
+            "description": "`http` only: the listener serving the policy, else `null`."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "`http` only: the networks clients may connect from; empty is anyone."
+          }
+        },
+        "description": "A sandbox port an inbound policy opens."
+      },
+      "InjectMethod": {
+        "type": "string",
+        "enum": [
+          "http_header",
+          "ssh_identity",
+          "ssh_password"
+        ],
+        "description": "How a secret is substituted."
+      },
+      "Intercept": {
+        "type": "object",
+        "required": [
+          "policy",
+          "handler",
+          "port"
+        ],
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "The policy."
+          },
+          "handler": {
+            "type": "string",
+            "enum": [
+              "http",
+              "https"
+            ],
+            "description": "The proxy listener it goes to."
+          },
+          "port": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The destination port."
+          }
+        },
+        "description": "A redirect into the proxy, for one policy and port."
+      },
+      "Limits": {
+        "type": "object",
+        "properties": {
+          "bandwidth_limit": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BandwidthLimit"
+              }
+            ],
+            "nullable": true,
+            "description": "(OPTIONAL) The bandwidth cap; absent or `null` for none."
+          }
+        },
+        "description": "The limits on the shield as a whole, rather than on a policy."
+      },
+      "LimitsResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Limits"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying the limits, read back from the kernel."
+      },
+      "LogCategory": {
+        "type": "string",
+        "enum": [
+          "api",
+          "policy"
+        ],
+        "description": "What wrote a log entry."
+      },
+      "LogEntry": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "uptime_ms",
+          "category",
+          "message",
+          "details"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the event occurred, in UTC to the microsecond. No two entries share\none, so it is also the entry's place in the log."
+          },
+          "uptime_ms": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The control plane's uptime when the entry was written, in whole\nmilliseconds. It drops when the control plane restarts."
+          },
+          "category": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LogCategory"
+              }
+            ],
+            "description": "What wrote it."
+          },
+          "message": {
+            "type": "string",
+            "description": "What happened, sanitised and at most 2048 characters."
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Structured detail, which varies by category."
+          }
+        },
+        "description": "One log entry."
+      },
+      "LogsData": {
+        "type": "object",
+        "required": [
+          "logs",
+          "next",
+          "total",
+          "server_time"
+        ],
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEntry"
+            },
+            "description": "The entries, in the order asked for."
+          },
+          "next": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "The `from` of the page after this one: a microsecond after the last\nentry's `timestamp`, or with `order=desc` a microsecond before it, and\n`null` with `order=desc` once the oldest entry is on the page. In\nascending order it is set after the newest entry too, so that asking with\nit returns what has been written since, and an empty page answers with\nthe `from` it was sent."
+          },
+          "total": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The entries from `from` on, before `count` cuts the page."
+          },
+          "server_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The shield's time when it answered."
+          }
+        },
+        "description": "A page of the log."
+      },
+      "LogsResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LogsData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying a page of the log."
+      },
+      "PaginationOrder": {
+        "type": "string",
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "description": "Pagination helpers."
+      },
+      "PolicyListData": {
+        "type": "object",
+        "required": [
+          "policies"
+        ],
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyRule"
+            },
+            "description": "The policies, in the order they were written."
+          }
+        },
+        "description": "Policies: every one in force, or for an addition the ones added."
+      },
+      "PolicyListResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PolicyListData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying the policy set."
+      },
+      "PolicyMatch": {
+        "type": "object",
+        "properties": {
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) Hostnames, each with at most a single leading `*.` wildcard,\nstored lowercased. Not addresses, which go in `networks`. Inbound: the\nsandbox's private name, exactly one."
+          },
+          "networks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) IPv4 networks in CIDR notation, given by their network address.\nOutbound: public ranges only. Inbound: the sandbox's address, which a name\nin `hosts` is resolved to when the policy is written, or on a passthrough\npolicy a range of sandboxes. A policy names a host or a network."
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "uint16"
+            },
+            "description": "The ports to match. A policy names at least one port, here or in\n`port_ranges`. On an outbound policy 53 and 3128-3131 are reserved."
+          },
+          "port_ranges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PortRange"
+            },
+            "description": "(OPTIONAL) Ranges of ports, both ends included. An inbound passthrough\npolicy's only, for the platform's plugin range."
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Protocol"
+            },
+            "description": "(OPTIONAL) The protocols to match; `tcp` when empty."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) Inbound `http` only: the IPv4 networks clients may connect\nfrom, read from `X-Forwarded-For`. Empty admits anyone."
+          }
+        },
+        "description": "What a policy applies to."
+      },
+      "PolicyResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PolicyRule"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying one policy."
+      },
+      "PolicyRule": {
+        "type": "object",
+        "required": [
+          "id",
+          "direction",
+          "handler",
+          "match"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The policy's id: 1 to 64 ASCII letters, digits, `.`, `_` and `-`, but not\n`.` or `..`, unique among the policies.",
+            "example": "allow-github-https"
+          },
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Direction"
+              }
+            ],
+            "description": "Which way the connections go."
+          },
+          "handler": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Handler"
+              }
+            ],
+            "description": "How matched connections are carried; inbound, `http` or `passthrough`."
+          },
+          "match": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PolicyMatch"
+              }
+            ],
+            "description": "What the policy applies to."
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "description": "(OPTIONAL) Evaluation priority, highest first.",
+            "default": 100
+          },
+          "request_limit": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RequestLimit"
+              }
+            ],
+            "nullable": true,
+            "description": "(OPTIONAL) A cap on requests. Not on `passthrough`, nor inbound."
+          },
+          "connection_limit": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionLimit"
+              }
+            ],
+            "nullable": true,
+            "description": "(OPTIONAL) A cap on new connections. Not inbound."
+          }
+        },
+        "description": "A policy rule."
+      },
+      "PortRange": {
+        "type": "object",
+        "required": [
+          "first",
+          "last"
+        ],
+        "properties": {
+          "first": {
+            "type": "integer",
+            "format": "uint16"
+          },
+          "last": {
+            "type": "integer",
+            "format": "uint16"
+          }
+        },
+        "description": "An inclusive range of ports; one port is a range of one."
+      },
+      "Protocol": {
+        "type": "string",
+        "enum": [
+          "tcp",
+          "udp"
+        ],
+        "description": "A protocol a policy matches."
+      },
+      "ReplacePolicyRequest": {
+        "type": "object",
+        "required": [
+          "direction",
+          "handler",
+          "match"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "(OPTIONAL) The policy's id. Given, it has to be the path's."
+          },
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Direction"
+              }
+            ],
+            "description": "Which way the connections go."
+          },
+          "handler": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Handler"
+              }
+            ],
+            "description": "How matched connections are carried; inbound, `http` or `passthrough`."
+          },
+          "match": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PolicyMatch"
+              }
+            ],
+            "description": "What the policy applies to."
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "description": "(OPTIONAL) Evaluation priority, highest first.",
+            "default": 100
+          },
+          "request_limit": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RequestLimit"
+              }
+            ],
+            "nullable": true,
+            "description": "(OPTIONAL) A cap on requests. Not on `passthrough`, nor inbound."
+          },
+          "connection_limit": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionLimit"
+              }
+            ],
+            "nullable": true,
+            "description": "(OPTIONAL) A cap on new connections. Not inbound."
+          }
+        },
+        "description": "The request to replace one policy, which the path names."
+      },
+      "ReplaceSecretRequest": {
+        "type": "object",
+        "required": [
+          "inject",
+          "hostname"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "(OPTIONAL) The secret's id. Given, it has to be the path's."
+          },
+          "value": {
+            "type": "string",
+            "description": "(OPTIONAL) The value substituted for the pattern. Left out, the stored one\nis kept. Never returned."
+          },
+          "inject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretInject"
+              }
+            ],
+            "description": "Where and how it is substituted."
+          },
+          "hostname": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Exact hostnames the secret may be substituted for, at least one, at least\none of them covered by an `https` policy the secret is bound to."
+          },
+          "bound_to_policies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) The `https` policies whose requests the secret is substituted\ninto. Empty, it applies to every `https` policy covering its hostnames."
+          }
+        },
+        "description": "The request to replace one secret, which the path names."
+      },
+      "RequestLimit": {
+        "type": "object",
+        "required": [
+          "max_requests",
+          "window_seconds"
+        ],
+        "properties": {
+          "max_requests": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 1000000,
+            "description": "Requests allowed within the sliding window; over it, 429."
+          },
+          "window_seconds": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 1,
+            "maximum": 86400,
+            "description": "The length of the sliding window, in seconds."
+          }
+        },
+        "description": "A cap on requests, counted by the proxy, on `http` and `https` policies."
+      },
+      "ResponseError": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The HTTP status code of the error."
+          }
+        },
+        "description": "The error response message for an API request."
+      },
+      "ResponseStatus": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "partial_success"
+        ],
+        "description": "The response status of an API request."
+      },
+      "Sealed": {
+        "type": "object",
+        "required": [
+          "reason",
+          "failures",
+          "since",
+          "remedy"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "What failed."
+          },
+          "failures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The operations that failed."
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the shield sealed."
+          },
+          "sealed": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "description": "Which of the shutdown steps took effect."
+          },
+          "remedy": {
+            "type": "string",
+            "description": "What to do: replace the instance."
+          }
+        },
+        "description": "Why the shield sealed. Once set, it never clears."
+      },
+      "Secret": {
+        "type": "object",
+        "required": [
+          "id",
+          "value",
+          "inject",
+          "hostname"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The secret's id, on the same terms as a policy's.",
+            "example": "github-token"
+          },
+          "value": {
+            "type": "string",
+            "description": "The value substituted for the pattern. Never returned."
+          },
+          "inject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretInject"
+              }
+            ],
+            "description": "Where and how it is substituted."
+          },
+          "hostname": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Exact hostnames the secret may be substituted for, at least one, at least\none of them covered by an `https` policy the secret is bound to."
+          },
+          "bound_to_policies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) The `https` policies whose requests the secret is substituted\ninto. Empty, it applies to every `https` policy covering its hostnames."
+          }
+        },
+        "description": "A secret, as written."
+      },
+      "SecretInject": {
+        "type": "object",
+        "required": [
+          "method",
+          "header_name",
+          "pattern"
+        ],
+        "properties": {
+          "method": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InjectMethod"
+              }
+            ],
+            "description": "The substitution method."
+          },
+          "header_name": {
+            "type": "string",
+            "description": "The request header the pattern is replaced in. Only what HTTP allows in a\nheader name: letters, digits, any of !#$%&'*+-.^_|~ and the backtick.",
+            "example": "Authorization"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "The literal text replaced by the secret's value.",
+            "example": "{{GITHUB_TOKEN}}"
+          }
+        },
+        "description": "Where and how a secret is substituted."
+      },
+      "SecretListData": {
+        "type": "object",
+        "required": [
+          "secrets"
+        ],
+        "properties": {
+          "secrets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecretMetadata"
+            },
+            "description": "The secrets, values excluded."
+          }
+        },
+        "description": "Secrets: every one in force, or for an addition the ones added."
+      },
+      "SecretListResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretListData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying every secret's metadata."
+      },
+      "SecretMetadata": {
+        "type": "object",
+        "required": [
+          "id",
+          "inject",
+          "hostname",
+          "bound_to_policies"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The secret's id."
+          },
+          "inject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretInject"
+              }
+            ],
+            "description": "Where and how it is substituted."
+          },
+          "hostname": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The hostnames it may be substituted for."
+          },
+          "bound_to_policies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The policies it is bound to."
+          }
+        },
+        "description": "A secret as the API answers it: everything but the value."
+      },
+      "SecretReplacement": {
+        "type": "object",
+        "required": [
+          "id",
+          "inject",
+          "hostname"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The secret's id, on the same terms as a policy's.",
+            "example": "github-token"
+          },
+          "value": {
+            "type": "string",
+            "description": "(OPTIONAL) The value substituted for the pattern. Left out, the stored one\nis kept; a new secret needs it. Never returned."
+          },
+          "inject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretInject"
+              }
+            ],
+            "description": "Where and how it is substituted."
+          },
+          "hostname": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Exact hostnames the secret may be substituted for, at least one, at least\none of them covered by an `https` policy the secret is bound to."
+          },
+          "bound_to_policies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "(OPTIONAL) The `https` policies whose requests the secret is substituted\ninto. Empty, it applies to every `https` policy covering its hostnames."
+          }
+        },
+        "description": "A secret as a replace of every secret sends it."
+      },
+      "SecretResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SecretMetadata"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying one secret's metadata."
+      },
+      "SetNearCapacity": {
+        "type": "object",
+        "required": [
+          "policy",
+          "port",
+          "entries",
+          "maxelem",
+          "full"
+        ],
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "The policy the set belongs to."
+          },
+          "port": {
+            "type": "integer",
+            "format": "uint16",
+            "description": "The port the set belongs to."
+          },
+          "entries": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The addresses in it."
+          },
+          "maxelem": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The most it can hold."
+          },
+          "full": {
+            "type": "boolean",
+            "description": "Whether it is full."
+          }
+        },
+        "description": "An address set at 90% of its capacity or above."
+      },
+      "StatusData": {
+        "type": "object",
+        "required": [
+          "uptime_ms",
+          "policy_count",
+          "secret_count",
+          "enforcement",
+          "icap",
+          "failed"
+        ],
+        "properties": {
+          "uptime_ms": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "Whole milliseconds since the control plane started."
+          },
+          "policy_count": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The number of policies in force."
+          },
+          "secret_count": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The number of secrets in force."
+          },
+          "enforcement": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Enforcement"
+              }
+            ],
+            "description": "What the packet layer enforces."
+          },
+          "icap": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IcapGenerations"
+              }
+            ],
+            "description": "The generations published and loaded."
+          },
+          "failed": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Sealed"
+              }
+            ],
+            "nullable": true,
+            "description": "`null` while the shield can say what it enforces. Set when applying a\npolicy set failed: the shield denies all traffic and refuses every write."
+          }
+        },
+        "description": "The state of the shield."
+      },
+      "StatusResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "data",
+          "op_time_us"
+        ],
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResponseStatus"
+              }
+            ],
+            "description": "The status of the response."
+          },
+          "message": {
+            "type": "string",
+            "description": "An optional message providing additional information about the status."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusData"
+              }
+            ],
+            "description": "The response data for this request."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseError"
+            },
+            "description": "A list of errors which may have occurred during the request."
+          },
+          "op_time_us": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The operation time in microseconds."
+          }
+        },
+        "description": "The response carrying the state of the shield."
+      }
+    },
+    "securitySchemes": {
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "A control plane running locally, listening on its default port",
+      "variables": {}
+    },
+    {
+      "url": "https://api.{metro}.unikraft.cloud/v1/instances/{instance}/plugins/netshield",
+      "description": "The netshield plugin route of a shield running on a Unikraft Cloud metro",
+      "variables": {
+        "metro": {
+          "default": "",
+          "description": "The metro the shield is running in, e.g. `fra`."
+        },
+        "instance": {
+          "default": "",
+          "description": "The UUID or name of the shield instance."
+        }
+      }
+    }
+  ],
+  "x-unikraft-plugin-rom": "unikraft.io/plugins/netshield",
+  "x-unikraft-plugin-name": "netshield"
+}

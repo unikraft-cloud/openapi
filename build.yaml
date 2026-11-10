@@ -65,7 +65,9 @@ paths:
         scales to zero until a build uses it. A builder that already exists is
         answered with `200` if every field of the request matches it and `409`
         otherwise, and is left as it is. A tenant over its quota is answered with
-        `403` and the code `builder_quota`.
+        `403` and the code `builder_quota`, and a builder that the platform
+        refuses, such as one with sizes past the limits of the tenant's plan, with
+        `400` and the code `invalid`.
       parameters: []
       responses:
         '200':

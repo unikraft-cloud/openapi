@@ -22,7 +22,7 @@
       "post": {
         "operationId": "CreateBuilder",
         "summary": "Create Builder",
-        "description": "Create a builder of the caller's tenant in the caller's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`.",
+        "description": "Create a builder of the caller's tenant in the caller's metro, which then\nscales to zero until a build uses it. A builder that already exists is\nanswered with `200` if every field of the request matches it and `409`\notherwise, and is left as it is. A tenant over its quota is answered with\n`403` and the code `builder_quota`, and a builder that the platform\nrefuses, such as one with sizes past the limits of the tenant's plan, with\n`400` and the code `invalid`.",
         "parameters": [],
         "responses": {
           "200": {

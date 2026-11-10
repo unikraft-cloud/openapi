@@ -139,7 +139,7 @@
       "delete": {
         "operationId": "DeleteCommandLogsByUUID",
         "summary": "Delete Command Logs",
-        "description": "Forget the output logs of an existing command, freeing up memory.\nThe stdin/out/err pipes of running commands will be closed. Idempotent.\n`404` is returned, with an empty body, when no such command exists.",
+        "description": "Forget the output logs of an existing command, freeing up memory.\nThe stdin/out/err pipes of running commands will be closed. Idempotent.\n`404` is returned, with an empty body, when no such command exists.\nWith persistence, the log files go first; should neither go (`500`),\nnothing is deleted and the logs stay.",
         "parameters": [
           {
             "name": "uuid",
@@ -170,7 +170,7 @@
       "get": {
         "operationId": "GetCommandLogs",
         "summary": "Get Command Logs",
-        "description": "Fetch the collected output of a command. Both streams are base64-encoded;\nuse the raw log endpoint for binary output. `404` is returned, with an\nempty body, when no such command exists. `410` is returned, with an empty body,\nif the command's logs have been deleted.",
+        "description": "Fetch the collected output of a command; this changes nothing, releasing\nis `POST .../logs/release`. Both streams are base64-encoded; use the raw\nlog endpoint for binary output. `404` is returned, with an empty body,\nwhen no such command exists. `410` is returned, with an empty body, if the\ncommand's logs have been deleted. `416` is returned, with a message naming\nthe first byte still available, when an `offset` is below what was\nreleased. With persistence, output past the ceiling is in the log file\nwhile the command runs, read as one stream with memory; unread output\nthere is bounded (a quarter of the volume, 4 GiB at most, never into its\nlast quarter), past which the command is held as without a volume.",
         "parameters": [
           {
             "name": "uuid",
@@ -213,7 +213,7 @@
       "get": {
         "operationId": "GetRawCommandLog",
         "summary": "Get Raw Command Log",
-        "description": "Fetch an output stream of a command as raw bytes. A single contiguous\n`Range` header is honoured, as described in RFC 9110.",
+        "description": "Fetch an output stream of a command as raw bytes. A single contiguous\n`Range` header is honoured, as described in RFC 9110. Once part of the\nstream was released (see `POST .../logs/release`), a request without a `Range` is\nanswered with `206` and what is still available, or `416` once all of it\nwas released, and a `Range` into the released part with `416`. A stream\nlonger than what memory can hold, on a volume while the command runs, is\nanswered a page of that size at a time, `206` with a `Content-Range`.",
         "parameters": [
           {
             "name": "uuid",
@@ -244,7 +244,7 @@
         ],
         "responses": {
           "default": {
-            "description": "An output stream of a command, returned verbatim and unenveloped. A request\ncarrying no `Range` header is answered with `200` and the whole stream; a\nsatisfiable `Range` is answered with `206`, the requested bytes and a\n`Content-Range` header. `404` is returned when the command or the stream does\nnot exist, `410` is returned, with an empty body, if the command's logs have been\ndeleted, and `416` — with a `Content-Range` header reporting the total length —\nwhen the range cannot be satisfied.",
+            "description": "An output stream of a command, returned verbatim and unenveloped. A request\ncarrying no `Range` header is answered with `200` and the whole stream (or,\nonce part of it was released, with `206` and what is still available, and\nwith `416` once all of it was); a\nsatisfiable `Range` is answered with `206`, the requested bytes and a\n`Content-Range` header. `404` is returned when the command or the stream does\nnot exist, `410` is returned, with an empty body, if the command's logs have been\ndeleted, and `416` — with a `Content-Range` header reporting the total length —\nwhen the range cannot be satisfied.",
             "headers": {
               "Content-Range": {
                 "required": false,
@@ -267,6 +267,49 @@
         "tags": [
           "commands"
         ]
+      }
+    },
+    "/commands/{uuid}/logs/release": {
+      "post": {
+        "operationId": "ReleaseCommandLogs",
+        "summary": "Release Command Logs",
+        "description": "Release what the client has of a command's output; a read never does.\n`404` is returned, with an empty body, when no such command exists, `410`\nif the command's logs have been deleted, and `400` when the body is not\noffsets. With persistence, output past the ceiling is in the log file\nwhile the command runs, and a release frees it there too.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The outcome of releasing the output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "commands"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandLogsReleaseRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/commands/{uuid}/resize": {
@@ -684,12 +727,14 @@
           "stdout",
           "stderr",
           "stdout_available",
-          "stderr_available"
+          "stderr_available",
+          "stdout_first",
+          "stderr_first"
         ],
         "properties": {
           "stdout": {
             "type": "string",
-            "description": "The requested part of the standard output stream, base64-encoded.",
+            "description": "The requested part of the standard output stream, base64-encoded: from\nthe `offset` asked for, or from `stdout_first` when none was (the same\nfor `stderr`).",
             "example": "aGVsbG8K"
           },
           "stderr": {
@@ -699,35 +744,57 @@
           "stdout_available": {
             "type": "integer",
             "format": "uint64",
-            "description": "The total number of bytes available in the standard output stream."
+            "description": "The total number of bytes the standard output stream has produced so far,\nreleased ones included: what is still available starts at `stdout_first`."
           },
           "stderr_available": {
             "type": "integer",
             "format": "uint64",
-            "description": "The total number of bytes available in the standard error stream."
+            "description": "The same for the standard error stream."
+          },
+          "stdout_first": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The first byte of the standard output stream still available:\neverything before it was released. 0 unless something was; kept once\nthe output is a file, and across a restart."
+          },
+          "stderr_first": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The same for the standard error stream."
           }
         },
         "description": "The collected output of a command."
       },
       "CommandLogsRange": {
         "type": "object",
-        "required": [
-          "offset"
-        ],
         "properties": {
           "offset": {
             "type": "integer",
             "format": "uint64",
-            "description": "The first byte of the stream to return.",
-            "default": 0
+            "description": "The first byte of the stream to return. Omitted, the stream from where\nit starts: byte 0, or what is still available once some was released.\nGiven, it may not be below what was released: that is a `416`."
           },
           "limit": {
             "type": "integer",
             "format": "uint64",
-            "description": "The maximum number of bytes to return. When omitted, everything from\n`offset` to the end of the stream is returned."
+            "description": "The maximum number of bytes to return; omitted, the rest of the stream.\nA stream comes whole up to what memory can hold, a little over 18 MiB;\none longer than that, which only a volume allows, is answered in pages of\nthat size, `limit` or not."
           }
         },
         "description": "The byte range of a single output stream to return."
+      },
+      "CommandLogsReleaseRequest": {
+        "type": "object",
+        "properties": {
+          "stdout": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "Free the standard output stream below this byte: the client has it and\nwill not ask for it again. A command held at its output ceiling\n(`capped`) carries on once there is room. More than there is frees what\nthere is; no more than was released already does nothing, so a retry is\nharmless. Released bytes are gone, from memory and from the log file\nwhere some had spilled to it: a read's `stdout_first` says where what is\nleft starts, and an `offset` below it is a `416`. Once the command has\nexited and its log is a file, a release does nothing: the file is the\narchive, and `stdout_first` stays where releases left it while it ran."
+          },
+          "stderr": {
+            "type": "integer",
+            "format": "uint64",
+            "description": "The same for the standard error stream."
+          }
+        },
+        "description": "What the client has of each output stream, to release."
       },
       "CommandLogsRequest": {
         "type": "object",
@@ -943,7 +1010,8 @@
           "env",
           "pty",
           "duration_ms",
-          "exitcode"
+          "exitcode",
+          "capped"
         ],
         "properties": {
           "uuid": {
@@ -990,6 +1058,10 @@
             "format": "int32",
             "nullable": true,
             "description": "The exit code of the command. It is `null` while the command is still\nrunning."
+          },
+          "capped": {
+            "type": "boolean",
+            "description": "Whether the command is held at the output ceiling: the memory for output,\nits own share of it (at most 16 MiB) or the sandbox's whole budget across\ncommands, is full of output nothing has released, so nothing more of it\nis read and it blocks in its next write. Releasing some (see\n`POST .../logs/release`) lets it carry on. With persistence, output at\nthe ceiling goes to the log file instead and the command carries on,\nwhich is not `capped`: it is only once the volume's share for unread\noutput is used up or the volume will not take a spill. Either way `true`\nmeans a release is the way on. `false` once it has finished."
           }
         },
         "description": "The state of a single command."
@@ -1218,7 +1290,8 @@
           "env",
           "pty",
           "duration_ms",
-          "exitcode"
+          "exitcode",
+          "capped"
         ],
         "properties": {
           "uuid": {
@@ -1266,6 +1339,10 @@
             "nullable": true,
             "description": "The exit code of the command. It is `null` while the command is still\nrunning."
           },
+          "capped": {
+            "type": "boolean",
+            "description": "Whether the command is held at the output ceiling: the memory for output,\nits own share of it (at most 16 MiB) or the sandbox's whole budget across\ncommands, is full of output nothing has released, so nothing more of it\nis read and it blocks in its next write. Releasing some (see\n`POST .../logs/release`) lets it carry on. With persistence, output at\nthe ceiling goes to the log file instead and the command carries on,\nwhich is not `capped`: it is only once the volume's share for unread\noutput is used up or the volume will not take a spill. Either way `true`\nmeans a release is the way on. `false` once it has finished."
+          },
           "logs": {
             "allOf": [
               {
@@ -1305,7 +1382,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "(OPTIONAL) Environment variables"
+            "description": "(OPTIONAL) Environment variables: the command's whole environment,\nunless the sandbox is configured with `inherit_env`, when they are laid\nover the environment the sandbox itself was started with."
           },
           "pty": {
             "type": "boolean",
@@ -1343,7 +1420,7 @@
           },
           "forget": {
             "type": "boolean",
-            "description": "(OPTIONAL) With `req_timeout_s`: forget the command once it has finished,\nas `DELETE .../{uuid}` would, so that one request is the whole exchange.\nDoes nothing on a timeout, when the UUID is still needed."
+            "description": "(OPTIONAL) With `req_timeout_s`: forget the command once it has finished,\nas `DELETE .../{uuid}` would, so that one request is the whole exchange.\nDoes nothing on a timeout, when the UUID is still needed, nor when the\nanswer had to leave output behind short of what was asked (no\n`logs_limit`, or one past the bound): a persisted log that spilled past\nthe ceiling is answered up to what memory could have held (a little\nover 18 MiB), and the command then stays for `GET .../logs`,\n`stdout_available`/`stderr_available` past what the answer carries\nshowing it."
           }
         },
         "description": "The request to start a command in the sandbox."

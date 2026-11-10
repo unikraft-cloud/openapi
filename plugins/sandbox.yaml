@@ -129,6 +129,8 @@ paths:
         Forget the output logs of an existing command, freeing up memory.
         The stdin/out/err pipes of running commands will be closed. Idempotent.
         `404` is returned, with an empty body, when no such command exists.
+        With persistence, the log files go first; should neither go (`500`),
+        nothing is deleted and the logs stay.
       parameters:
         - name: uuid
           in: path
@@ -149,10 +151,16 @@ paths:
       operationId: GetCommandLogs
       summary: Get Command Logs
       description: |-
-        Fetch the collected output of a command. Both streams are base64-encoded;
-        use the raw log endpoint for binary output. `404` is returned, with an
-        empty body, when no such command exists. `410` is returned, with an empty body,
-        if the command's logs have been deleted.
+        Fetch the collected output of a command; this changes nothing, releasing
+        is `POST .../logs/release`. Both streams are base64-encoded; use the raw
+        log endpoint for binary output. `404` is returned, with an empty body,
+        when no such command exists. `410` is returned, with an empty body, if the
+        command's logs have been deleted. `416` is returned, with a message naming
+        the first byte still available, when an `offset` is below what was
+        released. With persistence, output past the ceiling is in the log file
+        while the command runs, read as one stream with memory; unread output
+        there is bounded (a quarter of the volume, 4 GiB at most, never into its
+        last quarter), past which the command is held as without a volume.
       parameters:
         - name: uuid
           in: path
@@ -181,7 +189,12 @@ paths:
       summary: Get Raw Command Log
       description: |-
         Fetch an output stream of a command as raw bytes. A single contiguous
-        `Range` header is honoured, as described in RFC 9110.
+        `Range` header is honoured, as described in RFC 9110. Once part of the
+        stream was released (see `POST .../logs/release`), a request without a `Range` is
+        answered with `206` and what is still available, or `416` once all of it
+        was released, and a `Range` into the released part with `416`. A stream
+        longer than what memory can hold, on a volume while the command runs, is
+        answered a page of that size at a time, `206` with a `Content-Range`.
       parameters:
         - name: uuid
           in: path
@@ -204,7 +217,9 @@ paths:
         default:
           description: |-
             An output stream of a command, returned verbatim and unenveloped. A request
-            carrying no `Range` header is answered with `200` and the whole stream; a
+            carrying no `Range` header is answered with `200` and the whole stream (or,
+            once part of it was released, with `206` and what is still available, and
+            with `416` once all of it was); a
             satisfiable `Range` is answered with `206`, the requested bytes and a
             `Content-Range` header. `404` is returned when the command or the stream does
             not exist, `410` is returned, with an empty body, if the command's logs have been
@@ -225,6 +240,38 @@ paths:
                 format: binary
       tags:
         - commands
+  /commands/{uuid}/logs/release:
+    post:
+      operationId: ReleaseCommandLogs
+      summary: Release Command Logs
+      description: |-
+        Release what the client has of a command's output; a read never does.
+        `404` is returned, with an empty body, when no such command exists, `410`
+        if the command's logs have been deleted, and `400` when the body is not
+        offsets. With persistence, output past the ceiling is in the log file
+        while the command runs, and a release frees it there too.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: The outcome of releasing the output.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      tags:
+        - commands
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandLogsReleaseRequest'
   /commands/{uuid}/resize:
     post:
       operationId: ResizeCommandTerminal
@@ -529,10 +576,15 @@ components:
         - stderr
         - stdout_available
         - stderr_available
+        - stdout_first
+        - stderr_first
       properties:
         stdout:
           type: string
-          description: The requested part of the standard output stream, base64-encoded.
+          description: |-
+            The requested part of the standard output stream, base64-encoded: from
+            the `offset` asked for, or from `stdout_first` when none was (the same
+            for `stderr`).
           example: aGVsbG8K
         stderr:
           type: string
@@ -540,29 +592,65 @@ components:
         stdout_available:
           type: integer
           format: uint64
-          description: The total number of bytes available in the standard output stream.
+          description: |-
+            The total number of bytes the standard output stream has produced so far,
+            released ones included: what is still available starts at `stdout_first`.
         stderr_available:
           type: integer
           format: uint64
-          description: The total number of bytes available in the standard error stream.
+          description: The same for the standard error stream.
+        stdout_first:
+          type: integer
+          format: uint64
+          description: |-
+            The first byte of the standard output stream still available:
+            everything before it was released. 0 unless something was; kept once
+            the output is a file, and across a restart.
+        stderr_first:
+          type: integer
+          format: uint64
+          description: The same for the standard error stream.
       description: The collected output of a command.
     CommandLogsRange:
       type: object
-      required:
-        - offset
       properties:
         offset:
           type: integer
           format: uint64
-          description: The first byte of the stream to return.
-          default: 0
+          description: |-
+            The first byte of the stream to return. Omitted, the stream from where
+            it starts: byte 0, or what is still available once some was released.
+            Given, it may not be below what was released: that is a `416`.
         limit:
           type: integer
           format: uint64
           description: |-
-            The maximum number of bytes to return. When omitted, everything from
-            `offset` to the end of the stream is returned.
+            The maximum number of bytes to return; omitted, the rest of the stream.
+            A stream comes whole up to what memory can hold, a little over 18 MiB;
+            one longer than that, which only a volume allows, is answered in pages of
+            that size, `limit` or not.
       description: The byte range of a single output stream to return.
+    CommandLogsReleaseRequest:
+      type: object
+      properties:
+        stdout:
+          type: integer
+          format: uint64
+          description: |-
+            Free the standard output stream below this byte: the client has it and
+            will not ask for it again. A command held at its output ceiling
+            (`capped`) carries on once there is room. More than there is frees what
+            there is; no more than was released already does nothing, so a retry is
+            harmless. Released bytes are gone, from memory and from the log file
+            where some had spilled to it: a read's `stdout_first` says where what is
+            left starts, and an `offset` below it is a `416`. Once the command has
+            exited and its log is a file, a release does nothing: the file is the
+            archive, and `stdout_first` stays where releases left it while it ran.
+        stderr:
+          type: integer
+          format: uint64
+          description: The same for the standard error stream.
+      description: What the client has of each output stream, to release.
     CommandLogsRequest:
       type: object
       required:
@@ -727,6 +815,7 @@ components:
         - pty
         - duration_ms
         - exitcode
+        - capped
       properties:
         uuid:
           type: string
@@ -766,6 +855,18 @@ components:
           description: |-
             The exit code of the command. It is `null` while the command is still
             running.
+        capped:
+          type: boolean
+          description: |-
+            Whether the command is held at the output ceiling: the memory for output,
+            its own share of it (at most 16 MiB) or the sandbox's whole budget across
+            commands, is full of output nothing has released, so nothing more of it
+            is read and it blocks in its next write. Releasing some (see
+            `POST .../logs/release`) lets it carry on. With persistence, output at
+            the ceiling goes to the log file instead and the command carries on,
+            which is not `capped`: it is only once the volume's share for unread
+            output is used up or the volume will not take a spill. Either way `true`
+            means a release is the way on. `false` once it has finished.
       description: The state of a single command.
     GetCommandResponse:
       type: object
@@ -927,6 +1028,7 @@ components:
         - pty
         - duration_ms
         - exitcode
+        - capped
       properties:
         uuid:
           type: string
@@ -966,6 +1068,18 @@ components:
           description: |-
             The exit code of the command. It is `null` while the command is still
             running.
+        capped:
+          type: boolean
+          description: |-
+            Whether the command is held at the output ceiling: the memory for output,
+            its own share of it (at most 16 MiB) or the sandbox's whole budget across
+            commands, is full of output nothing has released, so nothing more of it
+            is read and it blocks in its next write. Releasing some (see
+            `POST .../logs/release`) lets it carry on. With persistence, output at
+            the ceiling goes to the log file instead and the command carries on,
+            which is not `capped`: it is only once the volume's share for unread
+            output is used up or the volume will not take a spill. Either way `true`
+            means a release is the way on. `false` once it has finished.
         logs:
           allOf:
             - $ref: '#/components/schemas/CommandLogsData'
@@ -999,7 +1113,10 @@ components:
           type: object
           additionalProperties:
             type: string
-          description: (OPTIONAL) Environment variables
+          description: |-
+            (OPTIONAL) Environment variables: the command's whole environment,
+            unless the sandbox is configured with `inherit_env`, when they are laid
+            over the environment the sandbox itself was started with.
         pty:
           type: boolean
           description: |-
@@ -1051,7 +1168,13 @@ components:
           description: |-
             (OPTIONAL) With `req_timeout_s`: forget the command once it has finished,
             as `DELETE .../{uuid}` would, so that one request is the whole exchange.
-            Does nothing on a timeout, when the UUID is still needed.
+            Does nothing on a timeout, when the UUID is still needed, nor when the
+            answer had to leave output behind short of what was asked (no
+            `logs_limit`, or one past the bound): a persisted log that spilled past
+            the ceiling is answered up to what memory could have held (a little
+            over 18 MiB), and the command then stays for `GET .../logs`,
+            `stdout_available`/`stderr_available` past what the answer carries
+            showing it.
       description: The request to start a command in the sandbox.
     RunCommandResponse:
       type: object

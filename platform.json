@@ -1794,6 +1794,7 @@
             "name": "timeout_ms",
             "in": "query",
             "required": false,
+            "description": "Deprecated: Use `timeout_s` instead. Same semantics as `timeout_ms`\nin the request body.",
             "schema": {
               "type": "array",
               "items": {
@@ -1807,6 +1808,7 @@
             "name": "timeout_s",
             "in": "query",
             "required": false,
+            "description": "Timeout in seconds, with the same semantics as `timeout_s` in the\nrequest body: capped at the platform's maximum API timeout (60 seconds\nby default), and 0 or -1 wait for that maximum.",
             "schema": {
               "type": "array",
               "items": {
@@ -7342,7 +7344,8 @@
           "timeout_s": {
             "type": "integer",
             "format": "int64",
-            "description": "Timeout in seconds to wait for the template instances to be created.\nA value of -1 means to wait indefinitely until the instance reaches the\ndesired state. No wait performed for a value of 0.",
+            "minimum": -1,
+            "description": "Timeout in seconds to wait for the template instances to be created.\nNo wait is performed for a value of 0, which is the default. The wait is\ncapped at the platform's maximum API timeout (60 seconds by default);\nlarger values are rejected, and a value of -1 waits for that maximum. If\nseveral instances are converted in one request, the shortest positive\ntimeout applies to all of them.\n\nReaching the timeout is not an HTTP error: the response carries the\nmessage `Operation timed out`, and each instance that has not become a\ntemplate yet is reported with its current `state` and an `error` status.",
             "example": 2
           },
           "autokill": {
@@ -10790,9 +10793,6 @@
       },
       "Instances.WaitInstanceByUUIDRequestBody": {
         "type": "object",
-        "required": [
-          "state"
-        ],
         "properties": {
           "state": {
             "allOf": [
@@ -10805,14 +10805,16 @@
           "timeout_ms": {
             "type": "integer",
             "format": "int64",
-            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+            "minimum": -1,
+            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 selects the platform's maximum API timeout\n(60000 ms by default); larger values are rejected.",
             "deprecated": true,
             "example": 450
           },
           "timeout_s": {
             "type": "integer",
             "format": "int64",
-            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
+            "minimum": -1,
+            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. Every wait is capped at the platform's maximum API timeout\n(60 seconds by default); larger values are rejected. A value of 0 or\n-1, or omitting the timeout, waits for that maximum; there is no way\nto wait indefinitely or to skip the wait. If several instances are\nwaited for in one request, the shortest positive timeout applies to\nall of them.\n\nReaching the timeout is not an HTTP error: the response carries the\nmessage `Operation timed out`, and each instance that has not reached\nthe desired state is reported with its current `state` and an `error`\nstatus.",
             "example": 2
           }
         },
@@ -10841,14 +10843,16 @@
           "timeout_ms": {
             "type": "integer",
             "format": "int64",
-            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 means to wait indefinitely.",
+            "minimum": -1,
+            "description": "Deprecated: Use `timeout_s` instead. Timeout in milliseconds to\nwait for the instance to reach the desired state. If `timeout_s` is\nnot set, this value is converted by rounding up to the next full\nsecond. A value of -1 selects the platform's maximum API timeout\n(60000 ms by default); larger values are rejected.",
             "deprecated": true,
             "example": 450
           },
           "timeout_s": {
             "type": "integer",
             "format": "int64",
-            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. If the timeout is reached, the request will fail with an\nerror. A value of -1 means to wait indefinitely until the instance\nreaches the desired state. No wait performed for a value of 0.",
+            "minimum": -1,
+            "description": "Timeout in seconds to wait for the instance to reach the desired\nstate. Every wait is capped at the platform's maximum API timeout\n(60 seconds by default); larger values are rejected. A value of 0 or\n-1, or omitting the timeout, waits for that maximum; there is no way\nto wait indefinitely or to skip the wait. If several instances are\nwaited for in one request, the shortest positive timeout applies to\nall of them.\n\nReaching the timeout is not an HTTP error: the response carries the\nmessage `Operation timed out`, and each instance that has not reached\nthe desired state is reported with its current `state` and an `error`\nstatus.",
             "example": 2
           }
         },

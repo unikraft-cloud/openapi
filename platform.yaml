@@ -1205,6 +1205,9 @@ paths:
         - name: timeout_ms
           in: query
           required: false
+          description: |-
+            Deprecated: Use `timeout_s` instead. Same semantics as `timeout_ms`
+            in the request body.
           schema:
             type: array
             items:
@@ -1214,6 +1217,10 @@ paths:
         - name: timeout_s
           in: query
           required: false
+          description: |-
+            Timeout in seconds, with the same semantics as `timeout_s` in the
+            request body: capped at the platform's maximum API timeout (60 seconds
+            by default), and 0 or -1 wait for that maximum.
           schema:
             type: array
             items:
@@ -5321,10 +5328,18 @@ components:
         timeout_s:
           type: integer
           format: int64
+          minimum: -1
           description: |-
             Timeout in seconds to wait for the template instances to be created.
-            A value of -1 means to wait indefinitely until the instance reaches the
-            desired state. No wait performed for a value of 0.
+            No wait is performed for a value of 0, which is the default. The wait is
+            capped at the platform's maximum API timeout (60 seconds by default);
+            larger values are rejected, and a value of -1 waits for that maximum. If
+            several instances are converted in one request, the shortest positive
+            timeout applies to all of them.
+
+            Reaching the timeout is not an HTTP error: the response carries the
+            message `Operation timed out`, and each instance that has not become a
+            template yet is reported with its current `state` and an `error` status.
           example: 2
         autokill:
           allOf:
@@ -8461,8 +8476,6 @@ components:
       description: Per-item result for an update template instances operation.
     Instances.WaitInstanceByUUIDRequestBody:
       type: object
-      required:
-        - state
       properties:
         state:
           allOf:
@@ -8471,21 +8484,32 @@ components:
         timeout_ms:
           type: integer
           format: int64
+          minimum: -1
           description: |-
             Deprecated: Use `timeout_s` instead. Timeout in milliseconds to
             wait for the instance to reach the desired state. If `timeout_s` is
             not set, this value is converted by rounding up to the next full
-            second. A value of -1 means to wait indefinitely.
+            second. A value of -1 selects the platform's maximum API timeout
+            (60000 ms by default); larger values are rejected.
           deprecated: true
           example: 450
         timeout_s:
           type: integer
           format: int64
+          minimum: -1
           description: |-
             Timeout in seconds to wait for the instance to reach the desired
-            state. If the timeout is reached, the request will fail with an
-            error. A value of -1 means to wait indefinitely until the instance
-            reaches the desired state. No wait performed for a value of 0.
+            state. Every wait is capped at the platform's maximum API timeout
+            (60 seconds by default); larger values are rejected. A value of 0 or
+            -1, or omitting the timeout, waits for that maximum; there is no way
+            to wait indefinitely or to skip the wait. If several instances are
+            waited for in one request, the shortest positive timeout applies to
+            all of them.
+
+            Reaching the timeout is not an HTTP error: the response carries the
+            message `Operation timed out`, and each instance that has not reached
+            the desired state is reported with its current `state` and an `error`
+            status.
           example: 2
       description: Wait parameters.
     Instances.WaitInstancesRequestItem:
@@ -8505,21 +8529,32 @@ components:
         timeout_ms:
           type: integer
           format: int64
+          minimum: -1
           description: |-
             Deprecated: Use `timeout_s` instead. Timeout in milliseconds to
             wait for the instance to reach the desired state. If `timeout_s` is
             not set, this value is converted by rounding up to the next full
-            second. A value of -1 means to wait indefinitely.
+            second. A value of -1 selects the platform's maximum API timeout
+            (60000 ms by default); larger values are rejected.
           deprecated: true
           example: 450
         timeout_s:
           type: integer
           format: int64
+          minimum: -1
           description: |-
             Timeout in seconds to wait for the instance to reach the desired
-            state. If the timeout is reached, the request will fail with an
-            error. A value of -1 means to wait indefinitely until the instance
-            reaches the desired state. No wait performed for a value of 0.
+            state. Every wait is capped at the platform's maximum API timeout
+            (60 seconds by default); larger values are rejected. A value of 0 or
+            -1, or omitting the timeout, waits for that maximum; there is no way
+            to wait indefinitely or to skip the wait. If several instances are
+            waited for in one request, the shortest positive timeout applies to
+            all of them.
+
+            Reaching the timeout is not an HTTP error: the response carries the
+            message `Operation timed out`, and each instance that has not reached
+            the desired state is reported with its current `state` and an `error`
+            status.
           example: 2
       description: A single request item to wait for an instance's state.
     Instances.WaitInstancesResponse:

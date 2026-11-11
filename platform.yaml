@@ -408,7 +408,7 @@ paths:
       operationId: UnpinImages
       summary: Unpin Images
       description: |-
-        Unpin one or more images by UUID, making them eligible for normal
+        Unpin one or more images by UUID or URL, making them eligible for normal
         cache eviction again. This does not delete the image.
       parameters: []
       responses:
@@ -4086,6 +4086,19 @@ components:
         - initrd_or_rom
         - size_in_bytes
       properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID of the image. Not returned by the image store.
+        name:
+          type: string
+          description: The name of the image, if it has one.
+        state:
+          type: string
+          description: |-
+            The current state of the image (e.g. `ready`). Not returned by the image
+            store.
+          example: ready
         url:
           type: string
           description: The image URL.
@@ -4127,7 +4140,27 @@ components:
             populated (and only ever `true`) for callers with image manager
             permissions; omitted otherwise, including when the image is not pinned.
           example: true
+        autokill:
+          allOf:
+            - $ref: '#/components/schemas/Images.ImageAutokill'
+          description: |-
+            Automatic unpin-on-idle configuration of the image. Only populated for
+            callers with image manager permissions, on a pinned image that has an
+            autokill time.
       description: An image representing a VM which can be deployed on Unikraft Cloud.
+    Images.ImageAutokill:
+      type: object
+      required:
+        - time_ms
+      properties:
+        time_ms:
+          type: integer
+          format: uint64
+          description: The image is unpinned after this many milliseconds of inactivity.
+          example: 60000
+      description: |-
+        Automatic unpin-on-idle configuration of a pinned image. Only populated
+        for callers with image manager permissions.
     Images.PinImageRequestItem:
       type: object
       required:
@@ -4274,16 +4307,25 @@ components:
         being pulled is not otherwise identified in the response).
     Images.UnpinImageRequestItem:
       type: object
-      required:
-        - uuid
       properties:
         uuid:
           type: string
           format: uuid
+          description: The UUID of the image to unpin.
+        url:
+          type: string
           description: |-
-            The UUID of the image to unpin. Only UUID is supported; name, URL,
-            tag, and digest are not.
-      description: The request item for unpinning a single image.
+            The URL of the image to unpin, by tag or by digest. A URL without a
+            digest selects the image the tag currently resolves to on the node.
+          example: user/image:latest
+      description: |-
+        The request item for unpinning a single image. Select the image by exactly
+        one of `uuid` or `url`.
+      oneOf:
+        - required:
+            - uuid
+        - required:
+            - url
     Images.UnpinImagesResponse:
       type: object
       required:

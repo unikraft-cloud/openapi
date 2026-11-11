@@ -404,7 +404,7 @@
       "get": {
         "operationId": "GetImageStore",
         "summary": "Get Images in Store",
-        "description": "Retrieve all images in store.",
+        "description": "Retrieve all images in store. Filter with the `digest` and `tag` query\nparameters; a request body is not accepted.",
         "parameters": [
           {
             "name": "digest",
@@ -439,20 +439,7 @@
         },
         "tags": [
           "images"
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Images.GetImagesRequestTagOrDigest"
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/v1/images": {
@@ -1225,7 +1212,7 @@
       "get": {
         "operationId": "GetInstanceMetrics",
         "summary": "Get Instances Metrics",
-        "description": "Get instances metrics.",
+        "description": "Get instances metrics.\n\nThe response is JSON only if the request's `Accept` header is exactly\n`application/json` (case-insensitive, without parameters or other media\ntypes). Otherwise, including without an `Accept` header or with a\nwildcard, the metrics are returned as `text/plain` in the Prometheus\ntext exposition format.",
         "parameters": [
           {
             "$ref": "#/components/parameters/Common.NameOrUUIDQueryParams.uuid"
@@ -1241,6 +1228,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Instances.GetInstancesMetricsResponse"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2052,7 +2044,7 @@
       "get": {
         "operationId": "GetInstanceMetricsByUUID",
         "summary": "Get Instance Metrics by UUID",
-        "description": "Get instance metrics by UUID.",
+        "description": "Get instance metrics by UUID.\n\nThe response is JSON only if the request's `Accept` header is exactly\n`application/json` (case-insensitive, without parameters or other media\ntypes). Otherwise, including without an `Accept` header or with a\nwildcard, the metrics are returned as `text/plain` in the Prometheus\ntext exposition format.",
         "parameters": [
           {
             "name": "uuid",
@@ -2071,6 +2063,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Instances.GetInstancesMetricsResponse"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -5323,8 +5320,8 @@
           },
           "common_name": {
             "type": "string",
-            "description": "The common name (CN) field from the certificate's subject.\n\nThis is typically the primary domain name that the certificate is issued\nfor. It represents the main identity that the certificate validates.",
-            "example": "my-common-name"
+            "description": "The common name (CN) field from the certificate's subject.\n\nThis is typically the primary domain name that the certificate is issued\nfor. It represents the main identity that the certificate validates.\nReported without the trailing period required on creation.",
+            "example": "funky-town.com"
           },
           "subject": {
             "type": "string",
@@ -5425,12 +5422,12 @@
             "type": "string",
             "description": "The common name (CN) of the certificate.\n\nDeprecated: Use `common_name` instead.",
             "deprecated": true,
-            "example": "funky-town.com"
+            "example": "funky-town.com."
           },
           "common_name": {
             "type": "string",
-            "description": "The common name (CN) of the certificate.\n\nThis must be a fully-qualified domain name (FQDN). Exactly one of `cn`\nor `common_name` must be specified.",
-            "example": "funky-town.com"
+            "description": "The common name (CN) of the certificate.\n\nThis must be a fully-qualified domain name (FQDN) ending with a period\n`.`, e.g. `funky-town.com.`. Exactly one of `cn` or `common_name` must be\nspecified.",
+            "example": "funky-town.com."
           },
           "chain": {
             "type": "string",
@@ -9825,7 +9822,9 @@
             "items": {
               "type": "string"
             },
-            "description": "The command to execute when the action is `exec`.\n\nRequired when `action` is `SCHEDULE_ACTION_EXEC`, ignored otherwise.\nEach element is a separate argument; the first element is the executable.",
+            "minItems": 1,
+            "maxItems": 128,
+            "description": "The command to execute when the action is `exec`.\n\nRequired and non-empty when `action` is `exec`, and rejected for any\nother action, even when empty. Each element is a separate argument; the\nfirst element is the executable. At most 128 arguments, and the encoded\ncommand must fit in 1024 bytes.",
             "example": [
               "/bin/sh",
               "-c",
@@ -9833,7 +9832,37 @@
             ]
           }
         },
-        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, delete, or exec).\n\nCalendar expressions format:\n\n[weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC"
+        "description": "A schedule defines when an action should be performed on an instance.\n\nEach schedule specifies a name, a calendar expression following systemd\ncalendar event syntax, and an action (start, stop, delete, or exec).\n\nCalendar expressions format:\n\n[weekday] [[year-]month-day] [hour:minute[:second]]\n\nSupported syntax:\n\n- `*` - Any value\n- `5` - Exact value\n- `1..5` - Range\n- `1..5/2` - Range with step\n- `1,2,5` - Comma-separated list\n\nExample: `*-*-* 09:00:00` - Every day at 09:00 UTC\nExample: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC",
+        "oneOf": [
+          {
+            "properties": {
+              "action": {
+                "enum": [
+                  "exec"
+                ]
+              }
+            },
+            "required": [
+              "args"
+            ]
+          },
+          {
+            "properties": {
+              "action": {
+                "not": {
+                  "enum": [
+                    "exec"
+                  ]
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "args"
+              ]
+            }
+          }
+        ]
       },
       "Instances.ScheduleAction": {
         "type": "string",
@@ -10016,13 +10045,13 @@
         "properties": {
           "force": {
             "type": "boolean",
-            "description": "Whether to immediately force stop the instance.",
-            "example": true
+            "description": "Whether to immediately force stop the instance. Cannot be combined with\na non-zero `drain_timeout_ms`.",
+            "example": false
           },
           "drain_timeout_ms": {
             "type": "integer",
             "format": "uint64",
-            "description": "Timeout for draining connections in milliseconds.\nNo draining will occur if set to 0. The instance\ndoes not receive new connections in the draining\nphase. The instance is stopped when the last\nconnection has been closed or the timeout expired.\nThe maximum timeout may vary. Use -1 for the\nlargest possible value. Ignored if force is set.\n\nNote: This endpoint does not block. Use the wait\nendpoint for the instance to reach the stopped\nstate.",
+            "description": "Timeout for draining connections in milliseconds.\nNo draining will occur if set to 0. The instance\ndoes not receive new connections in the draining\nphase. The instance is stopped when the last\nconnection has been closed or the timeout expired.\nThe maximum timeout may vary. Use -1 for the\nlargest possible value. Must be 0 or omitted if\nforce is set; any other value, including -1, is\nrejected.\n\nNote: This endpoint does not block. Use the wait\nendpoint for the instance to reach the stopped\nstate.",
             "example": 550
           },
           "quick": {
@@ -10041,7 +10070,27 @@
             "example": false
           }
         },
-        "description": "Parameters for stopping the instance."
+        "description": "Parameters for stopping the instance.",
+        "not": {
+          "required": [
+            "force",
+            "drain_timeout_ms"
+          ],
+          "properties": {
+            "force": {
+              "enum": [
+                true
+              ]
+            },
+            "drain_timeout_ms": {
+              "not": {
+                "enum": [
+                  0
+                ]
+              }
+            }
+          }
+        }
       },
       "Instances.StopInstancesRequestItem": {
         "type": "object",
@@ -10057,13 +10106,13 @@
           },
           "force": {
             "type": "boolean",
-            "description": "Whether to immediately force stop the instance.",
-            "example": true
+            "description": "Whether to immediately force stop the instance. Cannot be combined with\na non-zero `drain_timeout_ms`.",
+            "example": false
           },
           "drain_timeout_ms": {
             "type": "integer",
             "format": "uint64",
-            "description": "Timeout for draining connections in milliseconds.\nNo draining will occur if set to 0. The instance\ndoes not receive new connections in the draining\nphase. The instance is stopped when the last\nconnection has been closed or the timeout expired.\nThe maximum timeout may vary. Use -1 for the\nlargest possible value. Ignored if force is set.\n\nNote: This endpoint does not block. Use the wait\nendpoint for the instance to reach the stopped\nstate.",
+            "description": "Timeout for draining connections in milliseconds.\nNo draining will occur if set to 0. The instance\ndoes not receive new connections in the draining\nphase. The instance is stopped when the last\nconnection has been closed or the timeout expired.\nThe maximum timeout may vary. Use -1 for the\nlargest possible value. Must be 0 or omitted if\nforce is set; any other value, including -1, is\nrejected.\n\nNote: This endpoint does not block. Use the wait\nendpoint for the instance to reach the stopped\nstate.",
             "example": 550
           },
           "quick": {
@@ -10082,7 +10131,27 @@
             "example": false
           }
         },
-        "description": "A single request item to stop an instance."
+        "description": "A single request item to stop an instance.",
+        "not": {
+          "required": [
+            "force",
+            "drain_timeout_ms"
+          ],
+          "properties": {
+            "force": {
+              "enum": [
+                true
+              ]
+            },
+            "drain_timeout_ms": {
+              "not": {
+                "enum": [
+                  0
+                ]
+              }
+            }
+          }
+        }
       },
       "Instances.StopInstancesResponse": {
         "type": "object",

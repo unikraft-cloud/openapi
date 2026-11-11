@@ -312,7 +312,9 @@ paths:
     get:
       operationId: GetImageStore
       summary: Get Images in Store
-      description: Retrieve all images in store.
+      description: |-
+        Retrieve all images in store. Filter with the `digest` and `tag` query
+        parameters; a request body is not accepted.
       parameters:
         - name: digest
           in: query
@@ -335,14 +337,6 @@ paths:
                 $ref: '#/components/schemas/Images.GetImagesResponse'
       tags:
         - images
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Images.GetImagesRequestTagOrDigest'
   /v1/images:
     get:
       operationId: GetImages
@@ -840,7 +834,14 @@ paths:
     get:
       operationId: GetInstanceMetrics
       summary: Get Instances Metrics
-      description: Get instances metrics.
+      description: |-
+        Get instances metrics.
+
+        The response is JSON only if the request's `Accept` header is exactly
+        `application/json` (case-insensitive, without parameters or other media
+        types). Otherwise, including without an `Accept` header or with a
+        wildcard, the metrics are returned as `text/plain` in the Prometheus
+        text exposition format.
       parameters:
         - $ref: '#/components/parameters/Common.NameOrUUIDQueryParams.uuid'
         - $ref: '#/components/parameters/Common.NameOrUUIDQueryParams.name'
@@ -851,6 +852,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Instances.GetInstancesMetricsResponse'
+            text/plain:
+              schema:
+                type: string
       tags:
         - instances
       requestBody:
@@ -1376,7 +1380,14 @@ paths:
     get:
       operationId: GetInstanceMetricsByUUID
       summary: Get Instance Metrics by UUID
-      description: Get instance metrics by UUID.
+      description: |-
+        Get instance metrics by UUID.
+
+        The response is JSON only if the request's `Accept` header is exactly
+        `application/json` (case-insensitive, without parameters or other media
+        types). Otherwise, including without an `Accept` header or with a
+        wildcard, the metrics are returned as `text/plain` in the Prometheus
+        text exposition format.
       parameters:
         - name: uuid
           in: path
@@ -1391,6 +1402,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Instances.GetInstancesMetricsResponse'
+            text/plain:
+              schema:
+                type: string
       tags:
         - instances
   /v1/instances/{uuid}/migrate:
@@ -3579,7 +3593,8 @@ components:
 
             This is typically the primary domain name that the certificate is issued
             for. It represents the main identity that the certificate validates.
-          example: my-common-name
+            Reported without the trailing period required on creation.
+          example: funky-town.com
         subject:
           type: string
           description: |-
@@ -3702,15 +3717,16 @@ components:
 
             Deprecated: Use `common_name` instead.
           deprecated: true
-          example: funky-town.com
+          example: funky-town.com.
         common_name:
           type: string
           description: |-
             The common name (CN) of the certificate.
 
-            This must be a fully-qualified domain name (FQDN). Exactly one of `cn`
-            or `common_name` must be specified.
-          example: funky-town.com
+            This must be a fully-qualified domain name (FQDN) ending with a period
+            `.`, e.g. `funky-town.com.`. Exactly one of `cn` or `common_name` must be
+            specified.
+          example: funky-town.com.
         chain:
           type: string
           description: The certificate chain in PEM format. Required for user-uploaded certificates.
@@ -7628,11 +7644,15 @@ components:
           type: array
           items:
             type: string
+          minItems: 1
+          maxItems: 128
           description: |-
             The command to execute when the action is `exec`.
 
-            Required when `action` is `SCHEDULE_ACTION_EXEC`, ignored otherwise.
-            Each element is a separate argument; the first element is the executable.
+            Required and non-empty when `action` is `exec`, and rejected for any
+            other action, even when empty. Each element is a separate argument; the
+            first element is the executable. At most 128 arguments, and the encoded
+            command must fit in 1024 bytes.
           example:
             - /bin/sh
             - -c
@@ -7657,6 +7677,21 @@ components:
 
         Example: `*-*-* 09:00:00` - Every day at 09:00 UTC
         Example: `Sat,Sun *-*-* 20:00:00` - Every Saturday and Sunday at 20:00 UTC
+      oneOf:
+        - properties:
+            action:
+              enum:
+                - exec
+          required:
+            - args
+        - properties:
+            action:
+              not:
+                enum:
+                  - exec
+          not:
+            required:
+              - args
     Instances.ScheduleAction:
       type: string
       enum:
@@ -7827,8 +7862,10 @@ components:
       properties:
         force:
           type: boolean
-          description: Whether to immediately force stop the instance.
-          example: true
+          description: |-
+            Whether to immediately force stop the instance. Cannot be combined with
+            a non-zero `drain_timeout_ms`.
+          example: false
         drain_timeout_ms:
           type: integer
           format: uint64
@@ -7839,7 +7876,9 @@ components:
             phase. The instance is stopped when the last
             connection has been closed or the timeout expired.
             The maximum timeout may vary. Use -1 for the
-            largest possible value. Ignored if force is set.
+            largest possible value. Must be 0 or omitted if
+            force is set; any other value, including -1, is
+            rejected.
 
             Note: This endpoint does not block. Use the wait
             endpoint for the instance to reach the stopped
@@ -7862,6 +7901,18 @@ components:
             Can only be used in conjunction with force.
           example: false
       description: Parameters for stopping the instance.
+      not:
+        required:
+          - force
+          - drain_timeout_ms
+        properties:
+          force:
+            enum:
+              - true
+          drain_timeout_ms:
+            not:
+              enum:
+                - 0
     Instances.StopInstancesRequestItem:
       type: object
       properties:
@@ -7874,8 +7925,10 @@ components:
           description: The name of the resource.
         force:
           type: boolean
-          description: Whether to immediately force stop the instance.
-          example: true
+          description: |-
+            Whether to immediately force stop the instance. Cannot be combined with
+            a non-zero `drain_timeout_ms`.
+          example: false
         drain_timeout_ms:
           type: integer
           format: uint64
@@ -7886,7 +7939,9 @@ components:
             phase. The instance is stopped when the last
             connection has been closed or the timeout expired.
             The maximum timeout may vary. Use -1 for the
-            largest possible value. Ignored if force is set.
+            largest possible value. Must be 0 or omitted if
+            force is set; any other value, including -1, is
+            rejected.
 
             Note: This endpoint does not block. Use the wait
             endpoint for the instance to reach the stopped
@@ -7909,6 +7964,18 @@ components:
             Can only be used in conjunction with force.
           example: false
       description: A single request item to stop an instance.
+      not:
+        required:
+          - force
+          - drain_timeout_ms
+        properties:
+          force:
+            enum:
+              - true
+          drain_timeout_ms:
+            not:
+              enum:
+                - 0
     Instances.StopInstancesResponse:
       type: object
       required:

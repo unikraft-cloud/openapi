@@ -1233,7 +1233,7 @@
             "items": {
               "type": "string"
             },
-            "description": "(OPTIONAL) Hostnames, each with at most a single leading `*.` wildcard,\nstored lowercased. Not addresses, which go in `networks`. Inbound: the\nsandbox's private name, exactly one."
+            "description": "(OPTIONAL) Hostnames, each with at most a single leading `*.` wildcard,\nstored lowercased. Not addresses, which go in `networks`. `*` alone\nallows every host on the policy's ports, and no other outbound policy\nmay use them. Inbound: the sandbox's private name, exactly one, or `*`\nfor every sandbox on a passthrough policy, stored as `0.0.0.0/0` in\n`networks`."
           },
           "networks": {
             "type": "array",

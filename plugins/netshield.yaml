@@ -921,8 +921,11 @@ components:
             type: string
           description: |-
             (OPTIONAL) Hostnames, each with at most a single leading `*.` wildcard,
-            stored lowercased. Not addresses, which go in `networks`. Inbound: the
-            sandbox's private name, exactly one.
+            stored lowercased. Not addresses, which go in `networks`. `*` alone
+            allows every host on the policy's ports, and no other outbound policy
+            may use them. Inbound: the sandbox's private name, exactly one, or `*`
+            for every sandbox on a passthrough policy, stored as `0.0.0.0/0` in
+            `networks`.
         networks:
           type: array
           items:

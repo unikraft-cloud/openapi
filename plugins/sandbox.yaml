@@ -8,7 +8,7 @@ info:
     management of shell commands running inside the sandbox, and reading and
     writing files in the sandbox filesystem.
 
-    Every operation declares a single `default` response: the standard response
+    Every operation declares a `default` response: the standard response
     envelope, which carries the outcome of the request in `status`, the
     human-readable reason for a failure in `message` and the HTTP status code in
     `errors`. The HTTP status code itself distinguishes success from failure; the
@@ -16,10 +16,10 @@ info:
     endpoints which stream bytes rather than JSON (the raw command log and the
     raw file download) return their payload verbatim, unenveloped.
 
-    One endpoint is not an HTTP operation and so does not appear below:
-    `GET /commands/{uuid}/ws` upgrades to a WebSocket that streams a command's
-    output as it is produced and takes its input, `eof`, `resize` and `signal`
-    as frames. The frame contract is documented in the plugin's README.
+    `GET /commands/{uuid}/ws` also declares `101`: it upgrades to a WebSocket
+    that streams a command's output as it is produced and takes its input,
+    `eof`, `resize` and `signal` as frames. The frame contract is documented in
+    the plugin's README.
 tags:
   - name: fs
     x-displayName: Filesystem
@@ -431,6 +431,69 @@ paths:
             schema:
               $ref: '#/components/schemas/CommandWaitTimeoutRequest'
       deprecated: true
+  /commands/{uuid}/ws:
+    get:
+      operationId: FollowCommand
+      summary: Follow Command
+      description: |-
+        Follow a command over a WebSocket: what it has said from the given
+        offsets on, then everything new as it arrives, then its exit. The socket
+        also takes the command's input, `eof`, `resize` and `signal` as frames,
+        as the plugin's README describes. `404` is returned, with an empty body,
+        when no such command exists, and `400` when the request is not a
+        WebSocket upgrade or its query does not parse. What the other operations
+        answer with `410` or `416` is no HTTP status here: a command whose logs
+        were deleted, or an offset behind what was released (or past the end,
+        with `release`), gets the upgrade and then a `1008` close.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: stdout
+          in: query
+          required: false
+          description: |-
+            The bytes of standard output the client already has. Omitted, from
+            where the stream starts: byte 0, or what is still available once some
+            was released.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: stderr
+          in: query
+          required: false
+          description: The same for standard error.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: release
+          in: query
+          required: false
+          description: |-
+            Release the offsets the session starts from, then each frame once sent,
+            as `POST .../logs/release` does. A frame still on its way when the
+            session drops is gone with it.
+          schema:
+            type: boolean
+          explode: false
+      responses:
+        '101':
+          description: |-
+            The switch to a WebSocket that follows a command. Its frames are the
+            plugin's contract, documented in its README, not this specification's.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      tags:
+        - commands
   /fs/mkdir:
     post:
       operationId: CreateDirectory

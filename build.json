@@ -1365,7 +1365,7 @@
             "$ref": "#/components/schemas/KraftfileObject"
           }
         ],
-        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context."
+        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context. A source without a `filename` reads the file `Kraftfile`,\nand if there is none, the build is the one of a request without a\n`kraftfile`."
       },
       "KraftfileInline": {
         "type": "string",

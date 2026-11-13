@@ -3,7 +3,7 @@
   "info": {
     "title": "Unikraft Cloud Build API",
     "version": "v0.1.0",
-    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile, or from a Dockerfile alone, on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON\nor plain text.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`GET /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as a WebSocket upgrade whose binary messages carry the\nsession, with the `X-Docker-Expose-Session-*` headers of dockerd's\n`/session`. A `POST` takes the session as an h2c upgrade instead, as dockerd\ndoes. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, already has one, or that another user started, with\n`409`. A build that no session attaches to within a minute fails. The build\nreads from the session only when it needs to, thus a session that ends\nearly does not end the build, but fails the next read that needs it."
+    "description": "This specification describes the Unikraft Cloud build API, served by\nblacksmith. A build takes its files from git repositories, https tarballs\nor the client's own buildkit session, builds a Unikraft image from a\nKraftfile, or from a Dockerfile alone, on a buildkitd running in the\ncaller's own account, and pushes the image to registries or imports it into\nvolumes.\n\nEvery request carries the caller's Unikraft Cloud token as a bearer token.\nThe token is validated against the platform on every request, and the answer\nis the caller's identity: everything is scoped to that tenant, and the build\nof another tenant is a `404`. Images are pulled and pushed with the caller's\ntoken, unless `registries` gives other credentials for a registry.\n\nEvery operation answers a failed request with an HTTP status code and an\n`ErrorBody`, which names the failure in `error.code` and explains it in\n`error.message`. The status codes an operation can answer with are\ndocumented on the operation. The success responses are plain JSON objects,\nexcept for the progress stream of a build, which is newline-delimited JSON.\n\nA part of a request marked as not supported yet is answered with `400` and\nthe code `unsupported`.\n\nOne endpoint is not an HTTP operation and so does not appear below:\n`GET /v1/builds/{id}/session` attaches the client's buildkit session to a\nwaiting build, as a WebSocket upgrade whose binary messages carry the\nsession, with the `X-Docker-Expose-Session-*` headers of dockerd's\n`/session`. A `POST` takes the session as an h2c upgrade instead, as dockerd\ndoes. After the `101`, the connection\nserves the build's session sources, secrets, SSH agents and registry\ncredentials until the build ends. A session that does not advertise a\nmethod the build needs is answered with `400`, and a build that does not\nwait for a session, already has one, or that another user started, with\n`409`. A build that no session attaches to within a minute fails. The build\nreads from the session only when it needs to, thus a session that ends\nearly does not end the build, but fails the next read that needs it."
   },
   "tags": [
     {
@@ -320,7 +320,7 @@
       "post": {
         "operationId": "CreateBuild",
         "summary": "Create Build",
-        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`. A\nrequest whose `hints.dedupe` names a running or succeeded build with the\nsame `output` is answered with `200` and that build, and starts nothing.\nWith other `output`, the new build pushes the image of a succeeded build.",
+        "description": "Create a build. It runs on a builder of the caller's tenant, which is\ncreated on first use, whether or not anyone is watching it, and waits for\na build slot while each of the tenant's builders already runs as many\nbuilds at once as the service allows. Each replica of the service has its\nown slots on each builder, so a builder runs up to `max_builds` builds for\neach replica. A request that uses a part of the full build API this\nservice does not support yet is answered with `400` and the code\n`unsupported`. A tenant that already has as many builds running or waiting\nas it may is answered with `429` and the code `too_many_builds`. A\nrequest whose `hints.dedupe` names a running or succeeded build with the\nsame `output` is answered with `200` and that build, and starts nothing.\nWith other `output`, the new build pushes the image of a succeeded build.",
         "parameters": [],
         "responses": {
           "200": {
@@ -589,7 +589,7 @@
       "get": {
         "operationId": "GetBuildLogs",
         "summary": "Get Build Logs",
-        "description": "Follow the progress of a build by ID. Every request replays the stream\nfrom the start and ends once the build has finished, with a `result` or an\n`error` as its last line, so reconnecting is just asking again. Past\n8 MiB, the stream has one event that says so, and then only its last\nline. `Accept: text/plain` renders the stream as text instead of\nnewline-delimited JSON.",
+        "description": "Follow the progress of a build by ID. Every request replays the stream\nfrom the start and ends once the build has finished, with a `result` or an\n`error` as its last line, so reconnecting is just asking again. Past\n8 MiB, the stream has one event that says so, and then only its last\nline. An `Accept` header that selects `text/plain` over\n`application/x-ndjson` is not supported yet.",
         "parameters": [
           {
             "name": "id",
@@ -604,16 +604,11 @@
         ],
         "responses": {
           "200": {
-            "description": "The progress stream of a build as newline-delimited JSON: one `BuildEvent`\nper line. This is the default rendering, and the one that\n`Accept: application/x-ndjson` selects.",
+            "description": "The progress stream of a build as newline-delimited JSON: one `BuildEvent`\nper line. It is the only rendering, which `Accept: application/x-ndjson`\nselects.",
             "content": {
               "application/x-ndjson": {
                 "schema": {
                   "$ref": "#/components/schemas/BuildEvent"
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -911,7 +906,7 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "The reference to push the built image to, including the tag. The caller\npicks the tag, and checks whether it already exists. The push is done with\nthe caller's token, unless `registries` has credentials for its registry.",
+            "description": "The reference to push the built image to, including the tag. The caller\npicks the tag, and checks whether it already exists. The push is done with\nthe caller's token, unless `registries` has credentials for its registry.\nA registry at a private address is `invalid` on a service that only\nreaches public addresses.",
             "example": "index.unikraft.io/acme/app:1.2.3"
           },
           "volume": {
@@ -1169,7 +1164,7 @@
           "max_builds": {
             "type": "integer",
             "format": "int32",
-            "description": "The number of builds that run on the builder at once; more wait.",
+            "description": "The number of builds that each replica of the service runs on the builder\nat once; more wait. The replicas do not share their slots, so `builds` can\nhold more than this number.",
             "example": 2
           },
           "instance": {
@@ -1370,7 +1365,7 @@
             "$ref": "#/components/schemas/KraftfileObject"
           }
         ],
-        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context."
+        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context. A source without a `filename` reads the file `Kraftfile`,\nand if there is none, the build is the one of a request without a\n`kraftfile`."
       },
       "KraftfileInline": {
         "type": "string",

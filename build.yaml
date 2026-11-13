@@ -20,8 +20,7 @@ info:
     `ErrorBody`, which names the failure in `error.code` and explains it in
     `error.message`. The status codes an operation can answer with are
     documented on the operation. The success responses are plain JSON objects,
-    except for the progress stream of a build, which is newline-delimited JSON
-    or plain text.
+    except for the progress stream of a build, which is newline-delimited JSON.
 
     A part of a request marked as not supported yet is answered with `400` and
     the code `unsupported`.
@@ -291,7 +290,9 @@ paths:
         Create a build. It runs on a builder of the caller's tenant, which is
         created on first use, whether or not anyone is watching it, and waits for
         a build slot while each of the tenant's builders already runs as many
-        builds at once as the service allows. A request that uses a part of the full build API this
+        builds at once as the service allows. Each replica of the service has its
+        own slots on each builder, so a builder runs up to `max_builds` builds for
+        each replica. A request that uses a part of the full build API this
         service does not support yet is answered with `400` and the code
         `unsupported`. A tenant that already has as many builds running or waiting
         as it may is answered with `429` and the code `too_many_builds`. A
@@ -502,8 +503,8 @@ paths:
         from the start and ends once the build has finished, with a `result` or an
         `error` as its last line, so reconnecting is just asking again. Past
         8 MiB, the stream has one event that says so, and then only its last
-        line. `Accept: text/plain` renders the stream as text instead of
-        newline-delimited JSON.
+        line. An `Accept` header that selects `text/plain` over
+        `application/x-ndjson` is not supported yet.
       parameters:
         - name: id
           in: path
@@ -516,15 +517,12 @@ paths:
         '200':
           description: |-
             The progress stream of a build as newline-delimited JSON: one `BuildEvent`
-            per line. This is the default rendering, and the one that
-            `Accept: application/x-ndjson` selects.
+            per line. It is the only rendering, which `Accept: application/x-ndjson`
+            selects.
           content:
             application/x-ndjson:
               schema:
                 $ref: '#/components/schemas/BuildEvent'
-            text/plain:
-              schema:
-                type: string
         default:
           description: An unexpected error response.
           content:
@@ -793,6 +791,8 @@ components:
             The reference to push the built image to, including the tag. The caller
             picks the tag, and checks whether it already exists. The push is done with
             the caller's token, unless `registries` has credentials for its registry.
+            A registry at a private address is `invalid` on a service that only
+            reaches public addresses.
           example: index.unikraft.io/acme/app:1.2.3
         volume:
           type: string
@@ -1015,7 +1015,10 @@ components:
         max_builds:
           type: integer
           format: int32
-          description: The number of builds that run on the builder at once; more wait.
+          description: |-
+            The number of builds that each replica of the service runs on the builder
+            at once; more wait. The replicas do not share their slots, so `builds` can
+            hold more than this number.
           example: 2
         instance:
           allOf:
@@ -1200,7 +1203,9 @@ components:
         a source to read it from, or the parsed file as an object. A source has
         `session`, `git` or `url`, and none is a Kraftfile key, so the two object
         forms never collide. Relative paths in the Kraftfile resolve inside the
-        build context.
+        build context. A source without a `filename` reads the file `Kraftfile`,
+        and if there is none, the build is the one of a request without a
+        `kraftfile`.
     KraftfileInline:
       type: string
       description: |-

@@ -7597,7 +7597,8 @@
           "timeout_s": {
             "type": "integer",
             "format": "int64",
-            "description": "Timeout in seconds to wait for the instance to be deleted. No wait\nperformed for a value of 0.",
+            "minimum": -1,
+            "description": "Timeout in seconds for a graceful stop before the deletion. The platform\nasks the instance to shut down and waits until it has stopped, so the\ninstance can write its data to its volumes, and the volumes are free when\nthe request returns. If the timeout expires first, the platform stops the\ninstance forcefully. A value of -1 selects the platform's maximum API\ntimeout (60 seconds by default); larger values are rejected.\n\nWith 0, the default, the platform stops the instance forcefully at once\nand does not wait. The instance can then lose data that it has not yet\nwritten to its volumes, and the volumes stay in use for a short time\nafter the request returns.",
             "example": 2
           },
           "dont_retain": {
@@ -7623,7 +7624,8 @@
           "timeout_s": {
             "type": "integer",
             "format": "int64",
-            "description": "Timeout in seconds to wait for the instance to be deleted. No wait\nperformed for a value of 0.",
+            "minimum": -1,
+            "description": "Timeout in seconds for a graceful stop before the deletion. The platform\nasks the instance to shut down and waits until it has stopped, so the\ninstance can write its data to its volumes, and the volumes are free when\nthe request returns. If the timeout expires first, the platform stops the\ninstance forcefully. A value of -1 selects the platform's maximum API\ntimeout (60 seconds by default); larger values are rejected.\n\nWith 0, the default, the platform stops the instance forcefully at once\nand does not wait. The instance can then lose data that it has not yet\nwritten to its volumes, and the volumes stay in use for a short time\nafter the request returns.",
             "example": 2
           },
           "dont_retain": {

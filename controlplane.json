@@ -1,33 +1,40 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.0.0",
   "info": {
     "title": "Unikraft Cloud Control Plane API",
-    "description": "This specification describes the Unikraft Cloud Control Plane API, which provides mechanisms to interact with globally provided Unikraft Cloud system.",
+    "version": "v1.0.0",
     "contact": {
       "name": "Unikraft Support",
       "url": "https://unikraft.com/contact",
       "email": "support@unikraft.com"
     },
-    "version": "v1.0.0"
+    "description": "This specification describes the Unikraft Cloud Control Plane API, which\nprovides mechanisms to interact with globally provided Unikraft Cloud system."
   },
-  "servers": [
+  "tags": [
     {
-      "url": "https://controlplane.unikraft.cloud",
-      "description": "Official Unikraft Cloud Control Plane API"
+      "name": "Auth",
+      "description": "Authenticate with Unikraft Cloud."
+    },
+    {
+      "name": "Images"
+    },
+    {
+      "name": "Metros"
+    },
+    {
+      "name": "NodeService",
+      "description": "NodeService service provides APIs for provisioning and managing compute nodes\nacross multiple cloud providers for use in Unikraft Cloud."
     }
   ],
   "paths": {
     "/v1/auth": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Get Authorization Status",
-        "description": "Get authorization details for a token.",
         "operationId": "GetAuthorization",
+        "description": "Get authorization details for a token.",
+        "parameters": [],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -37,30 +44,19 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/v1/auth/check": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Check Authorization of Sign-In Request",
-        "description": "Check the authorization status of a request.  The responses are streamed\nback to the client, indicating whether the signin request is authorized or\nnot.",
         "operationId": "CheckAuthorization",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckAuthorizationRequest"
-              }
-            }
-          },
-          "required": true
-        },
+        "description": "Check the authorization status of a request.  The responses are streamed\nback to the client, indicating whether the signin request is authorized or\nnot.",
+        "parameters": [],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "text/event-stream": {
                 "schema": {
@@ -70,30 +66,32 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckAuthorizationRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
       }
     },
     "/v1/auth/signin": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Request Sign-In",
-        "description": "Initiate the sign-in process and return an authorization URL.  The user\nshould be redirected to this URL to complete the sign-in.",
         "operationId": "RequestSignin",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestSigninRequest"
-              }
-            }
-          },
-          "required": true
-        },
+        "description": "Initiate the sign-in process and return an authorization URL.  The user\nshould be redirected to this URL to complete the sign-in.",
+        "parameters": [],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -103,21 +101,33 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSigninRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
       }
     },
     "/v1/images": {
       "get": {
-        "tags": [
-          "Images"
-        ],
-        "summary": "List Images",
-        "description": "ListImages lists all images for the authenticated user.",
         "operationId": "ListImages",
+        "description": "ListImages lists all images for the authenticated user.",
         "parameters": [
           {
             "name": "details",
             "in": "query",
+            "required": false,
             "description": "Whether to include image tag details.",
             "schema": {
               "type": "boolean"
@@ -126,6 +136,7 @@
           {
             "name": "namespace",
             "in": "query",
+            "required": false,
             "description": "Optional namespaces to filter images by.",
             "schema": {
               "type": "array",
@@ -137,7 +148,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -147,20 +158,19 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "Images"
+        ]
       }
     },
     "/v1/metros": {
       "get": {
-        "tags": [
-          "Metros"
-        ],
-        "summary": "Get Metros",
-        "description": "ListMetros lists all available metros.",
         "operationId": "ListMetros",
+        "description": "ListMetros lists all available metros.",
+        "parameters": [],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -170,21 +180,20 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "Metros"
+        ]
       }
     },
     "/v1/nodes": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "List Node Nodes",
-        "description": "Get one or more nodes.\n\nReturns nodes matching the specified filters. If no filters are\nprovided, all nodes are returned.",
         "operationId": "ListNodes",
+        "description": "Get one or more nodes.\n\nReturns nodes matching the specified filters. If no filters are\nprovided, all nodes are returned.",
         "parameters": [
           {
             "name": "uuid",
             "in": "query",
+            "required": false,
             "description": "The UUID of the resource.",
             "schema": {
               "type": "array",
@@ -196,6 +205,7 @@
           {
             "name": "name",
             "in": "query",
+            "required": false,
             "description": "The name of the resource.",
             "schema": {
               "type": "array",
@@ -207,6 +217,7 @@
           {
             "name": "cloudprovider",
             "in": "query",
+            "required": false,
             "description": "Optional filter by cloud provider.",
             "schema": {
               "$ref": "#/components/schemas/CloudProvider"
@@ -215,6 +226,7 @@
           {
             "name": "state",
             "in": "query",
+            "required": false,
             "description": "Optional filter by state.",
             "schema": {
               "$ref": "#/components/schemas/NodeState"
@@ -223,6 +235,7 @@
           {
             "name": "metro",
             "in": "query",
+            "required": false,
             "description": "Optional filter by metro.",
             "schema": {
               "type": "string"
@@ -231,6 +244,7 @@
           {
             "name": "limit",
             "in": "query",
+            "required": false,
             "description": "Maximum number of results to return.",
             "schema": {
               "type": "integer",
@@ -240,6 +254,7 @@
           {
             "name": "offset",
             "in": "query",
+            "required": false,
             "description": "Offset for pagination.",
             "schema": {
               "type": "integer",
@@ -247,21 +262,9 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/NameOrUUID"
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -271,57 +274,11 @@
             }
           }
         },
-        "x-package": "controlplane"
-      },
-      "post": {
         "tags": [
           "NodeService"
         ],
-        "summary": "Create Node Node",
-        "description": "Create a new node.\n\nCreates a new compute node on the specified cloud provider. The node\nwill go through provisioning (PROVISIONING state) and configuration\n(CONFIGURING state) before becoming ready (READY state) for use.",
-        "operationId": "ProvisionNode",
         "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProvisionNodeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProvisionNodeResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "controlplane"
-      },
-      "delete": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "Delete Node Nodes",
-        "description": "Delete one or more nodes.\n\nBatch deletion of nodes by their identifiers.",
-        "operationId": "DestroyNode",
-        "parameters": [
-          {
-            "name": "force",
-            "in": "query",
-            "description": "Force deletion even if nodes are in use.",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -331,12 +288,56 @@
                 }
               }
             }
-          },
-          "required": true
-        },
+          }
+        }
+      },
+      "post": {
+        "operationId": "ProvisionNode",
+        "description": "Create a new node.\n\nCreates a new compute node on the specified cloud provider. The node\nwill go through provisioning (PROVISIONING state) and configuration\n(CONFIGURING state) before becoming ready (READY state) for use.",
+        "parameters": [],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvisionNodeResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "NodeService"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProvisionNodeRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DestroyNode",
+        "description": "Delete one or more nodes.\n\nBatch deletion of nodes by their identifiers.",
+        "parameters": [
+          {
+            "name": "force",
+            "in": "query",
+            "required": false,
+            "description": "Force deletion even if nodes are in use.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -346,19 +347,31 @@
             }
           }
         },
-        "x-package": "controlplane"
-      },
-      "patch": {
         "tags": [
           "NodeService"
         ],
-        "summary": "Update Node Nodes",
-        "description": "Update one or more nodes.\n\nBatch update of mutable properties for multiple nodes.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
         "operationId": "UpdateNodes",
+        "description": "Update one or more nodes.\n\nBatch update of mutable properties for multiple nodes.",
         "parameters": [
           {
             "name": "property",
             "in": "query",
+            "required": false,
             "description": "The property to update.",
             "schema": {
               "type": "array",
@@ -370,6 +383,7 @@
           {
             "name": "operation",
             "in": "query",
+            "required": false,
             "description": "The operation to perform on the property.",
             "schema": {
               "type": "array",
@@ -381,32 +395,19 @@
           {
             "name": "value",
             "in": "query",
-            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
+            "required": false,
+            "description": "The value for the update operation.",
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "format": "bytes"
+                "type": "string"
               }
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/NameOrUUID"
-                }
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -416,87 +417,34 @@
             }
           }
         },
-        "x-package": "controlplane"
-      }
-    },
-    "/v1/nodes/activate": {
-      "post": {
         "tags": [
-          "NodeActivationService"
+          "NodeService"
         ],
-        "description": "Activates a new node, or renews an existing node's license. For first-time\nactivation, a secret must be provided. For renewal, the CSR self-signature\nis used as proof of key possession and the secret is omitted.\n\nA renewal request may optionally also carry an HTTP message signature\n(RFC 9421) made with the node's current stable private key. When present\nand valid, it authorizes the CSR's public key to become the node's new\nstable identity even if it differs from the current one -- i.e. key\nrotation: prove who you are with the old key, then switch to the new one\nnamed in the CSR.",
-        "operationId": "NodeActivate",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NodeActivateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NodeActivateResponse"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NameOrUUID"
                 }
               }
             }
           }
-        },
-        "x-package": "controlplane"
-      }
-    },
-    "/v1/nodes/deactivate": {
-      "post": {
-        "tags": [
-          "NodeActivationService"
-        ],
-        "description": "Deactivates a node's license so it can no longer renew. The node's\nissued certificate remains valid until it naturally expires -- this\nonly prevents renewal. The request must carry an HTTP message signature\n(RFC 9421) made with the node's stable private key; the node is\nidentified by the signature, the same mechanism used by the private\nnode-facing APIs (e.g. NodeHeartbeat).",
-        "operationId": "NodeDeactivate",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NodeDeactivateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NodeDeactivateResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-package": "controlplane"
+        }
       }
     },
     "/v1/nodes/providers/{cloudprovider}/regions": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "List Regions",
-        "description": "List available regions for a provider.\n\nReturns the regions available for provisioning on the specified cloud\nprovider, including availability zone information.",
         "operationId": "ListRegions",
+        "description": "List available regions for a provider.\n\nReturns the regions available for provisioning on the specified cloud\nprovider, including availability zone information.",
         "parameters": [
           {
             "name": "cloudprovider",
             "in": "path",
-            "description": "The cloud provider to list regions for.",
             "required": true,
+            "description": "The cloud provider to list regions for.",
             "schema": {
               "$ref": "#/components/schemas/CloudProvider"
             }
@@ -504,7 +452,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -514,23 +462,21 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "NodeService"
+        ]
       }
     },
     "/v1/nodes/providers/{cloudprovider}/types": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "List Machine Types",
-        "description": "List available machine types for a provider.\n\nReturns the machine types (instance types) available for provisioning\non the specified cloud provider.",
         "operationId": "ListMachineTypes",
+        "description": "List available machine types for a provider.\n\nReturns the machine types (instance types) available for provisioning\non the specified cloud provider.",
         "parameters": [
           {
             "name": "cloudprovider",
             "in": "path",
-            "description": "The cloud provider to list machine types for.",
             "required": true,
+            "description": "The cloud provider to list machine types for.",
             "schema": {
               "$ref": "#/components/schemas/CloudProvider"
             }
@@ -538,6 +484,7 @@
           {
             "name": "region",
             "in": "query",
+            "required": false,
             "description": "Optional region filter. Some providers have region-specific availability.",
             "schema": {
               "type": "string"
@@ -546,7 +493,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -556,21 +503,20 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "NodeService"
+        ]
       }
     },
     "/v1/nodes/wait": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "Wait for Node Nodes States",
-        "description": "Wait for multiple nodes to reach specific states.",
         "operationId": "WaitNodes",
+        "description": "Wait for multiple nodes to reach specific states.",
         "parameters": [
           {
             "name": "uuid",
             "in": "query",
+            "required": false,
             "description": "The UUID of the resource.",
             "schema": {
               "type": "array",
@@ -582,6 +528,7 @@
           {
             "name": "name",
             "in": "query",
+            "required": false,
             "description": "The name of the resource.",
             "schema": {
               "type": "array",
@@ -593,6 +540,7 @@
           {
             "name": "states",
             "in": "query",
+            "required": false,
             "description": "The desired state(s) to wait for.",
             "schema": {
               "type": "array",
@@ -604,6 +552,7 @@
           {
             "name": "timeout_ms",
             "in": "query",
+            "required": false,
             "description": "Timeout in milliseconds. Use -1 for infinite wait.",
             "schema": {
               "type": "integer",
@@ -613,7 +562,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -623,25 +572,22 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "NodeService"
+        ]
       }
     },
     "/v1/nodes/{uuid}": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "Get Node Node by UUID",
-        "description": "Get a single node by its UUID.",
         "operationId": "GetNodeByUUID",
+        "description": "Get a single node by its UUID.",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
-            "description": "The UUID of the node to retrieve.",
             "required": true,
+            "description": "The UUID of the node to retrieve.",
             "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
               "type": "string",
               "format": "uuid"
             }
@@ -649,7 +595,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -659,23 +605,20 @@
             }
           }
         },
-        "x-package": "controlplane"
-      },
-      "delete": {
         "tags": [
           "NodeService"
-        ],
-        "summary": "Delete Node Node by UUID",
-        "description": "Destroy (delete) a node by its UUID.\n\nDeprovisions and deletes the node. The node will transition to\nDEPROVISIONING state and then be removed. If the node has a delete lock,\nthis operation will fail unless the lock is first removed.",
+        ]
+      },
+      "delete": {
         "operationId": "DestroyNodeByUUID",
+        "description": "Destroy (delete) a node by its UUID.\n\nDeprovisions and deletes the node. The node will transition to\nDEPROVISIONING state and then be removed. If the node has a delete lock,\nthis operation will fail unless the lock is first removed.",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
-            "description": "The UUID of the node to delete.",
             "required": true,
+            "description": "The UUID of the node to delete.",
             "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
               "type": "string",
               "format": "uuid"
             }
@@ -683,6 +626,7 @@
           {
             "name": "force",
             "in": "query",
+            "required": false,
             "description": "Force deletion even if the node is in use.",
             "schema": {
               "type": "boolean"
@@ -691,7 +635,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -701,44 +645,28 @@
             }
           }
         },
-        "x-package": "controlplane"
-      },
-      "patch": {
         "tags": [
           "NodeService"
-        ],
-        "summary": "Update Node Node by UUID",
-        "description": "Update a node by its UUID.\n\nUpdates mutable properties of a node such as tags, delete lock,\nor SSH keys.",
+        ]
+      },
+      "patch": {
         "operationId": "UpdateNodeByUUID",
+        "description": "Update a node by its UUID.\n\nUpdates mutable properties of a node such as tags, delete lock,\nor SSH keys.",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
-            "description": "The UUID of the node to update.",
             "required": true,
+            "description": "The UUID of the node to update.",
             "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
               "type": "string",
               "format": "uuid"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/UpdateNodePayload"
-                }
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -748,25 +676,35 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "NodeService"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateNodePayload"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/nodes/{uuid}/wait": {
       "get": {
-        "tags": [
-          "NodeService"
-        ],
-        "summary": "Wait for Node Node State by UUID",
-        "description": "Wait for a node to reach a specific state.\n\nBlocks until the specified node reaches one of the desired states\nor the timeout is reached.",
         "operationId": "WaitNodeByUUID",
+        "description": "Wait for a node to reach a specific state.\n\nBlocks until the specified node reaches one of the desired states\nor the timeout is reached.",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
-            "description": "The UUID of the node to wait for.",
             "required": true,
+            "description": "The UUID of the node to wait for.",
             "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
               "type": "string",
               "format": "uuid"
             }
@@ -774,7 +712,8 @@
           {
             "name": "states",
             "in": "query",
-            "description": "The desired state(s) to wait for. The request completes when any of\nthese states is reached.",
+            "required": false,
+            "description": "The desired state(s) to wait for. The request completes when any of these\nstates is reached.",
             "schema": {
               "type": "array",
               "items": {
@@ -785,6 +724,7 @@
           {
             "name": "timeout_ms",
             "in": "query",
+            "required": false,
             "description": "Timeout in milliseconds. Use -1 for infinite wait.",
             "schema": {
               "type": "integer",
@@ -794,7 +734,7 @@
         ],
         "responses": {
           "default": {
-            "description": "default",
+            "description": "An unexpected error response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -804,34 +744,36 @@
             }
           }
         },
-        "x-package": "controlplane"
+        "tags": [
+          "NodeService"
+        ]
       }
     }
   },
+  "security": [
+    {
+      "bearerToken": []
+    }
+  ],
   "components": {
     "schemas": {
       "AWSConfig": {
+        "type": "object",
         "required": [
           "dedicated_host",
           "region",
           "machine_type"
         ],
-        "type": "object",
         "properties": {
           "vpc_id": {
-            "example": "vpc-0123456789abcdef0",
             "type": "string",
             "description": "The VPC ID where the instance will be launched. If not specified, the\ndefault VPC for the region will be used."
           },
           "subnet_id": {
-            "example": "subnet-0123456789abcdef0",
             "type": "string",
             "description": "The subnet ID where the instance will be launched. If not specified,\na subnet will be selected from the VPC."
           },
           "security_group_ids": {
-            "example": [
-              "sg-0123456789abcdef0"
-            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -839,7 +781,6 @@
             "description": "Security group IDs to attach to the instance. If not specified, the\ndefault security group for the VPC will be used."
           },
           "iam_instance_profile": {
-            "example": "arn:aws:iam::123456789012:instance-profile/MyProfile",
             "type": "string",
             "description": "The IAM instance profile ARN or name to attach to the instance."
           },
@@ -863,67 +804,57 @@
             "description": "Whether to use a dedicated host. Dedicated hosts provide visibility and\ncontrol over how instances are placed on physical servers."
           },
           "placement_group": {
-            "example": "my-cluster-placement-group",
             "type": "string",
             "description": "Placement group name for the instance. Placement groups influence how\ninstances are placed on underlying hardware."
           },
           "region": {
-            "example": "us-east-1",
             "type": "string",
             "description": "The AWS region where the machine is located."
           },
           "machine_type": {
-            "example": "c8i.large",
             "type": "string",
             "description": "The AWS machine type. This determines the compute resources\n(CPU, memory, etc.) available on the machine. The valid values depend\non the chosen provider."
           }
         },
-        "description": "AWSConfig contains AWS-specific configuration for node provisioning.",
-        "x-package": "controlplane"
+        "description": "AWSConfig contains AWS-specific configuration for node provisioning."
       },
       "AWSEBSConfig": {
+        "type": "object",
         "required": [
           "size_gib",
           "volume_type",
           "encrypted",
           "delete_on_termination"
         ],
-        "type": "object",
         "properties": {
           "device_name": {
-            "example": "/dev/xvdf",
             "type": "string",
             "description": "The device name (e.g., \"/dev/sda1\", \"/dev/xvdf\"). Required for\nadditional volumes."
           },
           "size_gib": {
-            "example": 100,
             "type": "integer",
-            "description": "Size of the volume in GiB.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "Size of the volume in GiB."
           },
           "volume_type": {
-            "example": "gp3",
             "type": "string",
             "description": "The volume type (gp3, gp2, io1, io2, st1, sc1, standard)."
           },
           "iops": {
-            "example": 3000,
             "type": "integer",
-            "description": "The number of IOPS. Only valid for io1, io2, and gp3 volumes.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "The number of IOPS. Only valid for io1, io2, and gp3 volumes."
           },
           "throughput_mibps": {
-            "example": 125,
             "type": "integer",
-            "description": "The throughput in MiB/s. Only valid for gp3 volumes.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "The throughput in MiB/s. Only valid for gp3 volumes."
           },
           "encrypted": {
             "type": "boolean",
             "description": "Whether the volume should be encrypted."
           },
           "kms_key_id": {
-            "example": "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012",
             "type": "string",
             "description": "The KMS key ID for encryption. If encrypted is true and this is not\nspecified, the default EBS encryption key will be used."
           },
@@ -932,41 +863,39 @@
             "description": "Whether to delete the volume when the instance is terminated."
           }
         },
-        "description": "AWSEBSConfig defines the configuration for an AWS EBS volume.",
-        "x-package": "controlplane"
+        "description": "AWSEBSConfig defines the configuration for an AWS EBS volume."
       },
       "CheckAuthorizationRequest": {
+        "type": "object",
         "required": [
           "request_id"
         ],
-        "type": "object",
         "properties": {
           "request_id": {
             "type": "string",
             "description": "The request ID is a unique identifier for the request.  This is used to\ntrack the request in the system and should be provided by the client."
           }
         },
-        "description": "The request message for checking authorization given a request ID.",
-        "x-package": "controlplane"
+        "description": "The request message for checking authorization given a request ID."
       },
       "CheckAuthorizationResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -979,21 +908,20 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 56,
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "The response message for checking authorization.",
-        "x-package": "controlplane"
+        "description": "The response message for checking authorization."
       },
       "CheckAuthorizationResponseData": {
+        "type": "object",
         "required": [
           "token",
           "organization_name",
@@ -1002,7 +930,6 @@
           "organization_uuid",
           "user_uuid"
         ],
-        "type": "object",
         "properties": {
           "token": {
             "type": "string",
@@ -1022,70 +949,56 @@
           },
           "organization_uuid": {
             "type": "string",
-            "description": "The UUID of the organization the token is associated with.",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID of the organization the token is associated with."
           },
           "user_uuid": {
             "type": "string",
-            "description": "The UUID of the user who approved the login.",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID of the user who approved the login."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "CloudProvider": {
+        "type": "string",
         "enum": [
           "manual",
           "aws"
         ],
-        "type": "string",
-        "description": "CloudProvider identifies the cloud infrastructure provider where nodes are\nprovisioned.",
-        "format": "enum",
-        "x-package": "controlplane"
+        "description": "CloudProvider identifies the cloud infrastructure provider where nodes are\nprovisioned."
       },
       "CloudProviderConfig": {
         "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
+        "properties": {
+          "aws": {
+            "allOf": [
               {
-                "title": "aws",
-                "type": "object",
-                "properties": {
-                  "aws": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/AWSConfig"
-                      }
-                    ],
-                    "description": "AWS-specific configuration."
-                  }
-                }
+                "$ref": "#/components/schemas/AWSConfig"
               }
-            ]
+            ],
+            "description": "AWS-specific configuration."
           }
-        ],
-        "description": "CloudProviderConfig contains provider-specific configuration for node\nprovisioning.",
-        "x-package": "controlplane"
+        },
+        "description": "CloudProviderConfig contains provider-specific configuration for node\nprovisioning."
       },
       "DestroyNodeResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1098,19 +1011,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 2341,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for deleting nodes.",
-        "x-package": "controlplane"
+        "description": "Response message for deleting nodes."
       },
       "DestroyNodeResponseData": {
         "type": "object",
@@ -1122,27 +1033,26 @@
             },
             "description": "The deleted nodes (with their final state before deletion)."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "GetAuthorizationResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1155,28 +1065,27 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 56,
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "The response message for getting authorization details.",
-        "x-package": "controlplane"
+        "description": "The response message for getting authorization details."
       },
       "GetAuthorizationResponseData": {
+        "type": "object",
         "required": [
           "organization_name",
           "organization_display_name",
           "registry",
-          "organization_uuid"
+          "organization_uuid",
+          "permissions"
         ],
-        "type": "object",
         "properties": {
           "organization_name": {
             "type": "string",
@@ -1192,91 +1101,84 @@
           },
           "organization_uuid": {
             "type": "string",
-            "description": "The UUID of the organization the token is associated with.",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID of the organization the token is associated with."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The permissions of the organization that are not revoked."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "Image": {
+        "type": "object",
         "required": [
           "name"
         ],
-        "type": "object",
         "properties": {
           "name": {
-            "example": "namespace/image1",
             "type": "string",
             "description": "The canonical name of the image."
           },
           "tags": {
-            "example": [
-              {
-                "name": "latest",
-                "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
-              }
-            ],
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ImageTag"
             },
             "description": "The list of tags for the image.  Only populated when details are requested."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ImageTag": {
+        "type": "object",
         "required": [
           "name",
           "digest",
           "size",
           "push_time"
         ],
-        "type": "object",
         "properties": {
           "name": {
-            "example": "latest",
             "type": "string",
             "description": "The tag name."
           },
           "digest": {
-            "example": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
             "type": "string",
             "description": "The digest for the tag."
           },
           "size": {
-            "example": 12345678,
             "type": "integer",
-            "description": "The size of the image in bytes.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The size of the image in bytes."
           },
           "push_time": {
-            "example": "2024-01-02T15:04:05Z",
             "type": "string",
-            "description": "The push time of the image.",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The push time of the image."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ListImagesResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1289,18 +1191,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 87,
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "x-package": "controlplane"
+        "description": "Standard response envelope wrapping all API responses."
       },
       "ListImagesResponseData": {
         "type": "object",
@@ -1312,27 +1213,26 @@
             },
             "description": "The list of images."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ListMachineTypesResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1345,19 +1245,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 123,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for listing machine types.",
-        "x-package": "controlplane"
+        "description": "Response message for listing machine types."
       },
       "ListMachineTypesResponseData": {
         "type": "object",
@@ -1369,27 +1267,26 @@
             },
             "description": "The list of available machine types."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ListMetroResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1402,18 +1299,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 87,
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "x-package": "controlplane"
+        "description": "Standard response envelope wrapping all API responses."
       },
       "ListMetroResponseData": {
         "type": "object",
@@ -1425,27 +1321,26 @@
             },
             "description": "The list of metros."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ListNodesResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1458,25 +1353,23 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 234,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for getting nodes.",
-        "x-package": "controlplane"
+        "description": "Response message for getting nodes."
       },
       "ListNodesResponseData": {
+        "type": "object",
         "required": [
           "total_count"
         ],
-        "type": "object",
         "properties": {
           "nodes": {
             "type": "array",
@@ -1486,32 +1379,30 @@
             "description": "The list of nodes matching the request."
           },
           "total_count": {
-            "example": 42,
             "type": "integer",
-            "description": "Total count of nodes matching the filters (for pagination).",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "Total count of nodes matching the filters (for pagination)."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "ListRegionsResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -1524,19 +1415,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 89,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for listing regions.",
-        "x-package": "controlplane"
+        "description": "Response message for listing regions."
       },
       "ListRegionsResponseData": {
         "type": "object",
@@ -1548,42 +1437,36 @@
             },
             "description": "The list of available regions."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "MachineType": {
+        "type": "object",
         "required": [
           "name",
           "vcpus",
           "memory_mib",
           "nested_virtualization"
         ],
-        "type": "object",
         "properties": {
           "name": {
-            "example": "m5.xlarge",
             "type": "string",
             "description": "The machine type identifier (e.g., \"m5.xlarge\", \"n2-standard-4\")."
           },
           "description": {
-            "example": "General purpose, 4 vCPUs, 16 GiB memory",
             "type": "string",
             "description": "Human-readable description."
           },
           "vcpus": {
-            "example": 4,
             "type": "integer",
-            "description": "Number of vCPUs.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "Number of vCPUs."
           },
           "memory_mib": {
-            "example": 16384,
             "type": "integer",
-            "description": "Memory in MiB.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "Memory in MiB."
           },
           "category": {
-            "example": "general-purpose",
             "type": "string",
             "description": "Machine category (e.g., \"general-purpose\", \"compute-optimized\",\n\"memory-optimized\")."
           },
@@ -1599,10 +1482,10 @@
             "description": "Whether this machine type supports nested virtualization."
           }
         },
-        "description": "Information about an available machine type.",
-        "x-package": "controlplane"
+        "description": "Information about an available machine type."
       },
       "Metro": {
+        "type": "object",
         "required": [
           "uuid",
           "endpoint",
@@ -1610,101 +1493,71 @@
           "iata_code",
           "country"
         ],
-        "type": "object",
         "properties": {
           "uuid": {
-            "example": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
             "type": "string",
-            "description": "The UUID of the metro.",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID of the metro."
           },
           "endpoint": {
-            "example": "https://api.metro1.unikraft.cloud/v1",
             "type": "string",
-            "description": "The API endpoint for the metro.",
-            "format": "uri"
+            "format": "uri",
+            "description": "The API endpoint for the metro."
           },
           "name": {
-            "example": "metro1",
             "type": "string",
             "description": "The name of the metro."
           },
           "iata_code": {
-            "example": "FRA",
             "type": "string",
             "description": "The IATA code of the metro."
           },
           "country": {
-            "example": "de",
             "type": "string",
             "description": "The country where the metro is located."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "MutableNodeOperation": {
+        "type": "string",
         "enum": [
           "set",
           "add",
           "del"
         ],
-        "type": "string",
-        "description": "The operations available on a node's mutable properties.",
-        "format": "enum",
-        "x-package": "controlplane"
+        "description": "The operations available on a node's mutable properties."
       },
       "MutableNodeProperty": {
+        "type": "string",
         "enum": [
           "tags",
           "delete_lock",
-          "ssh_keys"
+          "ssh_keys",
+          "api_endpoint"
         ],
-        "type": "string",
-        "description": "The mutable properties of a node which can be updated.",
-        "format": "enum",
-        "x-package": "controlplane"
+        "description": "The mutable properties of a node which can be updated."
       },
       "NameOrUUID": {
         "type": "object",
-        "allOf": [
-          {
-            "oneOf": [
-              {
-                "title": "uuid",
-                "required": [
-                  "uuid"
-                ],
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "example": "123e4567-e89b-12d3-a456-426614174000",
-                    "type": "string",
-                    "description": "The UUID of the resource.",
-                    "format": "uuid"
-                  }
-                }
-              },
-              {
-                "title": "name",
-                "required": [
-                  "name"
-                ],
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "funky-town-g756b5d",
-                    "type": "string",
-                    "description": "The name of the resource."
-                  }
-                }
-              }
-            ]
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Mutually exclusive with name."
+          },
+          "name": {
+            "type": "string",
+            "description": "Mutually exclusive with UUID."
+          },
+          "metro": {
+            "type": "string",
+            "description": "(Only applies when using global control plane).\nThe metro of the resource."
           }
-        ],
-        "description": "An identifier for a resource.  Either a name or a UUID.",
-        "x-package": "common"
+        },
+        "description": "An identifier for a node.  Either a name or a UUID."
       },
       "Node": {
+        "type": "object",
         "required": [
           "uuid",
           "name",
@@ -1715,29 +1568,25 @@
           "uptime_seconds",
           "delete_lock"
         ],
-        "type": "object",
         "properties": {
           "uuid": {
             "type": "string",
-            "description": "The UUID of the machine.\n\nThis is a unique identifier for the machine that is generated when the\nmachine is created. The UUID is used to reference the machine in API calls and\ncan be used to identify the machine in all API calls that require a machine\nidentifier.",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID of the machine.\n\nThis is a unique identifier for the machine that is generated when the\nmachine is created. The UUID is used to reference the machine in API calls and\ncan be used to identify the machine in all API calls that require a machine\nidentifier."
           },
           "name": {
-            "example": "machine-fra-aws-001",
             "type": "string",
             "description": "The name of the machine.\n\nThis is a human-readable name that can be used to identify the machine.\nThe name must be unique within the context of your account. The name can\nalso be used to identify the machine in API calls."
           },
           "created_at": {
-            "example": "2024-01-15T10:30:00Z",
             "type": "string",
-            "description": "The time the machine was created.",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The time the machine was created."
           },
           "updated_at": {
-            "example": "2024-01-15T12:45:00Z",
             "type": "string",
-            "description": "The time the machine was last updated.",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The time the machine was last updated."
           },
           "state": {
             "allOf": [
@@ -1748,7 +1597,6 @@
             "description": "The current state of the machine."
           },
           "state_message": {
-            "example": "Provisioning in progress, waiting for instance to become available",
             "type": "string",
             "description": "An optional message providing additional information about the current\nstate, particularly useful for error states."
           },
@@ -1761,16 +1609,14 @@
             "description": "The cloud provider where this machine is provisioned."
           },
           "vcpus": {
-            "example": 4,
             "type": "integer",
-            "description": "The number of vCPUs available on this machine.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "The number of vCPUs available on this machine."
           },
           "memory_mib": {
-            "example": 16384,
             "type": "integer",
-            "description": "The amount of memory in MiB available on this machine.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The amount of memory in MiB available on this machine."
           },
           "ssh_keys": {
             "type": "array",
@@ -1780,30 +1626,25 @@
             "description": "The SSH keys configured for access to this machine."
           },
           "public_ipv4": {
-            "example": "203.0.113.50",
             "type": "string",
-            "description": "The public IPv4 address of the machine, if assigned.",
-            "format": "ipv4"
+            "format": "ipv4",
+            "description": "The public IPv4 address of the machine, if assigned."
           },
           "public_ipv6": {
-            "example": "2001:db8::1",
             "type": "string",
-            "description": "The public IPv6 address of the machine, if assigned.",
-            "format": "ipv6"
+            "format": "ipv6",
+            "description": "The public IPv6 address of the machine, if assigned."
           },
           "private_ipv4": {
-            "example": "10.0.1.50",
             "type": "string",
-            "description": "The private IPv4 address of the machine within the provider's network.",
-            "format": "ipv4"
+            "format": "ipv4",
+            "description": "The private IPv4 address of the machine within the provider's network."
           },
           "metro": {
-            "example": "fra",
             "type": "string",
             "description": "The Unikraft Cloud metro this machine is associated with."
           },
           "provider_instance_id": {
-            "example": "i-0123456789abcdef0",
             "type": "string",
             "description": "The provider-specific instance ID or resource identifier."
           },
@@ -1816,10 +1657,6 @@
             "description": "Provider-specific configuration that was used to provision this node."
           },
           "tags": {
-            "example": {
-              "environment": "production",
-              "team": "platform"
-            },
             "type": "object",
             "additionalProperties": {
               "type": "string"
@@ -1827,183 +1664,28 @@
             "description": "User-defined tags for organizing and filtering nodes."
           },
           "ready_at": {
-            "example": "2024-01-15T10:35:00Z",
             "type": "string",
-            "description": "The time when the machine became ready (entered READY state).",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The time when the machine became ready (entered READY state)."
           },
           "uptime_seconds": {
-            "example": 86400,
             "type": "integer",
-            "description": "The total uptime of the machine in seconds since it became ready.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The total uptime of the machine in seconds since it became ready."
           },
           "delete_lock": {
             "type": "boolean",
             "description": "Whether the machine is protected from deletion. When true, delete operations\nwill fail until this is set to false."
           },
           "api_endpoint": {
-            "example": "https://api.node-metro1.unikraft.cloud/v1",
             "type": "string",
             "description": "The API endpoint for the node, used to connect to the node's platform SDK."
           }
         },
-        "description": "Node represents a physical or virtual compute node provisioned on a\ncloud provider for use as part of the Unikraft Cloud infrastructure.\n\nNode nodes are the underlying compute resources where Unikraft Cloud\ninstances run.  They are provisioned on-demand across multiple cloud\nproviders and managed through a unified API.",
-        "x-package": "controlplane"
-      },
-      "NodeActivateRequest": {
-        "required": [
-          "csr"
-        ],
-        "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "csr": {
-                "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KLi4uCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQ==",
-                "type": "string",
-                "description": "The certificate signing request (CSR) for the license which is base64\nencoded."
-              }
-            }
-          },
-          {
-            "oneOf": [
-              {
-                "title": "secret",
-                "type": "object",
-                "properties": {
-                  "secret": {
-                    "type": "string",
-                    "description": "An opaque secret for first-time activation. On renewal (where the node's\npublic key is already known), this field is omitted and the CSR\nself-signature is used as proof of key possession."
-                  }
-                }
-              },
-              {
-                "title": "serial",
-                "type": "object",
-                "properties": {
-                  "serial": {
-                    "type": "string",
-                    "description": "The serial number of the last issued certificate."
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "description": "The request message for certificate activation.",
-        "x-package": "controlplane"
-      },
-      "NodeActivateResponse": {
-        "required": [
-          "status",
-          "op_time_us"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "/ An optional message providing additional information about the response."
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NodeActivateResponseData"
-              }
-            ],
-            "description": "The response data for this request."
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ResponseError"
-            },
-            "description": "A list of errors which may have occurred during the request."
-          },
-          "op_time_us": {
-            "example": 234,
-            "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
-          }
-        },
-        "description": "The response message for certificate activation.",
-        "x-package": "controlplane"
-      },
-      "NodeActivateResponseData": {
-        "required": [
-          "license"
-        ],
-        "type": "object",
-        "properties": {
-          "license": {
-            "type": "string",
-            "description": "The issued license certificate in base64 URL encoded PEM format."
-          }
-        },
-        "x-package": "controlplane"
-      },
-      "NodeDeactivateRequest": {
-        "required": [
-          "serial"
-        ],
-        "type": "object",
-        "properties": {
-          "serial": {
-            "example": "1a2b3c4d5e6f",
-            "type": "string",
-            "description": "The serial number of the last issued certificate."
-          }
-        },
-        "description": "The request message for license deactivation. The caller is identified by\nan HTTP message signature (RFC 9421) made with the node's stable private\nkey, the same mechanism used by the private node-facing APIs (e.g.\nNodeHeartbeat) -- not by any field in this message.",
-        "x-package": "controlplane"
-      },
-      "NodeDeactivateResponse": {
-        "required": [
-          "status",
-          "op_time_us"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ResponseStatus"
-              }
-            ],
-            "description": "The status of the response."
-          },
-          "message": {
-            "type": "string",
-            "description": "An optional message providing additional information about the response."
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ResponseError"
-            },
-            "description": "A list of errors which may have occurred during the request."
-          },
-          "op_time_us": {
-            "example": 234,
-            "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
-          }
-        },
-        "description": "The response message for license deactivation.",
-        "x-package": "controlplane"
+        "description": "Node represents a physical or virtual compute node provisioned on a\ncloud provider for use as part of the Unikraft Cloud infrastructure.\n\nNode nodes are the underlying compute resources where Unikraft Cloud\ninstances run.  They are provisioned on-demand across multiple cloud\nproviders and managed through a unified API."
       },
       "NodeState": {
+        "type": "string",
         "enum": [
           "unspecified",
           "pending",
@@ -2015,19 +1697,15 @@
           "error",
           "maintenance"
         ],
-        "type": "string",
-        "description": "NodeState defines the provisioning lifecycle state of a machine which will\nrun the Unikraft Cloud Platform.",
-        "format": "enum",
-        "x-package": "controlplane"
+        "description": "NodeState defines the provisioning lifecycle state of a machine which will\nrun the Unikraft Cloud Platform."
       },
       "ProvisionNodeRequest": {
+        "type": "object",
         "required": [
           "ssh_keys"
         ],
-        "type": "object",
         "properties": {
           "name": {
-            "example": "node-fra-aws-001",
             "type": "string",
             "description": "Optional name for the node. If not provided, a name will be\nauto-generated."
           },
@@ -2047,9 +1725,6 @@
             "description": "SSH keys for accessing the node. At least one key is required."
           },
           "tags": {
-            "example": {
-              "environment": "production"
-            },
             "type": "object",
             "additionalProperties": {
               "type": "string"
@@ -2065,14 +1740,10 @@
             "description": "Optional provider-specific configuration for advanced customization."
           },
           "metro": {
-            "example": "fra",
             "type": "string",
             "description": "The Unikraft Cloud metro to associate this machine with."
           },
           "platform_config": {
-            "example": {
-              "vm-user-min-memory": "2048"
-            },
             "type": "object",
             "additionalProperties": {
               "type": "string"
@@ -2080,10 +1751,6 @@
             "description": "Optional user overrides for platform configuration. Keys should be\nkebab-case (e.g., \"vm-user-min-memory\")."
           },
           "image_pulls": {
-            "example": [
-              "ghcr.io/myapp:latest",
-              "quay.io/image:v1"
-            ],
             "type": "array",
             "items": {
               "type": "string"
@@ -2091,33 +1758,31 @@
             "description": "Optional image references to pre-pull on the provisioned machine."
           },
           "net_count": {
-            "example": 1000,
             "type": "integer",
-            "description": "Optional network count override. If not specified, defaults to 1000.",
-            "format": "uint32"
+            "format": "uint32",
+            "description": "Optional network count override. If not specified, defaults to 1000."
           }
         },
-        "description": "Request message for creating a new node.",
-        "x-package": "controlplane"
+        "description": "Request message for creating a new node."
       },
       "ProvisionNodeResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -2130,25 +1795,23 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 1523,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for creating a node.",
-        "x-package": "controlplane"
+        "description": "Response message for creating a node."
       },
       "ProvisionNodeResponseData": {
+        "type": "object",
         "required": [
           "node"
         ],
-        "type": "object",
         "properties": {
           "node": {
             "allOf": [
@@ -2158,113 +1821,97 @@
             ],
             "description": "The created node."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "Region": {
+        "type": "object",
         "required": [
           "name",
           "iata"
         ],
-        "type": "object",
         "properties": {
           "name": {
-            "example": "us-east-1",
             "type": "string",
             "description": "The region identifier (e.g., \"us-east-1\", \"us-central1\")."
           },
           "iata": {
-            "example": "SFO",
             "type": "string",
             "description": "The IATA code for the region."
           }
         },
-        "description": "Information about an available region.",
-        "x-package": "controlplane"
+        "description": "Information about an available region."
       },
       "RequestSigninRequest": {
+        "type": "object",
         "required": [
           "hostname"
         ],
-        "type": "object",
         "properties": {
           "hostname": {
-            "example": "my-machine.local",
             "type": "string",
             "description": "The hostname is the name of the machine making the request.  This is\nmandatory as it consitutes a unique identifier for the machine."
           },
           "os": {
-            "example": "linux",
             "type": "string",
             "description": "The operating system of the machine making the request."
           },
           "os_version": {
-            "example": "5.10.0-17-amd64",
             "type": "string",
             "description": "The version of the operating system of the machine making the request, if\navailable.\n\nFor Android, it's like \"10\", \"11\", \"12\", etc.  For iOS and macOS it's like\n\"15.6.1\" or \"12.4.0\".  For Windows it's like \"10.0.19044.1889\". For FreeBSD\nit's like \"12.3-STABLE\".  For Linux, this is simply the kernel version on\nLinux, like \"5.10.0-17-amd64\"."
           },
           "container": {
-            "example": false,
             "type": "boolean",
             "description": "A best-effort whether the client is running in a container."
           },
           "distro": {
-            "example": "ubuntu",
             "type": "string",
             "description": "The OS distribution, if known.  E.g. \"debian\", \"ubuntu\", \"nixos\", ..."
           },
           "distro_version": {
-            "example": 20.04,
             "type": "string",
             "description": "The OS distribution version if known.  E.g. \"20.04\", ..."
           },
           "distro_codename": {
-            "example": "jammy",
             "type": "string",
             "description": "TThe OS distribution codename if known.  E.g. \"jammy\", \"bullseye\", ..."
           },
           "cli_version": {
-            "example": "1.0.0",
             "type": "string",
             "description": "The CLI version is the version of the Unikraft CLI that is making the\nrequest."
           },
           "goarch": {
-            "example": "amd64",
             "type": "string",
             "description": "If available, the GOARCH value (of the built binary)."
           },
           "goos": {
-            "example": "linux",
             "type": "string",
             "description": "If available, the GOOS value (of the built binary)"
           },
           "go_version": {
-            "example": "1.16.0",
             "type": "string",
             "description": "if available, the Go version binary was built with."
           }
         },
-        "description": "The request message for a sign-in request.",
-        "x-package": "controlplane"
+        "description": "The request message for a sign-in request."
       },
       "RequestSigninResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -2277,26 +1924,24 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 87,
             "type": "integer",
-            "description": "The operation time in microseconds.  This is the time it took to process\nthe request and generate the response.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "The response message for a sign-in request.",
-        "x-package": "controlplane"
+        "description": "The response message for a sign-in request."
       },
       "RequestSigninResponseData": {
+        "type": "object",
         "required": [
           "authorization_url",
           "request_id"
         ],
-        "type": "object",
         "properties": {
           "authorization_url": {
             "type": "string",
@@ -2306,63 +1951,55 @@
             "type": "string",
             "description": "A unique identifier for the request.  This can be used to track the\nrequest in the system."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
-      "ResponseError": {
+      "SSHKey": {
+        "type": "object",
+        "required": [
+          "name",
+          "public_key"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A name or label for this SSH key."
+          },
+          "public_key": {
+            "type": "string",
+            "description": "The SSH public key in OpenSSH format (e.g., \"ssh-rsa AAAA... user@host\"\nor \"ssh-ed25519 AAAA... user@host\")."
+          }
+        },
+        "description": "SSHKey represents an SSH public key for authentication."
+      },
+      "UnikraftCloud.Common.ResponseError": {
+        "type": "object",
         "required": [
           "status"
         ],
-        "type": "object",
         "properties": {
           "status": {
-            "example": 401,
             "type": "integer",
-            "description": "The HTTP status code of the error.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The HTTP status code of the error."
           }
         },
-        "description": "The error response message for an API request.",
-        "x-package": "common"
+        "description": "The error response message for an API request."
       },
-      "ResponseStatus": {
+      "UnikraftCloud.Common.ResponseStatus": {
+        "type": "string",
         "enum": [
           "success",
           "error",
           "partial_success"
         ],
-        "type": "string",
-        "description": "The response status of an API request.",
-        "format": "enum",
-        "x-package": "common"
-      },
-      "SSHKey": {
-        "required": [
-          "name",
-          "public_key"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "example": "admin-key",
-            "type": "string",
-            "description": "A name or label for this SSH key."
-          },
-          "public_key": {
-            "example": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl user@host",
-            "type": "string",
-            "description": "The SSH public key in OpenSSH format (e.g., \"ssh-rsa AAAA... user@host\"\nor \"ssh-ed25519 AAAA... user@host\")."
-          }
-        },
-        "description": "SSHKey represents an SSH public key for authentication.",
-        "x-package": "controlplane"
+        "description": "The response status of an API request."
       },
       "UpdateNodePayload": {
+        "type": "object",
         "required": [
           "property",
           "operation"
         ],
-        "type": "object",
         "properties": {
           "property": {
             "allOf": [
@@ -2382,31 +2019,29 @@
           },
           "value": {
             "type": "string",
-            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects",
-            "format": "bytes"
+            "description": "The value for the update operation. The type depends on the property:\n- TAGS: google.protobuf.Struct with key-value pairs\n- DELETE_LOCK: google.protobuf.Value with boolean\n- SSH_KEYS: google.protobuf.ListValue with SSHKey objects\n- API_ENDPOINT: the URL as plain text"
           }
         },
-        "description": "UpdateNodePayload contains the changes to apply to a node.",
-        "x-package": "controlplane"
+        "description": "UpdateNodePayload contains the changes to apply to a node."
       },
       "UpdateNodesResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -2419,19 +2054,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 456,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for updating nodes.",
-        "x-package": "controlplane"
+        "description": "Response message for updating nodes."
       },
       "UpdateNodesResponseData": {
         "type": "object",
@@ -2443,27 +2076,26 @@
             },
             "description": "The updated nodes."
           }
-        },
-        "x-package": "controlplane"
+        }
       },
       "WaitNodesResponse": {
+        "type": "object",
         "required": [
           "status",
           "op_time_us"
         ],
-        "type": "object",
         "properties": {
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ResponseStatus"
+                "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseStatus"
               }
             ],
             "description": "The status of the response."
           },
           "message": {
             "type": "string",
-            "description": "An optional message providing additional information about the response."
+            "description": "An optional message providing additional information about the status."
           },
           "data": {
             "allOf": [
@@ -2476,19 +2108,17 @@
           "errors": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ResponseError"
+              "$ref": "#/components/schemas/UnikraftCloud.Common.ResponseError"
             },
             "description": "A list of errors which may have occurred during the request."
           },
           "op_time_us": {
-            "example": 180234,
             "type": "integer",
-            "description": "The operation time in microseconds.",
-            "format": "uint64"
+            "format": "uint64",
+            "description": "The operation time in microseconds."
           }
         },
-        "description": "Response message for wait operations.",
-        "x-package": "controlplane"
+        "description": "Response message for wait operations."
       },
       "WaitNodesResponseData": {
         "type": "object",
@@ -2500,35 +2130,22 @@
             },
             "description": "The nodes after reaching the desired state."
           }
-        },
-        "x-package": "controlplane"
+        }
       }
     },
     "securitySchemes": {
       "bearerToken": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "Bearer",
+        "description": "A bearer token in the Authorization header."
       }
     }
   },
-  "tags": [
+  "servers": [
     {
-      "name": "Auth",
-      "description": "Authenticate with Unikraft Cloud."
-    },
-    {
-      "name": "Images"
-    },
-    {
-      "name": "Metros"
-    },
-    {
-      "name": "NodeActivationService",
-      "description": "NodeActivationService provides APIs for activating and renewing node\nlicenses."
-    },
-    {
-      "name": "NodeService",
-      "description": "NodeService service provides APIs for provisioning and managing compute nodes\nacross multiple cloud providers for use in Unikraft Cloud."
+      "url": "https://controlplane.unikraft.cloud",
+      "description": "Official Unikraft Cloud Control Plane API",
+      "variables": {}
     }
   ]
 }

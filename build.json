@@ -1366,7 +1366,7 @@
             "$ref": "#/components/schemas/KraftfileObject"
           }
         ],
-        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context. A source without a `filename` reads the file `Kraftfile`,\nand if there is none, the build is the one of a request without a\n`kraftfile`."
+        "description": "The Kraftfile of a build, in one of three forms: the whole file as a string,\na source to read it from, or the parsed file as an object. A source has\n`session`, `git` or `url`, and none is a Kraftfile key, so the two object\nforms never collide. Relative paths in the Kraftfile resolve inside the\nbuild context. A source without a `filename` reads the first of\n`kraft.yaml`, `kraft.yml`, `Kraftfile.yml`, `Kraftfile.yaml` and\n`Kraftfile` that it has, and if it has none, the build is the one of a\nrequest without a `kraftfile`."
       },
       "KraftfileInline": {
         "type": "string",
@@ -1637,7 +1637,7 @@
           },
           "filename": {
             "type": "string",
-            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to\n`Kraftfile`, and `contexts.dockerfile`, where it defaults to the name of\nthe Dockerfile the Kraftfile builds with. A `filename` on any other\ncontext is a `400`.",
+            "description": "The file to read out of the source, relative to `subdir`. Only valid where\nthe source names a single file: `kraftfile`, where it defaults to the\nfirst of `kraft.yaml`, `kraft.yml`, `Kraftfile.yml`, `Kraftfile.yaml` and\n`Kraftfile` that the source has, and `contexts.dockerfile`, where it\ndefaults to the name of the Dockerfile the Kraftfile builds with. A\n`filename` on any other context is a `400`.",
             "example": "Kraftfile"
           }
         },

@@ -1207,9 +1207,10 @@ components:
         a source to read it from, or the parsed file as an object. A source has
         `session`, `git` or `url`, and none is a Kraftfile key, so the two object
         forms never collide. Relative paths in the Kraftfile resolve inside the
-        build context. A source without a `filename` reads the file `Kraftfile`,
-        and if there is none, the build is the one of a request without a
-        `kraftfile`.
+        build context. A source without a `filename` reads the first of
+        `kraft.yaml`, `kraft.yml`, `Kraftfile.yml`, `Kraftfile.yaml` and
+        `Kraftfile` that it has, and if it has none, the build is the one of a
+        request without a `kraftfile`.
     KraftfileInline:
       type: string
       description: |-
@@ -1420,10 +1421,11 @@ components:
           type: string
           description: |-
             The file to read out of the source, relative to `subdir`. Only valid where
-            the source names a single file: `kraftfile`, where it defaults to
-            `Kraftfile`, and `contexts.dockerfile`, where it defaults to the name of
-            the Dockerfile the Kraftfile builds with. A `filename` on any other
-            context is a `400`.
+            the source names a single file: `kraftfile`, where it defaults to the
+            first of `kraft.yaml`, `kraft.yml`, `Kraftfile.yml`, `Kraftfile.yaml` and
+            `Kraftfile` that the source has, and `contexts.dockerfile`, where it
+            defaults to the name of the Dockerfile the Kraftfile builds with. A
+            `filename` on any other context is a `400`.
           example: Kraftfile
       description: |-
         Where the files of a build come from. A source is exactly one of a

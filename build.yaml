@@ -1009,8 +1009,10 @@ components:
           type: integer
           format: int32
           description: |-
-            The number of builds of the tenant waiting for the builder, or for any
-            builder of the pool for `default`.
+            The number of builds of the tenant that have not started on the builder,
+            or on any builder of the pool for `default`: those that wait for a build
+            slot, with status `running`, and those that wait for their client's
+            session, with status `waiting`.
           example: 1
         max_builds:
           type: integer
